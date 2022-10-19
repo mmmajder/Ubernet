@@ -1,0 +1,4 @@
+<div class="restaurant-body">
+  <div style="height: 50px"></div>
+  <app-restaurant-details [restaurant]="restaurant$" (addMenuItemEvent)="createMenuItem($event)" (removeMenuItemEvent)="removeMenuItem($event)"></app-restaurant-details>
+</div>

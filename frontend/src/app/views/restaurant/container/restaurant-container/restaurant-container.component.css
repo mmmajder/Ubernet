@@ -1,0 +1,9 @@
+.restaurant-body {
+  background-image: url("src/assets/background.jpg");
+  height: 100%;
+  object-fit: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  margin-top: -10px;
+}

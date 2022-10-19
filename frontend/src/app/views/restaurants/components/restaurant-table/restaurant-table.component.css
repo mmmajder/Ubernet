@@ -1,0 +1,22 @@
+table {
+  width: 100%;
+}
+
+.mat-form-field {
+  font-size: 14px;
+  width: 100%;
+}
+
+td, th {
+  width: 20%;
+}
+
+.link {
+  text-decoration: none;
+  color: #E91E63;
+}
+
+.mat-column-deliveryRate {
+  width: 40px;
+  text-align: right;
+}

@@ -1,0 +1,207 @@
+h2 {
+  font-size: 2.8rem !important;
+  font-weight: 700;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+a,
+button {
+  cursor: pointer;
+}
+
+.jumbotron {
+  margin-bottom: 0 !important;
+}
+
+.atlas-cta {
+  border-radius: 22px !important;
+  padding: 12px 30px !important;
+  font-weight: 700;
+  transition: .3s ease-in-out !important;
+}
+
+.atlas-cta:hover {
+  text-decoration: none;
+  transform: translateY(-5px);
+}
+
+.atlas-cta-wide {
+  width: 100%;
+}
+
+.cta-green {
+  background: #FFC107;
+  color: #fff;
+}
+
+.cta-green:hover {
+  color: #E1E8EB;
+  background: #F0C000;
+}
+
+.cta-blue {
+  background: #7952B3;
+  color: #fff;
+}
+
+.cta-blue:hover {
+  color: #E1E8EB;
+  background: #121a2e;
+}
+
+.cta-ghost {
+  border: 2px solid #7952B3 !important;
+  color: #7952B3;
+}
+
+.cta-ghost:hover {
+  color: #E1E8EB;
+  background: #121a2e;
+}
+
+#banner {
+  background-size: cover;
+}
+
+/********** banner **********/
+#banner header {
+  overflow: hidden;
+}
+
+#banner header img {
+  max-width: 200px;
+}
+
+/********** feature (skew background) **********/
+.feature img {
+  width: 100%;
+  max-width: 480px;
+}
+
+#feature-first {
+  background: linear-gradient(168deg, #FFF 55%, #FFC107 0);
+}
+
+#feature-last {
+  background: #FFC107;
+}
+
+/********** price table **********/
+#price-table {
+  padding-top: 4rem !important;
+  padding-bottom: 4rem !important;
+}
+
+#price-table__premium {
+  background: #7952B3;
+  color: #E1E8EB;
+}
+
+#price-table ul li {
+  padding: 5px 0;
+}
+
+/********** contact **********/
+#contact {
+  background-size: cover;
+}
+
+#contact ul li {
+  padding: 3px 0;
+}
+
+#contact form {
+  color: #FFC107;
+}
+
+#contact form input,
+#contact form textarea {
+  background: transparent;
+  border: 1px solid #FFC107;
+  color: #E1E8EB;
+}
+
+/********** copyright **********/
+#copyright {
+  background: #7952B3;
+  padding: 2rem 3rem;
+}
+
+#copyright #social-media a {
+  width: 40px;
+  height: 40px;
+  border-radius: 99%;
+  background: #E1E8EB;
+  transition: .4s ease;
+}
+
+#copyright #social-media a i {
+  color: #192440;
+  font-size: 1.2rem;
+  line-height: 40px;
+}
+
+#copyright #social-media a:hover {
+  background: #FFC107;
+}
+
+#copyright #social-media a:hover i {
+  color: #E1E8EB;
+}
+
+@media (max-width: 575px) {
+  #banner h1 {
+    font-size: 3.6rem;
+  }
+}
+
+.advantage {
+  max-height: 100px
+}
+
+.wide-btn {
+  width: 100%;
+  padding: 12px;
+  border-radius: 4px;
+  margin: 5px 0;
+  opacity: 0.85;
+  display: inline-block;
+  font-size: 12px;
+  line-height: 20px;
+  text-decoration: none;
+}
+
+input {
+  width: 100%;
+  padding: 5px;
+  border-radius: 4px;
+  margin: 5px 0;
+  display: inline-block;
+  font-size: 12px;
+}
+
+.wide-btn:hover {
+  opacity: 1;
+}
+
+.fb {
+  background-color: #3B5998;
+  color: white;
+}
+
+.google {
+  background-color: #dd4b39;
+  color: white;
+}
+
+.card {
+  padding: 20px;
+  background: #fff;
+  overflow: hidden;
+  border-radius: 30px;
+  box-shadow: 1px 1px 2px gray;
+}

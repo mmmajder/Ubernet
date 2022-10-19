@@ -1,0 +1,21 @@
+<p>
+  <mat-toolbar color="primary">
+    <button mat-icon-button class="example-icon" aria-label="Example icon-button with share icon">
+      <mat-icon>delivery_dining</mat-icon>
+    </button>
+    <span>BringIT</span>
+    <span class="example-spacer"></span>
+    <button mat-icon-button (menuOpened)="menuOpened()" [ngClass]="{'activeNotifications': colorBell}" [matMenuTriggerFor]="menu" aria-label="Example icon-button with a menu">
+      <mat-icon class>notifications</mat-icon>
+    </button>
+    <mat-menu #menu="matMenu">
+      <button *ngFor="let message of notifications" mat-menu-item>
+        {{message.message}}
+      </button>
+    </mat-menu>
+    <button mat-button class="example-icon" (click)="goToRestaurants()">
+      <mat-icon>restaurant</mat-icon>
+      Restaurants
+    </button>
+  </mat-toolbar>
+</p>
