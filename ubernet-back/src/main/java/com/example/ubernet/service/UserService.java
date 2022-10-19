@@ -2,15 +2,12 @@ package com.example.ubernet.service;
 
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
-import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.RoleRepository;
 import com.example.ubernet.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-
-import java.util.Optional;
 
 @Service
 public class UserService implements UserDetailsService {
@@ -24,11 +21,12 @@ public class UserService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Optional<User> user = userRepository.findByEmail(username);
-        if (user.isEmpty()) {
+        User user = userRepository.findByEmail(username);
+        if (user==null) {
             throw new UsernameNotFoundException(String.format("No user found with username '%s'.", username));
         } else {
-            return user.get();
+            System.out.println(user);
+            return user;
         }
     }
 
@@ -40,7 +38,7 @@ public class UserService implements UserDetailsService {
         return roleRepository.findByName(name);
     }
 
-    public Optional<User> findByEmail(String email) {
+    public User findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 }

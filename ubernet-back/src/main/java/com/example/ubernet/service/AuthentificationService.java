@@ -68,7 +68,7 @@ public class AuthentificationService {
 
         String randomCode = RandomString.make(64);
         userAuth.setVerificationCode(randomCode);
-        userAuth.setIsEnabled(false);
+        userAuth.setIsEnabled(true);
         userAuth.setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
         userAuth.setIsPasswordReset(false);
         userAuthService.save(userAuth);

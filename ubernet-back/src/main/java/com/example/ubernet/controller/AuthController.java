@@ -14,6 +14,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
@@ -26,18 +27,20 @@ public class AuthController {
     private final UserService userService;
     private final AuthentificationService authentificationService;
     private final AuthenticationManager authenticationManager;
-
-    public AuthController(TokenUtils tokenUtils, UserService userService, AuthentificationService authentificationService, AuthenticationManager authenticationManager) {
+    private final PasswordEncoder passwordEncoder;
+    public AuthController(TokenUtils tokenUtils, UserService userService, AuthentificationService authentificationService, AuthenticationManager authenticationManager, PasswordEncoder passwordEncoder) {
         this.tokenUtils = tokenUtils;
         this.userService = userService;
         this.authentificationService = authentificationService;
         this.authenticationManager = authenticationManager;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> createAuthenticationToken(
             @RequestBody JwtAuthenticationRequest authenticationRequest, HttpServletResponse response) {
         Authentication authentication;
+        System.out.println(passwordEncoder.encode(authenticationRequest.getPassword()));
         try {
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getEmail(), authenticationRequest.getPassword()));
@@ -62,8 +65,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<User> addUser(@RequestBody CreateUserDTO userDTO) {
 
-        Optional<User> existUser = this.userService.findByEmail(userDTO.getEmail());
-        if (existUser.isPresent()) {
+        User existUser = this.userService.findByEmail(userDTO.getEmail());
+        if (existUser!=null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         User user = DTOMapper.getUser(userDTO);
