@@ -15,12 +15,7 @@ import java.util.Set;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-@SQLDelete(sql
-        = "UPDATE person "
-        + "SET deleted = true "
-        + "WHERE username = ? and version = ?")
-@Where(clause = "deleted = false")
+
 public class Ride {
     @Id
     @Column(unique = true)
