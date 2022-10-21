@@ -110,10 +110,6 @@ public class AuthentificationService {
     private boolean isUserEnabled(User user) {
         return user.isEnabled() && !user.getDeleted();
     }
-//    public boolean isPasswordReseted(User user) {
-//        return user.getUserAuth().getIsPasswordReset();
-//    }
-
 
 }
 

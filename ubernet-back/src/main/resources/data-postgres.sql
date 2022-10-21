@@ -12,7 +12,7 @@ values (false, true, false, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxD
 
 insert into admin (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
 values ('admin@gmail.com', 'Adminville', false, false, 'Admin',
-        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 1, 'Adminic', 1);
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 1);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (1, 1),

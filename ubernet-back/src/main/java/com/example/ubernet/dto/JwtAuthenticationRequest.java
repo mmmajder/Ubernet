@@ -1,7 +1,13 @@
 package com.example.ubernet.dto;
 
+import javax.validation.constraints.Email;
+import javax.validation.constraints.NotEmpty;
+
 public class JwtAuthenticationRequest {
+    @Email
+    @NotEmpty
     private String email;
+    @NotEmpty
     private String password;
 
     public JwtAuthenticationRequest() {

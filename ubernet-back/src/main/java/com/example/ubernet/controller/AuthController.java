@@ -8,10 +8,13 @@ import com.example.ubernet.service.AuthentificationService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -24,7 +27,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> createAuthenticationToken(
-            @RequestBody JwtAuthenticationRequest authenticationRequest) {
+            @Valid @RequestBody JwtAuthenticationRequest authenticationRequest) {
 
         LoginResponseDTO loginResponseDTO = authentificationService.login(authenticationRequest);
         if (loginResponseDTO==null) {
@@ -33,8 +36,9 @@ public class AuthController {
         return ResponseEntity.ok(loginResponseDTO);
     }
 
+//    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
-    public ResponseEntity<User> addUser(@RequestBody CreateUserDTO userDTO) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserDTO userDTO) {
         User user = authentificationService.addUser(userDTO);
         if (user==null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
