@@ -4,11 +4,16 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.ubernet.dto.CreateUserDTO;
 import com.example.ubernet.dto.JwtAuthenticationRequest;
+import com.example.ubernet.dto.LoginResponseDTO;
+import com.example.ubernet.dto.UserTokenState;
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
 import com.example.ubernet.model.UserAuth;
 import com.example.ubernet.model.enums.UserRole;
+import com.example.ubernet.utils.DTOMapper;
+import com.example.ubernet.utils.TokenUtils;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -22,48 +27,39 @@ import net.bytebuddy.utility.RandomString;
 @Service
 public class AuthentificationService {
     private final UserService userService;
-    private final EmailService emailService;
     private final AdminService adminService;
+    private final TokenUtils tokenUtils;
     private final UserAuthService userAuthService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
 
     public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService,
-                                   EmailService emailService, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService) {
+                                   TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
-        this.emailService = emailService;
+        this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.adminService = adminService;
         this.userAuthService = userAuthService;
     }
 
-    public User addUser(User user) {
-        user.setPassword(passwordEncoder.encode(user.getPassword()));
-        user.setIsBlocked(false);
-        user.setUserAuth(getUserAuth());
-        user = addRoles(user);
-
-//        user = this.userService.save(user);
-        user = adminService.save(user);
-
-        //TODO send email when needed
-//        if (user.getRole() == Role.DRIVER) {
-//            // SEND MAIL
-//            try {
-//                emailService.sendCreateProfileAsync(user);
-//            } catch (UnsupportedEncodingException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            } catch (MessagingException e) {
-//                // TODO Auto-generated catch block
-//                e.printStackTrace();
-//            }
-//        }
-        return user;
+    public User addUser(CreateUserDTO createUserDTO) {
+        if (userService.findByEmail(createUserDTO.getEmail())!=null) {
+            return null;
+        }
+        //TODO send emails
+        return saveUser(createUserDTO);
     }
 
-    private UserAuth getUserAuth() {
+    private User saveUser(CreateUserDTO createUserDTO) {
+        User user = DTOMapper.getUser(createUserDTO);
+        user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
+        user.setIsBlocked(false);
+        user.setUserAuth(getUserAuth(user));
+        return adminService.save(user);
+    }
+
+    private UserAuth getUserAuth(User user) {
         UserAuth userAuth = new UserAuth();
 
         String randomCode = RandomString.make(64);
@@ -71,47 +67,53 @@ public class AuthentificationService {
         userAuth.setIsEnabled(true);
         userAuth.setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
         userAuth.setIsPasswordReset(false);
+        userAuth.setRoles(getRoles(user));
         userAuthService.save(userAuth);
         return userAuth;
     }
 
-    private User addRoles(User user) {
-        List<Role> roles = new ArrayList<Role>();
+    private List<Role> getRoles(User user) {
+        List<Role> roles = new ArrayList<>();
         UserRole userRole = user.getRole();
-        roles.add((Role) userService.findRolesByUserType("ROLE_USER"));
+        roles.add(userService.findRolesByUserType("ROLE_USER"));
 
         if (userRole == UserRole.ADMIN) {
-            roles.add((Role) userService.findRolesByUserType("ROLE_ADMIN"));
+            roles.add(userService.findRolesByUserType("ROLE_ADMIN"));
         } else if (userRole == UserRole.DRIVER) {
-            roles.add((Role) userService.findRolesByUserType("ROLE_DRIVER"));
+            roles.add(userService.findRolesByUserType("ROLE_DRIVER"));
         } else {
-            roles.add((Role) userService.findRolesByUserType("ROLE_CUSTOMER"));
+            roles.add(userService.findRolesByUserType("ROLE_CUSTOMER"));
         }
-        user.getUserAuth().setRoles(roles);
-        return user;
+        return roles;
     }
 
-    public User login(JwtAuthenticationRequest authenticationRequest) {
+    public LoginResponseDTO login(JwtAuthenticationRequest authenticationRequest) {
         Authentication authentication;
         try {
-            System.out.println(passwordEncoder.encode(authenticationRequest.getPassword()));
             authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
                     authenticationRequest.getEmail(), authenticationRequest.getPassword()));
         } catch (AuthenticationException e) {
             return null;
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
-
         User user = (User) authentication.getPrincipal();
-        if (!user.isEnabled() || user.getDeleted()) {
-            return null;
-        }
-        return user;
+        if (!isUserEnabled(user)) return null;
+        return createAccessToken(user);
     }
 
-    public boolean isPasswordReseted(User user) {
-        return user.getUserAuth().getIsPasswordReset();
+    private LoginResponseDTO createAccessToken(User user) {
+        String jwt = tokenUtils.generateToken(user);
+        int expiresIn = tokenUtils.getExpiredIn();
+        return new LoginResponseDTO(new UserTokenState(jwt, expiresIn), user.getRole());
     }
+
+    private boolean isUserEnabled(User user) {
+        return user.isEnabled() && !user.getDeleted();
+    }
+//    public boolean isPasswordReseted(User user) {
+//        return user.getUserAuth().getIsPasswordReset();
+//    }
+
 
 }
 

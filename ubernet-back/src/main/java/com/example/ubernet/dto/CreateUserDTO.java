@@ -3,14 +3,14 @@ package com.example.ubernet.dto;
 import com.example.ubernet.model.enums.UserRole;
 
 public class CreateUserDTO {
-    private boolean isDeleted;
     private String email;
+    private String password;
     private String name;
     private String surname;
     private String city;
     private String phoneNumber;
+    private boolean isDeleted;
     private UserRole userRole;
-    private String password;
 
     public String getEmail() {
         return email;

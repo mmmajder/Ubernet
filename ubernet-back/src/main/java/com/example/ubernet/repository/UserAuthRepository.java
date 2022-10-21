@@ -4,5 +4,4 @@ import com.example.ubernet.model.UserAuth;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserAuthRepository extends JpaRepository<UserAuth, Long> {
-    public UserAuth save(UserAuth userAuth);
 }

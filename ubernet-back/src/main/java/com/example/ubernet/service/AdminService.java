@@ -3,7 +3,7 @@ package com.example.ubernet.service;
 import com.example.ubernet.model.Admin;
 import com.example.ubernet.model.User;
 import com.example.ubernet.repository.AdminRepository;
-import com.example.ubernet.utils.UserMapper;
+import com.example.ubernet.utils.EntityMapper;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -16,6 +16,6 @@ public class AdminService {
 
 
     public Admin save(User user) {
-        return adminRepository.save(UserMapper.mapToAdmin(user));
+        return adminRepository.save(EntityMapper.mapToAdmin(user));
     }
 }

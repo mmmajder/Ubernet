@@ -3,7 +3,7 @@ package com.example.ubernet.utils;
 import com.example.ubernet.model.Admin;
 import com.example.ubernet.model.User;
 
-public class UserMapper {
+public class EntityMapper {
     public static Admin mapToAdmin(User user) {
         Admin admin = new Admin();
         admin.setCity(user.getCity());
@@ -18,4 +18,6 @@ public class UserMapper {
         admin.setRole(user.getRole());
         return admin;
     }
+
+
 }
