@@ -4,10 +4,7 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.example.ubernet.dto.CreateUserDTO;
-import com.example.ubernet.dto.JwtAuthenticationRequest;
-import com.example.ubernet.dto.LoginResponseDTO;
-import com.example.ubernet.dto.UserTokenState;
+import com.example.ubernet.dto.*;
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
 import com.example.ubernet.model.UserAuth;
@@ -111,5 +108,14 @@ public class AuthentificationService {
         return user.isEnabled() && !user.getDeleted();
     }
 
+    public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
+        User user = userService.findByEmail(changePasswordDTO.getEmail());
+        if (user==null) {
+            return false;
+        }
+        user.setPassword(passwordEncoder.encode(changePasswordDTO.getPassword()));
+        userService.save(user);
+        return true;
+    }
 }
 
