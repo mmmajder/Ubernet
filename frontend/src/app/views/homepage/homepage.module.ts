@@ -15,11 +15,13 @@ import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
 import {LoginComponent} from "./components/login/login.component";
 import { HomepageContainerComponent } from './container/homepage-container/homepage-container.component';
+import { RegistrationComponent } from './components/registration/registration.component';
 
 @NgModule({
   declarations: [
     HomepageContainerComponent,
-    LoginComponent
+    LoginComponent,
+    RegistrationComponent
   ],
   imports: [
     MatToolbarModule,
