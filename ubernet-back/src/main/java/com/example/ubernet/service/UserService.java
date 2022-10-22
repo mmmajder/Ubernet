@@ -4,6 +4,7 @@ import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.model.ProfileUpdateRequest;
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
+import com.example.ubernet.model.enums.Provider;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
@@ -97,5 +98,19 @@ public class UserService implements UserDetailsService {
             throw new Exception("Mail already exists");
         }
         user.setEmail(newEmail);
+    }
+
+    public void processOAuthPostLogin(String email) {
+        Optional<User> existUser = userRepository.findByEmail(email);
+
+        if (existUser.isEmpty()) {
+            User newUser = new User();
+            newUser.setEmail(email);
+            newUser.setProvider(Provider.GOOGLE);
+            newUser.getUserAuth().setIsEnabled(true);
+
+            userRepository.save(newUser);
+        }
+
     }
 }

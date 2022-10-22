@@ -1,5 +1,6 @@
 package com.example.ubernet.model;
 
+import com.example.ubernet.model.enums.Provider;
 import com.example.ubernet.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -36,9 +37,8 @@ public class User implements UserDetails {
     //    private Image image;
     private Boolean isBlocked;
 
-
-
-
+    @Enumerated(EnumType.STRING)
+    private Provider provider;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getUserAuth().getRoles();
