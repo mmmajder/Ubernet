@@ -5,7 +5,7 @@
     <p style="margin-top: 10px">
       <mat-form-field class="example-full-width" style="width: 100%" appearance="outline">
         <mat-label>Email</mat-label>
-        <input type="email" matInput [formControl]="emailFormControl" placeholder="Ex. pat@example.com">
+        <input type="email" matInput [formControl]="emailFormControl" [(ngModel)]="email" placeholder="Ex. pat@example.com">
         <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
           Please enter a valid email address
         </mat-error>
@@ -17,14 +17,14 @@
     <p style="margin-top: -10px">
       <mat-form-field style="width: 100%" appearance="outline">
         <mat-label>Enter your password</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'">
+        <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password">
         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
       </mat-form-field>
     </p>
-    <button mat-raised-button color="primary" style="width: 100%; margin-top: -20px;">Login</button>
+    <button mat-raised-button color="primary" style="width: 100%; margin-top: -20px;" (click)="login()">Login</button>
     <a mat-button style="width: 100%" routerLink=".">Forgot password?</a>
     <div class="hr-line">
       <span class="or">

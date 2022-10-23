@@ -24,6 +24,7 @@ import {RestaurantModule} from "./views/restaurant/restaurant.module";
 import {NotificationsService} from "./services/notifications.service";
 import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
+import {AuthService} from "./services/auth.service";
 
 @NgModule({
   declarations: [
@@ -55,7 +56,7 @@ import {HomepageModule} from "./views/homepage/homepage.module";
   ],
     exports: [
     ],
-  providers: [RestaurantService, NotificationsService, SocketService],
+  providers: [RestaurantService, AuthService, NotificationsService, SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
