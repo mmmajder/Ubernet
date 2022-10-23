@@ -5,3 +5,8 @@
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
+:root {
+  --yellow: #FFC107;
+  --yellow-hover: #F0C000;
+  --blue: #3f51b5;
+}

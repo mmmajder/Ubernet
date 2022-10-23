@@ -12,4 +12,9 @@ export class HomepageContainerComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  showForms() {
+    document.getElementById("registation-form")?.classList.toggle("fade");
+    document.getElementById("login-form")?.classList.toggle("fade");
+  }
+
 }

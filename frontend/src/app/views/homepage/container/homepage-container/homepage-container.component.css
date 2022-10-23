@@ -34,17 +34,17 @@ button {
 }
 
 .cta-green {
-  background: #FFC107;
+  background: var(--yellow);
   color: #fff;
 }
 
 .cta-green:hover {
   color: #E1E8EB;
-  background: #F0C000;
+  background: var(--yellow-hover);
 }
 
 .cta-blue {
-  background: #7952B3;
+  background: var(--yellow-hover);
   color: #fff;
 }
 
@@ -54,8 +54,8 @@ button {
 }
 
 .cta-ghost {
-  border: 2px solid #7952B3 !important;
-  color: #7952B3;
+  border: 2px solid var(--blue) !important;
+  color: var(--blue);
 }
 
 .cta-ghost:hover {
@@ -83,11 +83,11 @@ button {
 }
 
 #feature-first {
-  background: linear-gradient(168deg, #FFF 55%, #FFC107 0);
+  background: linear-gradient(168deg, #FFF 55%, var(--yellow) 0);
 }
 
 #feature-last {
-  background: #FFC107;
+  background: var(--yellow);
 }
 
 /********** price table **********/
@@ -97,7 +97,7 @@ button {
 }
 
 #price-table__premium {
-  background: #7952B3;
+  background: var(--blue);
   color: #E1E8EB;
 }
 
@@ -115,19 +115,19 @@ button {
 }
 
 #contact form {
-  color: #FFC107;
+  color: var(--yellow);
 }
 
 #contact form input,
 #contact form textarea {
   background: transparent;
-  border: 1px solid #FFC107;
+  border: 1px solid var(--yellow);
   color: #E1E8EB;
 }
 
 /********** copyright **********/
 #copyright {
-  background: #7952B3;
+  background: var(--blue);
   padding: 2rem 3rem;
 }
 
@@ -146,7 +146,7 @@ button {
 }
 
 #copyright #social-media a:hover {
-  background: #FFC107;
+  background: var(--yellow);
 }
 
 #copyright #social-media a:hover i {
@@ -204,4 +204,30 @@ input {
   overflow: hidden;
   border-radius: 30px;
   box-shadow: 1px 1px 2px gray;
+}
+
+#login-form {
+  opacity: 1;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out;
+  -ms-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+}
+
+#login-form.fade {
+  opacity: 0;
+  display: none;
+}
+
+#registation-form {
+  opacity: 1;
+  -webkit-transition: opacity 0.3s ease-in-out;
+  -moz-transition: opacity 0.3s ease-in-out;
+  -ms-transition: opacity 0.3s ease-in-out;
+  -o-transition: opacity 0.3s ease-in-out;
+}
+
+#registation-form.fade {
+  opacity: 0;
+  display: none;
 }
