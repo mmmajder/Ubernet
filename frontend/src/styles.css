@@ -46,3 +46,10 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 ::-webkit-scrollbar-thumb:hover {
   background-color: #a8bbbf;
 }
+
+.profile-picture {
+  object-fit: cover;
+  height: 250px;
+  width: 250px;
+  border-radius: 5%;
+}

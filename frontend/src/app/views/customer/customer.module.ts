@@ -13,37 +13,47 @@ import {CommonModule} from "@angular/common";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
-import {CustomerContainerComponent} from "./container/customer-container/customer-container.component";
+import {DashboardCustomerContainerComponent} from "./container/dashboard-customer-container/dashboard-customer-container.component";
 import { FavoritesComponent } from './components/favorites/favorites/favorites.component';
 import {MatListModule} from "@angular/material/list";
 import { ActivityLogComponent } from './components/activity-log/activity-log/activity-log.component';
+import { ProfileDataComponent } from './components/profile/profile-data/profile-data.component';
+import { ProfileCustomerContainerComponent } from './container/profile-customer-container/profile-customer-container.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
+import {ChangePasswordComponent} from "./components/profile/change-password/change-password.component";
 
 @NgModule({
   declarations: [
-    CustomerContainerComponent,
+    DashboardCustomerContainerComponent,
     FavoritesComponent,
-    ActivityLogComponent
+    ActivityLogComponent,
+    ProfileDataComponent,
+    ProfileCustomerContainerComponent,
+    CreditCardComponent,
+    ChangePasswordComponent
   ],
-    imports: [
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
-        MatTableModule,
-        MatCardModule,
-        MatSortModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDialogModule,
-        FormsModule,
-        CommonModule,
-        MatSnackBarModule,
-        ReactiveFormsModule,
-        MatMenuModule,
-        SharedModule,
-        MatListModule,
-    ],
+  imports: [
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTableModule,
+    MatCardModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDialogModule,
+    FormsModule,
+    CommonModule,
+    MatSnackBarModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    SharedModule,
+    MatListModule,
+    MatTabsModule,
+  ],
   exports: [
-    CustomerContainerComponent
+    DashboardCustomerContainerComponent
   ]
 })
 export class CustomerModule {
