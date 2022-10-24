@@ -16,6 +16,7 @@ import java.util.Map;
 public class Driver extends User {
     @OneToOne
     private Car car;
-//    @ManyToOne
-//    private HashMap<LocalDate, DriverDailyActivity> driverActivityByDate;
+    @ManyToOne
+    private DriverDailyActivity driverDailyActivity;
+
 }

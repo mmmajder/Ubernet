@@ -15,9 +15,12 @@ insert into admin (email, city, deleted, is_blocked, name, password, phone_numbe
 values ('admin@gmail.com', 'Adminville', false, false, 'Admin',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 1);
 
-insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
+insert into driver_daily_activity (deleted, is_active, last_time_set_active, total_duration)
+values (false, true, '2022-10-24 00:00', 0);
+
+insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, driver_daily_activity_id)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 1);
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 1, 1);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (1, 1),

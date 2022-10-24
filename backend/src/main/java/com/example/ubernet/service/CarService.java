@@ -41,7 +41,6 @@ public class CarService {
         car.setDriver((Driver) userService.findByEmail(user.getEmail()));
 //        car.setPosition(null);
         save(car);
-
         userService.save(user);
         return car;
     }
