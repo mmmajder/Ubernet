@@ -32,4 +32,12 @@ public class DriverController {
         }
         return ResponseEntity.ok(DTOMapper.getDriverResponse(driver));
     }
+
+    @PutMapping("/logout-driver/{email}")
+    public ResponseEntity<String> logoutDriver(@PathVariable String email) {
+        if (driverService.logoutDriver(email)) {
+            return new ResponseEntity<>("Successfully logged out", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("There was a logging out", HttpStatus.CONFLICT);
+    }
 }

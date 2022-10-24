@@ -18,6 +18,7 @@ import java.util.Set;
 
 public class Ride {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 

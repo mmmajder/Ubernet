@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.ubernet.dto.*;
-import com.example.ubernet.model.Role;
-import com.example.ubernet.model.User;
-import com.example.ubernet.model.UserAuth;
+import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.TokenUtils;
@@ -33,8 +31,8 @@ public class AuthentificationService {
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
 
-    public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService,
-                                   TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService, EmailService emailService) {
+
+    public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService, EmailService emailService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.tokenUtils = tokenUtils;
@@ -97,8 +95,7 @@ public class AuthentificationService {
     public LoginResponseDTO login(JwtAuthenticationRequest authenticationRequest) {
         Authentication authentication;
         try {
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
         } catch (AuthenticationException e) {
             return null;
         }
@@ -159,5 +156,7 @@ public class AuthentificationService {
         emailService.sendEmailResetAsync(user);
         return true;
     }
+
+
 }
 

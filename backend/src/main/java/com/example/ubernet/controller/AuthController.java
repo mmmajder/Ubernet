@@ -7,7 +7,6 @@ import com.example.ubernet.utils.DTOMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -27,17 +26,17 @@ public class AuthController {
             @Valid @RequestBody JwtAuthenticationRequest authenticationRequest) {
 
         LoginResponseDTO loginResponseDTO = authentificationService.login(authenticationRequest);
-        if (loginResponseDTO==null) {
+        if (loginResponseDTO == null) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
         return ResponseEntity.ok(loginResponseDTO);
     }
 
-//    @PreAuthorize("hasRole('ADMIN')")
+    //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
         User user = authentificationService.addUser(userDTO);
-        if (user==null) {
+        if (user == null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
         return new ResponseEntity<>(user, HttpStatus.CREATED);
@@ -55,7 +54,7 @@ public class AuthController {
 
     @PutMapping("/reset-password/{email}")
     public ResponseEntity<String> resetPassword(@PathVariable String email) throws MessagingException {
-        if (authentificationService.resetPassword(email)){
+        if (authentificationService.resetPassword(email)) {
             return new ResponseEntity<>("Successfully reset password", HttpStatus.OK);
         }
         return new ResponseEntity<>("There was a problem in resetting password", HttpStatus.CONFLICT);
@@ -63,7 +62,7 @@ public class AuthController {
 
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
-        if (authentificationService.changePassword(changePasswordDTO)){
+        if (authentificationService.changePassword(changePasswordDTO)) {
             return new ResponseEntity<>("Successfully changed password", HttpStatus.OK);
         }
         return new ResponseEntity<>("There was a problem in changing password", HttpStatus.CONFLICT);

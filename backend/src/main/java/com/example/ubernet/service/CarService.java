@@ -56,4 +56,7 @@ public class CarService {
         return carType;
     }
 
+    public Car findById(long id) {
+        return carRepository.findById(id).orElse(null);
+    }
 }

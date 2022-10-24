@@ -17,6 +17,7 @@ import java.util.List;
 public class Chat {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 

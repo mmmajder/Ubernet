@@ -15,4 +15,8 @@ public class DriverDailyActivityService {
     public DriverDailyActivity save(DriverDailyActivity driverDailyActivity) {
         return driverDailyActivityRepository.save(driverDailyActivity);
     }
+
+    public DriverDailyActivity findById(long id) {
+        return driverDailyActivityRepository.findById(id).orElse(null);
+    }
 }
