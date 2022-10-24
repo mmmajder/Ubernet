@@ -99,6 +99,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/admin/**").permitAll()
                 .antMatchers("/user/**").permitAll()
                 .antMatchers("/payment/**").permitAll()
+                .antMatchers("/car/**").permitAll()
                 .antMatchers("/www.sandbox.paypal.com/**").permitAll()
                 .antMatchers("/oauth2/**").permitAll()
 

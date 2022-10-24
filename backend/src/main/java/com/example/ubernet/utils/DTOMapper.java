@@ -1,9 +1,7 @@
 package com.example.ubernet.utils;
 
-import com.example.ubernet.dto.CreateUserDTO;
-import com.example.ubernet.dto.UserEditDTO;
-import com.example.ubernet.dto.UserResponse;
-import com.example.ubernet.dto.UserVerificationResponseDTO;
+import com.example.ubernet.dto.*;
+import com.example.ubernet.model.Car;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.UserService;
 
@@ -51,5 +49,12 @@ public class DTOMapper {
         userResponse.setSurname(user.getSurname());
         userResponse.setPhoneNumber(user.getPhoneNumber());
         return userResponse;
+    }
+
+    public static CarResponse getCarResponse(Car car) {
+        CarResponse carResponse = new CarResponse();
+        carResponse.setCarType(car.getCarType());
+        carResponse.setDriver(car.getDriver());
+        return carResponse;
     }
 }
