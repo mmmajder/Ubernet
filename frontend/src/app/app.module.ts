@@ -25,10 +25,15 @@ import {NotificationsService} from "./services/notifications.service";
 import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
+import { NotFoundPageComponent } from './views/404/not-found-page/not-found-page.component';
+import {DriverModule} from "./views/driver/driver.module";
+import {CustomerModule} from "./views/customer/customer.module";
+import {AdminModule} from "./views/admin/admin.module";
 
 @NgModule({
   declarations: [
     AppComponent,
+    NotFoundPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -52,7 +57,10 @@ import {AuthService} from "./services/auth.service";
     MatDialogModule,
     RestaurantsModule,
     RestaurantModule,
-    HomepageModule
+    HomepageModule,
+    DriverModule,
+    CustomerModule,
+    AdminModule
   ],
     exports: [
     ],

@@ -1,0 +1,14 @@
+<mat-card>
+  <mat-card-header>Favorite routes</mat-card-header>
+  <mat-card-content class="scrollable">
+    <mat-list>
+      <mat-list-item *ngFor="let favorite of favorites">
+        <mat-icon mat-list-icon>route</mat-icon>
+        <div mat-line><span class="route-name">{{favorite.name}}</span></div>
+        <div mat-line> {{favorite.start}} - {{favorite.end}} </div>
+        <mat-icon style="color: var(--yellow)">star</mat-icon>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+</mat-card>

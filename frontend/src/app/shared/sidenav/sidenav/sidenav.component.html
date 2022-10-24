@@ -1,0 +1,57 @@
+<mat-toolbar class="navbar">
+  <span>
+    <img class="logo" src="assets/logo.png"/>
+  </span>
+  <span class="example-spacer"></span>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon matBadge="15">notifications</mat-icon>
+  </button>
+  <button mat-icon-button class="example-icon favorite-icon" aria-label="Example icon-button with heart icon">
+    <mat-icon matBadge="15">help</mat-icon>
+  </button>
+  <img src="assets/taxi.jpg" class="avatar"/>
+  <p class="name">Pera Peric</p>
+</mat-toolbar>
+
+<div class="sidebar" [ngClass]="{ 'active': isActive }">
+  <div class="logo_content">
+    <i class="bx bx-menu" (click)="toggle()" id="menu-btn"></i>
+  </div>
+  <ul>
+    <li>
+      <a href="#">
+        <mat-icon>dashboard</mat-icon>
+        <span class="links_name">Dashboard</span>
+      </a>
+      <span class="tooltip">Dashboard</span>
+    </li>
+    <li>
+      <a href="#">
+        <mat-icon>location_pin</mat-icon>
+        <span class="links_name">Map</span>
+      </a>
+      <span class="tooltip">Map</span>
+    </li>
+    <li>
+      <a href="#">
+        <mat-icon>query_stats</mat-icon>
+        <span class="links_name">Analytics</span>
+      </a>
+      <span class="tooltip">Analytics</span>
+    </li>
+    <li>
+      <a href="#">
+        <mat-icon>person</mat-icon>
+        <span class="links_name">My Profile</span>
+      </a>
+      <span class="tooltip">My Profile</span>
+    </li>
+    <li>
+      <a href="#">
+        <mat-icon>logout</mat-icon>
+        <span class="links_name">Log out</span>
+      </a>
+      <span class="tooltip">Log out</span>
+    </li>
+  </ul>
+</div>
