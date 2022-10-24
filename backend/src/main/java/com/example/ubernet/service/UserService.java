@@ -111,6 +111,10 @@ public class UserService implements UserDetailsService {
 
             userRepository.save(newUser);
         }
+    }
 
+
+    public User findByVerificationCode(String verificationCode) {
+        return userRepository.findByVerificationCode(verificationCode).orElse(null);
     }
 }

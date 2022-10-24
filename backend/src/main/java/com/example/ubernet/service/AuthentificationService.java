@@ -21,6 +21,8 @@ import org.springframework.stereotype.Service;
 
 import net.bytebuddy.utility.RandomString;
 
+import javax.mail.MessagingException;
+
 @Service
 public class AuthentificationService {
     private final UserService userService;
@@ -29,23 +31,28 @@ public class AuthentificationService {
     private final UserAuthService userAuthService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
 
     public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService,
-                                   TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService) {
+                                   TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService, EmailService emailService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.adminService = adminService;
         this.userAuthService = userAuthService;
+        this.emailService = emailService;
     }
 
-    public User addUser(CreateUserDTO createUserDTO) {
-        if (userService.findByEmail(createUserDTO.getEmail())!=null) {
+    public User addUser(CreateUserDTO createUserDTO) throws MessagingException {
+        if (userService.findByEmail(createUserDTO.getEmail()) != null) {
             return null;
         }
-        //TODO send emails
-        return saveUser(createUserDTO);
+        User user = saveUser(createUserDTO);
+        if (user.getRole() == UserRole.CUSTOMER) {
+            emailService.sendRegistrationAsync(user);
+        }
+        return user;
     }
 
     private User saveUser(CreateUserDTO createUserDTO) {
@@ -61,12 +68,15 @@ public class AuthentificationService {
 
         String randomCode = RandomString.make(64);
         userAuth.setVerificationCode(randomCode);
-        userAuth.setIsEnabled(true);
         userAuth.setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
-        userAuth.setIsPasswordReset(false);
         userAuth.setRoles(getRoles(user));
+        userAuth.setIsEnabled(setIsUserEnabledRegistration(user));
         userAuthService.save(userAuth);
         return userAuth;
+    }
+
+    private boolean setIsUserEnabledRegistration(User user) {
+        return user.getRole() != UserRole.CUSTOMER;
     }
 
     private List<Role> getRoles(User user) {
@@ -110,11 +120,43 @@ public class AuthentificationService {
 
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         User user = userService.findByEmail(changePasswordDTO.getEmail());
-        if (user==null) {
+        if (user == null) {
             return false;
         }
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getPassword()));
+        if (!user.isEnabled()) {
+            user.getUserAuth().setIsEnabled(true);
+            userAuthService.save(user.getUserAuth());
+        }
         userService.save(user);
+        return true;
+    }
+
+    public User verify(String verificationCode) {
+        User user = userService.findByVerificationCode(verificationCode);
+
+        if (user == null || user.isEnabled()) {
+            return null;
+        }
+
+        user.getUserAuth().setVerificationCode(null);
+        user.getUserAuth().setIsEnabled(true);
+        userAuthService.save(user.getUserAuth());
+        user = userService.save(user);
+        return user;
+    }
+
+    public boolean resetPassword(String email) throws MessagingException {
+        User user = userService.findByEmail(email);
+        if (user == null) {
+            return false;
+        }
+        user.setPassword("");
+        user.getUserAuth().setIsEnabled(false);
+        user.getUserAuth().setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
+        userAuthService.save(user.getUserAuth());
+        userService.save(user);
+        emailService.sendEmailResetAsync(user);
         return true;
     }
 }

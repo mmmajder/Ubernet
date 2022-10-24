@@ -1,4 +1,4 @@
-package com.example.ubernet.controller;
+package com.example.ubernet.model;
 
 import java.util.Collection;
 import java.util.Map;

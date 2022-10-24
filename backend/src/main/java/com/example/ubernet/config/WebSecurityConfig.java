@@ -1,7 +1,7 @@
 package com.example.ubernet.config;
 
 
-import com.example.ubernet.controller.CustomOAuth2User;
+import com.example.ubernet.model.CustomOAuth2User;
 import com.example.ubernet.service.CustomOAuth2UserService;
 import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.TokenUtils;
@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;

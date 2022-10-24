@@ -1,17 +1,16 @@
 package com.example.ubernet.controller;
 
-import com.example.ubernet.dto.ChangePasswordDTO;
-import com.example.ubernet.dto.CreateUserDTO;
-import com.example.ubernet.dto.JwtAuthenticationRequest;
-import com.example.ubernet.dto.LoginResponseDTO;
+import com.example.ubernet.dto.*;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.AuthentificationService;
+import com.example.ubernet.utils.DTOMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
@@ -36,7 +35,7 @@ public class AuthController {
 
 //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
-    public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserDTO userDTO) {
+    public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
         User user = authentificationService.addUser(userDTO);
         if (user==null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
@@ -44,11 +43,31 @@ public class AuthController {
         return new ResponseEntity<>(user, HttpStatus.CREATED);
     }
 
+    @GetMapping("/verify/{code}")
+    public ResponseEntity<UserResponse> verifyUser(@PathVariable String code) {
+        User user = authentificationService.verify(code);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
+        }
+        UserResponse dto = DTOMapper.getUserResponse(user);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
+    }
+
+    @PutMapping("/reset-password/{email}")
+    public ResponseEntity<String> resetPassword(@PathVariable String email) throws MessagingException {
+        if (authentificationService.resetPassword(email)){
+            return new ResponseEntity<>("Successfully reset password", HttpStatus.OK);
+        }
+        return new ResponseEntity<>("There was a problem in resetting password", HttpStatus.CONFLICT);
+    }
+
     @PutMapping("/change-password")
     public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
         if (authentificationService.changePassword(changePasswordDTO)){
             return new ResponseEntity<>("Successfully changed password", HttpStatus.OK);
         }
-        return new ResponseEntity<>("There was a problem in changing of password", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("There was a problem in changing password", HttpStatus.CONFLICT);
     }
+
+
 }
