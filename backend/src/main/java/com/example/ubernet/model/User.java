@@ -1,12 +1,10 @@
 package com.example.ubernet.model;
 
-import com.example.ubernet.model.enums.Provider;
+import com.example.ubernet.model.enums.AuthProvider;
 import com.example.ubernet.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -38,7 +36,7 @@ public class User implements UserDetails {
     private Boolean isBlocked;
 
     @Enumerated(EnumType.STRING)
-    private Provider provider;
+    private AuthProvider provider;
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return getUserAuth().getRoles();

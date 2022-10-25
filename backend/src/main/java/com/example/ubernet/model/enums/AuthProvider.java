@@ -1,5 +1,5 @@
 package com.example.ubernet.model.enums;
 
-public enum Provider {
+public enum AuthProvider {
     LOCAL, GOOGLE, FACEBOOK
 }

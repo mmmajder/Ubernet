@@ -4,14 +4,12 @@ import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.model.ProfileUpdateRequest;
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
-import com.example.ubernet.model.enums.Provider;
+import com.example.ubernet.model.enums.AuthProvider;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
 import com.example.ubernet.repository.UserRepository;
 import com.example.ubernet.utils.DTOMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -109,7 +107,7 @@ public class UserService implements UserDetailsService {
         if (existUser.isEmpty()) {
             User newUser = new User();
             newUser.setEmail(email);
-            newUser.setProvider(Provider.GOOGLE);
+            newUser.setProvider(AuthProvider.GOOGLE);
             newUser.getUserAuth().setIsEnabled(true);
 
             userRepository.save(newUser);

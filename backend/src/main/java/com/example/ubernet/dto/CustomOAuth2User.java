@@ -1,4 +1,4 @@
-package com.example.ubernet.model;
+package com.example.ubernet.dto;
 
 import java.util.Collection;
 import java.util.Map;
