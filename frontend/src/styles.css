@@ -9,4 +9,47 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --yellow: #FFC107;
   --yellow-hover: #F0C000;
   --blue: #3f51b5;
+  --dark: #272d2d;
+  --gray: #8c8c8c;
+  --pink: #9C27B0;
+  --green: #23CE6B;
+  --white: #F6F8FF;
+  --border-radius: 12px;
+}
+
+.dashboard-background {
+  height: 100px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.scrollable {
+  overflow-y: scroll;
+  height: 250px;
+}
+
+::-webkit-scrollbar {
+  width: 20px;
+}
+
+::-webkit-scrollbar-track {
+  background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: #d6dee1;
+  border-radius: 20px;
+  border: 6px solid transparent;
+  background-clip: content-box;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background-color: #a8bbbf;
+}
+
+.profile-picture {
+  object-fit: cover;
+  height: 250px;
+  width: 250px;
+  border-radius: 5%;
 }

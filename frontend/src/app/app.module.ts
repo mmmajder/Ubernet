@@ -28,10 +28,15 @@ import {AuthService} from "./services/auth.service";
 import {GoogleLoginProvider, SocialLoginModule} from "angularx-social-login";
 import {RouterModule} from "@angular/router";
 import {LoginComponent} from "./views/homepage/components/login/login.component";
+import { NotFoundPageComponent } from './views/404/not-found-page/not-found-page.component';
+import {DriverModule} from "./views/driver/driver.module";
+import {CustomerModule} from "./views/customer/customer.module";
+import {AdminModule} from "./views/admin/admin.module";
 
 @NgModule({
   declarations: [
     AppComponent,
+    NotFoundPageComponent,
   ],
   imports: [
     BrowserModule,
@@ -62,6 +67,9 @@ import {LoginComponent} from "./views/homepage/components/login/login.component"
       {path: '**', component: LoginComponent}
     ]),
     BrowserAnimationsModule,
+    DriverModule,
+    CustomerModule,
+    AdminModule
   ],
   exports: [],
   providers: [{
