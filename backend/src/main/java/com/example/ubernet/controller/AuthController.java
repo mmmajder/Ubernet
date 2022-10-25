@@ -3,10 +3,12 @@ package com.example.ubernet.controller;
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.AuthentificationService;
+import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.DTOMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import javax.mail.MessagingException;
@@ -16,9 +18,11 @@ import javax.validation.Valid;
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
     private final AuthentificationService authentificationService;
+    private final UserService userService;
 
-    public AuthController(AuthentificationService authentificationService) {
+    public AuthController(AuthentificationService authentificationService, UserService userService) {
         this.authentificationService = authentificationService;
+        this.userService = userService;
     }
 
     @PostMapping("/login")
@@ -66,6 +70,16 @@ public class AuthController {
             return new ResponseEntity<>("Successfully changed password", HttpStatus.OK);
         }
         return new ResponseEntity<>("There was a problem in changing password", HttpStatus.CONFLICT);
+    }
+
+    @GetMapping("/whoami")
+    public ResponseEntity<UserResponse> loggedUser(Authentication authentication) {
+        User user = userService.getLoggedUser(authentication);
+        if (user == null) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        UserResponse dto = DTOMapper.getUserResponse(user);
+        return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
 

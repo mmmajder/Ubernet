@@ -1,11 +1,14 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.UserEditDTO;
+import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.UserService;
+import com.example.ubernet.utils.DTOMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -30,6 +33,5 @@ public class UserController {
         }
         return new ResponseEntity<>(userEditDTO, HttpStatus.OK);
     }
-
 
 }
