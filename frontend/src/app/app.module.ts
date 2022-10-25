@@ -25,6 +25,9 @@ import {NotificationsService} from "./services/notifications.service";
 import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
+import {GoogleLoginProvider, SocialLoginModule} from "angularx-social-login";
+import {RouterModule} from "@angular/router";
+import {LoginComponent} from "./views/homepage/components/login/login.component";
 
 @NgModule({
   declarations: [
@@ -52,11 +55,27 @@ import {AuthService} from "./services/auth.service";
     MatDialogModule,
     RestaurantsModule,
     RestaurantModule,
-    HomepageModule
+    HomepageModule,
+    SocialLoginModule,
+    RouterModule.forRoot([
+      {path: 'login', component: LoginComponent},
+      {path: '**', component: LoginComponent}
+    ]),
+    BrowserAnimationsModule,
   ],
-    exports: [
-    ],
-  providers: [RestaurantService, AuthService, NotificationsService, SocketService],
+  exports: [],
+  providers: [{
+    provide: 'SocialAuthServiceConfig',
+    useValue: {
+      autoLogin: true,
+      providers: [
+        {
+          id: GoogleLoginProvider.PROVIDER_ID,
+          provider: new GoogleLoginProvider('263337550240-ilitbfe2sqc3v0vlc61tiuu5bb3no8f6.apps.googleusercontent.com')
+        }
+      ]
+    }
+  }, RestaurantService, AuthService, NotificationsService, SocketService],
   bootstrap: [AppComponent]
 })
 export class AppModule {
