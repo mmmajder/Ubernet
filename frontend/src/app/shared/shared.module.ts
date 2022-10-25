@@ -8,17 +8,20 @@ import {MatButtonModule} from "@angular/material/button";
 import {NavbarStore} from "./stores/navbar.store";
 import {RestaurantsStore} from "./stores/restaurants.store";
 import {RestaurantStore} from "./stores/restaurant.store";
+import { SidenavComponent } from './sidenav/sidenav/sidenav.component';
+import {MatBadgeModule} from "@angular/material/badge";
 
 @NgModule({
-  declarations: [NavbarComponent],
+  declarations: [NavbarComponent, SidenavComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
     MatMenuModule,
     CommonModule,
-    MatButtonModule
+    MatButtonModule,
+    MatBadgeModule
   ],
-  exports: [NavbarComponent],
+  exports: [NavbarComponent, SidenavComponent],
   providers: [NavbarStore, RestaurantsStore, RestaurantStore]
 })
 export class SharedModule {

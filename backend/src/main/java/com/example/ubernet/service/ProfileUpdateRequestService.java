@@ -28,7 +28,7 @@ public class ProfileUpdateRequestService {
             return false;
         }
         ProfileUpdateRequest profileUpdateRequest = profileUpdateRequestOptional.get();
-        if (profileUpdateRequest.isProcessed()){
+        if (profileUpdateRequest.isProcessed()) {
             return false;
         }
         if (isAccepted) {
