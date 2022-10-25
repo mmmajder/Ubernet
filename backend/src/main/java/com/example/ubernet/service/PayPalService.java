@@ -33,10 +33,10 @@ public class PayPalService {
         transactions.add(transaction);
 
         Payer payer = new Payer();
-        payer.setPaymentMethod(method.toString());
+        payer.setPaymentMethod(method);
 
         Payment payment = new Payment();
-        payment.setIntent(intent.toString());
+        payment.setIntent(intent);
         payment.setPayer(payer);
         payment.setTransactions(transactions);
         RedirectUrls redirectUrls = new RedirectUrls();
