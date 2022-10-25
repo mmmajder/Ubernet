@@ -8,6 +8,8 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.sql.Timestamp;
+import java.time.Duration;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -23,7 +25,7 @@ public class Route {
     @Column(unique = true)
     private long id;
 
-    private LocalDate time;
+    private int time;
     private Double price;
     @OneToMany
     private List<Position> checkPoints;
