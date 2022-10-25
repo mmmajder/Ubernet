@@ -21,8 +21,8 @@ public class UserController {
     }
 
     @GetMapping(value = "/")
-    public User getUser(@RequestParam("email") String email) {
-        return userService.findByEmail(email);
+    public UserResponse getUser(@RequestParam("email") String email) {
+        return userService.getUser(email);
     }
 
     @PutMapping(consumes = "application/json")

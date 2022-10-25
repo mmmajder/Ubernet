@@ -1,6 +1,7 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.UserEditDTO;
+import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.model.ProfileUpdateRequest;
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
@@ -124,5 +125,13 @@ public class UserService implements UserDetailsService {
             return null;
         }
         return findByEmail(authentication.getName());
+    }
+
+    public UserResponse getUser(String email) {
+        User user = findByEmail(email);
+        if (user!=null) {
+            return DTOMapper.getUserResponse(user);
+        }
+        return null;
     }
 }
