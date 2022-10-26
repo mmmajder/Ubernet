@@ -49,7 +49,7 @@ public class ReviewController {
         return new ResponseEntity<>(reviewResponse, HttpStatus.OK);
     }
 
-    @GetMapping("/dtiverReviews/{rideId}")
+    @GetMapping("/driverReviews/{rideId}")
     public ResponseEntity<Set<ReviewResponse>> getDriverReviews(@PathVariable Long rideId) {
         Set<ReviewResponse> reviewResponse = reviewService.getDriverReviews(rideId);
         if (reviewResponse == null) {
