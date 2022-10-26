@@ -1,12 +1,12 @@
-<mat-card style="padding: 30px; border-radius: 20px;">
+<mat-card>
   <mat-card-content>
     <div style="text-align: center;">
-    <img src="assets/taxi.jpg" class="profile-picture" alt="profile-picture"/><br>
-    <button mat-raised-button color="primary" style="margin: 10px 0 10px 10px">Upload profile picture
-    </button>
-    <button mat-stroked-button color="primary" style="margin: 10px 10px 0 10px">
-      <mat-icon>delete</mat-icon>
-    </button>
+      <img src="assets/taxi.jpg" class="profile-picture" alt="profile-picture"/><br>
+      <button mat-raised-button color="primary" style="margin: 10px 0 10px 10px">Upload profile picture
+      </button>
+      <button mat-stroked-button color="primary" style="margin: 10px 10px 0 10px">
+        <mat-icon>delete</mat-icon>
+      </button>
     </div>
     <mat-form-field appearance="outline">
       <mat-label>Email</mat-label>
@@ -14,7 +14,7 @@
     </mat-form-field>
     <mat-form-field appearance="outline">
       <mat-label>Phone number</mat-label>
-      <input matInput type="number" [ngModel]="phoneNumber" [formControl]="phoneFormControl"
+      <input matInput type="tel" [ngModel]="phoneNumber" [formControl]="phoneFormControl"
              placeholder="Ex. +381 1234567">
       <mat-error *ngIf="phoneFormControl.hasError('required')">
         Phone number is <strong>required</strong>
@@ -42,6 +42,6 @@
       </mat-error>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" style="width: 100%; margin-top: -20px;">Update Account Settings</button>
+    <button mat-raised-button color="primary" style="width: 100%;">Update Account Settings</button>
   </mat-card-content>
 </mat-card>

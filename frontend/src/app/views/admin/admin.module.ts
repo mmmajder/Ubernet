@@ -14,28 +14,38 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
 import {AdminContainerComponent} from "./container/admin-container/admin-container.component";
+import { ChatContainerComponent } from './container/chat-container/chat-container.component';
+import { ListOfChatsComponent } from './components/list-of-chats/list-of-chats.component';
+import { ChatComponent } from './components/chat/chat.component';
+import {MatListModule} from "@angular/material/list";
+import { NewMessageComponent } from './components/new-message/new-message.component';
 
 @NgModule({
   declarations: [
-    AdminContainerComponent
+    AdminContainerComponent,
+    ChatContainerComponent,
+    ListOfChatsComponent,
+    ChatComponent,
+    NewMessageComponent
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatListModule,
+    ],
   exports: [
     AdminContainerComponent
   ]

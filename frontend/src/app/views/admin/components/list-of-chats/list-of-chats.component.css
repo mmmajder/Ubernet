@@ -1,0 +1,7 @@
+mat-list-item {
+  cursor: pointer;
+}
+
+mat-list-item:hover {
+  background: var(--light-gray);
+}

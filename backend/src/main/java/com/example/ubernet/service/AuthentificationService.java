@@ -41,7 +41,7 @@ public class AuthentificationService {
     }
 
     public User addUser(CreateUserDTO createUserDTO) {
-        if (userService.findByEmail(createUserDTO.getEmail())!=null) {
+        if (userService.findByEmail(createUserDTO.getEmail()) != null) {
             return null;
         }
         //TODO send emails
@@ -100,7 +100,7 @@ public class AuthentificationService {
 
     private LoginResponseDTO createAccessToken(User user) {
         String jwt = tokenUtils.generateToken(user);
-        int expiresIn = tokenUtils.getExpiredIn();
+        long expiresIn = tokenUtils.getExpiredIn();
         return new LoginResponseDTO(new UserTokenState(jwt, expiresIn), user.getRole());
     }
 
@@ -110,7 +110,7 @@ public class AuthentificationService {
 
     public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
         User user = userService.findByEmail(changePasswordDTO.getEmail());
-        if (user==null) {
+        if (user == null) {
             return false;
         }
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getPassword()));
@@ -118,4 +118,3 @@ public class AuthentificationService {
         return true;
     }
 }
-

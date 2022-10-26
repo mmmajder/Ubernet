@@ -5,8 +5,6 @@ import com.example.ubernet.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -34,7 +32,7 @@ public class User implements UserDetails {
     @OneToOne
     private UserAuth userAuth;
     private UserRole role;
-    //    private Image image;
+    private String profilePhoto;
     private Boolean isBlocked;
 
     @Enumerated(EnumType.STRING)

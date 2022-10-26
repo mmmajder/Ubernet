@@ -1,0 +1,12 @@
+<div class="scrollable">
+  <mat-list>
+    <mat-list-item *ngFor="let chat of chats">
+      <img class="avatar" style="margin-right: 10px" [src]='chat.profileImage' alt="avatar"/>
+      <div>
+        <div mat-line> {{chat.name}} </div>
+        <div mat-line style="font-size: 13px"> {{chat.lastMessage}} </div>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+  </mat-list>
+</div>

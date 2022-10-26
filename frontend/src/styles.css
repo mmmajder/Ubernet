@@ -11,6 +11,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   --blue: #3f51b5;
   --dark: #272d2d;
   --gray: #8c8c8c;
+  --light-gray: #f4f4f4;
   --pink: #9C27B0;
   --green: #23CE6B;
   --white: #F6F8FF;
@@ -52,4 +53,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
   height: 250px;
   width: 250px;
   border-radius: 5%;
+}
+
+mat-card {
+  padding: 30px;
+  border-radius: 20px;
+}
+
+.avatar {
+  height: 40px;
+  width: 40px;
+  border: none;
+  border-radius: 50%;
 }

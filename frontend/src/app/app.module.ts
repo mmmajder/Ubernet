@@ -60,7 +60,7 @@ import {AdminModule} from "./views/admin/admin.module";
     HomepageModule,
     DriverModule,
     CustomerModule,
-    AdminModule
+    AdminModule,
   ],
     exports: [
     ],
