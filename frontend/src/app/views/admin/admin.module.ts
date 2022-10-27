@@ -19,6 +19,8 @@ import { ListOfChatsComponent } from './components/list-of-chats/list-of-chats.c
 import { ChatComponent } from './components/chat/chat.component';
 import {MatListModule} from "@angular/material/list";
 import { NewMessageComponent } from './components/new-message/new-message.component';
+import {MatTooltipModule} from "@angular/material/tooltip";
+import { MessageComponent } from './components/message/message.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,8 @@ import { NewMessageComponent } from './components/new-message/new-message.compon
     ChatContainerComponent,
     ListOfChatsComponent,
     ChatComponent,
-    NewMessageComponent
+    NewMessageComponent,
+    MessageComponent
   ],
     imports: [
         MatToolbarModule,
@@ -45,6 +48,7 @@ import { NewMessageComponent } from './components/new-message/new-message.compon
         MatMenuModule,
         SharedModule,
         MatListModule,
+        MatTooltipModule,
     ],
   exports: [
     AdminContainerComponent

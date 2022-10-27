@@ -1,0 +1,21 @@
+.left {
+  background-color: var(--blue);
+  border-radius: var(--border-radius);
+  padding: 10px;
+  font-size: 14px;
+  color: #fff;
+  margin-left: 10px;
+}
+
+.right {
+  background-color: var(--light-gray);
+  border-radius: var(--border-radius);
+  padding: 10px;
+  font-size: 14px;
+  align-self: flex-end;
+}
+
+.message-tooltip {
+  font-size: 10px;
+  font-weight: 500;
+}
