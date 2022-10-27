@@ -16,7 +16,7 @@
       </mat-form-field>
       <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
         <mat-label>Phone number</mat-label>
-        <input matInput [ngModel]="phoneNumber" [formControl]="phoneFormControl"
+        <input matInput type="tel" [ngModel]="phoneNumber" [formControl]="phoneFormControl"
                placeholder="Ex. +381 1234567">
         <mat-error *ngIf="phoneFormControl.hasError('required')">
           Phone number is <strong>required</strong>

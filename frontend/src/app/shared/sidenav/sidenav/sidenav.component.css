@@ -15,15 +15,6 @@
   color: var(--gray);
 }
 
-.avatar {
-  height: 40px;
-  width: 40px;
-  border: none;
-  border-radius: 50%;
-  margin-left: 20px;
-  margin-right: 10px;
-}
-
 .example-spacer {
   flex: 1 1 auto;
 }

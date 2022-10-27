@@ -32,7 +32,7 @@ public class User implements UserDetails {
     @OneToOne
     private UserAuth userAuth;
     private UserRole role;
-    //    private Image image;
+    private String profilePhoto;
     private Boolean isBlocked;
 
     @Enumerated(EnumType.STRING)

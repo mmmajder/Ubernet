@@ -69,7 +69,7 @@ import {AdminModule} from "./views/admin/admin.module";
     BrowserAnimationsModule,
     DriverModule,
     CustomerModule,
-    AdminModule
+    AdminModule,
   ],
   exports: [],
   providers: [{

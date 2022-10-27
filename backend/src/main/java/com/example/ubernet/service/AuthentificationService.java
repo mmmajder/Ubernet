@@ -107,7 +107,7 @@ public class AuthentificationService {
 
     private LoginResponseDTO createAccessToken(User user) {
         String jwt = tokenUtils.generateToken(user);
-        int expiresIn = tokenUtils.getExpiredIn();
+        long expiresIn = tokenUtils.getExpiredIn();
         return new LoginResponseDTO(new UserTokenState(jwt, expiresIn), user.getRole());
     }
 
@@ -159,4 +159,3 @@ public class AuthentificationService {
 
 
 }
-
