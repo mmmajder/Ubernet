@@ -25,13 +25,13 @@ import {NotificationsService} from "./services/notifications.service";
 import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
-import {GoogleLoginProvider, SocialLoginModule} from "angularx-social-login";
-import {RouterModule} from "@angular/router";
-import {LoginComponent} from "./views/homepage/components/login/login.component";
-import { NotFoundPageComponent } from './views/404/not-found-page/not-found-page.component';
+import {GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule} from "angularx-social-login";
+import {NotFoundPageComponent} from './views/404/not-found-page/not-found-page.component';
 import {DriverModule} from "./views/driver/driver.module";
 import {CustomerModule} from "./views/customer/customer.module";
 import {AdminModule} from "./views/admin/admin.module";
+import {PopupService} from "./services/popup.service";
+
 
 @NgModule({
   declarations: [
@@ -62,29 +62,37 @@ import {AdminModule} from "./views/admin/admin.module";
     RestaurantModule,
     HomepageModule,
     SocialLoginModule,
-    RouterModule.forRoot([
-      {path: 'login', component: LoginComponent},
-      {path: '**', component: LoginComponent}
-    ]),
     BrowserAnimationsModule,
     DriverModule,
     CustomerModule,
     AdminModule,
   ],
   exports: [],
-  providers: [{
-    provide: 'SocialAuthServiceConfig',
-    useValue: {
-      autoLogin: true,
-      providers: [
-        {
-          id: GoogleLoginProvider.PROVIDER_ID,
-          provider: new GoogleLoginProvider('263337550240-ilitbfe2sqc3v0vlc61tiuu5bb3no8f6.apps.googleusercontent.com')
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '263337550240-ilitbfe2sqc3v0vlc61tiuu5bb3no8f6.apps.googleusercontent.com',
+              {
+                scope: 'profile email',
+                plugin_name: 'login' //you can use any name here
+              }
+            )
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
         }
-      ]
-    }
-  }, RestaurantService, AuthService, NotificationsService, SocketService],
+      } as SocialAuthServiceConfig,
+    },
+    RestaurantService, AuthService, NotificationsService, SocketService, PopupService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule {
 }

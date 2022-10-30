@@ -29,11 +29,8 @@ values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 1, 1, 1);
 
 insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
-values ('customer@gmail.com', 'Customville', false, false, 'Customer',
-        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 0, 'Customic', 1);
-
-values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 1, 1, 1);
+values ('ajder.milan2000@gmail.com', 'Customville', false, false, 'Customer',
+        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 1);
 
 update car set driver_email='driver@gmail.com' where id=1;
 
@@ -55,4 +52,4 @@ values ('2022-10-24 12:00', '2022-10-24 11:00', false, '2022-10-24 10:00', '2022
 update payment set ride_id=1 where id=1;
 
 insert into ride_customers(ride_id, customers_email)
-values (1, 'customer@gmail.com');
+values (1, 'ajder.milan2000@gmail.com');
