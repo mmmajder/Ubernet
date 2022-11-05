@@ -9,6 +9,8 @@ import com.example.ubernet.repository.ReviewRepository;
 import com.example.ubernet.utils.DTOMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
@@ -37,9 +39,18 @@ public class ReviewService {
         if (ride == null) {
             return null;
         }
+        if (pastThreeDays(ride)) {
+            return null;
+        }
         Review review = createReview(createReviewDTO);
         saveNewCarReview(ride, review);
         return DTOMapper.getReviewResponse(review);
+    }
+
+    private boolean pastThreeDays(Ride ride) {
+        LocalDateTime endOfRideTime = ride.getActualEnd();
+        LocalDateTime now = LocalDateTime.now();
+        return ChronoUnit.DAYS.between(endOfRideTime, now) > 3;
     }
 
     private void saveNewCarReview(Ride ride, Review review) {
@@ -52,7 +63,7 @@ public class ReviewService {
     private Review createReview(CreateReviewDTO createReviewDTO) {
         Review review = new Review();
         review.setComment(createReviewDTO.getComment());
-        Customer customer = customerService.findById(createReviewDTO.getClientId());
+        Customer customer = customerService.findByEmail(createReviewDTO.getClientEmail());
         review.setCustomer(customer);
         review.setRating(createReviewDTO.getRating());
         save(review);

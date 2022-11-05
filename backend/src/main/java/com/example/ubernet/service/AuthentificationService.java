@@ -30,9 +30,11 @@ public class AuthentificationService {
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
     private final EmailService emailService;
+    private final CustomerService customerService;
+    private final DriverService driverService;
 
 
-    public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService, EmailService emailService) {
+    public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService, EmailService emailService, CustomerService customerService, DriverService driverService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.tokenUtils = tokenUtils;
@@ -40,6 +42,8 @@ public class AuthentificationService {
         this.adminService = adminService;
         this.userAuthService = userAuthService;
         this.emailService = emailService;
+        this.customerService = customerService;
+        this.driverService = driverService;
     }
 
     public User addUser(CreateUserDTO createUserDTO) throws MessagingException {
@@ -58,7 +62,12 @@ public class AuthentificationService {
         user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
         user.setIsBlocked(false);
         user.setUserAuth(getUserAuth(user));
-        return adminService.save(user);
+        switch (createUserDTO.getUserRole()){
+            case CUSTOMER -> customerService.save((Customer) user);
+            case ADMIN -> adminService.save(user);
+            case DRIVER -> driverService.save((Driver) user);
+        }
+        return userService.save(user);
     }
 
     private UserAuth getUserAuth(User user) {

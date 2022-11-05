@@ -1,13 +1,13 @@
 package com.example.ubernet.model;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,9 +24,15 @@ public class Car {
     @OneToOne
     private Position position;
     @OneToOne
+    private Position destination;
+    @OneToOne
     private CarType carType;
     private Boolean isAvailable;
     @OneToOne
+    @JsonIgnore
     private Driver driver;
+
+    @OneToMany
+    private List<Position> futurePositions;
 
 }
