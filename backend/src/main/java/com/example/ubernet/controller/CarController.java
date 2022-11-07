@@ -58,6 +58,15 @@ public class CarController {
         return ResponseEntity.ok(DTOMapper.getCarResponse(car));
     }
 
+    @GetMapping("/position/{carId}")
+    public ResponseEntity<ActiveCarResponse> getPosition(@PathVariable Long carId) {
+        ActiveCarResponse car = carService.getPosition(carId);
+        if (car == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(car);
+    }
+
     @PutMapping("/position")
     public ResponseEntity<ActiveCarResponse> reachedDestination(@RequestBody Long carId) {
         ActiveCarResponse car = carService.reachedDestination(carId);

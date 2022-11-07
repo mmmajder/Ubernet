@@ -2,7 +2,8 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 import {MapService} from "../../../../services/map.service";
-import {tap} from "rxjs";
+import {Marker} from "leaflet";
+
 
 @Component({
   selector: 'app-map',
@@ -30,7 +31,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   });
 
 
-  private initMap(): any {
+  initMap(): any {
     var map = L.map('map').setView([45.267136, 19.833549], 11);
     var mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
@@ -44,7 +45,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   activeCars: any;
-  destinationPins=[];
+  pinsMap = new Map();
+  map: any;
+
 
   measureDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {  // generally used geo measurement function
     let R = 6378.137; // Radius of earth in KM
@@ -59,67 +62,108 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    var map = this.initMap();
+    this.map = this.initMap();
     this.mapService.getActiveCars().subscribe((data) => {
       this.activeCars = data;
       console.log(this.activeCars)
       this.activeCars.forEach((car: any) => {
-        var marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(map);
         let that = this
-        L.Routing.control({
-          waypoints: [
-            L.latLng(car.currentPosition.y, car.currentPosition.x),
-            L.latLng(car.destinations[0].y, car.destinations[0].x)
-          ]
-        }).on('routesfound', function (e) {
-          e.routes[0].instructions.splice(-1)
-          let numberOfCoordinates = 1
-          let distanceSlots: number[] = []
-          for (let i = 0; i < e.routes[0].coordinates.length; i++) {
-            if (i == 0) {
-              continue
-            }
-            let prevCoord = e.routes[0].coordinates[i - 1]
-            let coord = e.routes[0].coordinates[i]
-            let distance = that.measureDistance(coord.lat, coord.lng, prevCoord.lat, prevCoord.lng)
-            if (distance == 0) {
-              distanceSlots.push(numberOfCoordinates)
-              numberOfCoordinates = 0
-            }
-            numberOfCoordinates += 1
-          }
-
-          let timeSlots: number[] = []
-          for (let i = 0; i < distanceSlots.length; i++) {
-            for (let j = 0; j < distanceSlots[i]; j++) {
-              let time = e.routes[0].instructions[i].time / distanceSlots[i]
-              if (timeSlots.length == 0) {
-                timeSlots.push(time)
-              } else {
-                timeSlots.push(timeSlots[timeSlots.length - 1] + time)
-              }
-              timeSlots.push()
-            }
-          }
-          while (timeSlots.length < e.routes[0].coordinates.length) {
-            timeSlots.push(timeSlots[timeSlots.length - 1])
-          }
-
-          e.routes[0].coordinates.forEach(function (coord: any, index: any) {
-            setTimeout(function () {
-              marker.setLatLng([coord.lat, coord.lng]);
-              if (index == e.routes[0].coordinates.length - 1) {
-                console.log("car")
-                console.log(car.carId)
-                that.mapService.setNewPositionOfCar(car.carId).subscribe((data) => {
-                  console.log(data)
-                })
-              }
-            }, 10 * timeSlots[index])
-          })
-        }).addTo(map);
+        this.addRouteToMap.call(this, car, that);
       })
     })
+  }
+
+  addRouteToMap(car: any, that: this) {
+    var marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+    let positionPin = L.latLng(car.currentPosition.y, car.currentPosition.x)
+    let destinationPin = L.latLng(car.destinations[0].y, car.destinations[0].x)
+    this.pinsMap.set(car.carId, [positionPin, destinationPin])
+    L.Routing.control({
+      waypoints: [
+        positionPin,
+        destinationPin
+      ]
+    }).on('routesfound', function (e) {
+      let timeSlots = that.getTimeSlots(e, that);
+      while (timeSlots.length < e.routes[0].coordinates.length) {
+        timeSlots.push(timeSlots[timeSlots.length - 1])
+      }
+      e.routes[0].coordinates.forEach(function (coord: any, index: any) {
+        setTimeout(function () {
+          marker.setLatLng([coord.lat, coord.lng]);
+          if (index == e.routes[0].coordinates.length - 1) {
+            console.log("set new position for car")
+            console.log(car.carId)
+            that.setNewPosition(that, car);
+          }
+        }, 10 * timeSlots[index])
+      })
+    }).addTo(that.map);
+  }
+
+  setNewPosition(that: this, car: any) {
+    that.mapService.setNewPositionOfCar(car.carId).subscribe((data) => {
+      console.log(data)
+      let getNewDestination = () => {
+        that.mapService.getNewPositionOfCar(car.carId).subscribe((data) => {
+          console.log("Changed destination?")
+          console.log(data.currentPosition.id)
+          console.log(data.destinations[0].id)
+          if (data.currentPosition.id === data.destinations[0].id) {
+            getNewDestination()
+          } else {
+            let start = that.pinsMap.get(car.carId)[0];
+            let end = that.pinsMap.get(car.carId)[1];
+            start.setLatLng([end.lat, end.lng])
+            end.setLatLng([data.destinations[0].y, data.destinations[0].x])
+          }
+          // that.pinsMap.set
+        })
+      }
+      getNewDestination()
+      // that.pinsMap.set
+    })
+  }
+
+  getTimeSlots(e: any, that: any) {
+    e.routes[0].instructions.splice(-1)
+    let distanceSlots = that.getDistanceSlots(e, that);
+    return that.calculateTimeSlots(distanceSlots, e);
+  }
+
+  calculateTimeSlots(distanceSlots: any, e: any) {
+    let timeSlots: number[] = []
+    for (let i = 0; i < distanceSlots.length; i++) {
+      for (let j = 0; j < distanceSlots[i]; j++) {
+        let time = e.routes[0].instructions[i].time / distanceSlots[i]
+        if (timeSlots.length == 0) {
+          timeSlots.push(time)
+        } else {
+          timeSlots.push(timeSlots[timeSlots.length - 1] + time)
+        }
+        timeSlots.push()
+      }
+    }
+    return timeSlots;
+  }
+
+  getDistanceSlots(e: any, that: any) {
+    let numberOfCoordinates = 1
+    let distanceSlots: number[] = []
+    for (let i = 0; i < e.routes[0].coordinates.length; i++) {
+      if (i == 0) {
+        continue
+      }
+      let prevCoord = e.routes[0].coordinates[i - 1]
+      let coord = e.routes[0].coordinates[i]
+      let distance = that.measureDistance(coord.lat, coord.lng, prevCoord.lat, prevCoord.lng)
+      if (distance == 0) {
+        distanceSlots.push(numberOfCoordinates)
+        numberOfCoordinates = 0
+      }
+      numberOfCoordinates += 1
+    }
+    return distanceSlots;
   }
 
   ngAfterViewInit(): void {

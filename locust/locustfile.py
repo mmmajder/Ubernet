@@ -7,7 +7,7 @@ import json
 class MyTaskSet(HttpUser):
     # host = "http://localhost:8000"
     def createNewLocation(self):
-        center = [45.267136, 19.833549]
+        center = [45.26713, 19.833549]
         x = center[0] + (random() - 0.5) / 10
         y = center[1] + (random() - 0.5) / 10
         print([x, y])

@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {Restaurant} from "./restaurant.service";
 
 class Position {
+  id: number;
   x: number;
   y: number;
 }
@@ -11,7 +12,7 @@ class Position {
 class ActiveCarResponse {
   carId:number;
   driverEmail:string;
-  destination:Position;
+  destinations:Position[];
   currentPosition: Position;
 }
 
@@ -58,8 +59,12 @@ export class MapService {
     return this.http.get<ActiveCarResponse>(this.mapUrl + "/active", this.httpOptions);
   }
 
-  public setNewPositionOfCar(carId:number): Observable<ActiveCarResponse> {
-    return this.http.put<ActiveCarResponse>(this.mapUrl + "/position", carId, this.httpOptions);
+  public getNewPositionOfCar(carId:number) {
+    return this.http.get<ActiveCarResponse>(this.mapUrl + "/position/" + carId, this.httpOptions);
+  }
+
+  public setNewPositionOfCar(carId:number) {
+    return this.http.put<ActiveCarResponse>(this.mapUrl + "/position/", carId, this.httpOptions);
   }
 
   // public removeMenuItem(id: string, name: string) {

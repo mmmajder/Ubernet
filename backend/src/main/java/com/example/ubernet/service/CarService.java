@@ -94,6 +94,7 @@ public class CarService {
         for (Position position : setNewDestinationDTO.getNewDestinations()) {
             positionService.save(position);
         }
+        car.setPosition(car.getDestinations().get(0));
         car.setDestinations(setNewDestinationDTO.getNewDestinations());
         return carRepository.save(car);
     }
@@ -125,4 +126,14 @@ public class CarService {
         save(car);
         return getActiveAvailableCar(car);
     }
+
+    public ActiveCarResponse getPosition(Long carId) {
+        Car car = findById(carId);
+        if (car == null) {
+            return null;
+        }
+        return getActiveAvailableCar(car);
+    }
+
+
 }
