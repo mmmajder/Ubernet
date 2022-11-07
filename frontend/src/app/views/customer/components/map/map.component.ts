@@ -2,7 +2,6 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 import {MapService} from "../../../../services/map.service";
-import {Marker} from "leaflet";
 
 
 @Component({
@@ -105,23 +104,19 @@ export class MapComponent implements AfterViewInit, OnInit {
     that.mapService.setNewPositionOfCar(car.carId).subscribe((data) => {
       console.log(data)
       let getNewDestination = () => {
-        that.mapService.getNewPositionOfCar(car.carId).subscribe((data) => {
+        that.mapService.getCarById(car.carId).subscribe((newCarData) => {
           console.log("Changed destination?")
-          console.log(data.currentPosition.id)
-          console.log(data.destinations[0].id)
-          if (data.currentPosition.id === data.destinations[0].id) {
+          console.log(newCarData)
+          console.log(newCarData.currentPosition.id)
+          console.log(newCarData.destinations[0].id)
+          if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
             getNewDestination()
           } else {
-            let start = that.pinsMap.get(car.carId)[0];
-            let end = that.pinsMap.get(car.carId)[1];
-            start.setLatLng([end.lat, end.lng])
-            end.setLatLng([data.destinations[0].y, data.destinations[0].x])
+            that.addRouteToMap(newCarData, that)
           }
-          // that.pinsMap.set
         })
       }
       getNewDestination()
-      // that.pinsMap.set
     })
   }
 

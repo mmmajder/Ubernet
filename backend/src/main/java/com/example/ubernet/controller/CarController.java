@@ -58,15 +58,6 @@ public class CarController {
         return ResponseEntity.ok(DTOMapper.getCarResponse(car));
     }
 
-    @GetMapping("/position/{carId}")
-    public ResponseEntity<ActiveCarResponse> getPosition(@PathVariable Long carId) {
-        ActiveCarResponse car = carService.getPosition(carId);
-        if (car == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(car);
-    }
-
     @PutMapping("/position")
     public ResponseEntity<ActiveCarResponse> reachedDestination(@RequestBody Long carId) {
         ActiveCarResponse car = carService.reachedDestination(carId);
@@ -76,25 +67,13 @@ public class CarController {
         return ResponseEntity.ok(car);
     }
 
-
-
-//    @PutMapping("/future-positions")
-//    public ResponseEntity<String> setFuturePositions(@Valid @RequestBody FuturePositionsDTO futurePositionsDTO) {
-//        Car car = carService.setFuturePositions(futurePositionsDTO);
-//        if (car == null) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//        return ResponseEntity.ok("Successfully added future positions");
-//    }
-
-
-//    @PutMapping("/positions")
-//    public ResponseEntity<> updatePositions(@Valid @RequestBody SetNewDestinationDTO setNewDestinationDTO) {
-//        Car car = carService.setNewDestination(setNewDestinationDTO);
-//        if (car == null) {
-//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-//        }
-//        return ResponseEntity.ok(DTOMapper.getCarResponse(car));
-//    }
+    @GetMapping("/{carId}")
+    public ResponseEntity<ActiveCarResponse> getCarById(@PathVariable Long carId) {
+        ActiveCarResponse car = carService.getPosition(carId);
+        if (car == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(car);
+    }
 
 }
