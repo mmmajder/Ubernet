@@ -23,16 +23,13 @@ public class Car {
     private Boolean deleted=false;
     @OneToOne
     private Position position;
-    @OneToOne
-    private Position destination;
+    @OneToMany
+    private List<Position> destinations;
     @OneToOne
     private CarType carType;
     private Boolean isAvailable;
     @OneToOne
     @JsonIgnore
     private Driver driver;
-
-    @OneToMany
-    private List<Position> futurePositions;
 
 }

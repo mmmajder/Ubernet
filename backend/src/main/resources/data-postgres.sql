@@ -36,12 +36,13 @@ values (false, 45.267136, 19.833549),
 --        (false, 45.287136, 19.833549),
 --        (false, 45.287136, 19.863549);
 
-insert into car (deleted, is_available, car_type_id, position_id, destination_id)
-values (false, true, 1, 1, 2);
+insert into car (deleted, is_available, car_type_id, position_id)
+values (false, true, 1, 1);
 --        (false, true, 2, 3, 4),
 --        (false, true, 3, 5, 6);
 
-
+insert into car_destinations(car_id, destinations_id)
+values (1, 2);
 
 insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, driver_daily_activity_id, car_id)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',

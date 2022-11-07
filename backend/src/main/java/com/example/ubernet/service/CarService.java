@@ -1,11 +1,9 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.*;
-import com.example.ubernet.model.Car;
-import com.example.ubernet.model.CarType;
-import com.example.ubernet.model.Driver;
-import com.example.ubernet.model.User;
+import com.example.ubernet.model.*;
 import com.example.ubernet.repository.CarRepository;
+import com.example.ubernet.utils.DTOMapper;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -79,7 +77,7 @@ public class CarService {
         ActiveCarResponse activeAvailableCarResponse = new ActiveCarResponse();
         activeAvailableCarResponse.setCarId(car.getId());
         activeAvailableCarResponse.setDriverEmail(car.getDriver().getEmail());
-        activeAvailableCarResponse.setDestination(car.getDestination());
+        activeAvailableCarResponse.setDestinations(car.getDestinations());
         activeAvailableCarResponse.setCurrentPosition(car.getPosition());
         return activeAvailableCarResponse;
     }
@@ -93,16 +91,18 @@ public class CarService {
     }
 
     private Car setDestination(SetNewDestinationDTO setNewDestinationDTO, Car car) {
-        positionService.save(setNewDestinationDTO.getNewDestination());
-        car.setDestination(setNewDestinationDTO.getNewDestination());
+        for (Position position : setNewDestinationDTO.getNewDestinations()) {
+            positionService.save(position);
+        }
+        car.setDestinations(setNewDestinationDTO.getNewDestinations());
         return carRepository.save(car);
     }
 
-    public Car setFuturePositions(FuturePositionsDTO futurePositionsDTO) {
-        Car car = findById(futurePositionsDTO.getCarId());
-        car.setFuturePositions(futurePositionsDTO.getPositions());
-        return save(car);
-    }
+//    public Car setFuturePositions(FuturePositionsDTO futurePositionsDTO) {
+//        Car car = findById(futurePositionsDTO.getCarId());
+//        car.setFuturePositions(futurePositionsDTO.getPositions());
+//        return save(car);
+//    }
 
     public List<ActiveCarResponse> getActiveCars() {
         List<Car> cars = carRepository.findActiveCars();
@@ -111,5 +111,18 @@ public class CarService {
             carResponses.add(getActiveAvailableCar(car));
         }
         return carResponses;
+    }
+
+    public ActiveCarResponse reachedDestination(Long carId) {
+        Car car = findById(carId);
+        if (car == null) {
+            return null;
+        }
+        car.setPosition(car.getDestinations().get(0));
+        if (car.getDestinations().size() != 1) {
+            car.getDestinations().remove(0);
+        }
+        save(car);
+        return getActiveAvailableCar(car);
     }
 }

@@ -13,6 +13,7 @@ import javax.validation.Valid;
 import java.util.List;
 
 @RestController
+@CrossOrigin("*")
 @RequestMapping(value = "/car", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CarController {
     private final CarService carService;
@@ -57,14 +58,25 @@ public class CarController {
         return ResponseEntity.ok(DTOMapper.getCarResponse(car));
     }
 
-    @PutMapping("/future-positions")
-    public ResponseEntity<String> setFuturePositions(@Valid @RequestBody FuturePositionsDTO futurePositionsDTO) {
-        Car car = carService.setFuturePositions(futurePositionsDTO);
+    @PutMapping("/position")
+    public ResponseEntity<ActiveCarResponse> reachedDestination(@RequestBody Long carId) {
+        ActiveCarResponse car = carService.reachedDestination(carId);
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok("Successfully added future positions");
+        return ResponseEntity.ok(car);
     }
+
+
+
+//    @PutMapping("/future-positions")
+//    public ResponseEntity<String> setFuturePositions(@Valid @RequestBody FuturePositionsDTO futurePositionsDTO) {
+//        Car car = carService.setFuturePositions(futurePositionsDTO);
+//        if (car == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        return ResponseEntity.ok("Successfully added future positions");
+//    }
 
 
 //    @PutMapping("/positions")

@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
+import {Restaurant} from "./restaurant.service";
 
 class Position {
   x: number;
@@ -50,12 +51,21 @@ export class MapService {
   };
 
   constructor(private http: HttpClient) {
-    this.mapUrl = 'http://localhost:8000/car/active';
+    this.mapUrl = 'http://localhost:8000/car';
   }
 
   public getActiveCars(): Observable<ActiveCarResponse> {
-    return this.http.get<ActiveCarResponse>(this.mapUrl, this.httpOptions);
+    return this.http.get<ActiveCarResponse>(this.mapUrl + "/active", this.httpOptions);
   }
+
+  public setNewPositionOfCar(carId:number): Observable<ActiveCarResponse> {
+    return this.http.put<ActiveCarResponse>(this.mapUrl + "/position", carId, this.httpOptions);
+  }
+
+  // public removeMenuItem(id: string, name: string) {
+  //   return this.http.post<Restaurant>(this.createRestaurantUrl + '/' + id + '/remove-menu-item', name, this.httpOptions);
+  // }
+
   /*
     public findById(id: string): Observable<Restaurant> {
       return this.http.get<Restaurant>(this.createRestaurantUrl + '/' + id, this.httpOptions);

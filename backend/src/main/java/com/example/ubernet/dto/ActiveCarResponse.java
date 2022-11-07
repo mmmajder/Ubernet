@@ -5,12 +5,14 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 public class ActiveCarResponse {
     private long carId;
     private String driverEmail;
-    private Position destination;
+    private List<Position> destinations;
     private Position currentPosition;
 }
