@@ -70,7 +70,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       })
     })
   }
-  deleteOldPins(car:any) {
+
+  deleteOldPins(car: any) {
     console.log("AAA")
     if (this.pinsMap.has(car.carId)) {
       console.log("BBB")
@@ -79,8 +80,17 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
   }
 
+
   addRouteToMap(car: any, that: this) {
-    let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+
+    let content = L.DomUtil.create("div", "myPopup");
+    content.innerHTML = `${car.carId}
+      <br> <a style="font-size: small" href="/Details">Click here for details</a>`;
+    content.onclick = (e) => {
+      alert("Maaajmune")
+      e.preventDefault()
+    };
+    let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup(content);
     let positionPin = L.latLng(car.currentPosition.y, car.currentPosition.x)
     let destinationPin = L.latLng(car.destinations[0].y, car.destinations[0].x)
     this.deleteOldPins(car)
