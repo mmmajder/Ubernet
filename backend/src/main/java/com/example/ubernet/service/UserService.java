@@ -113,4 +113,8 @@ public class UserService implements UserDetailsService {
         }
 
     }
+
+    public boolean doesUserExist(String email){
+        return findByEmail(email) != null;
+    }
 }
