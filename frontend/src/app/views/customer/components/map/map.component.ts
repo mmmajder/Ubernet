@@ -31,8 +31,8 @@ export class MapComponent implements AfterViewInit, OnInit {
 
 
   initMap(): any {
-    var map = L.map('map').setView([45.267136, 19.833549], 11);
-    var mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
+    let map = L.map('map').setView([45.267136, 19.833549], 11);
+    let mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: 'Leaflet &copy; ' + mapLink + ', contribution',
       maxZoom: 18
@@ -46,7 +46,6 @@ export class MapComponent implements AfterViewInit, OnInit {
   activeCars: any;
   pinsMap = new Map();
   map: any;
-
 
   measureDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {  // generally used geo measurement function
     let R = 6378.137; // Radius of earth in KM
@@ -64,20 +63,28 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.map = this.initMap();
     this.mapService.getActiveCars().subscribe((data) => {
       this.activeCars = data;
-      console.log(this.activeCars)
+      // console.log(this.activeCars)
       this.activeCars.forEach((car: any) => {
         let that = this
         this.addRouteToMap.call(this, car, that);
       })
     })
   }
+  deleteOldPins(car:any) {
+    console.log("AAA")
+    if (this.pinsMap.has(car.carId)) {
+      console.log("BBB")
+      this.map.removeLayer(this.pinsMap.get(car.carId)[0])
+      this.map.removeControl(this.pinsMap.get(car.carId)[1])
+    }
+  }
 
   addRouteToMap(car: any, that: this) {
-    var marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+    let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
     let positionPin = L.latLng(car.currentPosition.y, car.currentPosition.x)
     let destinationPin = L.latLng(car.destinations[0].y, car.destinations[0].x)
-    this.pinsMap.set(car.carId, [positionPin, destinationPin])
-    L.Routing.control({
+    this.deleteOldPins(car)
+    let route = L.Routing.control({
       waypoints: [
         positionPin,
         destinationPin
@@ -91,24 +98,25 @@ export class MapComponent implements AfterViewInit, OnInit {
         setTimeout(function () {
           marker.setLatLng([coord.lat, coord.lng]);
           if (index == e.routes[0].coordinates.length - 1) {
-            console.log("set new position for car")
-            console.log(car.carId)
+            // console.log("set new position for car")
+            // console.log(car.carId)
             that.setNewPosition(that, car);
           }
-        }, 10 * timeSlots[index])
+        }, 100 * timeSlots[index])
       })
     }).addTo(that.map);
+    this.pinsMap.set(car.carId, [marker, route])
   }
 
   setNewPosition(that: this, car: any) {
     that.mapService.setNewPositionOfCar(car.carId).subscribe((data) => {
-      console.log(data)
+      // console.log(data)
       let getNewDestination = () => {
         that.mapService.getCarById(car.carId).subscribe((newCarData) => {
-          console.log("Changed destination?")
-          console.log(newCarData)
-          console.log(newCarData.currentPosition.id)
-          console.log(newCarData.destinations[0].id)
+          // console.log("Changed destination?")
+          // console.log(newCarData)
+          // console.log(newCarData.currentPosition.id)
+          // console.log(newCarData.destinations[0].id)
           if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
             getNewDestination()
           } else {

@@ -30,8 +30,8 @@ class MyTaskSet(HttpUser):
             if (car["destinations"][0]["x"] == car["currentPosition"]["x"]) and \
                     (car["destinations"][0]["y"] == car["currentPosition"]["y"]):
                 print("yea")
-                new_destination = {"carId": 1, "newDestinations": [{"y": center[0] + (random() - 0.5) / 10,
-                                                                    "x": center[1] + (random() - 0.5) / 10}]}
+                new_destination = {"carId": 1, "newDestinations": [{"y": car["destinations"][-1]["y"] + (random() - 0.5) / 200,
+                                                                    "x": car["destinations"][-1]["x"] + (random() - 0.5) / 200}]}
                 self.client.put("/car/new-destination", json=new_destination)
 
     # @task
