@@ -43,7 +43,7 @@ public class MessageService {
         return message;
     }
 
-    public List<Message> getUserChat(String email){
+    public List<Message> getClientMessages(String email){
         User user = userService.findByEmail(email);
 
         return messageRepository.findByClient(user);

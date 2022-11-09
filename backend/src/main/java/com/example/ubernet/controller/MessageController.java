@@ -1,7 +1,9 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.MessageDTO;
+import com.example.ubernet.dto.MessageResponse;
 import com.example.ubernet.model.Message;
+import com.example.ubernet.model.StringResponse;
 import com.example.ubernet.service.MessageService;
 import com.example.ubernet.service.ProfileUpdateRequestService;
 import com.example.ubernet.service.UserService;
@@ -13,7 +15,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/chat", produces = MediaType.APPLICATION_JSON_VALUE)
+@CrossOrigin(origins="*")
+@RequestMapping(value = "/messages", produces = MediaType.APPLICATION_JSON_VALUE)
 public class MessageController {
 
     private final MessageService messageService;
@@ -36,13 +39,20 @@ public class MessageController {
         return new ResponseEntity<>("Successfully sent message.", HttpStatus.OK);
     }
 
-    @GetMapping
-    public ResponseEntity<List<Message>> getMessages(@RequestParam String email) {
+    @GetMapping(value = "/{email}")
+    public ResponseEntity<List<MessageResponse>> getMessages(@PathVariable String email) {
         if (!userService.doesUserExist(email))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
-        List<Message> chat =  messageService.getUserChat(email);
-        return new ResponseEntity<>(chat, HttpStatus.OK);
+        List<Message> messages =  messageService.getClientMessages(email);
+
+        return new ResponseEntity<>(messageService.transformIntoResponses(messages), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "/test")
+    public ResponseEntity<StringResponse> getMessages() {
+        StringResponse r = new StringResponse("Success");
+        return new ResponseEntity<>(r, HttpStatus.OK);
     }
 
 }

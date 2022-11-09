@@ -1,4 +1,5 @@
 import {Component, OnInit} from '@angular/core';
+import {MessageService} from "../../../../services/message.service";
 
 @Component({
   selector: 'app-chat',
@@ -31,10 +32,30 @@ export class ChatComponent implements OnInit {
       "type": "left"
     },];
 
-  constructor() {
-  }
+  constructor(private messageService: MessageService) {}
+
+  // messageService: MessageService
+  //
+  // constructor(messageService: MessageService) {
+  //   this.messageService = messageService;
+  // }
+
+  messagesFromServer: any;
+  testStr: any;
 
   ngOnInit(): void {
-  }
+    console.log("tu samm");
 
+    this.messageService.getTest().subscribe((data) => {
+      this.testStr = data;
+      console.log(this.testStr);
+    });
+
+    console.log("tu samm2");
+
+    this.messageService.getMessages("petar@gmail.com").subscribe((data) => {
+      this.messagesFromServer = data;
+      console.log(this.messagesFromServer);
+    });
+  }
 }

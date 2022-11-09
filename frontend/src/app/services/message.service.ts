@@ -8,12 +8,6 @@ class Message {
   isSentByAdmin!: boolean;
   content!: string;
   time!: string; // "dd.MM.yyyy. hh:mm"
-
-  private String clientEmail;
-  private String adminEmail;
-  private boolean isSentByAdmin;
-  private String content;
-  private LocalDateTime time;
 }
 
 @Injectable({
@@ -31,12 +25,16 @@ export class MessageService {
   };
 
   constructor(private http: HttpClient) {
-    this.messageUrl = 'http://localhost:8000/chat';
+    this.messageUrl = 'http://localhost:8000/messages';
   }
 
   // for user
-  public getUserMessages(): Observable<Message> {
-    return this.http.get<ActiveCarResponse>(this.mapUrl + "/active", this.httpOptions);
+  public getMessages(clientEmail:string){
+    return this.http.get(this.messageUrl + "/" + clientEmail, this.httpOptions);
+  }
+
+  public getTest() {
+    return this.http.get(this.messageUrl + "/test" , this.httpOptions);
   }
 
   // for admin
