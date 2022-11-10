@@ -3,7 +3,6 @@ import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 import {MapService} from "../../../../services/map.service";
 
-
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
@@ -38,6 +37,23 @@ export class MapComponent implements AfterViewInit, OnInit {
       maxZoom: 18
     }).addTo(map);
     return map;
+  }
+
+  address: string;
+  onSubmit() {
+    return this.address;
+  }
+
+  results: string
+  addressArr:any
+
+  findAddress() {
+    var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + this.address
+    fetch(url)
+      .then(response => response.json())
+      .then(data => this.addressArr = data)
+      .then(show => L.marker([this.addressArr[0].lat, this.addressArr[0].lon], {icon: this.greenIcon}).addTo(this.map))
+      .catch(err => console.log(err))
   }
 
   constructor(private mapService: MapService) {

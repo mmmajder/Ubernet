@@ -1,10 +1,59 @@
 <head>
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css" />
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 </head>
-<div class="map-container">
-  <div class="map-frame">
-    <div id="map"></div>
+<!--  <mat-card class="example-card destination-input">-->
+<!--    <input matInput #message maxlength="256" placeholder="address" [(ngModel)]="address">-->
+<!--    <br>-->
+<!--    <button mat-raised-button color="primary" (click)="findAddress()">Search</button>-->
+<!--    <div id="results">{{results}}</div>-->
+<!--  </mat-card>-->
+<div>
+  <div class="map-container">
+    <div class="map-frame">
+      <div id="map">
+      </div>
+    </div>
   </div>
+  <mat-card class="destination-input">
+    <mat-card-header>
+      <mat-card-title>Directions</mat-card-title>
+      <div style="flex: 1">
+        <div class="header-right">
+          <label>Clear</label>
+          <button mat-icon-button class="example-icon favorite-icon"
+                  aria-label="Example icon-button with heart icon">
+            <mat-icon>map_marker_plus_outline</mat-icon>
+          </button>
+        </div>
+      </div>
+    </mat-card-header>
+    <form class="form">
+      <div class="destination">
+        <input type="text" placeholder="From:">
+        <button mat-icon-button class="example-icon favorite-icon" style="float: right"
+                aria-label="Example icon-button with heart icon">
+          <mat-icon>map_marker_minus_outline</mat-icon>
+        </button>
+      </div>
+      <div class="destination">
+        <input type="text" placeholder="To:">
+        <button mat-icon-button class="example-icon favorite-icon btn-padding" style="float: right"
+                aria-label="Example icon-button with heart icon">
+          <mat-icon>map_marker_minus_outline</mat-icon>
+        </button>
+      </div>
+    </form>
+    <hr>
+    <mat-card-content>
+      <p>
+        Estimated time:
+      </p>
+      <p>
+        Estimated price:
+      </p>
+    </mat-card-content>
+  </mat-card>
 </div>
+
