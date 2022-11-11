@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {MatMenuTrigger} from "@angular/material/menu";
 
 @Component({
   selector: 'app-sidenav',
@@ -8,6 +9,11 @@ import { Component, OnInit } from '@angular/core';
 export class SidenavComponent implements OnInit {
 
   isActive: boolean = false;
+  @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
+
+  someMethod() {
+    this.trigger?.openMenu();
+  }
 
   constructor() { }
 

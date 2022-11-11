@@ -8,22 +8,34 @@ import {MatButtonModule} from "@angular/material/button";
 import {NavbarStore} from "./stores/navbar.store";
 import {RestaurantsStore} from "./stores/restaurants.store";
 import {RestaurantStore} from "./stores/restaurant.store";
-import { SidenavComponent } from './sidenav/sidenav/sidenav.component';
+import {SidenavComponent} from './sidenav/sidenav/sidenav.component';
 import {MatBadgeModule} from "@angular/material/badge";
+import {UserChatComponent} from "./user-chat/user-chat.component";
+import {MatListModule} from "@angular/material/list";
+import {MessageComponent} from "./message/message.component";
+import {NewMessageComponent} from "./new-message/new-message.component";
+import {MatTooltipModule} from "@angular/material/tooltip";
+import {FormsModule} from "@angular/forms";
+import {MatFormFieldModule} from "@angular/material/form-field";
+import {MatInputModule} from "@angular/material/input";
 
 @NgModule({
-  declarations: [NavbarComponent, SidenavComponent],
+  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
     MatMenuModule,
     CommonModule,
     MatButtonModule,
-    MatBadgeModule
+    MatBadgeModule,
+    MatListModule,
+    MatTooltipModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
   ],
-  exports: [NavbarComponent, SidenavComponent],
+  exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent],
   providers: [NavbarStore, RestaurantsStore, RestaurantStore]
 })
 export class SharedModule {
-
 }

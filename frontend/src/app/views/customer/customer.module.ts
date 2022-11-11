@@ -22,6 +22,7 @@ import { ProfileCustomerContainerComponent } from './container/profile-customer-
 import {MatTabsModule} from "@angular/material/tabs";
 import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
 import {ChangePasswordComponent} from "./components/profile/change-password/change-password.component";
+import {AdminModule} from "../admin/admin.module";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,7 @@ import {ChangePasswordComponent} from "./components/profile/change-password/chan
     ProfileDataComponent,
     ProfileCustomerContainerComponent,
     CreditCardComponent,
-    ChangePasswordComponent
+    ChangePasswordComponent,
   ],
   imports: [
     MatToolbarModule,
@@ -51,9 +52,11 @@ import {ChangePasswordComponent} from "./components/profile/change-password/chan
     SharedModule,
     MatListModule,
     MatTabsModule,
+    AdminModule,
   ],
   exports: [
-    DashboardCustomerContainerComponent
+    DashboardCustomerContainerComponent,
+    ProfileDataComponent,
   ]
 })
 export class CustomerModule {

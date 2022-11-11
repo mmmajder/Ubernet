@@ -2,10 +2,10 @@ import {Component, OnInit} from '@angular/core';
 
 @Component({
   selector: 'app-chat',
-  templateUrl: './chat.component.html',
-  styleUrls: ['./chat.component.css']
+  templateUrl: './admin-chat.component.html',
+  styleUrls: ['./admin-chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class AdminChatComponent implements OnInit {
   messages = [{
     "profileImage": "assets/taxi.jpg",
     "text": "E imao sam pitanje...",

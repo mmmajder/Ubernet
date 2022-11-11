@@ -14,44 +14,48 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
 import {AdminContainerComponent} from "./container/admin-container/admin-container.component";
-import { ChatContainerComponent } from './container/chat-container/chat-container.component';
-import { ListOfChatsComponent } from './components/list-of-chats/list-of-chats.component';
-import { ChatComponent } from './components/chat/chat.component';
+import {ChatContainerComponent} from './container/chat-container/chat-container.component';
+import {ListOfChatsComponent} from './components/list-of-chats/list-of-chats.component';
+import {AdminChatComponent} from './components/admin-chat/admin-chat.component';
 import {MatListModule} from "@angular/material/list";
-import { NewMessageComponent } from './components/new-message/new-message.component';
 import {MatTooltipModule} from "@angular/material/tooltip";
-import { MessageComponent } from './components/message/message.component';
+import {DriverRegistartionComponent} from './components/driver-registartion/driver-registartion.component';
+import {DriversComponent} from './container/drivers/drivers.component';
+import {MatTabsModule} from "@angular/material/tabs";
+import {DriversListComponent} from './components/drivers-list/drivers-list.component';
 
 @NgModule({
   declarations: [
     AdminContainerComponent,
     ChatContainerComponent,
     ListOfChatsComponent,
-    ChatComponent,
-    NewMessageComponent,
-    MessageComponent
+    AdminChatComponent,
+    DriverRegistartionComponent,
+    DriversComponent,
+    DriversListComponent,
   ],
-    imports: [
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
-        MatTableModule,
-        MatCardModule,
-        MatSortModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDialogModule,
-        FormsModule,
-        CommonModule,
-        MatSnackBarModule,
-        ReactiveFormsModule,
-        MatMenuModule,
-        SharedModule,
-        MatListModule,
-        MatTooltipModule,
-    ],
+  imports: [
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTableModule,
+    MatCardModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDialogModule,
+    FormsModule,
+    CommonModule,
+    MatSnackBarModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    SharedModule,
+    MatListModule,
+    MatTooltipModule,
+    MatTabsModule,
+  ],
   exports: [
-    AdminContainerComponent
+    AdminContainerComponent,
   ]
 })
 export class AdminModule {
