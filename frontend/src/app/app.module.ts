@@ -31,6 +31,8 @@ import {DriverModule} from "./views/driver/driver.module";
 import {CustomerModule} from "./views/customer/customer.module";
 import {AdminModule} from "./views/admin/admin.module";
 import {PopupService} from "./services/popup.service";
+import { SearchDirectionsComponent } from './views/unauthenticated/components/search-directions/search-directions.component';
+import {UnauthenticatedModule} from "./views/unauthenticated/unauthenticated.module";
 
 
 @NgModule({
@@ -66,8 +68,10 @@ import {PopupService} from "./services/popup.service";
     DriverModule,
     CustomerModule,
     AdminModule,
+    UnauthenticatedModule
   ],
-  exports: [],
+  exports: [
+  ],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',

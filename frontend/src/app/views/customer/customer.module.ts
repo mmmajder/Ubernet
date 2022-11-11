@@ -23,6 +23,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
 import {ChangePasswordComponent} from "./components/profile/change-password/change-password.component";
 import { MapComponent } from './components/map/map.component';
+import {UnauthenticatedModule} from "../unauthenticated/unauthenticated.module";
 
 @NgModule({
   declarations: [
@@ -53,6 +54,7 @@ import { MapComponent } from './components/map/map.component';
     SharedModule,
     MatListModule,
     MatTabsModule,
+    UnauthenticatedModule,
   ],
   exports: [
     DashboardCustomerContainerComponent,

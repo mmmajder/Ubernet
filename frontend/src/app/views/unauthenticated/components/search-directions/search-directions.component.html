@@ -1,0 +1,43 @@
+<mat-card class="destination-input">
+  <mat-card-header>
+    <mat-card-title>Directions</mat-card-title>
+    <div style="flex: 1">
+      <div class="header-right">
+        <label style="margin-right: 15px">Clear</label>
+        <mat-icon (click)="addNewDestination()">add_location_alt</mat-icon>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <ul>
+      <li style="list-style-type: none;" *ngFor="let destination of destinations">
+
+        <div class="destination">
+          <mat-form-field appearance="outline" style="width: 85%">
+            <mat-label *ngIf="destination.number==1">From:</mat-label>
+            <mat-label *ngIf="destination.number==destinations.length">To:</mat-label>
+            <mat-label *ngIf="destination.number!=1 && destination.number!=destinations.length">
+              Stop {{destination.number}}:
+            </mat-label>
+            <input matInput>
+          </mat-form-field>
+          <mat-icon style="margin-left: 5px" (click)="removeDestination()">location_off</mat-icon>
+        </div>
+      </li>
+    </ul>
+    <!--    <div class="destination">-->
+    <!--      <mat-form-field appearance="outline" style="width: 85%">-->
+    <!--        <mat-label>First name</mat-label>-->
+    <!--        <input matInput>-->
+    <!--      </mat-form-field>-->
+    <!--      <mat-icon style="margin-left: 5px">location_off</mat-icon>-->
+    <!--    </div>-->
+    <hr>
+    <p>
+      Estimated time:
+    </p>
+    <p>
+      Estimated price:
+    </p>
+  </mat-card-content>
+</mat-card>
