@@ -18,6 +18,7 @@ import java.util.Set;
 
 public class Ride {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 
@@ -28,16 +29,16 @@ public class Ride {
     private Payment payment;
     @OneToOne
     private Driver driver;
-    private LocalDateTime start;
+    private LocalDateTime scheduledStart;
     private LocalDateTime actualStart;
     private LocalDateTime actualEnd;
     private LocalDateTime reservationTime;
     @OneToMany
     private Set<Customer> customers;
     @OneToMany
-    private Set<Rating> carRatings;
+    private Set<Review> carReviews;
     @OneToMany
-    private Set<Rating> driverRatings;
+    private Set<Review> driverReviews;
 
     private Boolean deleted = false;
 

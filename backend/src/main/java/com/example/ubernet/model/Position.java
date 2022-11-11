@@ -15,6 +15,7 @@ import javax.persistence.*;
 
 public class Position {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 

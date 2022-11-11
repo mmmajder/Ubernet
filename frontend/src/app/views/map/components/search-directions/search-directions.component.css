@@ -1,0 +1,49 @@
+.container {
+  text-align: center;
+  flex: 1;
+}
+
+.destination-input {
+  z-index: 99;
+  width: 30%;
+  max-width: 30%;
+  vertical-align: top;
+  margin: 50px;
+  float: right;
+}
+
+.input-field {
+  max-height: 10px;
+}
+
+.example-full-width {
+  width: 85%;
+}
+.label-height {
+  max-height: 30px!important;
+}
+
+.form {
+  align-items: center;
+  justify-content: center;
+}
+
+.header-right {
+  align-items: center;
+  flex-direction: row;
+  float: right;
+}
+
+.right {
+  float: right;
+}
+
+.destination {
+  flex-direction: row;
+  align-items: center;
+}
+
+input[type=text], select {
+  width: 85%;
+  margin: 8px 0;
+}

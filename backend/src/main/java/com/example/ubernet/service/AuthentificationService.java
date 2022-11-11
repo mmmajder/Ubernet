@@ -5,9 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.ubernet.dto.*;
-import com.example.ubernet.model.Role;
-import com.example.ubernet.model.User;
-import com.example.ubernet.model.UserAuth;
+import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.TokenUtils;
@@ -21,6 +19,8 @@ import org.springframework.stereotype.Service;
 
 import net.bytebuddy.utility.RandomString;
 
+import javax.mail.MessagingException;
+
 @Service
 public class AuthentificationService {
     private final UserService userService;
@@ -29,23 +29,32 @@ public class AuthentificationService {
     private final UserAuthService userAuthService;
     private final PasswordEncoder passwordEncoder;
     private final AuthenticationManager authenticationManager;
+    private final EmailService emailService;
+    private final CustomerService customerService;
+    private final DriverService driverService;
 
-    public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService,
-                                   TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService) {
+
+    public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService, EmailService emailService, CustomerService customerService, DriverService driverService) {
         this.passwordEncoder = passwordEncoder;
         this.userService = userService;
         this.tokenUtils = tokenUtils;
         this.authenticationManager = authenticationManager;
         this.adminService = adminService;
         this.userAuthService = userAuthService;
+        this.emailService = emailService;
+        this.customerService = customerService;
+        this.driverService = driverService;
     }
 
-    public User addUser(CreateUserDTO createUserDTO) {
+    public User addUser(CreateUserDTO createUserDTO) throws MessagingException {
         if (userService.findByEmail(createUserDTO.getEmail()) != null) {
             return null;
         }
-        //TODO send emails
-        return saveUser(createUserDTO);
+        User user = saveUser(createUserDTO);
+        if (user.getRole() == UserRole.CUSTOMER) {
+            emailService.sendRegistrationAsync(user);
+        }
+        return user;
     }
 
     private User saveUser(CreateUserDTO createUserDTO) {
@@ -53,7 +62,12 @@ public class AuthentificationService {
         user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
         user.setIsBlocked(false);
         user.setUserAuth(getUserAuth(user));
-        return adminService.save(user);
+        switch (createUserDTO.getUserRole()){
+            case CUSTOMER -> customerService.save((Customer) user);
+            case ADMIN -> adminService.save(user);
+            case DRIVER -> driverService.save((Driver) user);
+        }
+        return userService.save(user);
     }
 
     private UserAuth getUserAuth(User user) {
@@ -61,12 +75,15 @@ public class AuthentificationService {
 
         String randomCode = RandomString.make(64);
         userAuth.setVerificationCode(randomCode);
-        userAuth.setIsEnabled(true);
         userAuth.setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
-        userAuth.setIsPasswordReset(false);
         userAuth.setRoles(getRoles(user));
+        userAuth.setIsEnabled(setIsUserEnabledRegistration(user));
         userAuthService.save(userAuth);
         return userAuth;
+    }
+
+    private boolean setIsUserEnabledRegistration(User user) {
+        return user.getRole() != UserRole.CUSTOMER;
     }
 
     private List<Role> getRoles(User user) {
@@ -87,8 +104,7 @@ public class AuthentificationService {
     public LoginResponseDTO login(JwtAuthenticationRequest authenticationRequest) {
         Authentication authentication;
         try {
-            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
-                    authenticationRequest.getEmail(), authenticationRequest.getPassword()));
+            authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword()));
         } catch (AuthenticationException e) {
             return null;
         }
@@ -114,7 +130,41 @@ public class AuthentificationService {
             return false;
         }
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getPassword()));
+        if (!user.isEnabled()) {
+            user.getUserAuth().setIsEnabled(true);
+            userAuthService.save(user.getUserAuth());
+        }
         userService.save(user);
         return true;
     }
+
+    public User verify(String verificationCode) {
+        User user = userService.findByVerificationCode(verificationCode);
+
+        if (user == null || user.isEnabled()) {
+            return null;
+        }
+
+        user.getUserAuth().setVerificationCode(null);
+        user.getUserAuth().setIsEnabled(true);
+        userAuthService.save(user.getUserAuth());
+        user = userService.save(user);
+        return user;
+    }
+
+    public boolean resetPassword(String email) throws MessagingException {
+        User user = userService.findByEmail(email);
+        if (user == null) {
+            return false;
+        }
+        user.setPassword("");
+        user.getUserAuth().setIsEnabled(false);
+        user.getUserAuth().setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
+        userAuthService.save(user.getUserAuth());
+        userService.save(user);
+        emailService.sendEmailResetAsync(user);
+        return true;
+    }
+
+
 }

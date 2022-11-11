@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 
 @Component({
@@ -19,7 +19,8 @@ export class ChangePasswordComponent implements OnInit {
   password1FormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
   password2FormControl = new FormControl('', [Validators.required]);
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

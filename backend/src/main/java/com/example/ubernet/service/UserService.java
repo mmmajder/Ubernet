@@ -1,15 +1,17 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.UserEditDTO;
+import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.model.ProfileUpdateRequest;
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
-import com.example.ubernet.model.enums.Provider;
+import com.example.ubernet.model.enums.AuthProvider;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
 import com.example.ubernet.repository.UserRepository;
 import com.example.ubernet.utils.DTOMapper;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -106,11 +108,30 @@ public class UserService implements UserDetailsService {
         if (existUser.isEmpty()) {
             User newUser = new User();
             newUser.setEmail(email);
-            newUser.setProvider(Provider.GOOGLE);
+            newUser.setProvider(AuthProvider.GOOGLE);
             newUser.getUserAuth().setIsEnabled(true);
 
             userRepository.save(newUser);
         }
+    }
 
+
+    public User findByVerificationCode(String verificationCode) {
+        return userRepository.findByVerificationCode(verificationCode).orElse(null);
+    }
+
+    public User getLoggedUser(Authentication authentication) {
+        if(authentication == null) {
+            return null;
+        }
+        return findByEmail(authentication.getName());
+    }
+
+    public UserResponse getUser(String email) {
+        User user = findByEmail(email);
+        if (user!=null) {
+            return DTOMapper.getUserResponse(user);
+        }
+        return null;
     }
 }

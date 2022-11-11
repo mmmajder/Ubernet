@@ -17,6 +17,7 @@ import java.time.LocalDateTime;
 public class DriverDailyActivity {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
     private double totalDuration;

@@ -23,6 +23,7 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
 import {ChangePasswordComponent} from "./components/profile/change-password/change-password.component";
 import {AdminModule} from "../admin/admin.module";
+import {UnauthenticatedModule} from "../unauthenticated/unauthenticated.module";
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import {AdminModule} from "../admin/admin.module";
   exports: [
     DashboardCustomerContainerComponent,
     ProfileDataComponent,
-  ]
+    UnauthenticatedModule,
+  ],
 })
 export class CustomerModule {
 }
