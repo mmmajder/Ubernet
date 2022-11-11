@@ -1,9 +1,9 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {AuthService} from "../../../../services/auth.service";
-import {Observable} from "rxjs";
-import {Restaurant} from "../../../../services/restaurant.service";
-import {AuthStore} from "../../../../shared/stores/auth.store";
+import {GoogleLoginProvider, SocialAuthService} from 'angularx-social-login';
+import {Router} from '@angular/router';
+import {UserService} from "../../../../services/user.service";
 
 @Component({
   selector: 'app-login',
@@ -22,13 +22,46 @@ export class LoginComponent implements OnInit {
   email: string = "";
   password: string = "";
 
-  authService: AuthService;
-
-  constructor(authService: AuthService) {
-    this.authService = authService;
+  constructor(private authService: AuthService, private router: Router, private socialAuthService: SocialAuthService, private userService: UserService) {
   }
 
   ngOnInit(): void {
+  }
+
+  loginWithGoogle(): void {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
+      .then(() => {
+        // let user = this.socialAuthService.authState.pipe(
+        //   map((socialUser: SocialUser) => !!socialUser),
+        //   tap((isLoggedIn: boolean) => {
+        //     if (!isLoggedIn) {
+        //       this.router.navigate(['login']);
+        //     }
+        //   })
+        // );
+        this.socialAuthService.authState.subscribe(value => {
+          console.log(value);
+          this.email = value.email;
+        })
+        let response = this.userService.getUser(this.email);
+
+        console.log(response)
+        this.router.navigate(['customer']);
+        //TODO will be added soon
+        // if (response==null) {
+        //   // createUser();
+        //   this.router.navigate(['customer']);
+        // }
+        // else if (response.role==UserTypeEnum.CUSTOMER) {
+        //   this.router.navigate(['customer']);
+        // }
+        // else if (response.role==UserTypeEnum.ADMIN) {
+        //   this.router.navigate(['admin']);
+        // }
+        // else if (response.role==UserTypeEnum.DRIVER) {
+        //   this.router.navigate(['driver']);
+        // }
+      })
   }
 
   switchToRegisterForm() {

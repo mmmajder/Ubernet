@@ -16,6 +16,7 @@ import java.util.HashSet;
 
 public class Map {
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 
