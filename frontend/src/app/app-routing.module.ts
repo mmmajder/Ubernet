@@ -11,9 +11,11 @@ import {
   ProfileCustomerContainerComponent
 } from "./views/customer/container/profile-customer-container/profile-customer-container.component";
 import {ChatContainerComponent} from "./views/admin/container/chat-container/chat-container.component";
+import {MapComponent} from "./views/customer/components/map/map.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
+  {path: 'map', component: MapComponent},
   {path: 'driver', component: DriverContainerComponent},
   {path: 'admin', component: AdminContainerComponent},
   {path: 'admin/chat', component: ChatContainerComponent},

@@ -11,8 +11,8 @@ export class SearchDirectionsComponent implements OnInit {
 
   constructor(private formBuilder: FormBuilder) {
     this.destinations = [
-      {number: 1, locationName: ""},
-      {number: 2, locationName: ""}
+      {number: 0, locationName: ""},
+      {number: 1, locationName: ""}
     ]
   }
 
@@ -20,7 +20,7 @@ export class SearchDirectionsComponent implements OnInit {
   }
 
   addNewDestination() {
-    this.destinations.push({number: this.destinations.length + 1, locationName: ""})
+    this.destinations.push({number: this.destinations.length, locationName: ""})
   }
 
   removeDestination() {

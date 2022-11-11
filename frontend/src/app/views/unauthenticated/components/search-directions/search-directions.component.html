@@ -14,9 +14,9 @@
 
         <div class="destination">
           <mat-form-field appearance="outline" style="width: 85%">
-            <mat-label *ngIf="destination.number==1">From:</mat-label>
-            <mat-label *ngIf="destination.number==destinations.length">To:</mat-label>
-            <mat-label *ngIf="destination.number!=1 && destination.number!=destinations.length">
+            <mat-label *ngIf="destination.number==0">From:</mat-label>
+            <mat-label *ngIf="destination.number==destinations.length-1">To:</mat-label>
+            <mat-label *ngIf="destination.number!=0 && destination.number!=destinations.length-1">
               Stop {{destination.number}}:
             </mat-label>
             <input matInput>
@@ -25,13 +25,6 @@
         </div>
       </li>
     </ul>
-    <!--    <div class="destination">-->
-    <!--      <mat-form-field appearance="outline" style="width: 85%">-->
-    <!--        <mat-label>First name</mat-label>-->
-    <!--        <input matInput>-->
-    <!--      </mat-form-field>-->
-    <!--      <mat-icon style="margin-left: 5px">location_off</mat-icon>-->
-    <!--    </div>-->
     <hr>
     <p>
       Estimated time:
