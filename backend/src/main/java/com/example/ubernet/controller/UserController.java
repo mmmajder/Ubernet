@@ -20,7 +20,7 @@ public class UserController {
         return userService.getUser(email);
     }
 
-    @PutMapping(consumes = "application/json")
+    @PutMapping("/profile")
     public ResponseEntity<UserEditDTO> updateProfile(@RequestParam("email") String email, @RequestBody UserEditDTO userEditDTO) {
         userEditDTO = userService.editUser(email, userEditDTO);
         if (userEditDTO == null) {

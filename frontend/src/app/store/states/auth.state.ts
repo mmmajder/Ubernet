@@ -5,6 +5,20 @@ import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../../model/LoginResponseDto";
 import {UserRole} from "../../model/UserRole";
+import {UpdateCustomerData} from "../actions/loggedUser.actions";
+
+const asyncLocalStorage = {
+  setItem: function (key:string, value:string) {
+    return Promise.resolve().then(function () {
+      localStorage.setItem(key, value);
+    });
+  },
+  getItem: function (key:string) {
+    return Promise.resolve().then(function () {
+      return localStorage.getItem(key);
+    });
+  }
+};
 
 @State<LoginResponseDto>({
   name: 'auth',
@@ -35,12 +49,13 @@ export class AuthState {
   login(ctx: StateContext<LoginResponseDto>, action: Login) {
     return this.authService.login(action.payload).pipe(
       tap((result: LoginResponseDto) => {
-        console.log(result.token)
-        localStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken)));
-        console.log(localStorage.getItem('token'))
-        ctx.patchState({
-          token: result.token,
-          userRole: result.userRole
+        asyncLocalStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken))).then(function () {
+          return asyncLocalStorage.getItem('token');
+        }).then(function (value) {
+          ctx.patchState({
+            token: result.token,
+            userRole: result.userRole
+          });
         });
       })
     );

@@ -4,7 +4,6 @@ import {Observable} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../model/LoginResponseDto";
 import {LoginCredentials} from "../model/LoginCredentials";
 import {User} from "../model/User";
-import {AuthState} from "../store/states/auth.state";
 
 @Injectable({
   providedIn: 'root'
@@ -18,13 +17,7 @@ export class AuthService {
   httpOptions = {
     headers: new HttpHeaders({
       'Access-Control-Allow-Origin': '*',
-      'Authorization': 'authkey',
-    })
-  };
-  httpOptionsLogged = {
-    headers: new HttpHeaders({
-      'Access-Control-Allow-Origin': '*',
-      'Authorization': localStorage.getItem('token') || "",
+      'Authorization': localStorage.getItem('token') || 'authkey',
     })
   };
 
@@ -49,36 +42,6 @@ export class AuthService {
 
   public getCurrentlyLoggedUser(): Observable<User> {
     console.log(localStorage.getItem('token'))
-    return this.http.get<User>(this.currentlyLoggedUrl, this.httpOptionsLogged);
+    return this.http.get<User>(this.currentlyLoggedUrl, this.httpOptions);
   }
-
-  /*
-    public findById(id: string): Observable<Restaurant> {
-      return this.http.get<Restaurant>(this.createRestaurantUrl + '/' + id, this.httpOptions);
-    }
-
-    public createRestaurant(restaurant: RestaurantRequestModel): Observable<Restaurant> {
-      let body = {
-        "name": restaurant.name,
-        "address": restaurant.address,
-        "phone": restaurant.phone,
-        "email": restaurant.email,
-        "deliveryRate": restaurant.deliveryRate,
-        "menuItems": []
-      }
-      return this.http.post<Restaurant>(this.createRestaurantUrl, body, this.httpOptions);
-    }
-
-    public removeMenuItem(id: string, name: string) {
-      return this.http.post<Restaurant>(this.createRestaurantUrl + '/' + id + '/remove-menu-item', name, this.httpOptions);
-    }
-
-    public addMenuItem(menuItem: MenuItem): Observable<MenuItem> {
-      let body = {
-        "name": menuItem.name,
-        "description": menuItem.description,
-        "price": menuItem.price
-      }
-      return this.http.post<MenuItem>(this.createRestaurantUrl + '/' + menuItem.id + '/menu-item', body, this.httpOptions);
-    }*/
 }

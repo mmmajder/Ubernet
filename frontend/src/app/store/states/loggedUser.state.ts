@@ -1,9 +1,10 @@
 import {Injectable} from "@angular/core";
 import {Action, State, StateContext} from "@ngxs/store";
-import {CurrentlyLogged} from "../actions/loggedUser.actions";
+import {CurrentlyLogged, UpdateCustomerData} from "../actions/loggedUser.actions";
 import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
-import {User} from "../../model/User";
+import {User, UserDTO} from "../../model/User";
+import {UserService} from "../../services/user.service";
 
 @State<User>({
   name: 'loggedUser',
@@ -19,7 +20,7 @@ import {User} from "../../model/User";
 @Injectable()
 export class LoggedUserState {
 
-  constructor(private authService: AuthService) {
+  constructor(private authService: AuthService, private userService: UserService) {
   }
 
   @Action(CurrentlyLogged)
@@ -33,6 +34,20 @@ export class LoggedUserState {
           city: user.city,
           role: user.role,
           email: user.email
+        });
+      })
+    );
+  }
+
+  @Action(UpdateCustomerData)
+  updateCustomerData(ctx: StateContext<UserDTO>, action: UpdateCustomerData) {
+    return this.userService.updateCustomerData(action.payload).pipe(
+      tap((result: UserDTO) => {
+        ctx.patchState({
+          name: result.name,
+          surname: result.surname,
+          city: result.city,
+          phoneNumber: result.phoneNumber
         });
       })
     );

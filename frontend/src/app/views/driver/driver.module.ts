@@ -13,11 +13,14 @@ import {CommonModule} from "@angular/common";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
-import {DriverContainerComponent} from "./container/driver-container/driver-container.component";
+import {DriverContainerComponent} from "./container/dashboard-driver-container/driver-container.component";
+import { ProfileDriverContainerComponent } from './container/profile-driver-container/profile-driver-container.component';
+import {MatTabsModule} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
-    DriverContainerComponent
+    DriverContainerComponent,
+    ProfileDriverContainerComponent
   ],
   imports: [
     MatToolbarModule,
@@ -35,9 +38,11 @@ import {DriverContainerComponent} from "./container/driver-container/driver-cont
     ReactiveFormsModule,
     MatMenuModule,
     SharedModule,
+    MatTabsModule,
   ],
   exports: [
-    DriverContainerComponent
+    DriverContainerComponent,
+    ProfileDriverContainerComponent
   ]
 })
 export class DriverModule {
