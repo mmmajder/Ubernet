@@ -31,5 +31,5 @@ values (2, 3),
        (2, 4);
 
 insert into message(id, client_email, admin_email, is_sent_by_admin, time, content, is_deleted)
-values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15', 'Helloooo, the taxi driver is kidnapping me. Please help.', false);
-values (2, 'petar@gmail.com', 'admin@gmail.com', true, '2022-05-21 11:25', 'Oh no.', false);
+values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15', 'Helloooo, the taxi driver is kidnapping me. Please help.', false),
+       (2, 'petar@gmail.com', 'admin@gmail.com', true, '2022-05-21 11:25', 'Oh no.', false);

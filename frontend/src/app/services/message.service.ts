@@ -33,6 +33,11 @@ export class MessageService {
     return this.http.get(this.messageUrl + "/" + clientEmail, this.httpOptions);
   }
 
+  // for admin
+  public getMessagesAsAdmin(clientEmail:string){
+    return this.http.get(this.messageUrl + "/admin/" + clientEmail, this.httpOptions);
+  }
+
   public getTest() {
     return this.http.get(this.messageUrl + "/test" , this.httpOptions);
   }

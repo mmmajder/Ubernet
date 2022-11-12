@@ -49,15 +49,32 @@ public class MessageService {
         return messageRepository.findByClient(user);
     }
 
-    public List<MessageResponse> transformIntoResponses(List<Message> messages){
-        return messages.stream().map(m -> transferIntoResponse(m)).collect(Collectors.toList());
+    public List<MessageResponse> transformIntoResponses(List<Message> messages, String type){
+        return messages.stream().map(m -> transferIntoResponse(m, type)).collect(Collectors.toList());
     }
 
-    public MessageResponse transferIntoResponse(Message m){
-        MessageResponse r = new MessageResponse(m);
+    public MessageResponse transferIntoResponse(Message m, String type){
+        MessageResponse r = new MessageResponse(m, determineType(m, type));
         r.setTime(transformDateTimeToStringForMessages(m.getTime()));
 
         return r;
+    }
+
+    // TODO clean this and change 'right', 'left' into something more meaningful
+    private String determineType(Message m, String type) {
+        if (type.equals("admin")) {
+            if (m.isSentByAdmin())
+                type = "right";
+            else
+                type = "left";
+        } else { // sent by a customer or a driver
+            if (m.isSentByAdmin())
+                type = "left";
+            else
+                type = "right";
+        }
+
+        return type;
     }
 
     public String transformDateTimeToStringForMessages(LocalDateTime dateTime){

@@ -7,27 +7,27 @@ import {MessageService} from "../../../../services/message.service";
   styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit {
-  messages = [{
+  messages: any = [{
     "profileImage": "assets/taxi.jpg",
-    "text": "E imao sam pitanje...",
+    "content": "E imao sam pitanje...",
     "time": "20:00 12.10.2022.",
     "type": "right"
   },
     {
       "profileImage": "assets/taxi.jpg",
-      "text": "E imao sam pitanje...",
+      "content": "E imao sam pitanje...",
       "time": "20:00 12.10.2022.",
       "type": "right"
     },
     {
       "profileImage": "assets/taxi.jpg",
-      "text": "E imao sam pitanje...",
+      "content": "E imao sam pitanje...",
       "time": "20:00 12.10.2022.",
       "type": "right"
     },
     {
       "profileImage": "assets/taxi.jpg",
-      "text": "E imao sam pitanje...",
+      "content": "E imao sam pitanje...",
       "time": "20:00 12.10.2022.",
       "type": "left"
     },];
@@ -44,17 +44,14 @@ export class ChatComponent implements OnInit {
   testStr: any;
 
   ngOnInit(): void {
-    console.log("tu samm");
-
     this.messageService.getTest().subscribe((data) => {
       this.testStr = data;
       console.log(this.testStr);
     });
 
-    console.log("tu samm2");
-
-    this.messageService.getMessages("petar@gmail.com").subscribe((data) => {
+    this.messageService.getMessagesAsAdmin("petar@gmail.com").subscribe((data) => {
       this.messagesFromServer = data;
+      this.messages = data;
       console.log(this.messagesFromServer);
     });
   }

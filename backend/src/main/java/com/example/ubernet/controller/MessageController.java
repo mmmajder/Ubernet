@@ -45,8 +45,20 @@ public class MessageController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         List<Message> messages =  messageService.getClientMessages(email);
+        String type = "customer_driver";
 
-        return new ResponseEntity<>(messageService.transformIntoResponses(messages), HttpStatus.OK);
+        return new ResponseEntity<>(messageService.transformIntoResponses(messages, type), HttpStatus.OK);
+    }
+
+    @GetMapping(value = "admin/{email}")
+    public ResponseEntity<List<MessageResponse>> getMessagesAsAdmin(@PathVariable String email) {
+        if (!userService.doesUserExist(email))
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+
+        List<Message> messages =  messageService.getClientMessages(email);
+        String type = "admin";
+
+        return new ResponseEntity<>(messageService.transformIntoResponses(messages, type), HttpStatus.OK);
     }
 
     @GetMapping(value = "/test")

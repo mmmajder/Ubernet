@@ -19,11 +19,15 @@ public class MessageResponse {
     private boolean isSentByAdmin;
     private String content;
     private String time; // "dd.MM.yyyy. hh:mm"
+    private String profileImage;
+    private String type;
 
-    public MessageResponse(Message m){
+    public MessageResponse(Message m, String type){
         this.clientEmail = m.getClient().getEmail();
         this.adminEmail = m.getAdminEmail();
         this.isSentByAdmin = m.isSentByAdmin();
         this.content = m.getContent();
+        this.profileImage = "assets/taxi.jpg";
+        this.type = type;
     }
 }
