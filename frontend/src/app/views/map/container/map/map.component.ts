@@ -2,6 +2,7 @@ import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
 import 'leaflet-routing-machine';
 import {MapService} from "../../../../services/map.service";
+import {UserRole} from "../../../../model/UserRole";
 
 @Component({
   selector: 'app-map',
@@ -9,6 +10,9 @@ import {MapService} from "../../../../services/map.service";
   styleUrls: ['./map.component.css']
 })
 export class MapComponent implements AfterViewInit, OnInit {
+
+  userRoles = UserRole
+  userRole: UserRole | null
 
   redIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -39,13 +43,15 @@ export class MapComponent implements AfterViewInit, OnInit {
     return map;
   }
 
+
   address: string;
+
   onSubmit() {
     return this.address;
   }
 
   results: string
-  addressArr:any
+  addressArr: any
 
   findAddress() {
     var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + this.address
@@ -57,6 +63,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   constructor(private mapService: MapService) {
+    this.userRole = UserRole.CUSTOMER
+    // this.userRole = null
+
   }
 
   activeCars: any;

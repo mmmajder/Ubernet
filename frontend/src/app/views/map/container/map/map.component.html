@@ -10,12 +10,15 @@
 <!--    <div id="results">{{results}}</div>-->
 <!--  </mat-card>-->
 <div>
+  <ng-container [ngSwitch]="userRole">
+    <app-search-directions-unauthorised *ngSwitchCase="null"></app-search-directions-unauthorised>
+    <app-search-directions-customer *ngSwitchCase="userRoles.CUSTOMER"></app-search-directions-customer>
+  </ng-container>
   <div class="map-container">
     <div class="map-frame">
       <div id="map">
       </div>
     </div>
   </div>
-  <app-search-directions></app-search-directions>
 </div>
 

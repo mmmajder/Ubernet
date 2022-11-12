@@ -1,0 +1,37 @@
+<mat-card class="destination-input">
+  <mat-card-header>
+    <span style="padding: 8px; font-weight: 500; margin-left: -30px; font-size: 16px">Directions</span>
+    <div style="flex: 1">
+      <div class="header-right">
+        <button mat-stroked-button style="margin-right: 5px">Clear all</button>
+        <button mat-stroked-button>
+          <mat-icon (click)="addNewDestination()">add_location_alt</mat-icon>
+        </button>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content style="overflow-y:scroll; max-height: 300px; margin-top: 20px; margin-bottom: -10px">
+    <mat-form-field appearance="outline" *ngFor="let destination of destinations; let i=index" [ngSwitch]="i"
+                    style="width: 100%;">
+      <mat-label *ngSwitchCase=0>From:</mat-label>
+      <mat-label *ngSwitchCase=destinations.length-1>To:</mat-label>
+      <mat-label *ngSwitchDefault>
+        Stop {{i}}:
+      </mat-label>
+      <input matInput [name]="'dest' + i" [ngModel]="destinations[i].destination" (ngModelChange)="setDestination($event, i)">
+      <button mat-icon-button matSuffix (click)="removeDestination(i)">
+        <mat-icon>
+          location_off
+        </mat-icon>
+      </button>
+    </mat-form-field>
+  </mat-card-content>
+  <mat-card-footer style="padding: 15px">
+    <button mat-raised-button color="primary" style="width: 100%" (click)="showEstimates()">Search</button>
+    <div *ngIf="estimatesPresented==true">
+      <hr>
+      <p> Estimated time: </p>
+      <p> Estimated price: </p>
+    </div>
+  </mat-card-footer>
+</mat-card>

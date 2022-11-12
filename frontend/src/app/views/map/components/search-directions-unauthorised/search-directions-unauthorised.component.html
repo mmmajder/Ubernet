@@ -1,0 +1,30 @@
+<mat-card class="destination-input">
+  <mat-card-header>
+    <mat-card-title>Directions</mat-card-title>
+    <div style="flex: 1">
+      <div class="header-right">
+        <label style="cursor: pointer">Clear</label>
+      </div>
+    </div>
+  </mat-card-header>
+  <mat-card-content>
+    <div>
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>From:</mat-label>
+        <input matInput>
+      </mat-form-field>
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>To:</mat-label>
+        <input matInput>
+      </mat-form-field>
+    </div>
+    <mat-card-actions>
+      <button mat-raised-button color="primary" style="width: 100%" (click)="showEstimates()">Search</button>
+    </mat-card-actions>
+    <div *ngIf="estimatesDisplayed==true">
+      <hr>
+      <p>Estimated time:</p>
+      <p>Estimated price:</p>
+    </div>
+  </mat-card-content>
+</mat-card>

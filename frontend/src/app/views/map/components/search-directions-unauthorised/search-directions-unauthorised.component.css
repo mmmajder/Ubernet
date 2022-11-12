@@ -19,6 +19,7 @@
 .example-full-width {
   width: 85%;
 }
+
 .label-height {
   max-height: 30px!important;
 }
@@ -29,18 +30,11 @@
 }
 
 .header-right {
-  align-items: center;
-  flex-direction: row;
   float: right;
 }
 
 .right {
   float: right;
-}
-
-.destination {
-  flex-direction: row;
-  align-items: center;
 }
 
 input[type=text], select {

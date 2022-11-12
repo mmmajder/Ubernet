@@ -1,0 +1,25 @@
+.container {
+  text-align: center;
+  flex: 1;
+}
+
+.destination-input {
+  z-index: 99;
+  width: 30%;
+  max-width: 30%;
+  height: 10%;
+  max-height: 30%;
+  vertical-align: top;
+  margin: 50px;
+  float: right;
+}
+
+.header-right {
+  align-items: center;
+  flex-direction: row;
+  float: right;
+}
+
+.right {
+  float: right;
+}

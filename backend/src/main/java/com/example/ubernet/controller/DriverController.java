@@ -38,6 +38,6 @@ public class DriverController {
         if (driverService.logoutDriver(email)) {
             return new ResponseEntity<>("Successfully logged out", HttpStatus.OK);
         }
-        return new ResponseEntity<>("There was a logging out", HttpStatus.CONFLICT);
+        return new ResponseEntity<>("There was a problem logging out", HttpStatus.CONFLICT);
     }
 }

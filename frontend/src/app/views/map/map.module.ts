@@ -13,34 +13,38 @@ import {CommonModule} from "@angular/common";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
-import {SearchDirectionsComponent} from "./components/search-directions/search-directions.component";
+import {SearchDirectionsCustomerComponent} from "./components/search-directions-customer/search-directions-customer.component";
 import {MapComponent} from "./container/map/map.component";
+import { SearchDirectionsUnauthorisedComponent } from './components/search-directions-unauthorised/search-directions-unauthorised.component';
+import {MatListModule} from "@angular/material/list";
 
 @NgModule({
   declarations: [
-    SearchDirectionsComponent,
-    MapComponent
+    SearchDirectionsCustomerComponent,
+    MapComponent,
+    SearchDirectionsUnauthorisedComponent,
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-  ],
-  exports: [
-    MapComponent
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatListModule,
+    ],
+    exports: [
+        MapComponent,
+    ],
   bootstrap: []
 })
 export class MapModule {
