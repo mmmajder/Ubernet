@@ -4,19 +4,16 @@ import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.model.ProfileUpdateRequest;
 import com.example.ubernet.model.User;
 import com.example.ubernet.repository.ProfileUpdateRequestRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class ProfileUpdateRequestService {
     private final ProfileUpdateRequestRepository profileUpdateRequestRepository;
     private final UserService userService;
-
-    public ProfileUpdateRequestService(ProfileUpdateRequestRepository profileUpdateRequestRepository, UserService userService) {
-        this.profileUpdateRequestRepository = profileUpdateRequestRepository;
-        this.userService = userService;
-    }
 
     public ProfileUpdateRequest save(ProfileUpdateRequest profileUpdateRequest) {
         return profileUpdateRequestRepository.save(profileUpdateRequest);

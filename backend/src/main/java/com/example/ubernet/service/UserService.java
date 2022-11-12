@@ -11,6 +11,7 @@ import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
 import com.example.ubernet.repository.UserRepository;
 import com.example.ubernet.utils.DTOMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -20,18 +21,12 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ProfileUpdateRequestRepository profileUpdateRequestRepository;
-
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, ProfileUpdateRequestRepository profileUpdateRequestRepository) {
-        this.userRepository = userRepository;
-        this.roleRepository = roleRepository;
-        this.profileUpdateRequestRepository = profileUpdateRequestRepository;
-    }
-
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -121,7 +116,7 @@ public class UserService implements UserDetailsService {
     }
 
     public User getLoggedUser(Authentication authentication) {
-        if(authentication == null) {
+        if (authentication == null) {
             return null;
         }
         return findByEmail(authentication.getName());
@@ -129,7 +124,7 @@ public class UserService implements UserDetailsService {
 
     public UserResponse getUser(String email) {
         User user = findByEmail(email);
-        if (user!=null) {
+        if (user != null) {
             return DTOMapper.getUserResponse(user);
         }
         return null;

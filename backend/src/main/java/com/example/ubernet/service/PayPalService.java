@@ -3,6 +3,7 @@ package com.example.ubernet.service;
 import com.paypal.api.payments.*;
 import com.paypal.base.rest.APIContext;
 import com.paypal.base.rest.PayPalRESTException;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -10,14 +11,10 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
+@AllArgsConstructor
 @Service
 public class PayPalService {
-
     private final APIContext apiContext;
-
-    public PayPalService(APIContext context) {
-        this.apiContext = context;
-    }
 
     public Payment createPayment(Double total, String currency, String method, String intent, String description, String cancelUrl, String successUrl) throws PayPalRESTException {
         Amount amount = new Amount();

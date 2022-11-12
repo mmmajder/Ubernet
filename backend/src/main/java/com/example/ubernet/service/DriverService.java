@@ -5,24 +5,20 @@ import com.example.ubernet.model.Driver;
 import com.example.ubernet.model.DriverDailyActivity;
 import com.example.ubernet.model.User;
 import com.example.ubernet.repository.DriverRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class DriverService {
     private final DriverRepository driverRepository;
     private final DriverDailyActivityService driverDailyActivityService;
     private final UserService userService;
     private final CarService carService;
-    public DriverService(DriverRepository driverRepository, DriverDailyActivityService driverDailyActivityService, UserService userService, CarService carService) {
-        this.driverRepository = driverRepository;
-        this.driverDailyActivityService = driverDailyActivityService;
-        this.userService = userService;
-        this.carService = carService;
-    }
 
     public Driver toggleActivity(String email) {
         Driver driver = (Driver) userService.findByEmail(email);
-        if (driver==null) {
+        if (driver == null) {
             return null;
         }
         driver.getDriverDailyActivity().setIsActive(!driver.getDriverDailyActivity().getIsActive());

@@ -2,17 +2,13 @@ package com.example.ubernet.service;
 
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.repository.RideRepository;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+@AllArgsConstructor
 @Service
 public class RideService {
-
     private final RideRepository rideRepository;
-
-
-    public RideService(RideRepository rideRepository) {
-        this.rideRepository = rideRepository;
-    }
 
     public Ride findById(Long id) {
         return rideRepository.findById(id).orElse(null);

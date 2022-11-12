@@ -5,6 +5,7 @@ import com.example.ubernet.model.User;
 import com.example.ubernet.service.AuthentificationService;
 import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.DTOMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,15 +16,11 @@ import javax.mail.MessagingException;
 import javax.validation.Valid;
 
 @RestController
+@AllArgsConstructor
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
     private final AuthentificationService authentificationService;
     private final UserService userService;
-
-    public AuthController(AuthentificationService authentificationService, UserService userService) {
-        this.authentificationService = authentificationService;
-        this.userService = userService;
-    }
 
     @PostMapping("/login")
     public ResponseEntity<LoginResponseDTO> createAuthenticationToken(

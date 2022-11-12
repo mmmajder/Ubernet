@@ -2,6 +2,7 @@ package com.example.ubernet.service;
 
 import com.example.ubernet.model.User;
 import com.example.ubernet.utils.EmailContentUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.MailException;
 import org.springframework.mail.javamail.JavaMailSender;
@@ -13,20 +14,13 @@ import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
 import java.util.Objects;
 
+@AllArgsConstructor
 @Service
 public class EmailService {
-
     private final JavaMailSender javaMailSender;
-
     private final Environment env;
 
     private String siteURL = "http://localhost:4200";
-
-
-    public EmailService(JavaMailSender javaMailSender, Environment env) {
-        this.javaMailSender = javaMailSender;
-        this.env = env;
-    }
 
     @Async
     public void sendRegistrationAsync(User user) throws MailException, MessagingException {
