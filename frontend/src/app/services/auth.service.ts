@@ -24,7 +24,7 @@ export class AuthService {
   httpOptionsLogged = {
     headers: new HttpHeaders({
       'Access-Control-Allow-Origin': '*',
-      'Authorization': localStorage.getItem('token') as string,
+      'Authorization': localStorage.getItem('token') || "",
     })
   };
 
@@ -48,6 +48,7 @@ export class AuthService {
   }
 
   public getCurrentlyLoggedUser(): Observable<User> {
+    console.log(localStorage.getItem('token'))
     return this.http.get<User>(this.currentlyLoggedUrl, this.httpOptionsLogged);
   }
 

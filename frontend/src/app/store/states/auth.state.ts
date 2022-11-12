@@ -36,7 +36,8 @@ export class AuthState {
     return this.authService.login(action.payload).pipe(
       tap((result: LoginResponseDto) => {
         console.log(result.token)
-        localStorage.setItem('token', result.token.accessToken);
+        localStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken)));
+        console.log(localStorage.getItem('token'))
         ctx.patchState({
           token: result.token,
           userRole: result.userRole
