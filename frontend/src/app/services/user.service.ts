@@ -1,21 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
-
-class User {
-  email!: string;
-  name!: string;
-  surname!: string;
-}
-
-class GetUserResponse {
-  email!: string;
-  name!: string;
-  surname!: string;
-  city!: string;
-  phoneNumber!: string;
-  role!: string;
-}
+import {User} from "../model/User";
 
 @Injectable({
   providedIn: 'root'
@@ -35,9 +21,10 @@ export class UserService {
     this.userUrl = 'http://localhost:8000/user/';
   }
 
-  public getUser(email: string): Observable<GetUserResponse> {
-    return this.http.get<GetUserResponse>(this.userUrl + "?email=" + email, this.httpOptions);
+  public getUser(email: string): Observable<User> {
+    return this.http.get<User>(this.userUrl + "?email=" + email, this.httpOptions);
   }
+
   /*
     public findById(id: string): Observable<Restaurant> {
       return this.http.get<Restaurant>(this.createRestaurantUrl + '/' + id, this.httpOptions);

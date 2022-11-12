@@ -73,7 +73,10 @@ export class LoginComponent implements OnInit {
     this.store.dispatch(new Login({
       "email": this.email,
       "password": this.password
-    })).subscribe((resp) => console.log(resp));
+    })).subscribe((resp) => {
+      console.log(resp);
+      this.router.navigate(['/customer/profile']);
+    });
   }
 
 }

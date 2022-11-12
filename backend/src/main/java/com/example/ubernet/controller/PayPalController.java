@@ -5,11 +5,9 @@ import com.example.ubernet.service.PayPalService;
 import com.paypal.api.payments.Links;
 import com.paypal.api.payments.Payment;
 import com.paypal.base.rest.PayPalRESTException;
-import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping(value = "/payment", produces = MediaType.APPLICATION_JSON_VALUE)
 public class PayPalController {
@@ -17,6 +15,10 @@ public class PayPalController {
     public static final String SUCCESS_URL = "pay/success";
     public static final String CANCEL_URL = "pay/cancel";
     public static final String BASE_URL = "http://localhost:8000/";
+
+    public PayPalController(PayPalService service) {
+        this.service = service;
+    }
 
     @PostMapping(value = "/pay")
     public String payment(@RequestBody PaymentOrder paymentOrder) {

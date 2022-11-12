@@ -20,8 +20,6 @@ public class EmailService {
     private final JavaMailSender javaMailSender;
     private final Environment env;
 
-    private String siteURL = "http://localhost:4200";
-
     @Async
     public void sendRegistrationAsync(User user) throws MailException, MessagingException {
         System.out.println("Sending email...");
@@ -31,7 +29,7 @@ public class EmailService {
         helper.setTo("ubernet-test@outlook.com");
         helper.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
         String content = EmailContentUtils.getVerificationContent();
-        String verifyURL = siteURL + "/verify/" + user.getUserAuth().getVerificationCode();
+        String verifyURL = "http://localhost:4200/verify/" + user.getUserAuth().getVerificationCode();
         content = content.replace("[[URL]]", verifyURL);
         helper.setText(content, true);
         javaMailSender.send(message);
@@ -47,7 +45,7 @@ public class EmailService {
         helper.setTo("ubernet-test@outlook.com");
         helper.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
         String content = EmailContentUtils.getVerificationContent();
-        String verifyURL = siteURL + "/verify/" + user.getUserAuth().getVerificationCode();
+        String verifyURL = "http://localhost:4200/verify/" + user.getUserAuth().getVerificationCode();
         content = content.replace("[[URL]]", verifyURL);
         helper.setText(content, true);
         javaMailSender.send(message);

@@ -1,4 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import {User} from "../../../../model/User";
+import {Store} from "@ngxs/store";
+import {CurrentlyLogged} from "../../../../store/actions/loggedUser.actions";
 
 @Component({
   selector: 'app-profile-customer-container',
@@ -7,9 +10,17 @@ import { Component, OnInit } from '@angular/core';
 })
 export class ProfileCustomerContainerComponent implements OnInit {
 
-  constructor() { }
+  loggedUser: User;
+
+  constructor(private store: Store) {
+  }
 
   ngOnInit(): void {
+    this.store.dispatch(new CurrentlyLogged()).subscribe((resp) => {
+      console.log(resp);
+      console.log("ADFEKOGJASEO")
+      this.loggedUser = resp;
+    });
   }
 
 }

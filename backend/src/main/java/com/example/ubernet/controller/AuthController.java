@@ -69,7 +69,7 @@ public class AuthController {
         return new ResponseEntity<>("There was a problem in changing password", HttpStatus.CONFLICT);
     }
 
-    @GetMapping("/whoami")
+    @GetMapping("/currently-logged-user")
     public ResponseEntity<UserResponse> loggedUser(Authentication authentication) {
         User user = userService.getLoggedUser(authentication);
         if (user == null) {
@@ -78,6 +78,4 @@ public class AuthController {
         UserResponse dto = DTOMapper.getUserResponse(user);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
-
-
 }
