@@ -4,6 +4,8 @@ import {AuthService} from "../../../../services/auth.service";
 import {GoogleLoginProvider, SocialAuthService} from 'angularx-social-login';
 import {Router} from '@angular/router';
 import {UserService} from "../../../../services/user.service";
+import {Login} from "../../../../store/actions/authentication.actions";
+import {Store} from '@ngxs/store';
 
 @Component({
   selector: 'app-login',
@@ -11,8 +13,7 @@ import {UserService} from "../../../../services/user.service";
   styleUrls: ['./login.component.css']
 })
 export class LoginComponent implements OnInit {
-  @Output()
-  switchForm = new EventEmitter();
+  @Output() switchForm = new EventEmitter();
 
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('', [Validators.required]);
@@ -22,7 +23,7 @@ export class LoginComponent implements OnInit {
   email: string = "";
   password: string = "";
 
-  constructor(private authService: AuthService, private router: Router, private socialAuthService: SocialAuthService, private userService: UserService) {
+  constructor(private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService, private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -69,7 +70,10 @@ export class LoginComponent implements OnInit {
   }
 
   login() {
-    this.authService.login({"email": this.email, "password": this.password});
+    this.store.dispatch(new Login({
+      "email": this.email,
+      "password": this.password
+    })).subscribe((resp) => console.log(resp));
   }
 
 }

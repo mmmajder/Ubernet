@@ -1,26 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
-
-class UserTokenState {
-  accessToken!: string;
-  expiredIn!: number;
-}
-
-enum UserRole {
-  ADMIN,
-  DRIVER,
-  CUSTOMER
-}
-
-class LoginResponseDTO {
-  userRole!: UserRole;
-  token!: UserTokenState;
-}
-
-class User {
-  email!: string;
-  password!: string;
-}
+import {Observable} from "rxjs";
+import {LoginResponseDto, UserTokenState} from "../model/LoginResponseDto";
+import {LoginCredentials} from "../model/LoginCredentials";
 
 @Injectable({
   providedIn: 'root'
@@ -28,6 +10,7 @@ class User {
 export class AuthService {
 
   private readonly loginUrl: string;
+  private readonly logoutUrl: string;
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -38,20 +21,22 @@ export class AuthService {
 
   constructor(private http: HttpClient) {
     this.loginUrl = 'http://localhost:8000/auth/login';
+    this.logoutUrl = 'http://localhost:8000/auth/logout';
   }
 
-  public login(user: User): void {
+  public login(user: LoginCredentials): Observable<LoginResponseDto> {
     let body = {
       "email": user.email,
       "password": user.password
     }
     console.log(body)
-    this.http.post<LoginResponseDTO>(this.loginUrl, body, this.httpOptions).subscribe(
-      (res) => {
-        console.log(res);
-      }
-    );
+    return this.http.post<LoginResponseDto>(this.loginUrl, body, this.httpOptions);
   }
+
+  logout(token: UserTokenState | null) {
+    return this.http.post<LoginResponseDto>(this.logoutUrl, token, this.httpOptions);
+  }
+
   /*
     public findById(id: string): Observable<Restaurant> {
       return this.http.get<Restaurant>(this.createRestaurantUrl + '/' + id, this.httpOptions);

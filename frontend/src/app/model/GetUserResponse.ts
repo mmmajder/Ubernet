@@ -1,4 +1,4 @@
-class GetUserResponse {
+export class GetUserResponse {
   email!: string;
   name!: string;
   surname!: string;

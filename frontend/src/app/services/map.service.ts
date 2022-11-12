@@ -32,7 +32,7 @@ class ActiveCarResponse {
 //   token!: UserTokenState;
 // }
 //
-// class User {
+// class LoginCredentials {
 //   email!: string;
 //   password!: string;
 // }

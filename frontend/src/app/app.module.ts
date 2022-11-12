@@ -31,10 +31,10 @@ import {DriverModule} from "./views/driver/driver.module";
 import {CustomerModule} from "./views/customer/customer.module";
 import {AdminModule} from "./views/admin/admin.module";
 import {PopupService} from "./services/popup.service";
-import { SearchDirectionsComponent } from './views/map/components/search-directions/search-directions.component';
 import {UnauthenticatedModule} from "./views/unauthenticated/unauthenticated.module";
 import {MapModule} from "./views/map/map.module";
-
+import { NgxsModule } from '@ngxs/store';
+import {AuthState} from "./store/states/auth.state";
 
 @NgModule({
   declarations: [
@@ -70,7 +70,8 @@ import {MapModule} from "./views/map/map.module";
     CustomerModule,
     AdminModule,
     UnauthenticatedModule,
-    MapModule
+    MapModule,
+    NgxsModule.forRoot([AuthState]),
   ],
   exports: [
   ],

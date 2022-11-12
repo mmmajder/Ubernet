@@ -1,13 +1,4 @@
-import {
-  ChangeDetectorRef,
-  Component,
-  EventEmitter,
-  Input,
-  OnChanges, OnInit,
-  Output,
-  SimpleChanges,
-  ViewChild
-} from '@angular/core';
+import {ChangeDetectorRef, Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild} from '@angular/core';
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort, Sort} from "@angular/material/sort";
 import {Restaurant, RestaurantService} from "../../../../services/restaurant.service";
@@ -15,10 +6,7 @@ import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {FormControl} from "@angular/forms";
 import {Observable} from "rxjs";
-import {
-  CreateRestaurantDialogComponent,
-  RestaurantRequestModel
-} from "../create-restaurant-dialog/create-restaurant-dialog.component";
+import {CreateRestaurantDialogComponent, RestaurantRequestModel} from "../create-restaurant-dialog/create-restaurant-dialog.component";
 import {RestaurantsStore} from "../../../../shared/stores/restaurants.store";
 
 @Component({

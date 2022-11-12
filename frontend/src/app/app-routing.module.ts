@@ -13,6 +13,7 @@ import {
 import {ChatContainerComponent} from "./views/admin/container/chat-container/chat-container.component";
 import {MapComponent} from "./views/map/container/map/map.component";
 import {DriversComponent} from "./views/admin/container/drivers/drivers.component";
+import {AuthGuard} from "./auth.guard";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
@@ -23,7 +24,8 @@ const routes: Routes = [
   {path: 'admin/drivers', component: DriversComponent},
   {path: 'customer', component: DashboardCustomerContainerComponent},
   {path: 'customer/profile', component: ProfileCustomerContainerComponent},
-  {path: '**', component: NotFoundPageComponent}
+  {path: '**', component: NotFoundPageComponent},
+  // {canActivate: [AuthGuard]}
 ];
 
 @NgModule({

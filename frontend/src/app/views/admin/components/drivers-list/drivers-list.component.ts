@@ -1,12 +1,6 @@
 import {Component} from '@angular/core';
 import {MatTableDataSource} from "@angular/material/table";
-
-export interface DriverListItem {
-  profilePicture: string;
-  name: string;
-  lastName: string;
-  activity: boolean;
-}
+import {DriverListItem} from "../../model/DriverListItem";
 
 const ELEMENT_DATA: DriverListItem[] = [
   {profilePicture: "assets/taxi.jpg", name: "Pera", lastName: "Peric", activity: true},
