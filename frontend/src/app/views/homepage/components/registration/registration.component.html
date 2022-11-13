@@ -5,7 +5,7 @@
     <p style="margin-top: 10px">
       <mat-form-field class="example-full-width" style="width: 49%; margin-right: 1%" appearance="outline">
         <mat-label>Email</mat-label>
-        <input type="email" matInput [ngModel]="email" [formControl]="emailFormControl"
+        <input type="email" matInput [(ngModel)]="email" [formControl]="emailFormControl"
                placeholder="Ex. pat@example.com">
         <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
           Please enter a valid email address
@@ -16,7 +16,7 @@
       </mat-form-field>
       <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
         <mat-label>Phone number</mat-label>
-        <input matInput type="tel" [ngModel]="phoneNumber" [formControl]="phoneFormControl"
+        <input matInput type="tel" [(ngModel)]="phoneNumber" [formControl]="phoneFormControl"
                placeholder="Ex. +381 1234567">
         <mat-error *ngIf="phoneFormControl.hasError('required')">
           Phone number is <strong>required</strong>
@@ -26,7 +26,7 @@
     <p style="margin-top: -10px">
       <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
         <mat-label>Enter your password</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'" [ngModel]="password" [formControl]="passwordFormControl">
+        <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password" [formControl]="passwordFormControl">
         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -40,7 +40,7 @@
       </mat-form-field>
       <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
         <mat-label>Re-enter your password</mat-label>
-        <input matInput [type]="hide2 ? 'password' : 'text'" [ngModel]="password2" [formControl]="password2FormControl">
+        <input matInput [type]="hide2 ? 'password' : 'text'" [(ngModel)]="password2" [formControl]="password2FormControl">
         <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hide2">
           <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -56,14 +56,14 @@
     <p style="margin-top: -10px">
       <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
         <mat-label>Enter your name</mat-label>
-        <input matInput [formControl]="nameFormControl" [ngModel]="name">
+        <input matInput [formControl]="nameFormControl" [(ngModel)]="name">
         <mat-error *ngIf="nameFormControl.hasError('required')">
           Name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
         <mat-label>Enter your last name</mat-label>
-        <input matInput [formControl]="lastNameFormControl" [ngModel]="lastName">
+        <input matInput [formControl]="lastNameFormControl" [(ngModel)]="lastName">
         <mat-error *ngIf="lastNameFormControl.hasError('required')">
           Last name is <strong>required</strong>
         </mat-error>
@@ -72,7 +72,7 @@
     <p style="margin-top: -10px">
       <mat-form-field style="width: 100%" appearance="outline">
         <mat-label>Enter the city you live in</mat-label>
-        <input matInput [formControl]="cityFormControl" [ngModel]="city">
+        <input matInput [formControl]="cityFormControl" [(ngModel)]="city">
         <mat-error *ngIf="cityFormControl.hasError('required')">
           City is <strong>required</strong>
         </mat-error>

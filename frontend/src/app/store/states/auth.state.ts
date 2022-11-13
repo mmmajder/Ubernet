@@ -5,7 +5,6 @@ import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../../model/LoginResponseDto";
 import {UserRole} from "../../model/UserRole";
-import {UpdateCustomerData} from "../actions/loggedUser.actions";
 
 const asyncLocalStorage = {
   setItem: function (key:string, value:string) {
@@ -51,7 +50,7 @@ export class AuthState {
       tap((result: LoginResponseDto) => {
         asyncLocalStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken))).then(function () {
           return asyncLocalStorage.getItem('token');
-        }).then(function (value) {
+        }).then(function () {
           ctx.patchState({
             token: result.token,
             userRole: result.userRole

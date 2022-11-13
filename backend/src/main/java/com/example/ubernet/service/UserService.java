@@ -64,7 +64,6 @@ public class UserService implements UserDetailsService {
         } else if (user.getRole() == UserRole.DRIVER) {
             createDriverUpdateRequest(user, userEditRequest);
         }
-
     }
 
     private void createDriverUpdateRequest(User user, UserEditDTO userEditRequest) {

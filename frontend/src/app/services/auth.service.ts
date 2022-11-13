@@ -10,9 +10,7 @@ import {User} from "../model/User";
 })
 export class AuthService {
 
-  private readonly loginUrl: string;
-  private readonly logoutUrl: string;
-  private readonly currentlyLoggedUrl: string;
+  private readonly authUrl: string;
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -22,9 +20,7 @@ export class AuthService {
   };
 
   constructor(private http: HttpClient) {
-    this.loginUrl = 'http://localhost:8000/auth/login';
-    this.logoutUrl = 'http://localhost:8000/auth/logout';
-    this.currentlyLoggedUrl = 'http://localhost:8000/auth/currently-logged-user';
+    this.authUrl = 'http://localhost:8000/auth';
   }
 
   public login(user: LoginCredentials): Observable<LoginResponseDto> {
@@ -33,15 +29,14 @@ export class AuthService {
       "password": user.password
     }
     console.log(body)
-    return this.http.post<LoginResponseDto>(this.loginUrl, body, this.httpOptions);
+    return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, this.httpOptions);
   }
 
-  logout(token: UserTokenState | "") {
-    return this.http.post<LoginResponseDto>(this.logoutUrl, token, this.httpOptions);
+  public logout(token: UserTokenState | ""): Observable<LoginResponseDto> {
+    return this.http.post<LoginResponseDto>(this.authUrl + '/logout', token, this.httpOptions);
   }
 
   public getCurrentlyLoggedUser(): Observable<User> {
-    console.log(localStorage.getItem('token'))
-    return this.http.get<User>(this.currentlyLoggedUrl, this.httpOptions);
+    return this.http.get<User>(this.authUrl + '/currently-logged-user', this.httpOptions);
   }
 }

@@ -35,6 +35,8 @@ export class ProfileDataComponent implements OnInit {
   }
 
   update() {
+    console.log("this.name")
+    console.log(this.name)
     let user = new Customer(this.name, this.lastName, this.email, this.phoneNumber, this.city);
     console.log(user)
     this.store.dispatch(new UpdateCustomerData(user)).subscribe(() => console.log("saieyge"))

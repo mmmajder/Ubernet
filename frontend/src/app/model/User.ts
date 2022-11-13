@@ -24,6 +24,13 @@ export class Customer {
 }
 
 export class UserDTO {
+  constructor(name: string, surname: string, phoneNumber: string, city: string) {
+    this.name = name;
+    this.surname = surname;
+    this.city = city;
+    this.phoneNumber = phoneNumber;
+  }
+
   name!: string;
   surname!: string;
   city!: string;

@@ -25,12 +25,10 @@ export class UserService {
     return this.http.get<User>(this.userUrl + "?email=" + email, this.httpOptions);
   }
 
-  updateCustomerData(customer: Customer) {
-    return this.http.put<UserDTO>(this.userUrl + "/profile?email=" + customer.email, {
-      "name": customer.name,
-      "surname": customer.surname,
-      "phoneNumber": customer.phoneNumber,
-      "city": customer.city
-    }, this.httpOptions);
+  public updateCustomerData(customer: Customer): Observable<UserDTO> {
+    let body = new UserDTO(customer.name, customer.surname, customer.phoneNumber, customer.city);
+    console.log("body")
+    console.log(body)
+    return this.http.put<UserDTO>(this.userUrl + "/profile?email=" + customer.email, body, this.httpOptions);
   }
 }

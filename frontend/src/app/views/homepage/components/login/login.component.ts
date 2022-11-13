@@ -75,6 +75,7 @@ export class LoginComponent implements OnInit {
       "password": this.password
     })).subscribe((resp) => {
       console.log(resp);
+      // if(resp.loggedUser.role == "CUSTOMER")
       this.router.navigate(['/customer/profile']);
     });
   }
