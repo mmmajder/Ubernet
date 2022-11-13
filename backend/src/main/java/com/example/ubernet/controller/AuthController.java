@@ -28,7 +28,7 @@ public class AuthController {
 
         LoginResponseDTO loginResponseDTO = authentificationService.login(authenticationRequest);
         if (loginResponseDTO == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(loginResponseDTO);
     }

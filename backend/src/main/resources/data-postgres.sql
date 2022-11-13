@@ -18,6 +18,14 @@ insert into admin (email, city, deleted, is_blocked, name, password, phone_numbe
 values ('admin@gmail.com', 'Adminville', false, false, 'Admin',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 1);
 
+insert into user_auth_roles(user_auth_id, roles_id)
+values (1, 1),
+       (1, 4);
+-- insert into USER_ROLE (user_id, role_id) values
+--     (CURRVAL('userSeqGen'), 1);
+-- insert into user_auth_roles (user_auth_id, roles_id) values
+--     ()
+
 insert into driver_daily_activity (deleted, is_active, last_time_set_active, total_duration)
 values (false, true, '2022-10-24 00:00', 0),
        (false, true, '2022-10-24 00:00', 0),
@@ -44,7 +52,8 @@ values (false, true, 1, 1);
 insert into car_destinations(car_id, destinations_id)
 values (1, 2);
 
-insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, driver_daily_activity_id, car_id)
+insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
+                    driver_daily_activity_id, car_id)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1);
 --        ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
@@ -52,20 +61,33 @@ values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
 --        ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
 --         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3);
 
+insert into user_auth_roles(user_auth_id, roles_id)
+values (2, 2),
+       (2, 4);
+
 insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
 values ('ajder.milan2000@gmail.com', 'Customville', false, false, 'Customer',
         '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5);
 
-update car set driver_email='driver@gmail.com' where id=1;
+insert into user_auth_roles(user_auth_id, roles_id)
+values (3, 3),
+       (3, 4);
+
+-- insert into USER_ROLE (user_id, role_id) values
+--     (CURRVAL('userSeqGen'), 3);
+
+update car
+set driver_email='driver@gmail.com'
+where id = 1;
 -- update car set driver_email='driver2@gmail.com' where id=2;
 -- update car set driver_email='driver3@gmail.com' where id=3;
 
-insert into user_auth_roles(user_auth_id, roles_id)
-
-values (1, 1),
-       (1, 4),
-       (2, 2),
-       (2, 4);
+-- insert into user_auth_roles(user_auth_id, roles_id)
+--
+-- values (1, 1),
+--        (1, 4),
+--        (2, 2),
+--        (2, 4);
 
 insert into payment (deleted, is_accepted_payment, total_price)
 values (false, true, 500);
@@ -73,10 +95,14 @@ values (false, true, 500);
 insert into route (deleted, price, time)
 values (false, 500, 1200);
 
-insert into ride (actual_end, actual_start, deleted, reservation_time, scheduled_start, driver_email, payment_id, route_id)
-values ('2022-10-27 12:00', '2022-10-31 11:00', false, '2022-10-31 10:00', '2031-10-24 11:00', 'driver@gmail.com', 1, 1);
+insert into ride (actual_end, actual_start, deleted, reservation_time, scheduled_start, driver_email, payment_id,
+                  route_id)
+values ('2022-10-27 12:00', '2022-10-31 11:00', false, '2022-10-31 10:00', '2031-10-24 11:00', 'driver@gmail.com', 1,
+        1);
 
-update payment set ride_id=1 where id=1;
+update payment
+set ride_id=1
+where id = 1;
 
 insert into ride_customers(ride_id, customers_email)
 values (1, 'ajder.milan2000@gmail.com');

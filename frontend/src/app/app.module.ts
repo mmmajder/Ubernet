@@ -94,7 +94,7 @@ import {LoggedUserState} from "./store/states/loggedUser.state";
           }
         ],
         onError: (err) => {
-          console.error(err);
+          console.error();
         }
       } as SocialAuthServiceConfig,
     },

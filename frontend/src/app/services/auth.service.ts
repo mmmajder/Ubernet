@@ -28,7 +28,6 @@ export class AuthService {
       "email": user.email,
       "password": user.password
     }
-    console.log(body)
     return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, this.httpOptions);
   }
 
