@@ -17,21 +17,20 @@ import {DashboardCustomerContainerComponent} from "./container/dashboard-custome
 import { FavoritesComponent } from './components/favorites/favorites/favorites.component';
 import {MatListModule} from "@angular/material/list";
 import { ActivityLogComponent } from './components/activity-log/activity-log/activity-log.component';
-import { ProfileDataComponent } from './components/profile/profile-data/profile-data.component';
+import { ProfileDataComponent } from '../../shared/profile-edit/profile-data/profile-data.component';
 import { ProfileCustomerContainerComponent } from './container/profile-customer-container/profile-customer-container.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import {AdminModule} from "../admin/admin.module";
+import {UnauthenticatedModule} from "../unauthenticated/unauthenticated.module";
 import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
-import {ChangePasswordComponent} from "./components/profile/change-password/change-password.component";
 
 @NgModule({
   declarations: [
     DashboardCustomerContainerComponent,
     FavoritesComponent,
     ActivityLogComponent,
-    ProfileDataComponent,
     ProfileCustomerContainerComponent,
     CreditCardComponent,
-    ChangePasswordComponent
   ],
   imports: [
     MatToolbarModule,
@@ -51,10 +50,13 @@ import {ChangePasswordComponent} from "./components/profile/change-password/chan
     SharedModule,
     MatListModule,
     MatTabsModule,
+    AdminModule,
   ],
   exports: [
-    DashboardCustomerContainerComponent
-  ]
+    DashboardCustomerContainerComponent,
+    ProfileDataComponent,
+    UnauthenticatedModule,
+  ],
 })
 export class CustomerModule {
 }

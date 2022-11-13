@@ -25,10 +25,17 @@ import {NotificationsService} from "./services/notifications.service";
 import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
-import { NotFoundPageComponent } from './views/404/not-found-page/not-found-page.component';
+import {GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule} from "angularx-social-login";
+import {NotFoundPageComponent} from './views/404/not-found-page/not-found-page.component';
 import {DriverModule} from "./views/driver/driver.module";
 import {CustomerModule} from "./views/customer/customer.module";
 import {AdminModule} from "./views/admin/admin.module";
+import {PopupService} from "./services/popup.service";
+import {UnauthenticatedModule} from "./views/unauthenticated/unauthenticated.module";
+import {MapModule} from "./views/map/map.module";
+import { NgxsModule } from '@ngxs/store';
+import {AuthState} from "./store/states/auth.state";
+import {LoggedUserState} from "./store/states/loggedUser.state";
 
 @NgModule({
   declarations: [
@@ -58,14 +65,42 @@ import {AdminModule} from "./views/admin/admin.module";
     RestaurantsModule,
     RestaurantModule,
     HomepageModule,
+    SocialLoginModule,
+    BrowserAnimationsModule,
     DriverModule,
     CustomerModule,
     AdminModule,
+    UnauthenticatedModule,
+    MapModule,
+    NgxsModule.forRoot([AuthState, LoggedUserState]),
   ],
-    exports: [
-    ],
-  providers: [RestaurantService, AuthService, NotificationsService, SocketService],
+  exports: [
+  ],
+  providers: [
+    {
+      provide: 'SocialAuthServiceConfig',
+      useValue: {
+        autoLogin: false,
+        providers: [
+          {
+            id: GoogleLoginProvider.PROVIDER_ID,
+            provider: new GoogleLoginProvider(
+              '263337550240-ilitbfe2sqc3v0vlc61tiuu5bb3no8f6.apps.googleusercontent.com',
+              {
+                scope: 'profile email',
+                plugin_name: 'login' //you can use any name here
+              }
+            )
+          }
+        ],
+        onError: (err) => {
+          console.error(err);
+        }
+      } as SocialAuthServiceConfig,
+    },
+    RestaurantService, AuthService, NotificationsService, SocketService, PopupService],
   bootstrap: [AppComponent]
 })
+
 export class AppModule {
 }

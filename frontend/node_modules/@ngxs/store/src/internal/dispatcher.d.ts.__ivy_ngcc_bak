@@ -1,0 +1,32 @@
+import { Injector } from '@angular/core';
+import { Observable, Subject } from 'rxjs';
+import { ActionContext, InternalActions } from '../actions-stream';
+import { StateStream } from './state-stream';
+import { PluginManager } from '../plugin-manager';
+import { InternalNgxsExecutionStrategy } from '../execution/internal-ngxs-execution-strategy';
+/**
+ * Internal Action result stream that is emitted when an action is completed.
+ * This is used as a method of returning the action result to the dispatcher
+ * for the observable returned by the dispatch(...) call.
+ * The dispatcher then asynchronously pushes the result from this stream onto the main action stream as a result.
+ */
+export declare class InternalDispatchedActionResults extends Subject<ActionContext> {
+}
+export declare class InternalDispatcher {
+    private _injector;
+    private _actions;
+    private _actionResults;
+    private _pluginManager;
+    private _stateStream;
+    private _ngxsExecutionStrategy;
+    private _errorHandler;
+    constructor(_injector: Injector, _actions: InternalActions, _actionResults: InternalDispatchedActionResults, _pluginManager: PluginManager, _stateStream: StateStream, _ngxsExecutionStrategy: InternalNgxsExecutionStrategy);
+    /**
+     * Dispatches event(s).
+     */
+    dispatch(actionOrActions: any | any[]): Observable<any>;
+    private dispatchByEvents;
+    private dispatchSingle;
+    private getActionResultStream;
+    private createDispatchObservable;
+}

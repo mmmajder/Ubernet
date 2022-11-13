@@ -1,8 +1,9 @@
 package com.example.ubernet.utils;
 
-import com.example.ubernet.dto.CreateUserDTO;
-import com.example.ubernet.dto.UserEditDTO;
-import com.example.ubernet.dto.UserVerificationResponseDTO;
+import com.example.ubernet.dto.*;
+import com.example.ubernet.model.Car;
+import com.example.ubernet.model.Driver;
+import com.example.ubernet.model.Review;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.UserService;
 
@@ -39,5 +40,43 @@ public class DTOMapper {
         userEditDTO.setSurname(user.getSurname());
         userEditDTO.setPhoneNumber(user.getPhoneNumber());
         return userEditDTO;
+    }
+
+    public static UserResponse getUserResponse(User user) {
+        UserResponse userResponse = new UserResponse();
+        userResponse.setCity(user.getCity());
+        userResponse.setEmail(user.getEmail());
+        userResponse.setName(user.getName());
+        userResponse.setRole(user.getRole());
+        userResponse.setSurname(user.getSurname());
+        userResponse.setPhoneNumber(user.getPhoneNumber());
+        return userResponse;
+    }
+
+    public static CarResponse getCarResponse(Car car) {
+        CarResponse carResponse = new CarResponse();
+        carResponse.setCarType(car.getCarType());
+        carResponse.setDriver(car.getDriver());
+        return carResponse;
+    }
+
+    public static DriverResponse getDriverResponse(Driver driver) {
+        DriverResponse driverResponse = new DriverResponse();
+        driverResponse.setDriverDailyActivity(driver.getDriverDailyActivity());
+        driverResponse.setCity(driver.getCity());
+        driverResponse.setEmail(driver.getEmail());
+        driverResponse.setPassword(driver.getPassword());
+        driverResponse.setName(driver.getName());
+        driverResponse.setSurname(driver.getSurname());
+        driverResponse.setPhoneNumber(driver.getPhoneNumber());
+        return driverResponse;
+    }
+
+    public static ReviewResponse getReviewResponse(Review review) {
+        ReviewResponse reviewResponse = new ReviewResponse();
+        reviewResponse.setComment(review.getComment());
+        reviewResponse.setRating(review.getRating());
+        reviewResponse.setCustomer(review.getCustomer());
+        return reviewResponse;
     }
 }

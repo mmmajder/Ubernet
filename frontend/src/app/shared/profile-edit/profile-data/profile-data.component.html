@@ -1,0 +1,47 @@
+<mat-card>
+  <mat-card-content>
+    <div style="text-align: center;">
+      <img src="../../../../assets/taxi.jpg" class="profile-picture" alt="profile-picture"/><br>
+      <button mat-raised-button color="primary" style="margin: 10px 0 10px 10px">Upload profile picture
+      </button>
+      <button mat-stroked-button color="primary" style="margin: 10px 10px 0 10px">
+        <mat-icon>delete</mat-icon>
+      </button>
+    </div>
+    <mat-form-field appearance="outline">
+      <mat-label>Enter your name</mat-label>
+      <input matInput [formControl]="nameFormControl" [(ngModel)]="name">
+      <mat-error *ngIf="nameFormControl.hasError('required')">
+        Name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Enter your last name</mat-label>
+      <input matInput [formControl]="lastNameFormControl" [(ngModel)]="lastName">
+      <mat-error *ngIf="lastNameFormControl.hasError('required')">
+        Last name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Email</mat-label>
+      <input type="email" matInput [(ngModel)]="email" disabled>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Phone number</mat-label>
+      <input matInput type="tel" [(ngModel)]="phoneNumber" [formControl]="phoneFormControl"
+             placeholder="Ex. +381 1234567">
+      <mat-error *ngIf="phoneFormControl.hasError('required')">
+        Phone number is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline">
+      <mat-label>Enter the city you live in</mat-label>
+      <input matInput [formControl]="cityFormControl" [(ngModel)]="city">
+      <mat-error *ngIf="cityFormControl.hasError('required')">
+        City is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+
+    <button mat-raised-button color="primary" style="width: 100%;" (click)="update()">Update Account Settings</button>
+  </mat-card-content>
+</mat-card>

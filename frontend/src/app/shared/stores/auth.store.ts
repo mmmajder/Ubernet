@@ -40,9 +40,9 @@ export class AuthStore extends ComponentStore<AuthState> {
     super(INITIAL_STATE);
   }
 
-  // readonly login$: Observable<User> = this.select(state => state.login);
+  // readonly login$: Observable<LoginCredentials> = this.select(state => state.login);
 
-  /*login = this.effect((user$: Observable<User>) => user$
+  /*login = this.effect((user$: Observable<LoginCredentials>) => user$
     .pipe(
       exhaustMap(user => {
         return this.authService.login(user)

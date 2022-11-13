@@ -17,6 +17,7 @@ import javax.persistence.*;
 public class DriverInconsistency {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 

@@ -1,0 +1,21 @@
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+</head>
+<!--  <mat-card class="example-card destination-input">-->
+<!--    <input matInput #message maxlength="256" placeholder="address" [(ngModel)]="address">-->
+<!--    <br>-->
+<!--    <button mat-raised-button color="primary" (click)="findAddress()">Search</button>-->
+<!--    <div id="results">{{results}}</div>-->
+<!--  </mat-card>-->
+<div>
+  <div class="map-container">
+    <div class="map-frame">
+      <div id="map">
+      </div>
+    </div>
+  </div>
+  <app-search-directions></app-search-directions>
+</div>
+

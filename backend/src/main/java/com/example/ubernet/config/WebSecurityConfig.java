@@ -1,7 +1,7 @@
 package com.example.ubernet.config;
 
 
-import com.example.ubernet.controller.CustomOAuth2User;
+import com.example.ubernet.dto.CustomOAuth2User;
 import com.example.ubernet.service.CustomOAuth2UserService;
 import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.TokenUtils;
@@ -16,7 +16,6 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.Authentication;
@@ -93,6 +92,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling().authenticationEntryPoint(restAuthenticationEntryPoint).and()
 
                 // svim korisnicima dopusti da pristupe sledecim putanjama:
+
                 .authorizeRequests().antMatchers("/auth/**").permitAll()		// /auth/**
                 .antMatchers("/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
 
@@ -110,8 +110,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 // umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
                 .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, customUserDetailsService), BasicAuthenticationFilter.class)
 
-
-                .oauth2Login().loginPage("/login").userInfoEndpoint().userService(oauthUserService);
+                .oauth2Login().loginPage("/").userInfoEndpoint().userService(oauthUserService);
 
         // zbog jednostavnosti primera ne koristimo Anti-CSRF token (https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
         http.csrf().disable();

@@ -24,7 +24,6 @@ public class UserAuth {
     private String verificationCode;
     private Boolean isEnabled;
     private Timestamp lastPasswordSet;
-    private Boolean isPasswordReset;
     private Boolean deleted = false;
     @ManyToMany
     private List<Role> roles;
