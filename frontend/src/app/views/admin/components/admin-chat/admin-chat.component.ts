@@ -6,13 +6,8 @@ import {MessageService} from "../../../../services/message.service";
   templateUrl: './admin-chat.component.html',
   styleUrls: ['./admin-chat.component.css']
 })
-<<<<<<< HEAD:frontend/src/app/views/admin/components/chat/chat.component.ts
-export class ChatComponent implements OnInit {
-  messages: any = [{
-=======
 export class AdminChatComponent implements OnInit {
-  messages = [{
->>>>>>> dev:frontend/src/app/views/admin/components/admin-chat/admin-chat.component.ts
+  messages: any = [{
     "profileImage": "assets/taxi.jpg",
     "content": "E imao sam pitanje...",
     "time": "20:00 12.10.2022.",
