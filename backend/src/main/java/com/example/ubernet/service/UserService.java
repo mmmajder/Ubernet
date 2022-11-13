@@ -128,4 +128,8 @@ public class UserService implements UserDetailsService {
         }
         return null;
     }
+
+    public boolean doesUserExist(String email){
+        return findByEmail(email) != null;
+    }
 }
