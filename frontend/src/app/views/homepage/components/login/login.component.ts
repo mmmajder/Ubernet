@@ -77,7 +77,6 @@ export class LoginComponent implements OnInit {
     })).subscribe({
       next: (value) => {
         localStorage.setItem('token', value.auth.token);
-        console.log(value);
         this.navigate(value.auth.userRole)
       },
       error: () => this._snackBar.open("Wrong email or password.", 'Close')
