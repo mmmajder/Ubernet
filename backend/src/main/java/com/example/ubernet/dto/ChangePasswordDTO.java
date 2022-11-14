@@ -14,8 +14,7 @@ import javax.validation.constraints.NotEmpty;
 @Data
 public class ChangePasswordDTO {
     @NotEmpty
-    @Email
-    private String email;
+    private String currentPassword;
     @NotEmpty
-    private String password;
+    private String newPassword;
 }

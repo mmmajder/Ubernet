@@ -113,17 +113,25 @@ public class AuthentificationService {
         return user.isEnabled() && !user.getDeleted();
     }
 
-    public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
-        User user = userService.findByEmail(changePasswordDTO.getEmail());
-        if (user == null) {
+    public boolean changePassword(String email, ChangePasswordDTO changePasswordDTO) {
+        User user = userService.findByEmail(email);
+        if (user == null)
             return false;
-        }
-        user.setPassword(passwordEncoder.encode(changePasswordDTO.getPassword()));
+
+        System.out.println(changePasswordDTO.getCurrentPassword());
+        System.out.println(user.getPassword());
+        System.out.println(passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()));
+
+        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()))
+            return false;
+
+        user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         if (!user.isEnabled()) {
             user.getUserAuth().setIsEnabled(true);
             userAuthService.save(user.getUserAuth());
         }
         userService.save(user);
+
         return true;
     }
 

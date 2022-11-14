@@ -61,11 +61,12 @@ public class AuthController {
         return new ResponseEntity<>("There was a problem in resetting password", HttpStatus.CONFLICT);
     }
 
-    @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
-        if (authentificationService.changePassword(changePasswordDTO)) {
+    @PutMapping("/change-password/{email}")
+    public ResponseEntity<String> changePassword(@PathVariable String email, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+        if (authentificationService.changePassword(email, changePasswordDTO)) {
             return new ResponseEntity<>("Successfully changed password", HttpStatus.OK);
         }
+        
         return new ResponseEntity<>("There was a problem in changing password", HttpStatus.CONFLICT);
     }
 
