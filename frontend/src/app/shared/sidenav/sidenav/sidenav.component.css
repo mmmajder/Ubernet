@@ -9,6 +9,7 @@
 .name {
   margin-top: 10px;
   color: var(--dark);
+  cursor: pointer;
 }
 
 .mat-icon {

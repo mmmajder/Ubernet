@@ -33,14 +33,15 @@ import {AdminModule} from "./views/admin/admin.module";
 import {PopupService} from "./services/popup.service";
 import {UnauthenticatedModule} from "./views/unauthenticated/unauthenticated.module";
 import {MapModule} from "./views/map/map.module";
-import { NgxsModule } from '@ngxs/store';
+import {NgxsModule} from '@ngxs/store';
 import {AuthState} from "./store/states/auth.state";
 import {LoggedUserState} from "./store/states/loggedUser.state";
+import {PagesModule} from "./views/pages/pages.module";
 
 @NgModule({
   declarations: [
     AppComponent,
-    NotFoundPageComponent,
+    NotFoundPageComponent
   ],
   imports: [
     BrowserModule,
@@ -72,10 +73,10 @@ import {LoggedUserState} from "./store/states/loggedUser.state";
     AdminModule,
     UnauthenticatedModule,
     MapModule,
+    PagesModule,
     NgxsModule.forRoot([AuthState, LoggedUserState]),
   ],
-  exports: [
-  ],
+  exports: [],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',

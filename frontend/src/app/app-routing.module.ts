@@ -17,15 +17,14 @@ import {AuthGuard} from "./auth.guard";
 import {
   ProfileDriverContainerComponent
 } from "./views/driver/container/profile-driver-container/profile-driver-container.component";
+import {DashboardContainerComponent} from "./views/pages/dashboard-container/dashboard-container.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
+  {path: 'dashboard', component: DashboardContainerComponent},
   {path: 'map', component: MapComponent},
-  {path: 'driver', component: DriverContainerComponent},
-  {path: 'admin', component: AdminContainerComponent},
-  {path: 'admin/chat', component: ChatContainerComponent},
+  {path: 'chat', component: ChatContainerComponent},
   {path: 'admin/drivers', component: DriversComponent},
-  {path: 'customer', component: DashboardCustomerContainerComponent},
   {path: 'customer/profile', component: ProfileCustomerContainerComponent},
   {path: 'driver/profile', component: ProfileDriverContainerComponent},
   {path: '**', component: NotFoundPageComponent},

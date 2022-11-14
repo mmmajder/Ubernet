@@ -76,20 +76,13 @@ export class LoginComponent implements OnInit {
       "password": this.password
     })).subscribe({
       next: (value) => {
-        localStorage.setItem('token', value.auth.token);
-        this.navigate(value.auth.userRole)
+        console.log("AIUFBAIUFBFUUIAE")
+        console.log(value.auth.token);
+        localStorage.setItem('token', "Bearer " + value.auth.token.accessToken);
+        this.authService.getCurrentlyLoggedUser();
+        this.router.navigate(['/dashboard']);
       },
       error: () => this._snackBar.open("Wrong email or password.", 'Close')
     });
-  }
-
-  navigate(role: any) {
-    console.log("ROLE:" + role)
-    if (role == "ADMIN")
-      this.router.navigate(['/admin']);
-    else if (role == "DRIVER")
-      this.router.navigate(['/driver']);
-    else if (role == "CUSTOMER")
-      this.router.navigate(['/customer']);
   }
 }

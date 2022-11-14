@@ -12,13 +12,6 @@ export class AuthService {
 
   private readonly authUrl: string;
 
-  httpOptions = {
-    headers: new HttpHeaders({
-      'Access-Control-Allow-Origin': '*',
-      'Authorization': localStorage.getItem('token') || 'authkey',
-    })
-  };
-
   constructor(private http: HttpClient) {
     this.authUrl = 'http://localhost:8000/auth';
   }
@@ -28,14 +21,23 @@ export class AuthService {
       "email": user.email,
       "password": user.password
     }
-    return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, this.httpOptions);
+    return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, AuthService.getHttpOptions());
   }
 
   public logout(token: UserTokenState | ""): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(this.authUrl + '/logout', token, this.httpOptions);
+    return this.http.post<LoginResponseDto>(this.authUrl + '/logout', token, AuthService.getHttpOptions());
   }
 
   public getCurrentlyLoggedUser(): Observable<User> {
-    return this.http.get<User>(this.authUrl + '/currently-logged-user', this.httpOptions);
+    return this.http.get<User>(this.authUrl + '/currently-logged-user', AuthService.getHttpOptions());
+  }
+
+  public static getHttpOptions() {
+    return {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': localStorage.getItem('token') || 'authkey',
+      })
+    };
   }
 }
