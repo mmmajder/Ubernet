@@ -4,7 +4,7 @@ import {AuthService} from "../../../../services/auth.service";
 import {GoogleLoginProvider, SocialAuthService} from 'angularx-social-login';
 import {Router} from '@angular/router';
 import {UserService} from "../../../../services/user.service";
-import {Login} from "../../../../store/actions/authentication.actions";
+import {Login, LoginSocial} from "../../../../store/actions/authentication.actions";
 import {Store} from '@ngxs/store';
 
 @Component({
@@ -43,6 +43,19 @@ export class LoginComponent implements OnInit {
         this.socialAuthService.authState.subscribe(value => {
           console.log(value);
           this.email = value.email;
+          this.store.dispatch(new LoginSocial({
+            "email": value.email,
+            "authToken": value.authToken,
+            "firstName": value.firstName,
+            "id": value.id,
+            "idToken": value.idToken,
+            "lastName": value.lastName,
+            "name": value.name,
+            "photoUrl": value.photoUrl,
+            "provider": value.provider,
+          })).subscribe((resp) => console.log(resp));
+
+
         })
         let response = this.userService.getUser(this.email);
 
