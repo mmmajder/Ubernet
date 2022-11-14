@@ -67,8 +67,8 @@ values (1, 1),
        (2, 2),
        (2, 4);
 
-insert into user_auth(deleted, is_enabled, is_password_reset, last_password_set, verification_code)
-values (false, true, false, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');
+insert into user_auth(deleted, is_enabled, last_password_set, verification_code)
+values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');
 
 insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, payment_credentials)
 values ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',

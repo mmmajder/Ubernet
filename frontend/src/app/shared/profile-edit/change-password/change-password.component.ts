@@ -7,17 +7,17 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordComponent implements OnInit {
-  hide: boolean = true;
-  hide1: boolean = true;
-  hide2: boolean = true;
+  hideCurrentPassword: boolean = true;
+  hideNewPassword: boolean = true;
+  hideReEnteredNewPassword: boolean = true;
 
-  password: any;
-  password1: any;
-  password2: any;
+  currentPassword: any;
+  newPassword: any;
+  reEnteredNewPassword: any;
 
-  passwordFormControl = new FormControl('', [Validators.required]);
-  password1FormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
-  password2FormControl = new FormControl('', [Validators.required]);
+  currentPasswordFormControl = new FormControl('', [Validators.required]);
+  newPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  reEnteredNewPasswordFormControl = new FormControl('', [Validators.required]);
 
   constructor() {
   }
