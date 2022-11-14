@@ -7,6 +7,7 @@ import com.example.ubernet.model.Review;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.repository.ReviewRepository;
 import com.example.ubernet.utils.DTOMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,24 +16,16 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
 
+@AllArgsConstructor
 @Service
 public class ReviewService {
     private final ReviewRepository reviewRepository;
-    private final CarService carService;
     private final RideService rideService;
     private final CustomerService customerService;
-
-    public ReviewService(ReviewRepository reviewRepository, CarService carService, RideService rideService, CustomerService customerService) {
-        this.reviewRepository = reviewRepository;
-        this.carService = carService;
-        this.rideService = rideService;
-        this.customerService = customerService;
-    }
 
     public Review save(Review review) {
         return reviewRepository.save(review);
     }
-
 
     public ReviewResponse createCarReview(CreateReviewDTO createReviewDTO) {
         Ride ride = rideService.findById(createReviewDTO.getRideId());

@@ -2,18 +2,16 @@ package com.example.ubernet.model;
 
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
-@Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-
+@Getter
+@Setter
 public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

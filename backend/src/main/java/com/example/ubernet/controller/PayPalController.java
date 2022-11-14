@@ -20,7 +20,6 @@ public class PayPalController {
         this.service = service;
     }
 
-
     @PostMapping(value = "/pay")
     public String payment(@RequestBody PaymentOrder paymentOrder) {
         try {

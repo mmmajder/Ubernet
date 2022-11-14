@@ -15,12 +15,15 @@ import {MatListModule} from "@angular/material/list";
 import {MessageComponent} from "./message/message.component";
 import {NewMessageComponent} from "./new-message/new-message.component";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {MatFormFieldModule} from "@angular/material/form-field";
 import {MatInputModule} from "@angular/material/input";
+import {ProfileDataComponent} from "./profile-edit/profile-data/profile-data.component";
+import {ChangePasswordComponent} from "./profile-edit/change-password/change-password.component";
+import {MatCardModule} from "@angular/material/card";
 
 @NgModule({
-  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent],
+  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ChangePasswordComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -33,8 +36,10 @@ import {MatInputModule} from "@angular/material/input";
     FormsModule,
     MatFormFieldModule,
     MatInputModule,
+    ReactiveFormsModule,
+    MatCardModule,
   ],
-  exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent],
+  exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ChangePasswordComponent],
   providers: [NavbarStore, RestaurantsStore, RestaurantStore]
 })
 export class SharedModule {

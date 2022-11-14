@@ -9,6 +9,7 @@ import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.TokenUtils;
+import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -21,6 +22,7 @@ import net.bytebuddy.utility.RandomString;
 
 import javax.mail.MessagingException;
 
+@AllArgsConstructor
 @Service
 public class AuthentificationService {
     private final UserService userService;
@@ -32,19 +34,6 @@ public class AuthentificationService {
     private final EmailService emailService;
     private final CustomerService customerService;
     private final DriverService driverService;
-
-
-    public AuthentificationService(PasswordEncoder passwordEncoder, UserService userService, TokenUtils tokenUtils, AuthenticationManager authenticationManager, AdminService adminService, UserAuthService userAuthService, EmailService emailService, CustomerService customerService, DriverService driverService) {
-        this.passwordEncoder = passwordEncoder;
-        this.userService = userService;
-        this.tokenUtils = tokenUtils;
-        this.authenticationManager = authenticationManager;
-        this.adminService = adminService;
-        this.userAuthService = userAuthService;
-        this.emailService = emailService;
-        this.customerService = customerService;
-        this.driverService = driverService;
-    }
 
     public User addUser(CreateUserDTO createUserDTO) throws MessagingException {
         if (userService.findByEmail(createUserDTO.getEmail()) != null) {
@@ -62,7 +51,7 @@ public class AuthentificationService {
         user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
         user.setIsBlocked(false);
         user.setUserAuth(getUserAuth(user));
-        switch (createUserDTO.getUserRole()){
+        switch (createUserDTO.getUserRole()) {
             case CUSTOMER -> customerService.save((Customer) user);
             case ADMIN -> adminService.save(user);
             case DRIVER -> driverService.save((Driver) user);

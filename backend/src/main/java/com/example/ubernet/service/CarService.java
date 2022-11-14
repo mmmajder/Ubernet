@@ -3,26 +3,20 @@ package com.example.ubernet.service;
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.*;
 import com.example.ubernet.repository.CarRepository;
-import com.example.ubernet.utils.DTOMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+@AllArgsConstructor
 @Service
 public class CarService {
     private final CarRepository carRepository;
     private final UserService userService;
     private final CarTypeService carTypeService;
     private final PositionService positionService;
-
-    public CarService(CarRepository carRepository, UserService userService, CarTypeService carTypeService, PositionService positionService) {
-        this.carRepository = carRepository;
-        this.userService = userService;
-        this.carTypeService = carTypeService;
-        this.positionService = positionService;
-    }
 
     public Car createCar(CreateCarDTO createCarDTO) {
         User user = userService.findByEmail(createCarDTO.getEmail());

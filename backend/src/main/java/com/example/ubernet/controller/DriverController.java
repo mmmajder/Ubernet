@@ -1,28 +1,23 @@
 package com.example.ubernet.controller;
 
-import com.example.ubernet.dto.CarResponse;
-import com.example.ubernet.dto.CreateCarDTO;
 import com.example.ubernet.dto.DriverResponse;
-import com.example.ubernet.model.Car;
 import com.example.ubernet.model.Driver;
 import com.example.ubernet.service.DriverService;
 import com.example.ubernet.utils.DTOMapper;
+import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-
+@AllArgsConstructor
 @RestController
 @RequestMapping(value = "/driver", produces = MediaType.APPLICATION_JSON_VALUE)
 public class DriverController {
-
     private final DriverService driverService;
-
-    public DriverController(DriverService driverService) {
-        this.driverService = driverService;
-    }
 
     @PutMapping("/toggle-activity/{email}")
     public ResponseEntity<DriverResponse> toggleActivity(@PathVariable String email) {

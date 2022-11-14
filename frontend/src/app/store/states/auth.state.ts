@@ -4,18 +4,35 @@ import {Login, Logout} from "../actions/authentication.actions";
 import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../../model/LoginResponseDto";
+import {UserRole} from "../../model/UserRole";
+
+const asyncLocalStorage = {
+  setItem: function (key:string, value:string) {
+    return Promise.resolve().then(function () {
+      localStorage.setItem(key, value);
+    });
+  },
+  getItem: function (key:string) {
+    return Promise.resolve().then(function () {
+      return localStorage.getItem(key);
+    });
+  }
+};
 
 @State<LoginResponseDto>({
   name: 'auth',
   defaults: {
-    token: null,
-    userRole: null
+    token: {
+      accessToken: '',
+      expiresIn: 0
+    },
+    userRole: UserRole.CUSTOMER
   }
 })
 @Injectable()
 export class AuthState {
   @Selector()
-  static token(state: LoginResponseDto): UserTokenState | null {
+  static token(state: LoginResponseDto): UserTokenState | '' {
     return state.token;
   }
 
@@ -24,15 +41,20 @@ export class AuthState {
     return !!state.token;
   }
 
-  constructor(private authService: AuthService) {}
+  constructor(private authService: AuthService) {
+  }
 
   @Action(Login)
   login(ctx: StateContext<LoginResponseDto>, action: Login) {
     return this.authService.login(action.payload).pipe(
       tap((result: LoginResponseDto) => {
-        ctx.patchState({
-          token: result.token,
-          userRole: result.userRole
+        asyncLocalStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken))).then(function () {
+          return asyncLocalStorage.getItem('token');
+        }).then(function () {
+          ctx.patchState({
+            token: result.token,
+            userRole: result.userRole
+          });
         });
       })
     );
@@ -44,10 +66,11 @@ export class AuthState {
     return this.authService.logout(state.token).pipe(
       tap(() => {
         ctx.setState({
-          token: null,
-          userRole: null
+          token: new UserTokenState(),
+          userRole: UserRole.CUSTOMER
         });
       })
     );
   }
+
 }

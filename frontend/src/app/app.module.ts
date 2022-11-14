@@ -35,6 +35,7 @@ import {UnauthenticatedModule} from "./views/unauthenticated/unauthenticated.mod
 import {MapModule} from "./views/map/map.module";
 import { NgxsModule } from '@ngxs/store';
 import {AuthState} from "./store/states/auth.state";
+import {LoggedUserState} from "./store/states/loggedUser.state";
 
 @NgModule({
   declarations: [
@@ -71,7 +72,7 @@ import {AuthState} from "./store/states/auth.state";
     AdminModule,
     UnauthenticatedModule,
     MapModule,
-    NgxsModule.forRoot([AuthState]),
+    NgxsModule.forRoot([AuthState, LoggedUserState]),
   ],
   exports: [
   ],
