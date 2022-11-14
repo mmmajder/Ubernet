@@ -1,6 +1,7 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.*;
+import com.example.ubernet.model.StringResponse;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.AuthentificationService;
 import com.example.ubernet.service.UserService;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins="*")
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
     private final AuthentificationService authentificationService;
@@ -61,13 +63,15 @@ public class AuthController {
         return new ResponseEntity<>("There was a problem in resetting password", HttpStatus.CONFLICT);
     }
 
-    @PutMapping("/change-password/{email}")
+    @PutMapping("/changePassword/{email}")
     public ResponseEntity<String> changePassword(@PathVariable String email, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
         if (authentificationService.changePassword(email, changePasswordDTO)) {
-            return new ResponseEntity<>("Successfully changed password", HttpStatus.OK);
+            StringResponse r = new StringResponse("Successfully changed password");
+            return new ResponseEntity(r, HttpStatus.OK);
         }
-        
-        return new ResponseEntity<>("There was a problem in changing password", HttpStatus.CONFLICT);
+
+        StringResponse r = new StringResponse("There was a problem in changing password");
+        return new ResponseEntity(r, HttpStatus.CONFLICT);
     }
 
     @GetMapping("/currently-logged-user")

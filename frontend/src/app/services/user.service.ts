@@ -9,6 +9,7 @@ import {Customer, User, UserDTO} from "../model/User";
 export class UserService {
 
   private readonly userUrl: string;
+  private readonly authUrl: string;
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -19,6 +20,7 @@ export class UserService {
 
   constructor(private http: HttpClient) {
     this.userUrl = 'http://localhost:8000/user';
+    this.authUrl = 'http://localhost:8000/auth';
   }
 
   public getUser(email: string): Observable<User> {
@@ -30,5 +32,14 @@ export class UserService {
     console.log("body")
     console.log(body)
     return this.http.put<UserDTO>(this.userUrl + "/profile?email=" + customer.email, body, this.httpOptions);
+  }
+
+  public changePassword(email: String, currentPassword: String, newPassword: String){
+    let body = {"currentPassword": currentPassword,
+                "newPassword": newPassword};
+    console.log("body");
+    console.log(body);
+
+    return this.http.put<Object>(this.authUrl + "/changePassword/" + email, body, this.httpOptions);
   }
 }

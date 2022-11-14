@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
+import {UserService} from "../../../services/user.service";
 
 @Component({
   selector: 'app-change-password',
@@ -19,10 +20,15 @@ export class ChangePasswordComponent implements OnInit {
   newPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
   reEnteredNewPasswordFormControl = new FormControl('', [Validators.required]);
 
-  constructor() {
-  }
+  constructor(private userService: UserService) {}
 
   ngOnInit(): void {
+  }
+
+  changePassword(): void {
+    this.userService.changePassword("admin@gmail.com", "admin", "admin222").subscribe((data) => {
+      console.log(data);
+    });
   }
 
 }
