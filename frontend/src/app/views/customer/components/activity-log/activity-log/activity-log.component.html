@@ -1,13 +1,16 @@
-<mat-card>
-  <mat-card-header>Activity log</mat-card-header>
-  <mat-card-content class="scrollable">
+<mat-card class="dashboard-card">
+<mat-card-header>Activity log</mat-card-header>
+  <mat-card-content class="scrollable" *ngIf="activityLog.length > 0">
     <mat-list>
       <mat-list-item *ngFor="let log of activityLog">
         <mat-icon mat-list-icon>access_time</mat-icon>
-        <div> {{log.text}} </div>
-        <div><span class="activity-log-time"> {{log.time}} </span></div>
+        <div mat-line><span class="log-text">{{log.text}}</span></div>
+        <div mat-line><span class="activity-log-time"> {{log.time}} </span></div>
         <mat-divider></mat-divider>
       </mat-list-item>
     </mat-list>
+  </mat-card-content>
+  <mat-card-content *ngIf="activityLog.length == 0" style="text-align: center;">
+    <img src="assets/no-activities.png" style="height: 250px" alt="no-activities">
   </mat-card-content>
 </mat-card>

@@ -23,6 +23,10 @@ import {MatTabsModule} from "@angular/material/tabs";
 import {AdminModule} from "../admin/admin.module";
 import {UnauthenticatedModule} from "../unauthenticated/unauthenticated.module";
 import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
+import { CustomersUpcomingRidesComponent } from './components/customers-upcoming-rides/customers-upcoming-rides.component';
+import { CustomerRatingsDashboardComponent } from './components/customer-ratings-dashboard/customer-ratings-dashboard.component';
+import {MatChipsModule} from "@angular/material/chips";
+import {MatTooltipModule} from "@angular/material/tooltip";
 
 @NgModule({
   declarations: [
@@ -31,27 +35,31 @@ import {CreditCardComponent} from "./components/profile/credit-card/credit-card.
     ActivityLogComponent,
     ProfileCustomerContainerComponent,
     CreditCardComponent,
+    CustomersUpcomingRidesComponent,
+    CustomerRatingsDashboardComponent,
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-    MatListModule,
-    MatTabsModule,
-    AdminModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatListModule,
+        MatTabsModule,
+        AdminModule,
+        MatChipsModule,
+        MatTooltipModule,
+    ],
     exports: [
         DashboardCustomerContainerComponent,
         ProfileDataComponent,
