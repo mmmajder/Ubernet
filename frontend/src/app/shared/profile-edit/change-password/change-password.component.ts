@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
+import {UserService} from "../../../services/user.service";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-change-password',
@@ -7,22 +9,40 @@ import {FormControl, Validators} from "@angular/forms";
   styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordComponent implements OnInit {
-  hide: boolean = true;
-  hide1: boolean = true;
-  hide2: boolean = true;
+  hideCurrentPassword: boolean = true;
+  hideNewPassword: boolean = true;
+  hideReEnteredNewPassword: boolean = true;
 
-  password: any;
-  password1: any;
-  password2: any;
+  currentPassword: any = "";
+  newPassword: any = "";
+  reEnteredNewPassword: any = "";
+  loggedUser: any = null;
 
-  passwordFormControl = new FormControl('', [Validators.required]);
-  password1FormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
-  password2FormControl = new FormControl('', [Validators.required]);
+  currentPasswordFormControl = new FormControl('', [Validators.required]);
+  newPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
+  reEnteredNewPasswordFormControl = new FormControl('', [Validators.required]);
 
-  constructor() {
-  }
+
+  constructor(private userService: UserService, private authService: AuthService) {}
 
   ngOnInit(): void {
+    this.authService.getCurrentlyLoggedUser().subscribe(data => {
+      //TODO should the loggedUser be taken like this? sometimes because of the async it's not working well
+      this.loggedUser = data;
+    });
   }
 
+  changePassword(): void {
+    if (this.loggedUser === null || this.currentPassword === "" || this.newPassword === "" || this.newPassword !== this.reEnteredNewPassword)
+    {
+      console.log("something is not filled")
+      //TODO induce showing of errors on form fields
+      return
+    }
+
+    this.userService.changePassword(this.loggedUser.email, this.currentPassword, this.newPassword, this.reEnteredNewPassword)
+      .subscribe((data) => {
+        console.log(data);
+      });
+  }
 }

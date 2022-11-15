@@ -1,5 +1,6 @@
 package com.example.ubernet.model;
 
+import com.example.ubernet.dto.MessageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -13,7 +14,6 @@ import java.time.LocalDateTime;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Message {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,10 +21,21 @@ public class Message {
     private long id;
 
     @ManyToOne
-    private User sender;
+    private User client;
+    private String adminEmail;
+    private boolean isSentByAdmin; // for easier filtering in repos
+
     private LocalDateTime time;
     private String content;
 
-    private Boolean deleted = false;
+    private Boolean isDeleted = false;
 
+    public Message(User client, String adminEmail, boolean isSentByAdmin, String content){
+        this.client = client;
+        this.adminEmail = adminEmail;
+        this.isSentByAdmin = isSentByAdmin;
+        this.content = content;
+        this.time = LocalDateTime.now();
+        this.isDeleted = false;
+    }
 }

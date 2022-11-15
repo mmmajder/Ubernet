@@ -10,9 +10,11 @@ import {AuthService} from "./auth.service";
 export class UserService {
 
   private readonly userUrl: string;
+  private readonly authUrl: string;
 
   constructor(private http: HttpClient) {
     this.userUrl = 'http://localhost:8000/user';
+    this.authUrl = 'http://localhost:8000/auth';
   }
 
   public getUser(email: string): Observable<User> {
@@ -22,5 +24,15 @@ export class UserService {
   public updateCustomerData(customer: Customer): Observable<UserDTO> {
     let body = new UserDTO(customer.name, customer.surname, customer.phoneNumber, customer.city);
     return this.http.put<UserDTO>(this.userUrl + "/profile?email=" + customer.email, body, AuthService.getHttpOptions());
+  }
+
+  public changePassword(email: String, currentPassword: String, newPassword: String, reEnteredNewPassword: String){
+    let body = {"currentPassword": currentPassword,
+                "newPassword": newPassword,
+                "reEnteredNewPassword": reEnteredNewPassword};
+    console.log("body");
+    console.log(body);
+
+    return this.http.put<Object>(this.authUrl + "/changePassword/" + email, body, this.httpOptions);
   }
 }
