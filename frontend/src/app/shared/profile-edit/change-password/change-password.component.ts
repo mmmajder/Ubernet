@@ -26,9 +26,12 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   changePassword(): void {
-    this.userService.changePassword("admin@gmail.com", "admin", "admin222").subscribe((data) => {
-      console.log(data);
-    });
+    if (this.currentPassword !== "" && this.newPassword !== "" && this.newPassword === this.reEnteredNewPassword)
+    {
+      this.userService.changePassword("admin@gmail.com", "admin", "admin222")
+        .subscribe((data) => {
+          console.log(data);
+        });
+    }
   }
-
 }
