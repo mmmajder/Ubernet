@@ -127,6 +127,7 @@
 
 .sidebar ul li a:hover {
   background: var(--gray);
+  cursor: pointer;
 }
 
 .sidebar ul li mat-icon {

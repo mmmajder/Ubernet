@@ -18,6 +18,7 @@ import {
   ProfileDriverContainerComponent
 } from "./views/driver/container/profile-driver-container/profile-driver-container.component";
 import {DashboardContainerComponent} from "./views/pages/dashboard-container/dashboard-container.component";
+import {ProfileContainerComponent} from "./views/pages/profile-container/profile-container.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
@@ -25,8 +26,7 @@ const routes: Routes = [
   {path: 'map', component: MapComponent},
   {path: 'chat', component: ChatContainerComponent},
   {path: 'admin/drivers', component: DriversComponent},
-  {path: 'customer/profile', component: ProfileCustomerContainerComponent},
-  {path: 'driver/profile', component: ProfileDriverContainerComponent},
+  {path: 'profile', component: ProfileContainerComponent},
   {path: '**', component: NotFoundPageComponent},
   // {canActivate: [AuthGuard]}
 ];

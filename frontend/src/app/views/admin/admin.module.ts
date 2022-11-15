@@ -23,6 +23,7 @@ import {DriverRegistartionComponent} from './components/driver-registartion/driv
 import {DriversComponent} from './container/drivers/drivers.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {DriversListComponent} from './components/drivers-list/drivers-list.component';
+import { AdminProfileContainerComponent } from './container/admin-profile-container/admin-profile-container.component';
 
 @NgModule({
   declarations: [
@@ -33,6 +34,7 @@ import {DriversListComponent} from './components/drivers-list/drivers-list.compo
     DriverRegistartionComponent,
     DriversComponent,
     DriversListComponent,
+    AdminProfileContainerComponent,
   ],
   imports: [
     MatToolbarModule,
@@ -54,9 +56,10 @@ import {DriversListComponent} from './components/drivers-list/drivers-list.compo
     MatTooltipModule,
     MatTabsModule,
   ],
-  exports: [
-    AdminContainerComponent,
-  ]
+    exports: [
+        AdminContainerComponent,
+        AdminProfileContainerComponent,
+    ]
 })
 export class AdminModule {
 }

@@ -33,6 +33,11 @@ public class AuthController {
         return ResponseEntity.ok(loginResponseDTO);
     }
 
+    @PostMapping("/logout")
+    public void logout(@Valid @RequestBody UserTokenState userTokenState) {
+        // TODO
+    }
+
     //    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/register")
     public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {

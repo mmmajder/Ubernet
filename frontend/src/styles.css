@@ -67,3 +67,8 @@ mat-card {
   border: none;
   border-radius: 50%;
 }
+
+.snack-bar {
+  background: var(--dark);
+  color: var(--yellow);
+}

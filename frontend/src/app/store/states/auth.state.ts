@@ -13,7 +13,7 @@ import {UserRole} from "../../model/UserRole";
       accessToken: '',
       expiresIn: 0
     },
-    userRole: UserRole.CUSTOMER
+    userRole: UserRole.UNAUTHORIZED
   }
 })
 @Injectable()
@@ -50,7 +50,7 @@ export class AuthState {
       tap(() => {
         ctx.setState({
           token: new UserTokenState(),
-          userRole: UserRole.CUSTOMER
+          userRole: UserRole.UNAUTHORIZED
         });
       })
     );

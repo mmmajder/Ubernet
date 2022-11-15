@@ -76,13 +76,15 @@ export class LoginComponent implements OnInit {
       "password": this.password
     })).subscribe({
       next: (value) => {
-        console.log("AIUFBAIUFBFUUIAE")
         console.log(value.auth.token);
         localStorage.setItem('token', "Bearer " + value.auth.token.accessToken);
         this.authService.getCurrentlyLoggedUser();
         this.router.navigate(['/dashboard']);
       },
-      error: () => this._snackBar.open("Wrong email or password.", 'Close')
+      error: () => this._snackBar.open("Wrong email or password.", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
     });
   }
 }

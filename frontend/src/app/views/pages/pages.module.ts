@@ -17,10 +17,12 @@ import {DashboardContainerComponent} from "./dashboard-container/dashboard-conta
 import {AdminModule} from "../admin/admin.module";
 import {CustomerModule} from "../customer/customer.module";
 import {DriverModule} from "../driver/driver.module";
+import { ProfileContainerComponent } from './profile-container/profile-container.component';
 
 @NgModule({
   declarations: [
-    DashboardContainerComponent
+    DashboardContainerComponent,
+    ProfileContainerComponent
   ],
   imports: [
     MatToolbarModule,

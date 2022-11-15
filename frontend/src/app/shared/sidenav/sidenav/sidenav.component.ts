@@ -1,7 +1,7 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from "@angular/material/menu";
 import {Logout} from "../../../store/actions/authentication.actions";
-import {Store} from "@ngxs/store";
+import {Select, Store} from "@ngxs/store";
 import {Router} from "@angular/router";
 import {User} from "../../../model/User";
 
@@ -15,13 +15,16 @@ export class SidenavComponent implements OnInit {
   isActive: boolean = false;
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
 
-  @Input() user: User;
+  user: User;
 
   someMethod() {
     this.trigger?.openMenu();
   }
 
   constructor(private store: Store, private router: Router) {
+    this.store.select(state => state.loggedUser).subscribe({
+      next: (user) => this.user = user
+    })
   }
 
   ngOnInit(): void {

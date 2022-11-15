@@ -52,11 +52,12 @@ import {CreditCardComponent} from "./components/profile/credit-card/credit-card.
     MatTabsModule,
     AdminModule,
   ],
-  exports: [
-    DashboardCustomerContainerComponent,
-    ProfileDataComponent,
-    UnauthenticatedModule,
-  ],
+    exports: [
+        DashboardCustomerContainerComponent,
+        ProfileDataComponent,
+        UnauthenticatedModule,
+        ProfileCustomerContainerComponent,
+    ],
 })
 export class CustomerModule {
 }

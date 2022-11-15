@@ -24,8 +24,8 @@ export class AuthService {
     return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, AuthService.getHttpOptions());
   }
 
-  public logout(token: UserTokenState | ""): Observable<LoginResponseDto> {
-    return this.http.post<LoginResponseDto>(this.authUrl + '/logout', token, AuthService.getHttpOptions());
+  public logout(token: UserTokenState | ""): Observable<Object> {
+    return this.http.post(this.authUrl + '/logout', token, AuthService.getHttpOptions());
   }
 
   public getCurrentlyLoggedUser(): Observable<User> {

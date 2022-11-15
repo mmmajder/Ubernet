@@ -47,8 +47,14 @@ export class ProfileDataComponent implements OnInit {
   updateCustomer() {
     let user = new Customer(this.name, this.lastName, this.email, this.phoneNumber, this.city);
     this.store.dispatch(new UpdateCustomerData(user)).subscribe({
-      next: () => this._snackBar.open("Data updated successfully.", 'Close'),
-      error: () => this._snackBar.open("Error occurred while updating data.", 'Close')
+      next: () => this._snackBar.open("Data updated successfully.", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      }),
+      error: () => this._snackBar.open("Error occurred while updating data.", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
     });
   }
 
