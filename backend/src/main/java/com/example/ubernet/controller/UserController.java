@@ -30,4 +30,13 @@ public class UserController {
         return new ResponseEntity<>(userEditDTO, HttpStatus.OK);
     }
 
+//    @PutMapping("/profile")
+//    public ResponseEntity<UserEditDTO> updateProfile(@RequestParam("email") String email, @RequestBody UserEditDTO userEditDTO) {
+//        userEditDTO = userService.editUser(email, userEditDTO);
+//        if (userEditDTO == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        return new ResponseEntity<>(userEditDTO, HttpStatus.OK);
+//    }
+
 }
