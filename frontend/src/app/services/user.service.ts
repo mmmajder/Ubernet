@@ -31,8 +31,6 @@ export class UserService {
                 "newPassword": newPassword,
                 "reEnteredNewPassword": reEnteredNewPassword};
     console.log("body");
-    console.log(body);
-
-    return this.http.put<Object>(this.authUrl + "/changePassword/" + email, body, this.httpOptions);
+    return this.http.put<Object>(this.authUrl + "/changePassword/" + email, body, AuthService.getHttpOptions());
   }
 }

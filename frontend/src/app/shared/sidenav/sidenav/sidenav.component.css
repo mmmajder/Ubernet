@@ -10,6 +10,7 @@
   margin-top: 10px;
   color: var(--dark);
   cursor: pointer;
+  font-size: 15px;
 }
 
 .mat-icon {

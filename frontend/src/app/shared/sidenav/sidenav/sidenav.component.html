@@ -46,6 +46,13 @@
       </a>
       <span class="tooltip">My Profile</span>
     </li>
+    <li *ngIf="user.role == 'ADMIN'">
+      <a (click)="navigate('/chat')">
+        <mat-icon>message</mat-icon>
+        <span class="links_name">Messages</span>
+      </a>
+      <span class="tooltip">Messages</span>
+    </li>
     <li>
       <a (click)="logout()">
         <mat-icon>logout</mat-icon>
