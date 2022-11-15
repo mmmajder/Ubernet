@@ -17,4 +17,6 @@ public class ChangePasswordDTO {
     private String currentPassword;
     @NotEmpty
     private String newPassword;
+    @NotEmpty
+    private String reEnteredNewPassword;
 }

@@ -115,14 +115,8 @@ public class AuthentificationService {
 
     public boolean changePassword(String email, ChangePasswordDTO changePasswordDTO) {
         User user = userService.findByEmail(email);
-        if (user == null)
-            return false;
 
-        System.out.println(changePasswordDTO.getCurrentPassword());
-        System.out.println(user.getPassword());
-        System.out.println(passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()));
-
-        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()))
+        if (!validatePasswordChange(user, changePasswordDTO))
             return false;
 
         user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
@@ -131,6 +125,19 @@ public class AuthentificationService {
             userAuthService.save(user.getUserAuth());
         }
         userService.save(user);
+
+        return true;
+    }
+
+    private boolean validatePasswordChange(User user, ChangePasswordDTO changePasswordDTO){
+        if (user == null)
+            return false;
+
+        if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getReEnteredNewPassword()))
+            return false;
+
+        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()))
+            return false;
 
         return true;
     }

@@ -65,6 +65,7 @@ public class AuthController {
 
     @PutMapping("/changePassword/{email}")
     public ResponseEntity<String> changePassword(@PathVariable String email, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+        System.out.println("changepassworddd");
         if (authentificationService.changePassword(email, changePasswordDTO)) {
             StringResponse r = new StringResponse("Successfully changed password");
             return new ResponseEntity(r, HttpStatus.OK);
@@ -76,6 +77,7 @@ public class AuthController {
 
     @GetMapping("/currently-logged-user")
     public ResponseEntity<UserResponse> loggedUser(Authentication authentication) {
+        System.out.println("loggedUserrrr");
         User user = userService.getLoggedUser(authentication);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

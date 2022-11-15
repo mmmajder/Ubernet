@@ -34,9 +34,10 @@ export class UserService {
     return this.http.put<UserDTO>(this.userUrl + "/profile?email=" + customer.email, body, this.httpOptions);
   }
 
-  public changePassword(email: String, currentPassword: String, newPassword: String){
+  public changePassword(email: String, currentPassword: String, newPassword: String, reEnteredNewPassword: String){
     let body = {"currentPassword": currentPassword,
-                "newPassword": newPassword};
+                "newPassword": newPassword,
+                "reEnteredNewPassword": reEnteredNewPassword};
     console.log("body");
     console.log(body);
 
