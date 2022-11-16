@@ -8,7 +8,7 @@
           <span class="time-left"> &nbsp;&nbsp;{{ride.timeToRate}} left to rate</span>
         </div>
         <div mat-line><span class="start-end">{{ride.start}} - {{ride.destination}}</span></div>
-        <mat-icon style="color: var(--yellow)" [matTooltip]="'Rate this ride'" [matTooltipPosition]="'below'">star</mat-icon>
+        <mat-icon style="color: var(--yellow); cursor: pointer" (click)="openRatingsDialog(ride)" [matTooltip]="'Rate this ride'" [matTooltipPosition]="'below'">star</mat-icon>
         <mat-divider></mat-divider>
       </mat-list-item>
     </mat-list>

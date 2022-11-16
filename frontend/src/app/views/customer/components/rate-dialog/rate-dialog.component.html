@@ -1,0 +1,28 @@
+<mat-tab-group>
+  <mat-tab label="Rate driver">
+    <div [formGroup]="driverRatingForm">
+      <app-star-rating [rating]=driverRating></app-star-rating>
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Comment</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field>
+      <div style="float: right">
+        <button mat-button mat-dialog-close="">Cancel</button>
+        <button mat-button color="primary" mat-dialog-close="" (click)="rateDriver()">Submit rating</button>
+      </div>
+    </div>
+  </mat-tab>
+  <mat-tab label="Rate car">
+    <div [formGroup]="carRatingForm">
+      <app-star-rating [rating]=carRating></app-star-rating>
+      <mat-form-field appearance="outline" style="width: 100%">
+        <mat-label>Comment</mat-label>
+        <textarea matInput></textarea>
+      </mat-form-field>
+      <div style="float: right">
+        <button mat-button mat-dialog-close="">Cancel</button>
+        <button mat-button color="primary" mat-dialog-close="" (click)="rateCar()">Submit rating</button>
+      </div>
+    </div>
+  </mat-tab>
+</mat-tab-group>

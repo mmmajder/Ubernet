@@ -27,6 +27,8 @@ import { CustomersUpcomingRidesComponent } from './components/customers-upcoming
 import { CustomerRatingsDashboardComponent } from './components/customer-ratings-dashboard/customer-ratings-dashboard.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTooltipModule} from "@angular/material/tooltip";
+import { RateDialogComponent } from './components/rate-dialog/rate-dialog.component';
+import {StarRatingModule} from "angular-star-rating";
 
 @NgModule({
   declarations: [
@@ -37,6 +39,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
     CreditCardComponent,
     CustomersUpcomingRidesComponent,
     CustomerRatingsDashboardComponent,
+    RateDialogComponent,
   ],
     imports: [
         MatToolbarModule,
@@ -59,6 +62,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
         AdminModule,
         MatChipsModule,
         MatTooltipModule,
+        StarRatingModule,
     ],
     exports: [
         DashboardCustomerContainerComponent,
