@@ -18,12 +18,17 @@ public class CreditCardService {
         this.userService = userService;
     }
 
+    public boolean validateCreditCardInfo(CreditCardDTO creditCardDTO){
+        // TODO
+        return true;
+    }
+
     public CreditCard addCreditCardInfo(String email, CreditCardDTO creditCardDTO){
         User client = userService.findByEmail(email);
         CreditCard activeCreditCard, newCreditCard = null;
 
         if (client != null){
-            activeCreditCard = creditCardRepository.findByClientAndIsActive(client);
+            activeCreditCard = findClientsActiveCard(client);
 
             if ( activeCreditCard != null) // already has an active credit card
                 deactivateCreditCard(activeCreditCard);
@@ -51,5 +56,9 @@ public class CreditCardService {
 
     public CreditCard save(CreditCard creditCard) {
         return creditCardRepository.save(creditCard);
+    }
+
+    private CreditCard findClientsActiveCard(User client){
+        return creditCardRepository.findByClientAndIsActive(client, true);
     }
 }

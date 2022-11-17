@@ -9,5 +9,5 @@ import java.util.List;
 
 public interface CreditCardRepository extends JpaRepository<CreditCard, Long> {
     List<CreditCard> findByClient(User client);
-    CreditCard findByClientAndIsActive(User client);
+    CreditCard findByClientAndIsActive(User client, boolean isActive);
 }
