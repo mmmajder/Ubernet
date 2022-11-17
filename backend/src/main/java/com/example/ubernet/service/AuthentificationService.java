@@ -102,6 +102,15 @@ public class AuthentificationService {
         if (!isUserEnabled(user)) return null;
         return createAccessToken(user);
     }
+    public LoginResponseDTO loginSocial(LoginSocialDTO loginSocialDTO) {
+        User user = userService.findByEmail(loginSocialDTO.getEmail());
+        if (user==null) {
+            user = userService.createUserSocialLogin(loginSocialDTO);
+        }
+        long expiresIn = tokenUtils.getExpiredIn();
+        return new LoginResponseDTO(new UserTokenState(loginSocialDTO.getAuthToken(), expiresIn), UserRole.CUSTOMER);
+    }
+
 
     private LoginResponseDTO createAccessToken(User user) {
         String jwt = tokenUtils.generateToken(user);
@@ -154,6 +163,4 @@ public class AuthentificationService {
         emailService.sendEmailResetAsync(user);
         return true;
     }
-
-
 }

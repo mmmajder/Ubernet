@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Action, Selector, State, StateContext} from "@ngxs/store";
-import {Login, Logout} from "../actions/authentication.actions";
+import {Login, LoginSocial, Logout} from "../actions/authentication.actions";
 import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../../model/LoginResponseDto";
@@ -47,6 +47,22 @@ export class AuthState {
   @Action(Login)
   login(ctx: StateContext<LoginResponseDto>, action: Login) {
     return this.authService.login(action.payload).pipe(
+      tap((result: LoginResponseDto) => {
+        asyncLocalStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken))).then(function () {
+          return asyncLocalStorage.getItem('token');
+        }).then(function () {
+          ctx.patchState({
+            token: result.token,
+            userRole: result.userRole
+          });
+        });
+      })
+    );
+  }
+
+  @Action(LoginSocial)
+  loginSocial(ctx: StateContext<LoginResponseDto>, action: LoginSocial) {
+    return this.authService.loginSocial(action.payload).pipe(
       tap((result: LoginResponseDto) => {
         asyncLocalStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken))).then(function () {
           return asyncLocalStorage.getItem('token');

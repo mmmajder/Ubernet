@@ -1,5 +1,6 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.dto.LoginSocialDTO;
 import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.model.ProfileUpdateRequest;
@@ -19,6 +20,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -131,5 +133,29 @@ public class UserService implements UserDetailsService {
 
     public boolean doesUserExist(String email){
         return findByEmail(email) != null;
+    }
+
+    public User createUserSocialLogin(LoginSocialDTO loginSocialDTO) {
+        User user = new User();
+        user.setEmail(loginSocialDTO.getEmail());
+        user.setName(loginSocialDTO.getName());
+        user.getUserAuth().setIsEnabled(true);
+//        ArrayList<Role> roles = new ArrayList<>();
+//        roles.add(Role.)
+//        user.getUserAuth().setRoles();
+//
+
+//        private String email;
+//        private String authToken;
+//        private String firstName;
+//        private String id;
+//        private String idToken;
+//        private String lastName;
+//        private String name;
+//        private String photoUrl;
+//        private String provider;
+//
+//        user.set
+        return null;
     }
 }

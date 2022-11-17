@@ -33,7 +33,17 @@ public class AuthController {
         return ResponseEntity.ok(loginResponseDTO);
     }
 
-    //    @PreAuthorize("hasRole('ADMIN')")
+    @PostMapping("/login-social")
+    public ResponseEntity<LoginResponseDTO> loginSocial(
+            @Valid @RequestBody LoginSocialDTO loginSocialDTO) {
+
+        LoginResponseDTO loginResponseDTO = authentificationService.loginSocial(loginSocialDTO);
+        if (loginResponseDTO == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        return ResponseEntity.ok(loginResponseDTO);
+    }
+
     @PostMapping("/register")
     public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
         User user = authentificationService.addUser(userDTO);
