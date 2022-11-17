@@ -28,7 +28,7 @@ export class RestaurantStore extends ComponentStore<RestaurantState> {
         return this.restaurantService.findById(id)
           .pipe(tapResponse(
             (response) => this.patchState({restaurant: response}),
-            (error) => console.error(error),
+            (error) => console.error(),
           ))
       })
     )
@@ -44,7 +44,7 @@ export class RestaurantStore extends ComponentStore<RestaurantState> {
                 this.restaurantUpdater(response);
                 this.socketService.webSocketAPI._send(JSON.stringify(response), "/app/addMenuItem")
               },
-              error: (error) => console.error(error),
+              error: (error) => console.error(),
             }))
         )
       )
@@ -78,7 +78,7 @@ export class RestaurantStore extends ComponentStore<RestaurantState> {
                 }
                 this.socketService.webSocketAPI._send(JSON.stringify(item), "/app/removeMenuItem")
               },
-              error: (error) => console.error(error),
+              error: (error) => console.error(),
             }))
         )
       )

@@ -28,7 +28,7 @@ export class RestaurantsStore extends ComponentStore<RestaurantsState> {
         return this.restaurantService.findAll()
           .pipe(tapResponse(
             (response) => this.patchState({restaurants: response}),
-            (error) => console.error(error),
+            (error) => console.error(),
           ))
       })
     )
@@ -44,7 +44,7 @@ export class RestaurantsStore extends ComponentStore<RestaurantsState> {
                 this.addRestaurant(response);
                 this.socketService.webSocketAPI._send(JSON.stringify(restaurant), "/app/hello");
               },
-              error: (error) => console.error(error),
+              error: (error) => console.error(),
             }))
         )
       )

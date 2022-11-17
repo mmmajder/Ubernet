@@ -1,16 +1,16 @@
 <mat-toolbar class="navbar">
   <span>
-    <img class="logo" src="assets/logo.png"/>
+    <img class="logo" src="assets/logo.png" alt="logo"/>
   </span>
   <span class="example-spacer"></span>
   <button mat-icon-button>
     <mat-icon matBadge="15">notifications</mat-icon>
   </button>
-  <button mat-icon-button [matMenuTriggerFor]="menu">
+  <button *ngIf="user.role=='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon matBadge="15">help</mat-icon>
   </button>
-  <img src="assets/taxi.jpg" class="avatar" style="margin-left: 20px; margin-right: 10px;"/>
-  <p class="name">Pera Peric</p>
+  <img src="assets/taxi.jpg" class="avatar" style="margin-left: 20px; margin-right: 10px;" alt="avatar"/>
+  <p class="name" (click)="navigate('/profile')">{{user.name}} {{user.surname}}</p>
 </mat-toolbar>
 
 <div class="sidebar" [ngClass]="{ 'active': isActive }">
@@ -19,35 +19,42 @@
   </div>
   <ul>
     <li>
-      <a href="#">
+      <a (click)="navigate('/dashboard')">
         <mat-icon>dashboard</mat-icon>
         <span class="links_name">Dashboard</span>
       </a>
       <span class="tooltip">Dashboard</span>
     </li>
     <li>
-      <a href="map">
+      <a (click)="navigate('/map')">
         <mat-icon>location_pin</mat-icon>
         <span class="links_name">Map</span>
       </a>
       <span class="tooltip">Map</span>
     </li>
     <li>
-      <a href="#">
+      <a>
         <mat-icon>query_stats</mat-icon>
         <span class="links_name">Analytics</span>
       </a>
       <span class="tooltip">Analytics</span>
     </li>
     <li>
-      <a href="#">
+      <a (click)="navigate('/profile')">
         <mat-icon>person</mat-icon>
         <span class="links_name">My Profile</span>
       </a>
       <span class="tooltip">My Profile</span>
     </li>
+    <li *ngIf="user.role == 'ADMIN'">
+      <a (click)="navigate('/chat')">
+        <mat-icon>message</mat-icon>
+        <span class="links_name">Messages</span>
+      </a>
+      <span class="tooltip">Messages</span>
+    </li>
     <li>
-      <a href="#">
+      <a (click)="logout()">
         <mat-icon>logout</mat-icon>
         <span class="links_name">Log out</span>
       </a>

@@ -30,7 +30,7 @@ export class NavbarStore extends ComponentStore<NavbarState> {
         return this.navbarService.findAll()
           .pipe(tapResponse(
             (response) => this.patchState({notifications: response}),
-            (error) => console.error(error),
+            (error) => console.error(),
           ))
       })
     )
@@ -46,7 +46,7 @@ export class NavbarStore extends ComponentStore<NavbarState> {
                 this.addNotification(response);
                 this.colorNotification(notification.colorBell);
               },
-              error: (error) => console.error(error),
+              error: (error) => console.error(),
             }))
         )
       )

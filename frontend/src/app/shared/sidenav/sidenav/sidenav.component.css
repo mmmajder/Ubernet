@@ -9,6 +9,8 @@
 .name {
   margin-top: 10px;
   color: var(--dark);
+  cursor: pointer;
+  font-size: 15px;
 }
 
 .mat-icon {
@@ -126,6 +128,7 @@
 
 .sidebar ul li a:hover {
   background: var(--gray);
+  cursor: pointer;
 }
 
 .sidebar ul li mat-icon {

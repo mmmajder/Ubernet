@@ -6,6 +6,7 @@ import {Router} from '@angular/router';
 import {UserService} from "../../../../services/user.service";
 import {Login, LoginSocial} from "../../../../store/actions/authentication.actions";
 import {Store} from '@ngxs/store';
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-login',
@@ -23,7 +24,7 @@ export class LoginComponent implements OnInit {
   email: string = "";
   password: string = "";
 
-  constructor(private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService, private userService: UserService) {
+  constructor(private _snackBar: MatSnackBar, private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService, private userService: UserService) {
   }
 
   ngOnInit(): void {
@@ -86,11 +87,17 @@ export class LoginComponent implements OnInit {
     this.store.dispatch(new Login({
       "email": this.email,
       "password": this.password
-    })).subscribe((resp) => {
-      console.log(resp);
-      // if(resp.loggedUser.role == "CUSTOMER")
-      this.router.navigate(['/customer/profile']);
+    })).subscribe({
+      next: (value) => {
+        console.log(value.auth.token);
+        localStorage.setItem('token', "Bearer " + value.auth.token.accessToken);
+        this.authService.getCurrentlyLoggedUser();
+        this.router.navigate(['/dashboard']);
+      },
+      error: () => this._snackBar.open("Wrong email or password.", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
     });
   }
-
 }

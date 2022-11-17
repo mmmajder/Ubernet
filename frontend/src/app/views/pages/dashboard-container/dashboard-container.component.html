@@ -1,0 +1,6 @@
+<app-sidenav></app-sidenav>
+<div [ngSwitch]="user.role">
+  <app-driver-container *ngSwitchCase="'DRIVER'"></app-driver-container>
+  <app-admin-container *ngSwitchCase="'ADMIN'"></app-admin-container>
+  <app-customer-container *ngSwitchCase="'CUSTOMER'"></app-customer-container>
+</div>

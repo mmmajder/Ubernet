@@ -122,17 +122,32 @@ public class AuthentificationService {
         return user.isEnabled() && !user.getDeleted();
     }
 
-    public boolean changePassword(ChangePasswordDTO changePasswordDTO) {
-        User user = userService.findByEmail(changePasswordDTO.getEmail());
-        if (user == null) {
+    public boolean changePassword(String email, ChangePasswordDTO changePasswordDTO) {
+        User user = userService.findByEmail(email);
+
+        if (!validatePasswordChange(user, changePasswordDTO))
             return false;
-        }
-        user.setPassword(passwordEncoder.encode(changePasswordDTO.getPassword()));
+
+        user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
         if (!user.isEnabled()) {
             user.getUserAuth().setIsEnabled(true);
             userAuthService.save(user.getUserAuth());
         }
         userService.save(user);
+
+        return true;
+    }
+
+    private boolean validatePasswordChange(User user, ChangePasswordDTO changePasswordDTO){
+        if (user == null)
+            return false;
+
+        if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getReEnteredNewPassword()))
+            return false;
+
+        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()))
+            return false;
+
         return true;
     }
 

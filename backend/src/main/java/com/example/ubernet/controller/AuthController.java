@@ -1,6 +1,7 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.*;
+import com.example.ubernet.model.StringResponse;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.AuthentificationService;
 import com.example.ubernet.service.UserService;
@@ -17,6 +18,7 @@ import javax.validation.Valid;
 
 @RestController
 @AllArgsConstructor
+@CrossOrigin(origins = "*")
 @RequestMapping(value = "/auth", produces = MediaType.APPLICATION_JSON_VALUE)
 public class AuthController {
     private final AuthentificationService authentificationService;
@@ -28,7 +30,7 @@ public class AuthController {
 
         LoginResponseDTO loginResponseDTO = authentificationService.login(authenticationRequest);
         if (loginResponseDTO == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return ResponseEntity.ok(loginResponseDTO);
     }
@@ -43,6 +45,12 @@ public class AuthController {
         }
         return ResponseEntity.ok(loginResponseDTO);
     }
+
+    @PostMapping("/logout")
+    public void logout(@Valid @RequestBody UserTokenState userTokenState) {
+        // TODO
+    }
+
 
     @PostMapping("/register")
     public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
@@ -71,16 +79,21 @@ public class AuthController {
         return new ResponseEntity<>("There was a problem in resetting password", HttpStatus.CONFLICT);
     }
 
-    @PutMapping("/change-password")
-    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
-        if (authentificationService.changePassword(changePasswordDTO)) {
-            return new ResponseEntity<>("Successfully changed password", HttpStatus.OK);
+    @PutMapping("/changePassword/{email}")
+    public ResponseEntity<String> changePassword(@PathVariable String email, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+        System.out.println("changepassworddd");
+        if (authentificationService.changePassword(email, changePasswordDTO)) {
+            StringResponse r = new StringResponse("Successfully changed password");
+            return new ResponseEntity(r, HttpStatus.OK);
         }
-        return new ResponseEntity<>("There was a problem in changing password", HttpStatus.CONFLICT);
+
+        StringResponse r = new StringResponse("There was a problem in changing password");
+        return new ResponseEntity(r, HttpStatus.CONFLICT);
     }
 
     @GetMapping("/currently-logged-user")
     public ResponseEntity<UserResponse> loggedUser(Authentication authentication) {
+        System.out.println("loggedUserrrr");
         User user = userService.getLoggedUser(authentication);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
