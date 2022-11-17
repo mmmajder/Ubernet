@@ -31,8 +31,4 @@ export class UserService {
   public changePassword(email: string, passwordChangeInfo: PasswordChangeInfo){
     return this.http.put<Object>(this.authUrl + "/changePassword/" + email, passwordChangeInfo, AuthService.getHttpOptions());
   }
-
-  public putCreditCardData(email: String, creditCard: CreditCard){
-    return this.http.put<Object>(this.authUrl + "/creditCard/" + email, creditCard, AuthService.getHttpOptions());
-  }
 }

@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {CreditCard} from "../../../../../model/CreditCard";
-import {UserService} from "../../../../../services/user.service";
 import {AuthService} from "../../../../../services/auth.service";
+import {PaymentService} from "../../../../../services/payment.service";
 
 @Component({
   selector: 'app-credit-card',
@@ -23,7 +23,7 @@ export class CreditCardComponent implements OnInit {
 
   loggedUser: any = null;
 
-  constructor(private userService: UserService, private authService: AuthService) {}
+  constructor(private paymentService: PaymentService, private authService: AuthService) {}
 
   ngOnInit(): void {
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
@@ -81,7 +81,7 @@ export class CreditCardComponent implements OnInit {
     let creditCard: CreditCard = new CreditCard(this.creditCardNumber, this.expirationDate, this.CVV);
     if (this.testCardData())
       console.log(creditCard);
-      this.userService.putCreditCardData(this.loggedUser.email, creditCard)
+      this.paymentService.putCreditCardData(this.loggedUser.email, creditCard)
         .subscribe((data) => {
           console.log(data);
         });
