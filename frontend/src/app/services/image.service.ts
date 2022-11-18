@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {CreditCard} from "../model/CreditCard";
 import {AuthService} from "./auth.service";
 
 @Injectable({

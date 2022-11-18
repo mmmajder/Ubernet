@@ -5,7 +5,6 @@ import {Customer} from "../../../model/User";
 import {CurrentlyLogged, UpdateCustomerData} from "../../../store/actions/loggedUser.actions";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ImageService} from "../../../services/image.service";
-import {DomSanitizer, SafeResourceUrl} from '@angular/platform-browser';
 
 @Component({
   selector: 'app-profile-data',
@@ -27,12 +26,10 @@ export class ProfileDataComponent implements OnInit {
 
   hasSelectedFile: boolean = false;
   selectedImage: any = null;
-  profileImageSrc: string | SafeResourceUrl;
+  profileImageSrc: string;
   @ViewChild('fileUploader') fileUploader:ElementRef;
 
-  constructor(private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService,
-              private sanitizer: DomSanitizer) {
-  }
+  constructor(private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService) {}
 
   ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe((resp) => {

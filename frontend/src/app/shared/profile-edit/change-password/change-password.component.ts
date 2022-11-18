@@ -2,7 +2,6 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {UserService} from "../../../services/user.service";
 import {AuthService} from "../../../services/auth.service";
-import {CreditCard} from "../../../model/CreditCard";
 import {PasswordChangeInfo} from "../../../model/PasswordChangeInfo";
 
 @Component({
