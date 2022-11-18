@@ -18,11 +18,6 @@ public class CreditCardService {
         this.userService = userService;
     }
 
-    public boolean validateCreditCardInfo(CreditCardDTO creditCardDTO){
-        // TODO
-        return true;
-    }
-
     public CreditCard addCreditCardInfo(String email, CreditCardDTO creditCardDTO){
         User client = userService.findByEmail(email);
         CreditCard activeCreditCard, newCreditCard = null;
@@ -60,5 +55,37 @@ public class CreditCardService {
 
     private CreditCard findClientsActiveCard(User client){
         return creditCardRepository.findByClientAndIsActive(client, true);
+    }
+
+    public CreditCard findClientsActiveCardByEmail(String email){
+        User client = userService.findByEmail(email);
+        return creditCardRepository.findByClientAndIsActive(client, true);
+    }
+
+    public boolean validateNewCardAddition(String email, CreditCardDTO creditCardDTO){
+        return validateNewCardData(creditCardDTO) && !isNewCreditCardSameAsActive(email, creditCardDTO);
+    }
+
+    private boolean validateNewCardData(CreditCardDTO creditCardDTO){
+        String[] mmYySplits;
+        if (creditCardDTO.getCardNumber().matches("\\d{16}") &&
+                creditCardDTO.getExpirationDate().matches("\\d{2}\\/\\d{2}") &&
+                creditCardDTO.getCvv().matches("\\d{3}")) {
+            mmYySplits = creditCardDTO.getExpirationDate().split("/");
+            if (Integer.valueOf(mmYySplits[0]) > 0 && Integer.valueOf(mmYySplits[0])  <= 12)
+                return true;
+        }
+
+        return false;
+    }
+
+    private boolean isNewCreditCardSameAsActive(String email, CreditCardDTO creditCardDTO){
+        CreditCard card = findClientsActiveCardByEmail(email);
+        if (card == null)
+            return false;
+
+        return card.getCardNumber().equals(creditCardDTO.getCardNumber()) &&
+            card.getExpirationDate().equals(creditCardDTO.getExpirationDate()) &&
+            card.getCvv().equals(creditCardDTO.getCvv());
     }
 }
