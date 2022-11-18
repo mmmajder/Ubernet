@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Action, Selector, State, StateContext} from "@ngxs/store";
-import {Login, LoginSocial, Logout} from "../actions/authentication.actions";
+import {Login, LoginSocial, Logout, Register} from "../actions/authentication.actions";
 import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../../model/LoginResponseDto";
@@ -43,6 +43,14 @@ export class AuthState {
     );
   }
 
+  @Action(Register)
+  register(ctx: StateContext<string>, action: Register) {
+    return this.authService.register(action.payload).pipe(
+      tap((result: string) => {
+      })
+    );
+  }
+
   @Action(LoginSocial)
   loginSocial(ctx: StateContext<LoginResponseDto>, action: LoginSocial) {
     return this.authService.loginSocial(action.payload).pipe(
@@ -55,21 +63,6 @@ export class AuthState {
     );
   }
 
-  // @Action(LoginSocial)
-  // loginSocial(ctx: StateContext<LoginResponseDto>, action: LoginSocial) {
-  //   return this.authService.loginSocial(action.payload).pipe(
-  //     tap((result: LoginResponseDto) => {
-  //       asyncLocalStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken))).then(function () {
-  //         return asyncLocalStorage.getItem('token');
-  //       }).then(function () {
-  //         ctx.patchState({
-  //           token: result.token,
-  //           userRole: result.userRole
-  //         });
-  //       });
-  //     })
-  //   );
-  // }
 
   @Action(Logout)
   logout(ctx: StateContext<LoginResponseDto>) {

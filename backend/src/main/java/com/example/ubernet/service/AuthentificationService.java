@@ -52,11 +52,12 @@ public class AuthentificationService {
         user.setIsBlocked(false);
         user.setUserAuth(getUserAuth(user));
         switch (createUserDTO.getUserRole()) {
-            case CUSTOMER -> customerService.save((Customer) user);
+            case CUSTOMER -> customerService.save(user);
             case ADMIN -> adminService.save(user);
-            case DRIVER -> driverService.save((Driver) user);
+            case DRIVER -> driverService.save(user);
         }
-        return userService.save(user);
+        return user;
+//        return userService.save(user);
     }
 
     private UserAuth getUserAuth(User user) {
@@ -183,4 +184,6 @@ public class AuthentificationService {
         emailService.sendEmailResetAsync(user);
         return true;
     }
+
+
 }

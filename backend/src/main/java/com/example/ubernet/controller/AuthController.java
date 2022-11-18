@@ -53,12 +53,12 @@ public class AuthController {
 
 
     @PostMapping("/register")
-    public ResponseEntity<User> addUser(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
+    public ResponseEntity<String> addUser(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
         User user = authentificationService.addUser(userDTO);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        return new ResponseEntity<>(user, HttpStatus.CREATED);
+        return new ResponseEntity<>("Sent verification email", HttpStatus.CREATED);
     }
 
     @GetMapping("/verify/{code}")

@@ -5,6 +5,7 @@ import {LoginResponseDto, UserTokenState} from "../model/LoginResponseDto";
 import {LoginCredentials} from "../model/LoginCredentials";
 import {User} from "../model/User";
 import {LoginSocialCredentials} from "../model/LoginSocialCredentials";
+import {RegisterCredentials} from "../model/RegisterCredentials";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +24,19 @@ export class AuthService {
       "password": user.password
     }
     return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, AuthService.getHttpOptions());
+  }
+
+  public register(user: RegisterCredentials): Observable<string> {
+    let body = {
+      "email": user.email,
+      "password": user.password,
+      "name": user.name,
+      "surname": user.lastName,
+      "phoneNumber": user.phoneNumber,
+      "city": user.city,
+      "userRole": user.userRole
+    }
+    return this.http.post<string>(this.authUrl + '/register', body, AuthService.getHttpOptions());
   }
 
   public loginSocial(user: LoginSocialCredentials): Observable<LoginResponseDto> {

@@ -1,10 +1,8 @@
 package com.example.ubernet.service;
 
-import com.example.ubernet.model.Car;
-import com.example.ubernet.model.Driver;
-import com.example.ubernet.model.DriverDailyActivity;
-import com.example.ubernet.model.User;
+import com.example.ubernet.model.*;
 import com.example.ubernet.repository.DriverRepository;
+import com.example.ubernet.utils.EntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -28,8 +26,8 @@ public class DriverService {
         return driver;
     }
 
-    public Driver save(Driver driver) {
-        return driverRepository.save(driver);
+    public Driver save(User user) {
+        return driverRepository.save(EntityMapper.mapToDriver(user));
     }
 
     public boolean logoutDriver(String email) {
@@ -47,4 +45,5 @@ public class DriverService {
         save(driver);
         return true;
     }
+
 }

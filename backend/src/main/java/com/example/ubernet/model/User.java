@@ -19,8 +19,6 @@ import java.util.Collection;
 @Table(name = "Users")
 public class User implements UserDetails {
     @Id
-//    @SequenceGenerator(name="userSeqGen", sequenceName = "Seq", initialValue = 10000, allocationSize = 1)
-//    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "userSeqGen")
     @Column(unique = true)
     private String email;
     private String password;

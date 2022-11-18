@@ -69,27 +69,6 @@ export class LoginComponent implements OnInit {
     })
   }
 
-// let response = this.userService.getUser(this.email);
-  //
-  // console.log(response)
-  // this.router.navigate(['customer']);
-  //TODO will be added soon
-  // if (response==null) {
-  //   // createUser();
-  //   this.router.navigate(['customer']);
-  // }
-  // else if (response.role==UserTypeEnum.CUSTOMER) {
-  //   this.router.navigate(['customer']);
-  // }
-  // else if (response.role==UserTypeEnum.ADMIN) {
-  //   this.router.navigate(['admin']);
-  // }
-  // else if (response.role==UserTypeEnum.DRIVER) {
-  //   this.router.navigate(['driver']);
-  // }
-  // })
-  // }
-
   switchToRegisterForm() {
     this.switchForm.emit();
   }
@@ -100,7 +79,6 @@ export class LoginComponent implements OnInit {
       "password": this.password
     })).subscribe({
       next: (value) => {
-        console.log(value.auth.token);
         localStorage.setItem('token', "Bearer " + value.auth.token.accessToken);
         this.authService.getCurrentlyLoggedUser();
         this.router.navigate(['/dashboard']);
