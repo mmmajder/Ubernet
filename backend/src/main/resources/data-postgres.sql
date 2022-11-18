@@ -67,7 +67,9 @@ values (2, 2),
 
 insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
 values ('ajder.milan2000@gmail.com', 'Customville', false, false, 'Customer',
-        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5);
+        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5),
+         ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (3, 3),
@@ -91,10 +93,6 @@ where id = 1;
 
 insert into user_auth(deleted, is_enabled, last_password_set, verification_code)
 values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');
-
-insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, payment_credentials)
-values ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
-        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 'parepare');
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (2, 3),
