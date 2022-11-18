@@ -1,6 +1,7 @@
 import {LoginCredentials} from '../../model/LoginCredentials';
 import {LoginSocialCredentials} from "../../model/LoginSocialCredentials";
 import {RegisterCredentials} from "../../model/RegisterCredentials";
+import {VerifyCredentials} from "../../model/VerifyCredentials";
 
 export class Login {
   static readonly type = '[Auth] Login';
@@ -19,4 +20,9 @@ export class Logout {
 export class Register {
   static readonly type = '[Auth] Register';
   constructor(public payload: RegisterCredentials) {}
+}
+
+export class Verify {
+  static readonly type = '[Auth] Verify';
+  constructor(public payload: VerifyCredentials) {}
 }

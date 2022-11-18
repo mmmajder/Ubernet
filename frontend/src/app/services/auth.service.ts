@@ -6,6 +6,7 @@ import {LoginCredentials} from "../model/LoginCredentials";
 import {User} from "../model/User";
 import {LoginSocialCredentials} from "../model/LoginSocialCredentials";
 import {RegisterCredentials} from "../model/RegisterCredentials";
+import {VerifyCredentials} from "../model/VerifyCredentials";
 
 @Injectable({
   providedIn: 'root'
@@ -39,6 +40,14 @@ export class AuthService {
     return this.http.post<string>(this.authUrl + '/register', body, AuthService.getHttpOptions());
   }
 
+  public verify(credentials: VerifyCredentials): Observable<string> {
+    // let body = {
+    //   "code": credentials.verificationCode
+    // }
+    console.log("AAAAAAAA")
+    return this.http.get<string>(this.authUrl + `/verify/${credentials.verificationCode}`, AuthService.getHttpOptions());
+  }
+
   public loginSocial(user: LoginSocialCredentials): Observable<LoginResponseDto> {
     let body = {
       "email": user.email,
@@ -51,7 +60,6 @@ export class AuthService {
       "photoUrl": user.photoUrl,
       "provider": user.provider
     }
-    console.log(body)
     return this.http.post<LoginResponseDto>(this.authUrl + '/login-social', body, AuthService.getHttpOptions());
   }
 

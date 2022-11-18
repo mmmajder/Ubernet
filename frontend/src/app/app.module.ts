@@ -37,11 +37,13 @@ import {NgxsModule} from '@ngxs/store';
 import {AuthState} from "./store/states/auth.state";
 import {LoggedUserState} from "./store/states/loggedUser.state";
 import {PagesModule} from "./views/pages/pages.module";
+import { VerifyRegistrationComponent } from './views/verify/verify-registration/verify-registration.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    NotFoundPageComponent
+    NotFoundPageComponent,
+    VerifyRegistrationComponent
   ],
   imports: [
     BrowserModule,
