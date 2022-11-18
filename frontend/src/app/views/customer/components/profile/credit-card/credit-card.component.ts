@@ -22,6 +22,9 @@ export class CreditCardComponent implements OnInit {
   mmYyPatternReplace: RegExp = /[^0-9\/]/g;
 
   loggedUser: any = null;
+  existingCreditCard: CreditCard | null = null;
+
+  isButtonDisabled: boolean = true;
 
   constructor(private paymentService: PaymentService, private authService: AuthService) {}
 
@@ -29,7 +32,19 @@ export class CreditCardComponent implements OnInit {
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
       //TODO should the loggedUser be taken like this? sometimes because of the async it's not working well
       this.loggedUser = data;
+      this.paymentService.getCreditCard(data.email).subscribe(creditCardData => {
+        this.existingCreditCard = <CreditCard> creditCardData;
+        this.setExistingCardData();
+      });
     });
+  }
+
+  private setExistingCardData(){
+    if (this.existingCreditCard != null){
+      this.creditCardNumber = this.existingCreditCard.cardNumber;
+      this.expirationDate = this.existingCreditCard.expirationDate;
+      this.CVV = this.existingCreditCard.cvv;
+    }
   }
 
   public inputValidator(event: any, pattern: RegExp, patternReplace: RegExp) {
@@ -39,8 +54,8 @@ export class CreditCardComponent implements OnInit {
     if (!pattern.test(event.target.value)) {
       event.target.value = event.target.value.replace(patternReplace, "");
       // invalid character, prevent input
-
     }
+    this.disableButtonIfNoChangeIsMade();
   }
 
   public onlyNumInputValidator(event: any){
@@ -83,8 +98,29 @@ export class CreditCardComponent implements OnInit {
       console.log(creditCard);
       this.paymentService.putCreditCardData(this.loggedUser.email, creditCard)
         .subscribe((data) => {
-          console.log(data);
+          this.existingCreditCard = <CreditCard> data;
+          this.setExistingCardData();
+          this.isButtonDisabled = true;
+          // TODO notify user about change
+
         });
       console.log("poslato na server");
+  }
+
+  public disableButtonIfNoChangeIsMade(){
+    let isCardDataSameAsExistingCard;
+    this.isButtonDisabled = false;
+    let isCardDataFilledCorrectly = this.testCardData();
+
+    if (this.existingCreditCard === null)
+      this.isButtonDisabled = !isCardDataFilledCorrectly;
+    else
+      isCardDataSameAsExistingCard =  this.creditCardNumber === this.existingCreditCard.cardNumber &&
+                                      this.expirationDate === this.existingCreditCard.expirationDate &&
+                                      this.CVV === this.existingCreditCard.cvv;
+      if (isCardDataSameAsExistingCard || !isCardDataFilledCorrectly)
+        this.isButtonDisabled = true;
+      else
+        this.isButtonDisabled = false;
   }
 }

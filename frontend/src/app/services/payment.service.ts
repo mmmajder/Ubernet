@@ -25,4 +25,8 @@ export class PaymentService {
   public putCreditCardData(email: String, creditCard: CreditCard){
     return this.http.put<Object>(this.creditCardUrl + "/add/" + email, creditCard, AuthService.getHttpOptions());
   }
+
+  public getCreditCard(clientEmail:string){
+    return this.http.get(this.creditCardUrl + "/" + clientEmail, this.httpOptions);
+  }
 }

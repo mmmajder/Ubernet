@@ -21,6 +21,6 @@
       <mat-hint align="end">{{CVV.length}} / 3</mat-hint>
     </mat-form-field>
 
-    <button mat-raised-button color="primary" style="width: 100%" (click)="sendCardDataToServer()">Save credit card data</button>
+    <button mat-raised-button color="primary" style="width: 100%" (click)="sendCardDataToServer()" [disabled]="isButtonDisabled">Save credit card data</button>
   </mat-card-content>
 </mat-card>
