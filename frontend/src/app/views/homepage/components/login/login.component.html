@@ -34,8 +34,8 @@
         or log in with
       </span>
     </div>
-    <button mat-raised-button class="fb"><i class="fa fa-facebook fa-fw"></i> Facebook</button>
-    <a mat-raised-button class="google" (click)="loginWithGoogle()"><i class="fa fa-google fa-fw"></i>Google+</a>
+    <button mat-raised-button class="fb" (click)="facebookSignin()"><i class="fa fa-facebook fa-fw"></i> Facebook</button>
+    <button mat-raised-button class="google" (click)="loginWithGoogle()"><i class="fa fa-google fa-fw"></i>Google+</button>
 <!--    <a mat-raised-button class="google" href="/@{/oauth2/authorization/google}"><i class="fa fa-google fa-fw"></i>Google+</a>-->
     <div class="hr-line"></div>
     <a mat-button style="width: 100%" (click)="switchToRegisterForm()">Don't have an account? Create one <i class="material-icons">arrow_forward</i></a>

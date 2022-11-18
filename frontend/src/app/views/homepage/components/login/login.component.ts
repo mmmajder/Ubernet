@@ -1,7 +1,7 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {AuthService} from "../../../../services/auth.service";
-import {GoogleLoginProvider, SocialAuthService} from 'angularx-social-login';
+import {GoogleLoginProvider, SocialAuthService, FacebookLoginProvider} from 'angularx-social-login';
 import {Router} from '@angular/router';
 import {UserService} from "../../../../services/user.service";
 import {Login, LoginSocial} from "../../../../store/actions/authentication.actions";
@@ -30,44 +30,46 @@ export class LoginComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  facebookSignin() {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then((res) => {
+      this.loginSocial();
+    })
+  }
+
   loginWithGoogle(): void {
-    // window.open("/@{/oauth2/authorization/google", "_blank")
-
-
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
-      .then(() => {
-        this.socialAuthService.authState.subscribe(value => {
-          console.log("VREDNOST")
-          console.log(value);
-          this.email = value.email;
-          this.store.dispatch(new LoginSocial({
-            "email": value.email,
-            "authToken": value.authToken,
-            "firstName": value.firstName,
-            "id": value.id,
-            "idToken": value.idToken,
-            "lastName": value.lastName,
-            "name": value.name,
-            "photoUrl": value.photoUrl,
-            "provider": value.provider,
-          })).subscribe({
-            next: (newValue) => {
-              console.log("AAAAAAAAAAAAAAA")
-              console.log(newValue.auth.token);
-              localStorage.setItem('token', "Bearer " + newValue.auth.token.accessToken);
-              this.authService.getCurrentlyLoggedUser();
-              this.router.navigate(['/dashboard']);
-            },
-            error: () => this._snackBar.open("Wrong email or password.", '', {
-              duration: 3000,
-              panelClass: ['snack-bar']
-            })
-          });
-        })
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(() => {
+        this.loginSocial();
       })
   }
 
-  // let response = this.userService.getUser(this.email);
+  private loginSocial() {
+    this.socialAuthService.authState.subscribe(value => {
+      this.email = value.email;
+      this.store.dispatch(new LoginSocial({
+        "email": value.email,
+        "authToken": value.authToken,
+        "firstName": value.firstName,
+        "id": value.id,
+        "idToken": value.idToken,
+        "lastName": value.lastName,
+        "name": value.name,
+        "photoUrl": value.photoUrl,
+        "provider": value.provider,
+      })).subscribe({
+        next: (newValue) => {
+          localStorage.setItem('token', "Bearer " + newValue.auth.token.accessToken);
+          this.authService.getCurrentlyLoggedUser();
+          this.router.navigate(['/dashboard']);
+        },
+        error: () => this._snackBar.open("Wrong email or password.", '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        })
+      });
+    })
+  }
+
+// let response = this.userService.getUser(this.email);
   //
   // console.log(response)
   // this.router.navigate(['customer']);
@@ -109,4 +111,6 @@ export class LoginComponent implements OnInit {
       })
     });
   }
+
+
 }

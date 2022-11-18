@@ -25,7 +25,7 @@ import {NotificationsService} from "./services/notifications.service";
 import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
-import {GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule} from "angularx-social-login";
+import {GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, FacebookLoginProvider} from "angularx-social-login";
 import {NotFoundPageComponent} from './views/404/not-found-page/not-found-page.component';
 import {DriverModule} from "./views/driver/driver.module";
 import {CustomerModule} from "./views/customer/customer.module";
@@ -83,6 +83,12 @@ import {PagesModule} from "./views/pages/pages.module";
       useValue: {
         autoLogin: false,
         providers: [
+          {
+            id: FacebookLoginProvider.PROVIDER_ID,
+            provider: new FacebookLoginProvider(
+              '806860450609890'
+            )
+          },
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(

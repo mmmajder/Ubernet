@@ -61,7 +61,6 @@ public class AuthentificationService {
 
     private UserAuth getUserAuth(User user) {
         UserAuth userAuth = new UserAuth();
-
         String randomCode = RandomString.make(64);
         userAuth.setVerificationCode(randomCode);
         userAuth.setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
@@ -102,11 +101,17 @@ public class AuthentificationService {
         if (!isUserEnabled(user)) return null;
         return createAccessToken(user);
     }
+
     public LoginResponseDTO loginSocial(LoginSocialDTO loginSocialDTO) {
         User user = userService.findByEmail(loginSocialDTO.getEmail());
-        if (user==null) {
+        if (user == null) {
             user = customerService.createCustomerSocialLogin(loginSocialDTO);
         }
+        if (!isUserEnabled(user)) return null;
+        return saveAuthInContext(user);
+    }
+
+    private LoginResponseDTO saveAuthInContext(User user) {
         var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String token = tokenUtils.generateToken((User) authentication.getPrincipal());
@@ -141,7 +146,7 @@ public class AuthentificationService {
         return true;
     }
 
-    private boolean validatePasswordChange(User user, ChangePasswordDTO changePasswordDTO){
+    private boolean validatePasswordChange(User user, ChangePasswordDTO changePasswordDTO) {
         if (user == null)
             return false;
 

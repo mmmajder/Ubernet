@@ -38,7 +38,7 @@ public class CustomerService {
         userAuthService.save(userAuth);
         Customer customer = new Customer();
         customer.setEmail(loginSocialDTO.getEmail());
-        customer.setName(loginSocialDTO.getName().split("\\s+")[0]);
+        customer.setName(loginSocialDTO.getFirstName());
         customer.setUserAuth(userAuth);
         customer.setSurname(loginSocialDTO.getLastName());
         customer.setIsBlocked(false);
