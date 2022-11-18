@@ -1,11 +1,9 @@
 <mat-card>
   <mat-card-content>
     <div style="text-align: center;">
-      <img src="../../../../assets/taxi.jpg" class="profile-picture" alt="profile-picture"/><br>
-      <button mat-raised-button color="primary" style="margin: 10px 0 10px 10px">Upload profile picture
-      </button>
-      <button mat-stroked-button color="primary" style="margin: 10px 10px 0 10px">
-        <mat-icon>delete</mat-icon>
+      <img [src]="profileImageSrc" class="profile-picture" alt="profile-picture"/><br>
+      <input #fileUploader type="file" (input)="selectFile($event)" accept="image/png, image/jpeg"/> <!--TODO make this better looking -->
+      <button mat-raised-button color="primary" style="margin: 10px 0 10px 10px" [disabled]="!hasSelectedFile" (click)="uploadProfileImage()">Upload profile picture
       </button>
     </div>
     <mat-form-field appearance="outline">
