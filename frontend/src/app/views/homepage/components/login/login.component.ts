@@ -31,17 +31,13 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle(): void {
+    // window.open("/@{/oauth2/authorization/google", "_blank")
+
+
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID)
       .then(() => {
-        // let user = this.socialAuthService.authState.pipe(
-        //   map((socialUser: SocialUser) => !!socialUser),
-        //   tap((isLoggedIn: boolean) => {
-        //     if (!isLoggedIn) {
-        //       this.router.navigate(['login']);
-        //     }
-        //   })
-        // );
         this.socialAuthService.authState.subscribe(value => {
+          console.log("VREDNOST")
           console.log(value);
           this.email = value.email;
           this.store.dispatch(new LoginSocial({
@@ -54,30 +50,43 @@ export class LoginComponent implements OnInit {
             "name": value.name,
             "photoUrl": value.photoUrl,
             "provider": value.provider,
-          })).subscribe((resp) => console.log(resp));
-
-
+          })).subscribe({
+            next: (newValue) => {
+              console.log("AAAAAAAAAAAAAAA")
+              console.log(newValue.auth.token);
+              localStorage.setItem('token', "Bearer " + newValue.auth.token.accessToken);
+              this.authService.getCurrentlyLoggedUser();
+              this.router.navigate(['/dashboard']);
+            },
+            error: () => this._snackBar.open("Wrong email or password.", '', {
+              duration: 3000,
+              panelClass: ['snack-bar']
+            })
+          });
         })
-        let response = this.userService.getUser(this.email);
-
-        console.log(response)
-        this.router.navigate(['customer']);
-        //TODO will be added soon
-        // if (response==null) {
-        //   // createUser();
-        //   this.router.navigate(['customer']);
-        // }
-        // else if (response.role==UserTypeEnum.CUSTOMER) {
-        //   this.router.navigate(['customer']);
-        // }
-        // else if (response.role==UserTypeEnum.ADMIN) {
-        //   this.router.navigate(['admin']);
-        // }
-        // else if (response.role==UserTypeEnum.DRIVER) {
-        //   this.router.navigate(['driver']);
-        // }
       })
   }
+
+  // let response = this.userService.getUser(this.email);
+  //
+  // console.log(response)
+  // this.router.navigate(['customer']);
+  //TODO will be added soon
+  // if (response==null) {
+  //   // createUser();
+  //   this.router.navigate(['customer']);
+  // }
+  // else if (response.role==UserTypeEnum.CUSTOMER) {
+  //   this.router.navigate(['customer']);
+  // }
+  // else if (response.role==UserTypeEnum.ADMIN) {
+  //   this.router.navigate(['admin']);
+  // }
+  // else if (response.role==UserTypeEnum.DRIVER) {
+  //   this.router.navigate(['driver']);
+  // }
+  // })
+  // }
 
   switchToRegisterForm() {
     this.switchForm.emit();

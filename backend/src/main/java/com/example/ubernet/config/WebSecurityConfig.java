@@ -1,8 +1,6 @@
 package com.example.ubernet.config;
 
 
-import com.example.ubernet.dto.CustomOAuth2User;
-import com.example.ubernet.service.CustomOAuth2UserService;
 import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.TokenUtils;
 import com.example.ubernet.utils.auth.RestAuthenticationEntryPoint;
@@ -18,16 +16,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
-
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @Configuration
 // Ukljucivanje podrske za anotacije "@Pre*" i "@Post*" koje ce aktivirati autorizacione provere za svaki pristup metodi
@@ -74,9 +65,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     private TokenUtils tokenUtils;
 
     @Autowired
-    private CustomOAuth2UserService oauthUserService;
-
-    @Autowired
     private UserService userService;
 
     // Definisemo prava pristupa za zahteve ka odredjenim URL-ovima/rutama
@@ -93,8 +81,8 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 // svim korisnicima dopusti da pristupe sledecim putanjama:
 
-                .authorizeRequests().antMatchers("/auth/**").permitAll()		// /auth/**
-                .antMatchers("/**").permitAll()	// /h2-console/** ako se koristi H2 baza)
+                .authorizeRequests().antMatchers("/auth/**").permitAll()        // /auth/**
+                .antMatchers("/**").permitAll()    // /h2-console/** ako se koristi H2 baza)
 
                 // ukoliko ne zelimo da koristimo @PreAuthorize anotacije nad metodama kontrolera, moze se iskoristiti hasRole() metoda da se ogranici
                 // koji tip korisnika moze da pristupi odgovarajucoj ruti. Npr. ukoliko zelimo da definisemo da ruti 'admin' moze da pristupi
@@ -108,30 +96,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .cors().and()
 
                 // umetni custom filter TokenAuthenticationFilter kako bi se vrsila provera JWT tokena umesto cistih korisnickog imena i lozinke (koje radi BasicAuthenticationFilter)
-                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, customUserDetailsService), BasicAuthenticationFilter.class)
-
-                .oauth2Login().loginPage("/").userInfoEndpoint().userService(oauthUserService);
+                .addFilterBefore(new TokenAuthenticationFilter(tokenUtils, customUserDetailsService), BasicAuthenticationFilter.class);
 
         // zbog jednostavnosti primera ne koristimo Anti-CSRF token (https://cheatsheetseries.owasp.org/cheatsheets/Cross-Site_Request_Forgery_Prevention_Cheat_Sheet.html)
         http.csrf().disable();
-        http.oauth2Login()
-                .loginPage("/login")
-                .userInfoEndpoint()
-                .userService(oauthUserService)
-                .and()
-                .successHandler(new AuthenticationSuccessHandler() {
-
-                    @Override
-                    public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
-                                                        Authentication authentication) throws IOException, ServletException {
-
-                        CustomOAuth2User oauthUser = (CustomOAuth2User) authentication.getPrincipal();
-
-                        userService.processOAuthPostLogin(oauthUser.getEmail());
-
-                        response.sendRedirect("/list");
-                    }
-                });
     }
 
     // Definisanje konfiguracije koja utice na generalnu bezbednost aplikacije

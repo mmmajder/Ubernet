@@ -47,17 +47,29 @@ export class AuthState {
   loginSocial(ctx: StateContext<LoginResponseDto>, action: LoginSocial) {
     return this.authService.loginSocial(action.payload).pipe(
       tap((result: LoginResponseDto) => {
-        asyncLocalStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken))).then(function () {
-          return asyncLocalStorage.getItem('token');
-        }).then(function () {
-          ctx.patchState({
-            token: result.token,
-            userRole: result.userRole
-          });
+        ctx.patchState({
+          token: result.token,
+          userRole: result.userRole
         });
       })
     );
   }
+
+  // @Action(LoginSocial)
+  // loginSocial(ctx: StateContext<LoginResponseDto>, action: LoginSocial) {
+  //   return this.authService.loginSocial(action.payload).pipe(
+  //     tap((result: LoginResponseDto) => {
+  //       asyncLocalStorage.setItem('token', "Bearer " + JSON.parse(JSON.stringify(result.token.accessToken))).then(function () {
+  //         return asyncLocalStorage.getItem('token');
+  //       }).then(function () {
+  //         ctx.patchState({
+  //           token: result.token,
+  //           userRole: result.userRole
+  //         });
+  //       });
+  //     })
+  //   );
+  // }
 
   @Action(Logout)
   logout(ctx: StateContext<LoginResponseDto>) {

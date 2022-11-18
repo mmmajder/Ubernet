@@ -66,7 +66,7 @@ values (2, 2),
        (2, 4);
 
 insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
-values ('ajder.milan2000@gmail.com', 'Customville', false, false, 'Customer',
+values ('customer@gmail.com', 'Customville', false, false, 'Customer',
         '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5);
 
 insert into user_auth_roles(user_auth_id, roles_id)
@@ -96,9 +96,9 @@ insert into customer (email, city, deleted, is_blocked, name, password, phone_nu
 values ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 'parepare');
 
-insert into user_auth_roles(user_auth_id, roles_id)
-values (2, 3),
-       (2, 4);
+-- insert into user_auth_roles(user_auth_id, roles_id)
+-- values (2, 3),
+--        (2, 4);
 
 insert into message(id, client_email, admin_email, is_sent_by_admin, time, content, is_deleted)
 values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15', 'Helloooo, the taxi driver is kidnapping me. Please help.', false),
@@ -120,4 +120,4 @@ set ride_id=1
 where id = 1;
 
 insert into ride_customers(ride_id, customers_email)
-values (1, 'ajder.milan2000@gmail.com');
+values (1, 'customer@gmail.com');

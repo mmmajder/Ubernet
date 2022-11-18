@@ -5,7 +5,6 @@ import com.example.ubernet.dto.MessageResponse;
 import com.example.ubernet.model.Message;
 import com.example.ubernet.model.StringResponse;
 import com.example.ubernet.service.MessageService;
-import com.example.ubernet.service.ProfileUpdateRequestService;
 import com.example.ubernet.service.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -41,7 +40,7 @@ public class MessageController {
 
     @GetMapping(value = "/{email}")
     public ResponseEntity<List<MessageResponse>> getMessages(@PathVariable String email) {
-        if (!userService.doesUserExist(email))
+        if (!userService.userExists(email))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         List<Message> messages =  messageService.getClientMessages(email);
@@ -52,7 +51,7 @@ public class MessageController {
 
     @GetMapping(value = "admin/{email}")
     public ResponseEntity<List<MessageResponse>> getMessagesAsAdmin(@PathVariable String email) {
-        if (!userService.doesUserExist(email))
+        if (!userService.userExists(email))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         List<Message> messages =  messageService.getClientMessages(email);

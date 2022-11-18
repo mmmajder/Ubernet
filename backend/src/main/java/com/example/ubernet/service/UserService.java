@@ -1,12 +1,8 @@
 package com.example.ubernet.service;
 
-import com.example.ubernet.dto.LoginSocialDTO;
 import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.dto.UserResponse;
-import com.example.ubernet.model.ProfileUpdateRequest;
-import com.example.ubernet.model.Role;
-import com.example.ubernet.model.User;
-import com.example.ubernet.model.enums.AuthProvider;
+import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
@@ -20,7 +16,6 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
 import java.util.Optional;
 
 @AllArgsConstructor
@@ -29,7 +24,6 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ProfileUpdateRequestRepository profileUpdateRequestRepository;
-
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
@@ -88,30 +82,6 @@ public class UserService implements UserDetailsService {
         save(user);
     }
 
-    private void setEmail(User user, String newEmail) throws Exception {
-        if (newEmail == null) {
-            return;
-        }
-        if (userRepository.findByEmail(newEmail).isPresent()) {
-            throw new Exception("Mail already exists");
-        }
-        user.setEmail(newEmail);
-    }
-
-    public void processOAuthPostLogin(String email) {
-        Optional<User> existUser = userRepository.findByEmail(email);
-
-        if (existUser.isEmpty()) {
-            User newUser = new User();
-            newUser.setEmail(email);
-            newUser.setProvider(AuthProvider.GOOGLE);
-            newUser.getUserAuth().setIsEnabled(true);
-
-            userRepository.save(newUser);
-        }
-    }
-
-
     public User findByVerificationCode(String verificationCode) {
         return userRepository.findByVerificationCode(verificationCode).orElse(null);
     }
@@ -131,31 +101,7 @@ public class UserService implements UserDetailsService {
         return null;
     }
 
-    public boolean doesUserExist(String email){
+    public boolean userExists(String email){
         return findByEmail(email) != null;
-    }
-
-    public User createUserSocialLogin(LoginSocialDTO loginSocialDTO) {
-        User user = new User();
-        user.setEmail(loginSocialDTO.getEmail());
-        user.setName(loginSocialDTO.getName());
-        user.getUserAuth().setIsEnabled(true);
-//        ArrayList<Role> roles = new ArrayList<>();
-//        roles.add(Role.)
-//        user.getUserAuth().setRoles();
-//
-
-//        private String email;
-//        private String authToken;
-//        private String firstName;
-//        private String id;
-//        private String idToken;
-//        private String lastName;
-//        private String name;
-//        private String photoUrl;
-//        private String provider;
-//
-//        user.set
-        return null;
     }
 }

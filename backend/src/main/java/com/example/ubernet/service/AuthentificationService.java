@@ -105,10 +105,13 @@ public class AuthentificationService {
     public LoginResponseDTO loginSocial(LoginSocialDTO loginSocialDTO) {
         User user = userService.findByEmail(loginSocialDTO.getEmail());
         if (user==null) {
-            user = userService.createUserSocialLogin(loginSocialDTO);
+            user = customerService.createCustomerSocialLogin(loginSocialDTO);
         }
+        var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = tokenUtils.generateToken((User) authentication.getPrincipal());
         long expiresIn = tokenUtils.getExpiredIn();
-        return new LoginResponseDTO(new UserTokenState(loginSocialDTO.getAuthToken(), expiresIn), UserRole.CUSTOMER);
+        return new LoginResponseDTO(new UserTokenState(token, expiresIn), user.getRole());
     }
 
 
@@ -145,10 +148,7 @@ public class AuthentificationService {
         if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getReEnteredNewPassword()))
             return false;
 
-        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()))
-            return false;
-
-        return true;
+        return passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword());
     }
 
     public User verify(String verificationCode) {

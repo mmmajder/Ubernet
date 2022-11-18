@@ -25,23 +25,6 @@ export class AuthService {
     return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, AuthService.getHttpOptions());
   }
 
-  public logout(token: UserTokenState | ""): Observable<Object> {
-    return this.http.post(this.authUrl + '/logout', token, AuthService.getHttpOptions());
-  }
-
-  public getCurrentlyLoggedUser(): Observable<User> {
-    return this.http.get<User>(this.authUrl + '/currently-logged-user', AuthService.getHttpOptions());
-  }
-
-  public static getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': localStorage.getItem('token') || 'authkey',
-      })
-    };
-  }
-
   public loginSocial(user: LoginSocialCredentials): Observable<LoginResponseDto> {
     let body = {
       "email": user.email,
@@ -55,6 +38,25 @@ export class AuthService {
       "provider": user.provider
     }
     console.log(body)
-    return this.http.post<LoginResponseDto>(this.authUrl + '/login-social', body, this.httpOptions);
+    return this.http.post<LoginResponseDto>(this.authUrl + '/login-social', body, AuthService.getHttpOptions());
+  }
+
+  public logout(token: UserTokenState | ""): Observable<Object> {
+    return this.http.post(this.authUrl + '/logout', token, AuthService.getHttpOptions());
+  }
+
+  public getCurrentlyLoggedUser(): Observable<User> {
+    return this.http.get<User>(this.authUrl + '/currently-logged-user', AuthService.getHttpOptions());
+  }
+
+  public static getHttpOptions() {
+    console.log("MILAN")
+    console.log(localStorage.getItem('token'))
+    return {
+      headers: new HttpHeaders({
+        'Access-Control-Allow-Origin': '*',
+        'Authorization': localStorage.getItem('token') || 'authkey',
+      })
+    };
   }
 }

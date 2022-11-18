@@ -37,11 +37,11 @@ public class AuthController {
 
     @PostMapping("/login-social")
     public ResponseEntity<LoginResponseDTO> loginSocial(
-            @Valid @RequestBody LoginSocialDTO loginSocialDTO) {
+            @Valid @RequestBody LoginSocialDTO loginSocialDTO) throws Exception {
 
         LoginResponseDTO loginResponseDTO = authentificationService.loginSocial(loginSocialDTO);
         if (loginResponseDTO == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(loginResponseDTO);
     }
