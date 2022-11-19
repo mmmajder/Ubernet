@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {ActivityLogItem} from "../../../../../model/ActivityLogItem";
+import {ActivityLogItem} from "../../model/ActivityLogItem";
 
 @Component({
   selector: 'app-activity-log',
