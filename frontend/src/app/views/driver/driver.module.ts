@@ -16,11 +16,19 @@ import {SharedModule} from "../../shared/shared.module";
 import {DriverContainerComponent} from "./container/dashboard-driver-container/driver-container.component";
 import { ProfileDriverContainerComponent } from './container/profile-driver-container/profile-driver-container.component';
 import {MatTabsModule} from "@angular/material/tabs";
+import {MatListModule} from "@angular/material/list";
+import {CustomerModule} from "../customer/customer.module";
+import { DriverAvailabilityComponent } from './components/driver-availability/driver-availability.component';
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import { CarSettingsComponent } from './components/car-settings/car-settings.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
     DriverContainerComponent,
-    ProfileDriverContainerComponent
+    ProfileDriverContainerComponent,
+    DriverAvailabilityComponent,
+    CarSettingsComponent
   ],
   imports: [
     MatToolbarModule,
@@ -39,6 +47,10 @@ import {MatTabsModule} from "@angular/material/tabs";
     MatMenuModule,
     SharedModule,
     MatTabsModule,
+    MatListModule,
+    CustomerModule,
+    MatSlideToggleModule,
+    MatCheckboxModule,
   ],
   exports: [
     DriverContainerComponent,

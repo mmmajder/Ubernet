@@ -1,0 +1,7 @@
+<div class="rate">
+  <mat-icon class="star" [matTooltip]="'1/5'" [ngClass]="{ 'active': rating > 0 }" (click)="rate(1)">star</mat-icon>
+  <mat-icon class="star" [matTooltip]="'2/5'" [ngClass]="{ 'active': rating > 1 }" (click)="rate(2)">star</mat-icon>
+  <mat-icon class="star" [matTooltip]="'3/5'" [ngClass]="{ 'active': rating > 2 }" (click)="rate(3)">star</mat-icon>
+  <mat-icon class="star" [matTooltip]="'4/5'" [ngClass]="{ 'active': rating > 3 }" (click)="rate(4)">star</mat-icon>
+  <mat-icon class="star" [matTooltip]="'5/5'" [ngClass]="{ 'active': rating > 4 }" (click)="rate(5)">star</mat-icon>
+</div>

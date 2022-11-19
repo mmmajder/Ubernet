@@ -16,3 +16,17 @@
 .start-end {
   font-size: 12px;
 }
+
+mat-chip {
+  font-size: 12px;
+}
+
+.mat-chip.mat-standard-chip {
+  background-color: #fff;
+}
+
+.time-left {
+  color: var(--gray);
+  font-weight: 400;
+  font-size: 12px;
+}

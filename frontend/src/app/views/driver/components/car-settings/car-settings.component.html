@@ -1,0 +1,20 @@
+<mat-card>
+  <mat-card-content>
+    <mat-form-field appearance="outline">
+      <mat-label>Enter car's mark name</mat-label>
+      <input matInput [(ngModel)]="name" [formControl]="nameFormControl">
+      <mat-error *ngIf="nameFormControl.hasError('required')">
+        Car name is <strong>required</strong>
+      </mat-error>
+    </mat-form-field>
+    <mat-form-field appearance="outline" floatLabel="always">
+      <mat-label>Extra price for car type</mat-label>
+      <input matInput [(ngModel)]="price" class="example-right-align" type="number" placeholder="0">
+      <div matSuffix class="rsd">RSD</div>
+    </mat-form-field>
+    <mat-checkbox [(ngModel)]="allowsBabies" color="primary">Allows babies</mat-checkbox>
+    &nbsp;&nbsp;
+    <mat-checkbox [(ngModel)]="allowsPets" color="primary">Allows pets</mat-checkbox>
+    <button mat-raised-button color="primary" style="width: 100%" (click)="saveChanges()">Save changes</button>
+  </mat-card-content>
+</mat-card>

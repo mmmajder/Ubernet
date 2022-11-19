@@ -21,9 +21,10 @@ import {MatInputModule} from "@angular/material/input";
 import {ProfileDataComponent} from "./profile-edit/profile-data/profile-data.component";
 import {ChangePasswordComponent} from "./profile-edit/change-password/change-password.component";
 import {MatCardModule} from "@angular/material/card";
+import { StarRatingComponent } from './star-rating/star-rating.component';
 
 @NgModule({
-  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ChangePasswordComponent],
+  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -39,7 +40,7 @@ import {MatCardModule} from "@angular/material/card";
     ReactiveFormsModule,
     MatCardModule,
   ],
-  exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ChangePasswordComponent],
+  exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent],
   providers: [NavbarStore, RestaurantsStore, RestaurantStore]
 })
 export class SharedModule {

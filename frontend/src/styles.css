@@ -20,7 +20,7 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 }
 
 .dashboard-background {
-  height: 100px;
+  height: 150px;
   width: 100%;
   object-fit: cover;
 }
@@ -71,4 +71,8 @@ mat-card {
 .snack-bar {
   background: var(--dark);
   color: var(--yellow);
+}
+
+.dashboard-card {
+  margin-bottom: 15px;
 }

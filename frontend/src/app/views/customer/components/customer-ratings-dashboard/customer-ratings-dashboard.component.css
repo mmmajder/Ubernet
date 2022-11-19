@@ -16,3 +16,9 @@
 .start-end {
   font-size: 12px;
 }
+
+.time-left {
+  color: var(--gray);
+  font-weight: 400;
+  font-size: 12px;
+}
