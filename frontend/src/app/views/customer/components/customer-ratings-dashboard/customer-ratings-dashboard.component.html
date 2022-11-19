@@ -1,0 +1,19 @@
+<mat-card class="dashboard-card">
+  <mat-card-header>Recent rides</mat-card-header>
+  <mat-card-content class="scrollable" *ngIf="rides.length > 0">
+    <mat-list>
+      <mat-list-item *ngFor="let ride of rides">
+        <div mat-line>
+          <span class="route-name">{{ride.time}}</span>
+          <span class="time-left"> &nbsp;&nbsp;{{ride.timeToRate}} left to rate</span>
+        </div>
+        <div mat-line><span class="start-end">{{ride.start}} - {{ride.destination}}</span></div>
+        <mat-icon style="color: var(--yellow); cursor: pointer" (click)="openRatingsDialog(ride)" [matTooltip]="'Rate this ride'" [matTooltipPosition]="'below'">star</mat-icon>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </mat-card-content>
+  <mat-card-content *ngIf="rides.length == 0" style="text-align: center;">
+    <img src="assets/no-ratings.png" style="height: 250px" alt="no-ratings">
+  </mat-card-content>
+</mat-card>

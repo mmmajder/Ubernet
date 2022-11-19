@@ -4,6 +4,7 @@ import com.example.ubernet.dto.*;
 import com.example.ubernet.model.StringResponse;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.AuthentificationService;
+import com.example.ubernet.service.EmailService;
 import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.DTOMapper;
 import lombok.AllArgsConstructor;

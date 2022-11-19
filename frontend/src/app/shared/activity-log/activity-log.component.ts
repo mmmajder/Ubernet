@@ -1,4 +1,5 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {ActivityLogItem} from "../../model/ActivityLogItem";
 
 @Component({
   selector: 'app-activity-log',
@@ -6,7 +7,7 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./activity-log.component.css']
 })
 export class ActivityLogComponent implements OnInit {
-  activityLog = [{
+  activityLog: ActivityLogItem[] = [{
     "text": "You ordered ride at address: Danila Kiša 12",
     "time": "15:04 12.12.2022."
   },
@@ -19,7 +20,8 @@ export class ActivityLogComponent implements OnInit {
       "time": "15:14 14.12.2022."
     }];
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }

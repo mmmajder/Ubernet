@@ -1,0 +1,23 @@
+mat-form-field {
+  width: 100%;
+}
+
+.example-right-align {
+  text-align: right;
+}
+
+input.example-right-align::-webkit-outer-spin-button,
+input.example-right-align::-webkit-inner-spin-button {
+  display: none;
+}
+
+input.example-right-align {
+  -moz-appearance: textfield;
+}
+
+.rsd {
+  margin-left: 10px;
+  font-size: 11px;
+  color: var(--gray);
+  font-weight: 400
+}

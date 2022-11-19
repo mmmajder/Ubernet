@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {UserService} from "../../../services/user.service";
 import {AuthService} from "../../../services/auth.service";
+import {PasswordChangeInfo} from "../../../model/PasswordChangeInfo";
 
 @Component({
   selector: 'app-change-password',
@@ -40,7 +41,9 @@ export class ChangePasswordComponent implements OnInit {
       return
     }
 
-    this.userService.changePassword(this.loggedUser.email, this.currentPassword, this.newPassword, this.reEnteredNewPassword)
+    let passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
+    console.log(passwordChangeInfo);
+    this.userService.changePassword(this.loggedUser.email, passwordChangeInfo)
       .subscribe((data) => {
         console.log(data);
       });

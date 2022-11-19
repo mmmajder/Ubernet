@@ -1,0 +1,12 @@
+.star {
+  color: var(--light-gray);
+  cursor: pointer;
+}
+
+.active {
+  color: var(--yellow);
+}
+
+.rate {
+  padding: 10px;
+}

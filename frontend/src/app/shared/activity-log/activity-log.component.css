@@ -5,9 +5,14 @@
 }
 
 .activity-log-time {
-  font-size: 0.8rem;
+  font-size: 0.7rem;
   font-weight: 600;
   color: var(--dark);
+}
+
+.log-text {
+  font-weight: 400;
+  font-size: 14px;
 }
 
 .mat-list-icon {

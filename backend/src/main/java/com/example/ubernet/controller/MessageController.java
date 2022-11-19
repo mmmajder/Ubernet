@@ -40,7 +40,7 @@ public class MessageController {
 
     @GetMapping(value = "/{email}")
     public ResponseEntity<List<MessageResponse>> getMessages(@PathVariable String email) {
-        if (!userService.userExists(email))
+        if (!userService.doesUserExist(email))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         List<Message> messages =  messageService.getClientMessages(email);
@@ -51,7 +51,7 @@ public class MessageController {
 
     @GetMapping(value = "admin/{email}")
     public ResponseEntity<List<MessageResponse>> getMessagesAsAdmin(@PathVariable String email) {
-        if (!userService.userExists(email))
+        if (!userService.doesUserExist(email))
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
 
         List<Message> messages =  messageService.getClientMessages(email);

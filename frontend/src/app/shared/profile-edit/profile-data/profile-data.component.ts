@@ -1,9 +1,10 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {Store} from "@ngxs/store";
 import {Customer} from "../../../model/User";
 import {CurrentlyLogged, UpdateCustomerData} from "../../../store/actions/loggedUser.actions";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {ImageService} from "../../../services/image.service";
 
 @Component({
   selector: 'app-profile-data',
@@ -23,8 +24,12 @@ export class ProfileDataComponent implements OnInit {
   lastNameFormControl = new FormControl('', [Validators.required]);
   cityFormControl = new FormControl('', [Validators.required]);
 
-  constructor(private store: Store, private _snackBar: MatSnackBar) {
-  }
+  hasSelectedFile: boolean = false;
+  selectedImage: any = null;
+  profileImageSrc: string;
+  @ViewChild('fileUploader') fileUploader:ElementRef;
+
+  constructor(private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService) {}
 
   ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe((resp) => {
@@ -34,6 +39,7 @@ export class ProfileDataComponent implements OnInit {
       this.city = resp.loggedUser.city;
       this.email = resp.loggedUser.email;
       this.role = resp.loggedUser.role;
+      this.getProfileImage();
     });
   }
 
@@ -56,6 +62,39 @@ export class ProfileDataComponent implements OnInit {
         panelClass: ['snack-bar']
       })
     });
+  }
+
+  public selectFile(event: any){
+    console.log("event")
+    console.log(event)
+    console.log(event.target.files[0])
+    this.selectedImage = event.target.files[0];
+    this.hasSelectedFile = true;
+  }
+
+  public uploadProfileImage(){
+    if (this.selectedImage != null){
+      this.imageService.postProfileImage(this.email, this.selectedImage)
+        .subscribe((encodedImage: any) => {
+          this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
+          this.resetFileUploader();
+        });
+    }
+  }
+
+  public getProfileImage(){
+    this.imageService.getProfileImage(this.email)
+      .subscribe((encodedImage: any) => {
+        if (encodedImage === null)
+          this.profileImageSrc = "../../../../assets/taxi.jpg";
+        else
+          this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
+      });
+  }
+
+  resetFileUploader() {
+    this.fileUploader.nativeElement.value = null;
+    this.hasSelectedFile = false;
   }
 
   private updateDriver() {
