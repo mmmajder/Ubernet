@@ -1,41 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
-import {Restaurant} from "./restaurant.service";
-
-class Position {
-  id: number;
-  x: number;
-  y: number;
-}
-
-class ActiveCarResponse {
-  carId:number;
-  driverEmail:string;
-  destinations:Position[];
-  currentPosition: Position;
-}
-
-// class UserTokenState {
-//   accessToken!: string;
-//   expiredIn!: number;
-// }
-//
-// enum UserRole {
-//   ADMIN,
-//   DRIVER,
-//   CUSTOMER
-// }
-//
-// class LoginResponseDTO {
-//   userRole!: UserRole;
-//   token!: UserTokenState;
-// }
-//
-// class LoginCredentials {
-//   email!: string;
-//   password!: string;
-// }
+import {ActiveCarResponse} from "../model/ActiveCarResponse";
+import {Marker} from "leaflet";
 
 @Injectable({
   providedIn: 'root'
@@ -55,8 +22,8 @@ export class MapService {
     this.mapUrl = 'http://localhost:8000/car';
   }
 
-  public getActiveCars(): Observable<ActiveCarResponse> {
-    return this.http.get<ActiveCarResponse>(this.mapUrl + "/active", this.httpOptions);
+  public getActiveCars(): Observable<ActiveCarResponse[]> {
+    return this.http.get<ActiveCarResponse[]>(this.mapUrl + "/active", this.httpOptions);
   }
 
   public setNewPositionOfCar(carId:number) {
@@ -67,37 +34,59 @@ export class MapService {
     return this.http.get<ActiveCarResponse>(this.mapUrl + "/" + carId, this.httpOptions);
   }
 
-  // public removeMenuItem(id: string, name: string) {
-  //   return this.http.post<Restaurant>(this.createRestaurantUrl + '/' + id + '/remove-menu-item', name, this.httpOptions);
-  // }
 
-  /*
-    public findById(id: string): Observable<Restaurant> {
-      return this.http.get<Restaurant>(this.createRestaurantUrl + '/' + id, this.httpOptions);
-    }
 
-    public createRestaurant(restaurant: RestaurantRequestModel): Observable<Restaurant> {
-      let body = {
-        "name": restaurant.name,
-        "address": restaurant.address,
-        "phone": restaurant.phone,
-        "email": restaurant.email,
-        "deliveryRate": restaurant.deliveryRate,
-        "menuItems": []
+  getTimeSlots(e: { routes: { instructions: any[]; }[]; }) {
+    e.routes[0].instructions.splice(-1) //remove start location
+    let distanceSlots = this.getDistanceSlots(e);  //get number of points per path
+    return this.calculateTimeSlots(distanceSlots, e); // calculate time for every path
+  }
+
+  calculateTimeSlots(distanceSlots: any, e: any) {
+    let timeSlots: number[] = []
+    for (let i = 0; i < distanceSlots.length; i++) {
+      for (let j = 0; j < distanceSlots[i]; j++) {
+        let time = e.routes[0].instructions[i].time / distanceSlots[i]
+        if (timeSlots.length == 0) {
+          timeSlots.push(time)
+        } else {
+          timeSlots.push(timeSlots[timeSlots.length - 1] + time)
+        }
+        timeSlots.push()
       }
-      return this.http.post<Restaurant>(this.createRestaurantUrl, body, this.httpOptions);
     }
+    return timeSlots;
+  }
 
-    public removeMenuItem(id: string, name: string) {
-      return this.http.post<Restaurant>(this.createRestaurantUrl + '/' + id + '/remove-menu-item', name, this.httpOptions);
-    }
-
-    public addMenuItem(menuItem: MenuItem): Observable<MenuItem> {
-      let body = {
-        "name": menuItem.name,
-        "description": menuItem.description,
-        "price": menuItem.price
+  getDistanceSlots(e: any) {
+    let numberOfCoordinates = 1
+    let distanceSlots: number[] = []
+    for (let i = 0; i < e.routes[0].coordinates.length; i++) {
+      if (i == 0) {
+        continue
       }
-      return this.http.post<MenuItem>(this.createRestaurantUrl + '/' + menuItem.id + '/menu-item', body, this.httpOptions);
-    }*/
+      let prevCoord = e.routes[0].coordinates[i - 1]
+      let coord = e.routes[0].coordinates[i]
+      let distance = this.measureDistance(coord.lat, coord.lng, prevCoord.lat, prevCoord.lng)   // calculate distance in m between points
+      if (distance == 0) {
+        distanceSlots.push(numberOfCoordinates)
+        numberOfCoordinates = 0
+      }
+      numberOfCoordinates += 1
+    }
+    return distanceSlots;
+  }
+
+  measureDistance(lat1: number, lon1: number, lat2: number, lon2: number): number {  // generally used geo measurement function
+    let R = 6378.137; // Radius of earth in KM
+    let dLat = lat2 * Math.PI / 180 - lat1 * Math.PI / 180;
+    let dLon = lon2 * Math.PI / 180 - lon1 * Math.PI / 180;
+    let a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    let c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    let d = R * c;
+    return d * 1000; // meters
+  }
+
 }

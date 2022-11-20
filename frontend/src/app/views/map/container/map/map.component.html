@@ -11,7 +11,7 @@
 <!--  </mat-card>-->
 <div>
   <ng-container [ngSwitch]="userRole">
-    <app-search-directions-unauthorised *ngSwitchCase="null"></app-search-directions-unauthorised>
+    <app-search-directions-unauthorised *ngSwitchCase="userRoles.UNAUTHORIZED"></app-search-directions-unauthorised>
     <app-search-directions-customer *ngSwitchCase="userRoles.CUSTOMER"></app-search-directions-customer>
   </ng-container>
   <div class="map-container">
