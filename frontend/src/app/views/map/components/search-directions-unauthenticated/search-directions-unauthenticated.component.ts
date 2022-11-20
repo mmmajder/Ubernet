@@ -1,5 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import {FormBuilder} from "@angular/forms";
+import {Position} from "../../../../model/Position";
+import {MapService} from "../../../../services/map.service";
+import {SearchDestinationElement} from "../../../../model/SearchDestinationElement";
 
 @Component({
   selector: 'app-search-directions-unauthorised',
@@ -7,13 +10,14 @@ import {FormBuilder} from "@angular/forms";
   styleUrls: ['./search-directions-unauthenticated.component.css']
 })
 export class SearchDirectionsUnauthenticatedComponent implements OnInit {
-  destinations: ({ number: Number; locationName: string })[];
+  destinations: SearchDestinationElement[];
   estimatesDisplayed: boolean
+  positions: Position[]
 
-  constructor(private formBuilder: FormBuilder) {
+  constructor(private mapService: MapService) {
     this.destinations = [
-      {number: 0, locationName: ""},
-      {number: 1, locationName: ""}
+      {locationName: ""},
+      {locationName: ""}
     ]
     this.estimatesDisplayed = false
   }
@@ -22,12 +26,10 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   }
 
   addNewDestination() {
-    this.destinations.push({number: this.destinations.length, locationName: ""})
+    this.destinations.push({locationName: ""})
   }
 
   removeDestination() {
-    console.log("AAAAAAAAAAAA")
-    // this.destinations.pop({number: this.destinations.length + 1, locationName: ""})
   }
 
   showEstimates() {

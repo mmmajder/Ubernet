@@ -3,16 +3,12 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
 </head>
-<!--  <mat-card class="example-card destination-input">-->
-<!--    <input matInput #message maxlength="256" placeholder="address" [(ngModel)]="address">-->
-<!--    <br>-->
-<!--    <button mat-raised-button color="primary" (click)="findAddress()">Search</button>-->
-<!--    <div id="results">{{results}}</div>-->
-<!--  </mat-card>-->
+<app-sidenav></app-sidenav>
 <div>
   <ng-container [ngSwitch]="userRole">
     <app-search-directions-unauthorised *ngSwitchCase="userRoles.UNAUTHORIZED"></app-search-directions-unauthorised>
-    <app-search-directions-customer *ngSwitchCase="userRoles.CUSTOMER"></app-search-directions-customer>
+    <app-search-directions-customer *ngSwitchCase="userRoles.CUSTOMER"
+                                    (addPinsToMap)="getOutputVal($event)"></app-search-directions-customer>
   </ng-container>
   <div class="map-container">
     <div class="map-frame">

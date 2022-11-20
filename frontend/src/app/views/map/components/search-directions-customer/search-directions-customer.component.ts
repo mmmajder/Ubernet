@@ -1,5 +1,8 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
+import {Position} from "../../../../model/Position";
+import {MapService} from "../../../../services/map.service";
+import {Output, EventEmitter} from '@angular/core';
+
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -7,39 +10,58 @@ import {FormBuilder, FormGroup, FormArray, Validators} from '@angular/forms';
   styleUrls: ['./search-directions-customer.component.css']
 })
 export class SearchDirectionsCustomerComponent implements OnInit {
-  estimatesPresented: boolean
-  public destinations: ({ destination: string })[];
+  estimatesPresented: boolean;
+  public destinations: ({ locationName: string })[];
+  positions: Position[];
 
-  constructor(private formBuilder: FormBuilder) {
+  @Output() addPinsToMap = new EventEmitter<Position[]>();
+
+  constructor(private mapService: MapService) {
     this.destinations = [
-      {destination: ""},
-      {destination: ""}]
-    this.estimatesPresented = false
+      {locationName: ""},
+      {locationName: ""}];
+    this.estimatesPresented = false;
   }
 
   ngOnInit(): void {
   }
 
   addNewDestination() {
-    this.destinations.push({destination: ""})
+    this.destinations.push({locationName: ""});
   }
 
   removeDestination(number: number) {
-    console.log(this.destinations)
-    console.log("number " + number)
     this.destinations = this.destinations.filter(function (elem, index) {
       return index != number;
     });
 
   }
 
-  showEstimates() {
-    this.estimatesPresented = true
+  async showEstimates() {
+    this.estimatesPresented = true;
+    this.positions = [];
+    await this.calculatePositionsSearch()
+    this.addPinsToMap.emit(this.positions)
   }
 
+  calculatePositionsSearch() {
+    return new Promise(resolve => {
+      this.destinations.forEach((destination) => {
+        this.mapService.findAddress(destination.locationName).subscribe((response) => {
+          let position = new Position()
+          position.x = Object.values(response)[0].lon
+          position.y = Object.values(response)[0].lat
+          this.positions.push(position)
+        })
+      })
+      setTimeout(() => {
+        resolve('resolved');
+      }, 1000);
+    });
+  }
+
+
   setDestination(text: string, i: number) {
-    console.log(text)
-    console.log(i)
-    console.log(this.destinations)
+    this.destinations[i].locationName = text
   }
 }

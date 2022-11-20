@@ -18,7 +18,8 @@
       <mat-label *ngSwitchDefault>
         Stop {{i}}:
       </mat-label>
-      <input matInput [name]="'dest' + i" [ngModel]="destinations[i].destination" (ngModelChange)="setDestination($event, i)">
+      <input matInput [name]="'dest' + i" [ngModel]="destinations[i].locationName"
+             (ngModelChange)="setDestination($event, i)">
       <button mat-icon-button matSuffix (click)="removeDestination(i)">
         <mat-icon>
           location_off

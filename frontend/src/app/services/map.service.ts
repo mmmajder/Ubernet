@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {ActiveCarResponse} from "../model/ActiveCarResponse";
-import {Marker} from "leaflet";
 
 @Injectable({
   providedIn: 'root'
@@ -26,14 +25,13 @@ export class MapService {
     return this.http.get<ActiveCarResponse[]>(this.mapUrl + "/active", this.httpOptions);
   }
 
-  public setNewPositionOfCar(carId:number) {
+  public setNewPositionOfCar(carId: number) {
     return this.http.put<ActiveCarResponse>(this.mapUrl + "/position/", carId, this.httpOptions);
   }
 
-  public getCarById(carId:number): Observable<ActiveCarResponse> {
+  public getCarById(carId: number): Observable<ActiveCarResponse> {
     return this.http.get<ActiveCarResponse>(this.mapUrl + "/" + carId, this.httpOptions);
   }
-
 
 
   getTimeSlots(e: { routes: { instructions: any[]; }[]; }) {
@@ -65,9 +63,9 @@ export class MapService {
       if (i == 0) {
         continue
       }
-      let prevCoord = e.routes[0].coordinates[i - 1]
-      let coord = e.routes[0].coordinates[i]
-      let distance = this.measureDistance(coord.lat, coord.lng, prevCoord.lat, prevCoord.lng)   // calculate distance in m between points
+      let prevCoordinate = e.routes[0].coordinates[i - 1]
+      let coordinate = e.routes[0].coordinates[i]
+      let distance = this.measureDistance(coordinate.lat, coordinate.lng, prevCoordinate.lat, prevCoordinate.lng)   // calculate distance in m between points
       if (distance == 0) {
         distanceSlots.push(numberOfCoordinates)
         numberOfCoordinates = 0
@@ -89,4 +87,8 @@ export class MapService {
     return d * 1000; // meters
   }
 
+  findAddress(address: string) {
+    var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + address
+    return this.http.get(url);
+  }
 }
