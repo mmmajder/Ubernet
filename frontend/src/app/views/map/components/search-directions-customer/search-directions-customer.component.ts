@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Position} from "../../../../model/Position";
 import {MapService} from "../../../../services/map.service";
-import {Output, EventEmitter} from '@angular/core';
+import {Output, EventEmitter, Input} from '@angular/core';
 
 
 @Component({
@@ -14,6 +14,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   public destinations: ({ locationName: string })[];
   positions: Position[];
 
+  @Input()
+  estimatedTime: string;
   @Output() addPinsToMap = new EventEmitter<Position[]>();
 
   constructor(private mapService: MapService) {
@@ -38,10 +40,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   async showEstimates() {
-    this.estimatesPresented = true;
     this.positions = [];
     await this.calculatePositionsSearch()
     this.addPinsToMap.emit(this.positions)
+    this.estimatesPresented = true;
   }
 
   calculatePositionsSearch() {

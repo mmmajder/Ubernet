@@ -6,6 +6,7 @@ import {UserRole} from "../../../../model/UserRole";
 import {ActiveCarResponse} from "../../../../model/ActiveCarResponse";
 import {Marker} from "leaflet";
 import {Position} from "../../../../model/Position";
+import {secondsToDhms} from "../../../../services/utils.service";
 
 @Component({
   selector: 'app-map',
@@ -17,6 +18,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   userRoles = UserRole
   map: L.Map
   searchPins: Marker[]
+  estimatedTimeSearch: string
 
   constructor(private mapService: MapService) {
     this.userRole = UserRole.CUSTOMER
@@ -50,7 +52,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   initDirections = (car: ActiveCarResponse, marker: Marker<any>) => {
     let positionPosition = L.latLng(car.currentPosition.y, car.currentPosition.x)
     let destinationPosition = L.latLng(car.destinations[0].y, car.destinations[0].x)
-    let route = L.Routing.control({
+    L.Routing.control({
       waypoints: [
         positionPosition,
         destinationPosition
@@ -90,11 +92,28 @@ export class MapComponent implements AfterViewInit, OnInit {
     return returnData;
   }
 
-  getOutputVal(positions: Position[]) {
-    positions.forEach((position) => {
-      let marker = L.marker([position.y, position.x]).addTo(this.map);
-      this.searchPins.push(marker)
-    })
+  drawSearchedRoute(positions: Position[]) {
+    // positions.forEach((position) => {
+    //   let marker = L.marker([position.y, position.x]).addTo(this.map);
+    //   this.searchPins.push(marker)
+    // })
+
+    for (let i = 0; i < positions.length - 1; i++) {
+      let positionPosition = L.latLng(positions[i].y, positions[i].x)
+      let destinationPosition = L.latLng(positions[i + 1].y, positions[i + 1].x)
+      L.Routing.control({
+        waypoints: [
+          positionPosition,
+          destinationPosition
+        ],
+        routeWhileDragging: false,
+        addWaypoints: false,
+      }).on('routesfound', (reponse) => {
+        let route = reponse.routes[0]
+        this.estimatedTimeSearch = secondsToDhms(route.summary.totalTime)
+      }).addTo(this.map)
+    }
+
   }
 
   carIcon = L.icon({

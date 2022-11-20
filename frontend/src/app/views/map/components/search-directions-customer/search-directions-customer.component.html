@@ -31,7 +31,7 @@
     <button mat-raised-button color="primary" style="width: 100%" (click)="showEstimates()">Search</button>
     <div *ngIf="estimatesPresented==true">
       <hr>
-      <p> Estimated time: </p>
+      <p> Estimated time: {{estimatedTime}}</p>
       <p> Estimated price: </p>
     </div>
   </mat-card-footer>
