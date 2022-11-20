@@ -1,5 +1,6 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.dto.DriverDto;
 import com.example.ubernet.model.Car;
 import com.example.ubernet.model.Driver;
 import com.example.ubernet.model.DriverDailyActivity;
@@ -7,6 +8,9 @@ import com.example.ubernet.model.User;
 import com.example.ubernet.repository.DriverRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @AllArgsConstructor
 @Service
@@ -46,5 +50,20 @@ public class DriverService {
         driverDailyActivityService.save(driverDailyActivity);
         save(driver);
         return true;
+    }
+
+    public List<DriverDto> getDrivers() {
+        List<DriverDto> drivers = new ArrayList<>();
+        for (Driver driver : driverRepository.findAll()) {
+            drivers.add(DriverDto.builder()
+                    .email(driver.getEmail())
+                    .name(driver.getName())
+                    .surname(driver.getSurname())
+                    .city(driver.getCity())
+                    .phoneNumber(driver.getPhoneNumber())
+                    .isWorking(driver.getDriverDailyActivity().getIsActive())
+                    .build());
+        }
+        return drivers;
     }
 }

@@ -18,13 +18,11 @@ import {
 } from "./container/dashboard-customer-container/dashboard-customer-container.component";
 import {FavoritesComponent} from './components/favorites/favorites/favorites.component';
 import {MatListModule} from "@angular/material/list";
-import {ActivityLogComponent} from '../../shared/activity-log/activity-log.component';
 import {ProfileDataComponent} from '../../shared/profile-edit/profile-data/profile-data.component';
 import {
   ProfileCustomerContainerComponent
 } from './container/profile-customer-container/profile-customer-container.component';
 import {MatTabsModule} from "@angular/material/tabs";
-import {AdminModule} from "../admin/admin.module";
 import {UnauthenticatedModule} from "../unauthenticated/unauthenticated.module";
 import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
 import {
@@ -36,13 +34,11 @@ import {
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {RateDialogComponent} from './components/rate-dialog/rate-dialog.component';
-import {StarRatingModule} from "angular-star-rating";
 
 @NgModule({
   declarations: [
     DashboardCustomerContainerComponent,
     FavoritesComponent,
-    ActivityLogComponent,
     ProfileCustomerContainerComponent,
     CreditCardComponent,
     CustomersUpcomingRidesComponent,
@@ -67,17 +63,14 @@ import {StarRatingModule} from "angular-star-rating";
     SharedModule,
     MatListModule,
     MatTabsModule,
-    AdminModule,
     MatChipsModule,
     MatTooltipModule,
-    StarRatingModule,
   ],
   exports: [
     DashboardCustomerContainerComponent,
     ProfileDataComponent,
     UnauthenticatedModule,
     ProfileCustomerContainerComponent,
-    ActivityLogComponent,
   ],
 })
 export class CustomerModule {

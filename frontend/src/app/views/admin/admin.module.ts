@@ -22,8 +22,12 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {DriverRegistartionComponent} from './components/driver-registartion/driver-registartion.component';
 import {DriversComponent} from './container/drivers/drivers.component';
 import {MatTabsModule} from "@angular/material/tabs";
-import {DriversListComponent} from './components/drivers-list/drivers-list.component';
-import { AdminProfileContainerComponent } from './container/admin-profile-container/admin-profile-container.component';
+import {AdminProfileContainerComponent} from './container/admin-profile-container/admin-profile-container.component';
+import {
+  RegisterNewDriverDialogComponent
+} from './components/register-new-driver-dialog/register-new-driver-dialog.component';
+import {MatStepperModule} from "@angular/material/stepper";
+import {DriversProfileDialogComponent} from './components/drivers-profile-dialog/drivers-profile-dialog.component';
 
 @NgModule({
   declarations: [
@@ -33,8 +37,9 @@ import { AdminProfileContainerComponent } from './container/admin-profile-contai
     AdminChatComponent,
     DriverRegistartionComponent,
     DriversComponent,
-    DriversListComponent,
     AdminProfileContainerComponent,
+    RegisterNewDriverDialogComponent,
+    DriversProfileDialogComponent,
   ],
   imports: [
     MatToolbarModule,
@@ -55,11 +60,12 @@ import { AdminProfileContainerComponent } from './container/admin-profile-contai
     MatListModule,
     MatTooltipModule,
     MatTabsModule,
+    MatStepperModule
   ],
-    exports: [
-        AdminContainerComponent,
-        AdminProfileContainerComponent,
-    ]
+  exports: [
+    AdminContainerComponent,
+    AdminProfileContainerComponent,
+  ]
 })
 export class AdminModule {
 }
