@@ -18,6 +18,8 @@ import {MapComponent} from "./container/map/map.component";
 import { SearchDirectionsUnauthenticatedComponent } from './components/search-directions-unauthenticated/search-directions-unauthenticated.component';
 import {MatListModule} from "@angular/material/list";
 import { MapUnauthenticatedComponent } from './components/map-unauthenticated/map-unauthenticated.component';
+import {MatExpansionModule} from "@angular/material/expansion";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
@@ -26,24 +28,26 @@ import { MapUnauthenticatedComponent } from './components/map-unauthenticated/ma
     SearchDirectionsUnauthenticatedComponent,
     MapUnauthenticatedComponent,
   ],
-    imports: [
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
-        MatTableModule,
-        MatCardModule,
-        MatSortModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDialogModule,
-        FormsModule,
-        CommonModule,
-        MatSnackBarModule,
-        ReactiveFormsModule,
-        MatMenuModule,
-        SharedModule,
-        MatListModule,
-    ],
+  imports: [
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTableModule,
+    MatCardModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDialogModule,
+    FormsModule,
+    CommonModule,
+    MatSnackBarModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    SharedModule,
+    MatListModule,
+    MatExpansionModule,
+    MatSelectModule,
+  ],
     exports: [
         MapComponent,
     ],

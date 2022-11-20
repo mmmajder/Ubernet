@@ -27,12 +27,18 @@
       </button>
     </mat-form-field>
   </mat-card-content>
+  <mat-form-field appearance="outline">
+    <mat-label>Choose one</mat-label>
+    <mat-select [ngModel]="carType">
+      <mat-option *ngFor="let type of carTypes">{{type}}</mat-option>
+    </mat-select>
+  </mat-form-field>
   <mat-card-footer style="padding: 15px">
     <button mat-raised-button color="primary" style="width: 100%" (click)="showEstimates()">Search</button>
     <div *ngIf="estimatesPresented==true">
       <hr>
       <p> Estimated time: {{estimatedTime}}</p>
-      <p> Estimated price: </p>
+      <p> Estimated price: {{estimatedPrice}}</p>
     </div>
   </mat-card-footer>
 </mat-card>

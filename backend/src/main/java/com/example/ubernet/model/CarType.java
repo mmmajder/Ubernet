@@ -20,8 +20,6 @@ public class CarType {
     @Column(unique = true)
     private long id;
     private String name;
-    private Boolean allowsBaby;
-    private Boolean allowsPet;
     private Double priceForType;
     private Boolean deleted = false;
 }

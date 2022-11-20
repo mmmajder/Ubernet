@@ -19,10 +19,6 @@ public class CreateCarDTO {
 //    private Position position;
     @NotEmpty
     private String name;
-    @NotNull
-    private Boolean allowsBaby;
-    @NotNull
-    private Boolean allowsPet;
     @Min(0)
     private Double priceForType;
     @NotEmpty

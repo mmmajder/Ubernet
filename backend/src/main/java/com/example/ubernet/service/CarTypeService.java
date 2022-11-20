@@ -13,4 +13,8 @@ public class CarTypeService {
     public CarType save(CarType carType) {
         return carTypeRepository.save(carType);
     }
+
+    public CarType findCarTypeByName(String name) {
+        return carTypeRepository.findCarTypeByName(name);
+    }
 }

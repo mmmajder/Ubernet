@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Position} from "../../../../model/Position";
 import {MapService} from "../../../../services/map.service";
 import {Output, EventEmitter, Input} from '@angular/core';
-
+import {ErrorStateMatcher} from "@angular/material/core";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -13,10 +13,13 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   estimatesPresented: boolean;
   public destinations: ({ locationName: string })[];
   positions: Position[];
-
   @Input()
   estimatedTime: string;
+  @Input()
+  estimatedPrice: number
   @Output() addPinsToMap = new EventEmitter<Position[]>();
+  carType: string = 'Default';
+  carTypes: string[] = ['Default', 'Neki tip', 'Tip 2'];
 
   constructor(private mapService: MapService) {
     this.destinations = [

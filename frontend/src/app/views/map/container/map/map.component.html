@@ -8,7 +8,7 @@
   <ng-container [ngSwitch]="userRole">
     <app-search-directions-unauthorised *ngSwitchCase="userRoles.UNAUTHORIZED"></app-search-directions-unauthorised>
     <app-search-directions-customer *ngSwitchCase="userRoles.CUSTOMER"
-                                    (addPinsToMap)="drawSearchedRoute($event)" [estimatedTime]="estimatedTimeSearch"></app-search-directions-customer>
+                                    (addPinsToMap)="drawSearchedRoute($event)" [estimatedTime]="estimatedTimeSearch" [estimatedPrice]="estimatedPriceSearch"></app-search-directions-customer>
   </ng-container>
   <div class="map-container">
     <div class="map-frame">

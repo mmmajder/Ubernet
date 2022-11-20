@@ -31,10 +31,10 @@ values (false, true, '2022-10-24 00:00', 0),
        (false, true, '2022-10-24 00:00', 0),
        (false, true, '2022-10-24 00:00', 0);
 
-insert into car_type (allows_baby, allows_pet, deleted, name, price_for_type)
-values (true, true, false, 'R8 AUDI', 200),
-       (true, true, false, 'Golf 2', 500),
-       (true, true, false, 'Fiat Multipla', 100);
+insert into car_type (deleted, name, price_for_type)
+values (false, 'Convertible', 200),
+       (false, 'Jeep', 500),
+       (false, 'Van', 100);
 
 insert into position (deleted, y, x)
 values (false, 45.267136, 19.833549),
@@ -44,8 +44,8 @@ values (false, 45.267136, 19.833549),
 --        (false, 45.287136, 19.833549),
 --        (false, 45.287136, 19.863549);
 
-insert into car (deleted, is_available, car_type_id, position_id)
-values (false, true, 1, 1);
+insert into car (deleted, is_available, car_type_id, position_id,allows_baby, allows_pet)
+values (false, true, 1, 1, true, true);
 --        (false, true, 2, 3, 4),
 --        (false, true, 3, 5, 6);
 

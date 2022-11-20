@@ -41,10 +41,6 @@ export class AuthService {
   }
 
   public verify(credentials: VerifyCredentials): Observable<string> {
-    // let body = {
-    //   "code": credentials.verificationCode
-    // }
-    console.log("AAAAAAAA")
     return this.http.get<string>(this.authUrl + `/verify/${credentials.verificationCode}`, AuthService.getHttpOptions());
   }
 

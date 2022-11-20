@@ -29,5 +29,6 @@ public class Car {
     @OneToOne
     @JsonIgnore
     private Driver driver;
-
+    private Boolean allowsBaby;
+    private Boolean allowsPet;
 }

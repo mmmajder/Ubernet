@@ -45,8 +45,6 @@ public class CarService {
 
     private CarType getCarType(CreateCarDTO createCarDTO) {
         CarType carType = new CarType();
-        carType.setAllowsBaby(createCarDTO.getAllowsBaby());
-        carType.setAllowsPet(createCarDTO.getAllowsPet());
         carType.setPriceForType(createCarDTO.getPriceForType());
         carType.setName(createCarDTO.getName());
         carType.setDeleted(false);

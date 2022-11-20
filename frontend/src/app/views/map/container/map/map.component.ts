@@ -7,6 +7,7 @@ import {ActiveCarResponse} from "../../../../model/ActiveCarResponse";
 import {Marker} from "leaflet";
 import {Position} from "../../../../model/Position";
 import {secondsToDhms} from "../../../../services/utils.service";
+import {RidePayService} from "../../../../services/ride-price.service";
 
 @Component({
   selector: 'app-map',
@@ -20,8 +21,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   searchPins: Marker[]
   estimatedTimeSearch: string
   totalTime: number
+  estimatedPriceSearch: number;
+  typeOfVehicle: string
 
-  constructor(private mapService: MapService) {
+  constructor(private mapService: MapService, private ridePayService: RidePayService) {
     this.userRole = UserRole.CUSTOMER
     this.searchPins = []
     this.totalTime = 0
@@ -95,16 +98,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   drawSearchedRoute(positions: Position[]) {
-    console.log("CRTANJE")
-    console.log(positions)
-
     const drawRoutes = () => {
       for (let i = 0; i < positions.length - 1; i++) {
-        console.log(i)
         let startPosition = L.latLng(positions[i].y, positions[i].x)
         let endPosition = L.latLng(positions[i + 1].y, positions[i + 1].x)
-        console.log(startPosition)
-        console.log(endPosition)
         L.Routing.control({
           waypoints: [
             startPosition,
@@ -116,6 +113,9 @@ export class MapComponent implements AfterViewInit, OnInit {
           let route = response.routes[0]
           this.totalTime += route.summary.totalTime
           this.estimatedTimeSearch = secondsToDhms(this.totalTime)
+          let estimatedLengthInKm = route.summary.totalDistance
+          console.log("LEn " + estimatedLengthInKm)
+          this.estimatedPriceSearch = this.ridePayService.calculateRidePrice(this.typeOfVehicle, estimatedLengthInKm / 1000)
         }).addTo(this.map)
       }
     }
