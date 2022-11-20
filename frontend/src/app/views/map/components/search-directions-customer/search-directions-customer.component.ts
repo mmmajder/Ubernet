@@ -48,17 +48,18 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   calculatePositionsSearch() {
     return new Promise(resolve => {
-      this.destinations.forEach((destination) => {
+      for (let i=0; i<this.destinations.length; i++) {
+        let destination = this.destinations[i]
         this.mapService.findAddress(destination.locationName).subscribe((response) => {
           let position = new Position()
           position.x = Object.values(response)[0].lon
           position.y = Object.values(response)[0].lat
-          this.positions.push(position)
+          this.positions[i] = position
         })
-      })
+      }
       setTimeout(() => {
         resolve('resolved');
-      }, 1000);
+      }, 3000);
     });
   }
 

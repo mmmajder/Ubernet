@@ -9,5 +9,8 @@ export function secondsToDhms(seconds: number) {
   let hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
   let mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
   let sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+  console.log("MILAN")
+  console.log(seconds)
+  console.log(dDisplay + hDisplay + mDisplay + sDisplay)
   return dDisplay + hDisplay + mDisplay + sDisplay;
 }

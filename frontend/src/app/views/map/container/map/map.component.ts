@@ -19,10 +19,12 @@ export class MapComponent implements AfterViewInit, OnInit {
   map: L.Map
   searchPins: Marker[]
   estimatedTimeSearch: string
+  totalTime: number
 
   constructor(private mapService: MapService) {
     this.userRole = UserRole.CUSTOMER
     this.searchPins = []
+    this.totalTime = 0
   }
 
   ngOnInit(): void {
@@ -64,9 +66,9 @@ export class MapComponent implements AfterViewInit, OnInit {
       while (timeSlots.length < e.routes[0].coordinates.length) {
         timeSlots.push(timeSlots[timeSlots.length - 1])
       }
-      e.routes[0].coordinates.forEach((coord: any, index: any) => {
+      e.routes[0].coordinates.forEach((coordinate: any, index: any) => {
         setTimeout(() => {
-          marker.setLatLng([coord.lat, coord.lng]);
+          marker.setLatLng([coordinate.lat, coordinate.lng]);
           if (index == e.routes[0].coordinates.length - 1) {
             this.setNewPosition(car, marker)
           }
@@ -77,7 +79,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   setNewPosition(car: ActiveCarResponse, marker: Marker<any>): ActiveCarResponse {
     let returnData = car;
-    this.mapService.setNewPositionOfCar(car.carId).subscribe((data) => {
+    this.mapService.setNewPositionOfCar(car.carId).subscribe(() => {
       let getNewDestination = () => {
         this.mapService.getCarById(car.carId).subscribe((newCarData) => {
           if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
@@ -93,27 +95,32 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   drawSearchedRoute(positions: Position[]) {
-    // positions.forEach((position) => {
-    //   let marker = L.marker([position.y, position.x]).addTo(this.map);
-    //   this.searchPins.push(marker)
-    // })
+    console.log("CRTANJE")
+    console.log(positions)
 
-    for (let i = 0; i < positions.length - 1; i++) {
-      let positionPosition = L.latLng(positions[i].y, positions[i].x)
-      let destinationPosition = L.latLng(positions[i + 1].y, positions[i + 1].x)
-      L.Routing.control({
-        waypoints: [
-          positionPosition,
-          destinationPosition
-        ],
-        routeWhileDragging: false,
-        addWaypoints: false,
-      }).on('routesfound', (reponse) => {
-        let route = reponse.routes[0]
-        this.estimatedTimeSearch = secondsToDhms(route.summary.totalTime)
-      }).addTo(this.map)
+    const drawRoutes = () => {
+      for (let i = 0; i < positions.length - 1; i++) {
+        console.log(i)
+        let startPosition = L.latLng(positions[i].y, positions[i].x)
+        let endPosition = L.latLng(positions[i + 1].y, positions[i + 1].x)
+        console.log(startPosition)
+        console.log(endPosition)
+        L.Routing.control({
+          waypoints: [
+            startPosition,
+            endPosition
+          ],
+          routeWhileDragging: false,
+          addWaypoints: false,
+        }).on('routesfound', (response) => {
+          let route = response.routes[0]
+          this.totalTime += route.summary.totalTime
+          this.estimatedTimeSearch = secondsToDhms(this.totalTime)
+        }).addTo(this.map)
+      }
     }
 
+    drawRoutes();
   }
 
   carIcon = L.icon({
