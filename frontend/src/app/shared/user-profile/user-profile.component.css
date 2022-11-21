@@ -1,0 +1,21 @@
+.row-flex {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.col-flex-item {
+  margin-top: 10px;
+  display: flex;
+  flex-flow: column;
+}
+
+.vertical-divider {
+  border-right: 1px solid var(--light-gray);
+}
+
+.profile-picture {
+  object-fit: cover;
+  height: 200px;
+  width: 200px;
+  border-radius: 5%;
+}

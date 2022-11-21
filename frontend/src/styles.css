@@ -76,3 +76,9 @@ mat-card {
 .dashboard-card {
   margin-bottom: 15px;
 }
+
+.mat-card-header {
+  color: var(--gray);
+  font-weight: 500;
+  font-size: 1rem;
+}

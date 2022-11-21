@@ -52,7 +52,9 @@ export class DriversComponent implements OnInit {
 
   openDriversProfileDialog(element: DriverListItem) {
     let dialogRef = this.driversProfile.open(DriversProfileDialogComponent);
-    // dialogRef.componentInstance.userId = element.id;
+    dialogRef.componentInstance.userEmail = element.email;
+    console.log("DRIVERS.COMPONENT")
+    console.log(element.email)
   }
 
   private usersToDriverListItems(users: Driver[]): DriverListItem[] {
@@ -69,15 +71,4 @@ export class DriversComponent implements OnInit {
     }
     return driverList;
   }
-
-  // private getProfilePicture(email: string): void {
-  //   this.imageService.getProfileImage(email)
-  //     .subscribe((encodedImage: any) => {
-  //       if (encodedImage === null)
-  //         this.profilePictures.set(email, "../../../../assets/taxi.jpg");
-  //       else
-  //         this.profilePictures.set(email, `data:image/jpeg;base64,${encodedImage.data}`);
-  //     });
-  // }
-
 }

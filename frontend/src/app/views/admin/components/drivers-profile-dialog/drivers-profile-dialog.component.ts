@@ -1,5 +1,4 @@
 import {Component, Input, OnInit} from '@angular/core';
-import {User} from "../../../../model/User";
 
 @Component({
   selector: 'app-drivers-profile-dialog',
@@ -7,9 +6,10 @@ import {User} from "../../../../model/User";
   styleUrls: ['./drivers-profile-dialog.component.css']
 })
 export class DriversProfileDialogComponent implements OnInit {
-  @Input() user: User;
+  @Input() userEmail: string;
 
-  constructor() { }
+  constructor() {
+  }
 
   ngOnInit(): void {
   }
