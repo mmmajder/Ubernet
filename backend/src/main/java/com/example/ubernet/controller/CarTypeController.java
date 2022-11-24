@@ -10,6 +10,8 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @AllArgsConstructor
 @RestController
 @CrossOrigin("*")
@@ -24,5 +26,14 @@ public class CarTypeController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(DTOMapper.getCarTypeResponse(carType));
+    }
+
+    @GetMapping("/all")
+    public ResponseEntity<List<CarTypeResponse>> getAllCarTypes() {
+        List<CarType> carTypes = carTypeService.getAllCarTypes();
+        if (carTypes == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(DTOMapper.getCarTypesResponse(carTypes));
     }
 }

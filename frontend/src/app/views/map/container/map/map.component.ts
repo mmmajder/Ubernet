@@ -113,9 +113,10 @@ export class MapComponent implements AfterViewInit, OnInit {
           let route = response.routes[0]
           this.totalTime += route.summary.totalTime
           this.estimatedTimeSearch = secondsToDhms(this.totalTime)
-          let estimatedLengthInKm = route.summary.totalDistance
-          console.log("LEn " + estimatedLengthInKm)
-          this.estimatedPriceSearch = this.ridePayService.calculateRidePrice(this.typeOfVehicle, estimatedLengthInKm / 1000)
+          let estimatedLengthInKm = route.summary.totalDistance / 1000
+          this.ridePayService.calculatePrice(estimatedLengthInKm, this.typeOfVehicle).subscribe(value => {
+            this.estimatedPriceSearch = Math.round(value * 100) / 100
+          })
         }).addTo(this.map)
       }
     }
@@ -153,4 +154,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
   }
 
+  setSelectedCarType(carType: string) {
+    this.typeOfVehicle = carType
+  }
 }

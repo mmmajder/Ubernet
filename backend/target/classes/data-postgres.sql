@@ -32,7 +32,7 @@ values (false, true, '2022-10-24 00:00', 0),
        (false, true, '2022-10-24 00:00', 0);
 
 insert into car_type (deleted, name, price_for_type)
-values (false, 'Convertible', 200),
+values (false, 'Cabrio', 200),
        (false, 'Jeep', 500),
        (false, 'Van', 100);
 

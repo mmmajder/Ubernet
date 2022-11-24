@@ -14,8 +14,8 @@ export class CarTypeService {
     this.carTypeUrl = 'http://localhost:8000/car-type';
   }
 
-  public getCarType(name: String): Observable<CarTypeGetResponse> {
-    return this.http.get<CarTypeGetResponse>(this.carTypeUrl + `/${name}`, CarTypeService.getHttpOptions());
+  public getCarTypes(): Observable<CarTypeGetResponse[]> {
+    return this.http.get<CarTypeGetResponse[]>(this.carTypeUrl + "/all", CarTypeService.getHttpOptions());
   }
 
   public static getHttpOptions() {

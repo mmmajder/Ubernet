@@ -4,6 +4,9 @@ import com.example.ubernet.dto.*;
 import com.example.ubernet.model.*;
 import com.example.ubernet.service.UserService;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class DTOMapper {
     private static UserService userService;
 
@@ -84,5 +87,14 @@ public class DTOMapper {
         carTypeResponse.setId(carType.getId());
         carTypeResponse.setName(carType.getName());
         return carTypeResponse;
+    }
+
+    public static List<CarTypeResponse> getCarTypesResponse(List<CarType> carTypes) {
+        List<CarTypeResponse> carTypeResponses = new ArrayList<>();
+        for (CarType carType :
+                carTypes) {
+            carTypeResponses.add(DTOMapper.getCarTypeResponse(carType));
+        }
+        return carTypeResponses;
     }
 }

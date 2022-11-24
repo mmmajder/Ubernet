@@ -3,6 +3,7 @@ import {Position} from "../../../../model/Position";
 import {MapService} from "../../../../services/map.service";
 import {Output, EventEmitter, Input} from '@angular/core';
 import {ErrorStateMatcher} from "@angular/material/core";
+import {CarTypeService} from "../../../../services/car-type.service";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -18,17 +19,27 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   @Input()
   estimatedPrice: number
   @Output() addPinsToMap = new EventEmitter<Position[]>();
-  carType: string = 'Default';
-  carTypes: string[] = ['Default', 'Neki tip', 'Tip 2'];
+  @Output() getSelectedCarType = new EventEmitter<string>();
+  carType: string;
+  carTypes: string[];
 
-  constructor(private mapService: MapService) {
+  constructor(private mapService: MapService, private carTypeService: CarTypeService) {
     this.destinations = [
       {locationName: ""},
       {locationName: ""}];
+    this.carType = 'Default';
     this.estimatesPresented = false;
   }
 
   ngOnInit(): void {
+    this.carTypeService.getCarTypes().subscribe({
+      next: (carTypeGetResponse) => {
+        this.carTypes = []
+        carTypeGetResponse.forEach((type) => {
+          this.carTypes.push(type.name);
+        })
+      },
+    });
   }
 
   addNewDestination() {
@@ -45,13 +56,14 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   async showEstimates() {
     this.positions = [];
     await this.calculatePositionsSearch()
+    this.getSelectedCarType.emit(this.carType)
     this.addPinsToMap.emit(this.positions)
     this.estimatesPresented = true;
   }
 
   calculatePositionsSearch() {
     return new Promise(resolve => {
-      for (let i=0; i<this.destinations.length; i++) {
+      for (let i = 0; i < this.destinations.length; i++) {
         let destination = this.destinations[i]
         this.mapService.findAddress(destination.locationName).subscribe((response) => {
           let position = new Position()
@@ -69,5 +81,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   setDestination(text: string, i: number) {
     this.destinations[i].locationName = text
+  }
+
+  changeCarType(event: string) {
+    console.log(event)
+    this.carType = event
   }
 }
