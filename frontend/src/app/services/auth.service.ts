@@ -68,7 +68,6 @@ export class AuthService {
   }
 
   public static getHttpOptions() {
-    console.log("MILAN")
     console.log(localStorage.getItem('token'))
     return {
       headers: new HttpHeaders({

@@ -3,7 +3,7 @@
     <mat-card-title>Directions</mat-card-title>
     <div style="flex: 1">
       <div class="header-right">
-        <label style="cursor: pointer">Clear</label>
+        <label style="cursor: pointer" (click)="clearInputFields()">Clear</label>
       </div>
     </div>
   </mat-card-header>
@@ -11,20 +11,26 @@
     <div>
       <mat-form-field appearance="outline" style="width: 100%">
         <mat-label>From:</mat-label>
-        <input matInput>
+        <input matInput [(ngModel)]="fromValue">
       </mat-form-field>
       <mat-form-field appearance="outline" style="width: 100%">
         <mat-label>To:</mat-label>
-        <input matInput>
+        <input matInput [(ngModel)]="toValue">
       </mat-form-field>
     </div>
+    <mat-form-field appearance="outline" style="width: 100%; padding-right:20px">
+      <mat-label>Choose one</mat-label>
+      <mat-select [ngModel]="carType" (ngModelChange)="changeCarType($event)">
+        <mat-option *ngFor="let type of carTypes" [value]="type">{{type}}</mat-option>
+      </mat-select>
+    </mat-form-field>
     <mat-card-actions>
       <button mat-raised-button color="primary" style="width: 100%" (click)="showEstimates()">Search</button>
     </mat-card-actions>
     <div *ngIf="estimatesDisplayed==true">
       <hr>
-      <p>Estimated time:</p>
-      <p>Estimated price:</p>
+      <p>Estimated time: {{estimatedTime}}</p>
+      <p>Estimated price: {{estimatedPrice}}</p>
     </div>
   </mat-card-content>
 </mat-card>

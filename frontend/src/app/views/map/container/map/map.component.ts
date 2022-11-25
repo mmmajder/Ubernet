@@ -27,7 +27,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   directionRoutes: any;
 
   constructor(private mapService: MapService, private ridePayService: RidePayService) {
-    this.userRole = UserRole.CUSTOMER
+    this.userRole = UserRole.UNAUTHORIZED
     this.searchPins = []
     this.totalTime = 0
     this.searchedRoutes = []

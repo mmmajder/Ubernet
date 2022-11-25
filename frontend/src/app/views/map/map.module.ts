@@ -17,7 +17,6 @@ import {SearchDirectionsCustomerComponent} from "./components/search-directions-
 import {MapComponent} from "./container/map/map.component";
 import { SearchDirectionsUnauthenticatedComponent } from './components/search-directions-unauthenticated/search-directions-unauthenticated.component';
 import {MatListModule} from "@angular/material/list";
-import { MapUnauthenticatedComponent } from './components/map-unauthenticated/map-unauthenticated.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
 
@@ -26,7 +25,6 @@ import {MatSelectModule} from "@angular/material/select";
     SearchDirectionsCustomerComponent,
     MapComponent,
     SearchDirectionsUnauthenticatedComponent,
-    MapUnauthenticatedComponent,
   ],
   imports: [
     MatToolbarModule,

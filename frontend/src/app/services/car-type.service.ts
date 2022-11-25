@@ -19,7 +19,6 @@ export class CarTypeService {
   }
 
   public static getHttpOptions() {
-    console.log("MILAN")
     console.log(localStorage.getItem('token'))
     return {
       headers: new HttpHeaders({
