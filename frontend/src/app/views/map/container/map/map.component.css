@@ -24,9 +24,9 @@
   -webkit-box-shadow: 4px 4px 3px grey;
 }
 
-/*/deep/ .leaflet-routing-container {*/
-/*  display: none!important;*/
-/*}*/
+/deep/ .leaflet-top {
+  display: none!important;
+}
 
 /*/deep/ path {*/
 /*  display: none;*/

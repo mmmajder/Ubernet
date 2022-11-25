@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, OnInit} from '@angular/core';
 import * as L from 'leaflet';
+import {LatLng, Marker} from 'leaflet';
 import 'leaflet-routing-machine';
 import {MapService} from "../../../../services/map.service";
 import {UserRole} from "../../../../model/UserRole";
 import {ActiveCarResponse} from "../../../../model/ActiveCarResponse";
-import {LatLng, Marker} from "leaflet";
 import {Position} from "../../../../model/Position";
 import {secondsToDhms} from "../../../../services/utils.service";
 import {RidePayService} from "../../../../services/ride-price.service";
@@ -27,7 +27,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   directionRoutes: any;
 
   constructor(private mapService: MapService, private ridePayService: RidePayService) {
-    this.userRole = UserRole.UNAUTHORIZED
+    //TODO getlogged user
+    this.userRole = UserRole.ADMIN
     this.searchPins = []
     this.totalTime = 0
     this.searchedRoutes = []
@@ -50,11 +51,17 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   private initPins() {
     this.mapService.getActiveCars().subscribe((activeCars) => {
-      console.log(activeCars)
-      activeCars.forEach((car: ActiveCarResponse) => {
+      if (this.userRole == UserRole.DRIVER) {
+        //TODO get car of logged user
+        let car = activeCars[0]
         let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
         this.initDirections(car, marker)
-      })
+      } else {
+        activeCars.forEach((car: ActiveCarResponse) => {
+          let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+          this.initDirections(car, marker)
+        })
+      }
     })
 
   }

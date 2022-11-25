@@ -17,11 +17,14 @@
                                     [estimatedTime]="estimatedTimeSearch"
                                     [estimatedPrice]="estimatedPriceSearch"></app-search-directions-customer>
   </ng-container>
+
   <div class="map-container">
-    <div class="map-frame">
-      <div id="map">
+<!--    <div [ngClass]="{'leaflet-routing-container': userRole!=userRoles.DRIVER }">-->
+      <div class="map-frame">
+        <div id="map">
+        </div>
       </div>
-    </div>
+<!--    </div>-->
   </div>
 </div>
 
