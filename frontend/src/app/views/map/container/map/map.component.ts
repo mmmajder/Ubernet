@@ -4,7 +4,7 @@ import 'leaflet-routing-machine';
 import {MapService} from "../../../../services/map.service";
 import {UserRole} from "../../../../model/UserRole";
 import {ActiveCarResponse} from "../../../../model/ActiveCarResponse";
-import {Marker} from "leaflet";
+import {LatLng, Marker} from "leaflet";
 import {Position} from "../../../../model/Position";
 import {secondsToDhms} from "../../../../services/utils.service";
 import {RidePayService} from "../../../../services/ride-price.service";
@@ -70,6 +70,8 @@ export class MapComponent implements AfterViewInit, OnInit {
       ],
       routeWhileDragging: false,
       addWaypoints: false,
+      fitSelectedRoutes: false,
+
     }).on('routesfound', (e) => {
       let timeSlots = this.mapService.getTimeSlots(e);   // get time when reaching new location
       while (timeSlots.length < e.routes[0].coordinates.length) {
@@ -92,16 +94,16 @@ export class MapComponent implements AfterViewInit, OnInit {
     console.log(car.carId)
     let returnData = car;
     this.mapService.setNewPositionOfCar(car.carId).subscribe(() => {
-    let getNewDestination = () => {
-      this.mapService.getCarById(car.carId).subscribe((newCarData) => {
-        if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
-          getNewDestination()
-        } else {
-          this.initDirections(newCarData, marker)
-        }
-      })
-    }
-    getNewDestination()
+      let getNewDestination = () => {
+        this.mapService.getCarById(car.carId).subscribe((newCarData) => {
+          if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
+            getNewDestination()
+          } else {
+            this.initDirections(newCarData, marker)
+          }
+        })
+      }
+      getNewDestination()
     })
     return returnData;
   }
@@ -111,37 +113,37 @@ export class MapComponent implements AfterViewInit, OnInit {
       return
     }
     routingControls.forEach((routingControl: any) => {
-      console.log("STIGAOOO")
       this.map.removeControl(routingControl);
       routingControl = null;
     })
   }
 
   drawSearchedRoute(positions: Position[]) {
-    this.totalTime = 0
     this.removeRoutingControls(this.searchedRoutes)
+
+    let checkPoints: LatLng[] = []
+    for (let i = 0; i < positions.length; i++) {
+      checkPoints.push(L.latLng(positions[i].y, positions[i].x))
+    }
+
     const drawRoutes = () => {
-      for (let i = 0; i < positions.length - 1; i++) {
-        let startPosition = L.latLng(positions[i].y, positions[i].x)
-        let endPosition = L.latLng(positions[i + 1].y, positions[i + 1].x)
-        let route = L.Routing.control({
-          waypoints: [
-            startPosition,
-            endPosition
-          ],
-          routeWhileDragging: false,
-          addWaypoints: false,
-        }).on('routesfound', (response) => {
-          let route = response.routes[0]
-          this.totalTime += route.summary.totalTime
-          this.estimatedTimeSearch = secondsToDhms(this.totalTime)
-          let estimatedLengthInKm = route.summary.totalDistance / 1000
-          this.ridePayService.calculatePrice(estimatedLengthInKm, this.typeOfVehicle).subscribe(value => {
-            this.estimatedPriceSearch = Math.round(value * 100) / 100
-          })
-        }).addTo(this.map)
-        this.searchedRoutes.push(route)
-      }
+      let route = L.Routing.control({
+        waypoints: checkPoints,
+        routeWhileDragging: true,
+        addWaypoints: false,
+        showAlternatives: true,
+        useZoomParameter: false,
+      }).on('routesfound', (response) => {
+        let route = response.routes[0]
+        this.totalTime = route.summary.totalTime
+        this.estimatedTimeSearch = secondsToDhms(this.totalTime)
+        let estimatedLengthInKm = route.summary.totalDistance / 1000
+        this.ridePayService.calculatePrice(estimatedLengthInKm, this.typeOfVehicle).subscribe(value => {
+          this.estimatedPriceSearch = Math.round(value * 100) / 100
+        })
+      }).addTo(this.map)
+      this.searchedRoutes.push(route)
+      // }
     }
     drawRoutes();
   }
