@@ -3,7 +3,7 @@
     <span style="padding: 8px; font-weight: 500; margin-left: -30px; font-size: 16px">Directions</span>
     <div style="flex: 1">
       <div class="header-right">
-        <button mat-stroked-button style="margin-right: 5px">Clear all</button>
+        <button mat-stroked-button style="margin-right: 5px" (click)="clearInputFields()">Clear all</button>
         <button mat-stroked-button>
           <mat-icon (click)="addNewDestination()">add_location_alt</mat-icon>
         </button>

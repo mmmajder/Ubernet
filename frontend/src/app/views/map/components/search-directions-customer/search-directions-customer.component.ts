@@ -87,4 +87,11 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     console.log(event)
     this.carType = event
   }
+
+  clearInputFields() {
+    this.carType = 'Default';
+    this.destinations.forEach((destination) => {
+      destination.locationName = ""
+    })
+  }
 }
