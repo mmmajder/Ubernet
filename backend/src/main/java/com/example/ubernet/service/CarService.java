@@ -88,6 +88,9 @@ public class CarService {
         }
         car.setPosition(car.getDestinations().get(0));
         car.setDestinations(setNewDestinationDTO.getNewDestinations());
+        System.out.println("SET");
+        System.out.println(car.getId());
+        System.out.println(car.getDestinations());
         return carRepository.save(car);
     }
 

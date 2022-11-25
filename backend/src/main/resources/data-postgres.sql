@@ -21,10 +21,6 @@ values ('admin@gmail.com', 'Adminville', false, false, 'Admin',
 insert into user_auth_roles(user_auth_id, roles_id)
 values (1, 1),
        (1, 4);
--- insert into USER_ROLE (user_id, role_id) values
---     (CURRVAL('userSeqGen'), 1);
--- insert into user_auth_roles (user_auth_id, roles_id) values
---     ()
 
 insert into driver_daily_activity (deleted, is_active, last_time_set_active, total_duration)
 values (false, true, '2022-10-24 00:00', 0),
@@ -38,49 +34,51 @@ values (false, 'Cabrio', 200),
 
 insert into position (deleted, y, x)
 values (false, 45.267136, 19.833549),
-       (false, 45.267136, 19.843549);
---        (false, 45.277136, 19.833549),
---        (false, 45.277136, 19.813549),
---        (false, 45.287136, 19.833549),
---        (false, 45.287136, 19.863549);
+       (false, 45.267136, 19.843549),
+       (false, 45.275136, 19.833549),
+       (false, 45.275136, 19.843549),
+       (false, 45.287136, 19.833549),
+       (false, 45.287136, 19.843549);
 
 insert into car (deleted, is_available, car_type_id, position_id,allows_baby, allows_pet)
-values (false, true, 1, 1, true, true);
---        (false, true, 2, 3, 4),
---        (false, true, 3, 5, 6);
+values (false, true, 1, 1, true, true),
+       (false, true, 2, 3, true, true),
+       (false, true, 3, 5, true, true);
 
 insert into car_destinations(car_id, destinations_id)
-values (1, 2);
+values (1, 2), (2, 4), (3, 6);
 
 insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
                     driver_daily_activity_id, car_id)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1);
---        ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
---         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2),
---        ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
---         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3);
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1),
+       ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2),
+       ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (2, 2),
-       (2, 4);
+       (2, 4),
+       (3, 2),
+       (3, 4),
+       (4, 2),
+       (4, 4);
 
 insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
 values ('customer@gmail.com', 'Customville', false, false, 'Customer',
         '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5);
 
 insert into user_auth_roles(user_auth_id, roles_id)
-values (3, 3),
-       (3, 4);
+values (5, 3),
+       (5, 4);
 
 -- insert into USER_ROLE (user_id, role_id) values
 --     (CURRVAL('userSeqGen'), 3);
 
-update car
-set driver_email='driver@gmail.com'
-where id = 1;
--- update car set driver_email='driver2@gmail.com' where id=2;
--- update car set driver_email='driver3@gmail.com' where id=3;
+update car set driver_email='driver@gmail.com' where id = 1;
+update car set driver_email='driver2@gmail.com' where id=2;
+update car set driver_email='driver3@gmail.com' where id=3;
 
 -- insert into user_auth_roles(user_auth_id, roles_id)
 --
@@ -96,9 +94,9 @@ insert into customer (email, city, deleted, is_blocked, name, password, phone_nu
 values ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 'parepare');
 
--- insert into user_auth_roles(user_auth_id, roles_id)
--- values (2, 3),
---        (2, 4);
+insert into user_auth_roles(user_auth_id, roles_id)
+values (6, 3),
+       (6, 4);
 
 insert into message(id, client_email, admin_email, is_sent_by_admin, time, content, is_deleted)
 values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15', 'Helloooo, the taxi driver is kidnapping me. Please help.', false),
