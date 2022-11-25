@@ -98,6 +98,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   drawSearchedRoute(positions: Position[]) {
+    this.totalTime = 0
     const drawRoutes = () => {
       for (let i = 0; i < positions.length - 1; i++) {
         let startPosition = L.latLng(positions[i].y, positions[i].x)
