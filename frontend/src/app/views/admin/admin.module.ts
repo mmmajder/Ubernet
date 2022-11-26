@@ -28,6 +28,9 @@ import {
 } from './components/register-new-driver-dialog/register-new-driver-dialog.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import {DriversProfileDialogComponent} from './components/drivers-profile-dialog/drivers-profile-dialog.component';
+import { ChangesRequestsComponent } from './components/changes-requests/changes-requests.component';
+import { ChangesRequestDialogComponent } from './components/changes-request-dialog/changes-request-dialog.component';
+import { AdminCommentsComponent } from './components/admin-comments/admin-comments.component';
 
 @NgModule({
   declarations: [
@@ -40,6 +43,9 @@ import {DriversProfileDialogComponent} from './components/drivers-profile-dialog
     AdminProfileContainerComponent,
     RegisterNewDriverDialogComponent,
     DriversProfileDialogComponent,
+    ChangesRequestsComponent,
+    ChangesRequestDialogComponent,
+    AdminCommentsComponent,
   ],
   imports: [
     MatToolbarModule,

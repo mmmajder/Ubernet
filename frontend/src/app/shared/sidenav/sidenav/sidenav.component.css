@@ -33,7 +33,7 @@
 }
 
 .sidebar.active {
-  width: 240px;
+  width: 170px;
 }
 
 .sidebar #menu-btn {
@@ -127,8 +127,11 @@
 }
 
 .sidebar ul li a:hover {
-  background: var(--gray);
   cursor: pointer;
+}
+
+.currentPage {
+  background-color: var(--dark-gray);
 }
 
 .sidebar ul li mat-icon {

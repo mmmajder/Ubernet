@@ -18,7 +18,7 @@ import {ImageService} from "../../../../services/image.service";
 })
 export class DriversComponent implements OnInit {
 
-  displayedColumns: string[] = ['activity', 'profilePicture', 'name', 'block'];
+  displayedColumns: string[] = ['activity', 'profilePicture', 'name'];
   driversList: MatTableDataSource<DriverListItem> = new MatTableDataSource<DriverListItem>();
   drivers: Driver[];
   profilePictures: Map<string, string> = new Map<string, string>();
@@ -51,10 +51,8 @@ export class DriversComponent implements OnInit {
   }
 
   openDriversProfileDialog(element: DriverListItem) {
-    let dialogRef = this.driversProfile.open(DriversProfileDialogComponent);
+    let dialogRef = this.driversProfile.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
     dialogRef.componentInstance.userEmail = element.email;
-    console.log("DRIVERS.COMPONENT")
-    console.log(element.email)
   }
 
   private usersToDriverListItems(users: Driver[]): DriverListItem[] {

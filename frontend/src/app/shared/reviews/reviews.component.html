@@ -1,0 +1,16 @@
+<div *ngIf="reviews.length > 0" class="scrollable" style="min-height: 200px">
+  <mat-list>
+    <mat-list-item *ngFor="let review of reviews">
+      <img class="avatar" style="margin-right: 10px" [src]='profilePictures.get(review.reviewer.email)' alt="avatar"/>
+      <div>
+        <div mat-line> {{review.reviewer.name}} {{review.reviewer.surname}} {{review.rating}}<mat-icon>star</mat-icon></div>
+        <div mat-line style="font-size: 13px"> {{review.comment}} </div>
+        <div mat-line style="font-size: 13px"> {{review.date}} </div>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+  </mat-list>
+</div>
+<mat-card-content *ngIf="reviews.length == 0" style="text-align: center;">
+  <img src="assets/no-ratings.png" style="height: 250px" alt="no-reservations">
+</mat-card-content>

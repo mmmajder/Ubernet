@@ -16,6 +16,7 @@ export class SidenavComponent implements OnInit {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
 
   user: User;
+  @Input() currentPage: string = 'dashboard';
 
   someMethod() {
     this.trigger?.openMenu();

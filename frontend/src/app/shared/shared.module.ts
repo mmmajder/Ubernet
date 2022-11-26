@@ -24,9 +24,10 @@ import {MatCardModule} from "@angular/material/card";
 import {StarRatingComponent} from './star-rating/star-rating.component';
 import {UserProfileComponent} from './user-profile/user-profile.component';
 import {ActivityLogComponent} from "./activity-log/activity-log.component";
+import { ReviewsComponent } from './reviews/reviews.component';
 
 @NgModule({
-  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent],
+  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -42,7 +43,7 @@ import {ActivityLogComponent} from "./activity-log/activity-log.component";
     ReactiveFormsModule,
     MatCardModule,
   ],
-  exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent],
+    exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
   providers: [NavbarStore, RestaurantsStore, RestaurantStore]
 })
 export class SharedModule {

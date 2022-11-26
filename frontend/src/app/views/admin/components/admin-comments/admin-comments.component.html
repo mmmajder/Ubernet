@@ -1,0 +1,30 @@
+<div style="padding: 20px">
+  <div *ngIf="comments.length > 0" class="scrollable" style="min-height: 200px">
+    <mat-list>
+      <mat-list-item *ngFor="let comment of comments">
+        <div mat-line> {{comment.reviewer.name}} {{comment.reviewer.surname}}</div>
+        <div mat-line style="font-size: 13px"> {{comment.comment}} </div>
+        <div mat-line style="font-size: 13px"> {{comment.date}} </div>
+        <mat-divider></mat-divider>
+      </mat-list-item>
+    </mat-list>
+  </div>
+  <mat-card-content *ngIf="comments.length == 0" style="text-align: center;">
+    <img src="assets/no-comments.png" style="height: 250px" alt="no-reservations">
+  </mat-card-content>
+  <div style="margin-top: 10px">
+    <button mat-stroked-button color="warn" style="width: 49%">Block this user</button>
+    <button mat-stroked-button style="width: 49%; float: right" (click)="commentSectionVisible = true">
+      Leave a comment
+    </button>
+  </div>
+  <div *ngIf="commentSectionVisible">
+    <mat-form-field style="width: 100%; max-height: 150px; margin-top: 10px; margin-bottom: -10px"
+                    appearance="outline">
+      <mat-label>Comment</mat-label>
+      <textarea matInput placeholder="Ex. This driver is..."></textarea>
+      <mat-error *ngIf="commentFormControl.hasError('required')">You can't leave an empty comment</mat-error>
+    </mat-form-field>
+    <button mat-raised-button color="primary" style="width: 100%" (click)="leaveAComment()">Comment</button>
+  </div>
+</div>
