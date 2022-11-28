@@ -18,13 +18,11 @@ import {
 } from "./container/dashboard-customer-container/dashboard-customer-container.component";
 import {FavoritesComponent} from './components/favorites/favorites/favorites.component';
 import {MatListModule} from "@angular/material/list";
-import {ActivityLogComponent} from '../../shared/activity-log/activity-log.component';
 import {ProfileDataComponent} from '../../shared/profile-edit/profile-data/profile-data.component';
 import {
   ProfileCustomerContainerComponent
 } from './container/profile-customer-container/profile-customer-container.component';
 import {MatTabsModule} from "@angular/material/tabs";
-import {AdminModule} from "../admin/admin.module";
 import {UnauthenticatedModule} from "../unauthenticated/unauthenticated.module";
 import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
 import {
@@ -41,7 +39,6 @@ import {RateDialogComponent} from './components/rate-dialog/rate-dialog.componen
   declarations: [
     DashboardCustomerContainerComponent,
     FavoritesComponent,
-    ActivityLogComponent,
     ProfileCustomerContainerComponent,
     CreditCardComponent,
     CustomersUpcomingRidesComponent,
@@ -66,7 +63,6 @@ import {RateDialogComponent} from './components/rate-dialog/rate-dialog.componen
     SharedModule,
     MatListModule,
     MatTabsModule,
-    AdminModule,
     MatChipsModule,
     MatTooltipModule,
   ],
@@ -75,7 +71,6 @@ import {RateDialogComponent} from './components/rate-dialog/rate-dialog.componen
     ProfileDataComponent,
     UnauthenticatedModule,
     ProfileCustomerContainerComponent,
-    ActivityLogComponent,
   ],
 })
 export class CustomerModule {

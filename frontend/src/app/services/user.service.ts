@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {Customer, User, UserDTO} from "../model/User";
 import {AuthService} from "./auth.service";
-import {CreditCard} from "../model/CreditCard";
 import {PasswordChangeInfo} from "../model/PasswordChangeInfo";
 
 @Injectable({
@@ -20,7 +19,7 @@ export class UserService {
   }
 
   public getUser(email: string): Observable<User> {
-    return this.http.get<User>(this.userUrl + "?email=" + email, AuthService.getHttpOptions());
+    return this.http.get<User>(this.userUrl + "/?email=" + email, AuthService.getHttpOptions());
   }
 
   public updateCustomerData(customer: Customer): Observable<UserDTO> {
@@ -31,4 +30,5 @@ export class UserService {
   public changePassword(email: string, passwordChangeInfo: PasswordChangeInfo){
     return this.http.put<Object>(this.authUrl + "/changePassword/" + email, passwordChangeInfo, AuthService.getHttpOptions());
   }
+
 }

@@ -20,7 +20,7 @@ export class ImageService {
     this.imageUrl = 'http://localhost:8000/image';
   }
 
-  public postProfileImage(email: string, file: any){
+  public postProfileImage(email: string, file: any) {
     // TODO get rid of 'any'
     let formData = new FormData();
     formData.append("file", file);
@@ -28,7 +28,7 @@ export class ImageService {
     return this.http.post<Object>(this.imageUrl + "/" + email, formData, AuthService.getHttpOptions());
   }
 
-  public getProfileImage(email: string){
+  public getProfileImage(email: string) {
     return this.http.get(this.imageUrl + "/" + email, this.httpOptions);
   }
 }

@@ -27,9 +27,10 @@ export class ProfileDataComponent implements OnInit {
   hasSelectedFile: boolean = false;
   selectedImage: any = null;
   profileImageSrc: string;
-  @ViewChild('fileUploader') fileUploader:ElementRef;
+  @ViewChild('fileUploader') fileUploader: ElementRef;
 
-  constructor(private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService) {}
+  constructor(private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService) {
+  }
 
   ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe((resp) => {
@@ -44,7 +45,7 @@ export class ProfileDataComponent implements OnInit {
   }
 
   update() {
-    if (this.role != "CUSTOMER")
+    if (this.role == "DRIVER")
       this.updateDriver();
     else
       this.updateCustomer();
@@ -64,7 +65,7 @@ export class ProfileDataComponent implements OnInit {
     });
   }
 
-  public selectFile(event: any){
+  public selectFile(event: any) {
     console.log("event")
     console.log(event)
     console.log(event.target.files[0])
@@ -72,8 +73,8 @@ export class ProfileDataComponent implements OnInit {
     this.hasSelectedFile = true;
   }
 
-  public uploadProfileImage(){
-    if (this.selectedImage != null){
+  public uploadProfileImage() {
+    if (this.selectedImage != null) {
       this.imageService.postProfileImage(this.email, this.selectedImage)
         .subscribe((encodedImage: any) => {
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
@@ -82,7 +83,7 @@ export class ProfileDataComponent implements OnInit {
     }
   }
 
-  public getProfileImage(){
+  public getProfileImage() {
     this.imageService.getProfileImage(this.email)
       .subscribe((encodedImage: any) => {
         if (encodedImage === null)

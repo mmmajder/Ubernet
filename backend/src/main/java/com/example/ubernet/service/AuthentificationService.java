@@ -52,12 +52,11 @@ public class AuthentificationService {
         user.setIsBlocked(false);
         user.setUserAuth(getUserAuth(user));
         switch (createUserDTO.getUserRole()) {
-            case CUSTOMER -> customerService.save(user);
+            case CUSTOMER -> customerService.createCustomer((Customer) user);
             case ADMIN -> adminService.save(user);
             case DRIVER -> driverService.save(user);
         }
         return user;
-//        return userService.save(user);
     }
 
     private UserAuth getUserAuth(User user) {
