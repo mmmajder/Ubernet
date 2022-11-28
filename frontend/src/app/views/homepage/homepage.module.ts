@@ -40,9 +40,10 @@ import { RegistrationComponent } from './components/registration/registration.co
     MatMenuModule,
     SharedModule,
   ],
-  exports: [
-    HomepageContainerComponent
-  ],
+    exports: [
+        HomepageContainerComponent,
+        RegistrationComponent
+    ],
   bootstrap: [HomepageContainerComponent]
 })
 export class HomepageModule {

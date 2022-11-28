@@ -32,7 +32,6 @@ public class EntityMapper {
         customer.setEmail(user.getEmail());
         customer.setUserAuth(user.getUserAuth());
         customer.setRole(user.getRole());
-        customer.setProfilePhoto(user.getProfilePhoto());
         customer.setIsBlocked(user.getIsBlocked());
         return customer;
     }
@@ -47,11 +46,8 @@ public class EntityMapper {
         driver.setEmail(user.getEmail());
         driver.setUserAuth(user.getUserAuth());
         driver.setRole(user.getRole());
-        driver.setProfilePhoto(user.getProfilePhoto());
         driver.setIsBlocked(user.getIsBlocked());
         return driver;
     }
-
-
 
 }

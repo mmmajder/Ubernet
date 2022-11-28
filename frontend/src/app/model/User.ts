@@ -36,3 +36,9 @@ export class UserDTO {
   city!: string;
   phoneNumber!: string;
 }
+
+export class SimpleUser {
+  name!: string;
+  surname!: string;
+  email!: string;
+}

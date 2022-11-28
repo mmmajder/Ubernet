@@ -12,6 +12,7 @@ values (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
+       (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null);
 
 insert into admin (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
@@ -67,13 +68,17 @@ values (2, 2),
        (4, 2),
        (4, 4);
 
-insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
-values ('customer@gmail.com', 'Customville', false, false, 'Customer',
-        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5);
+insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, number_of_tokens)
+values ('cusotmer@gmail.com', 'Customville', false, false, 'Customer',
+        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5, 100.0),
+         ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 150.0);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (5, 3),
-       (5, 4);
+       (5, 4),
+       (6, 3),
+       (6, 4);
 
 -- insert into USER_ROLE (user_id, role_id) values
 --     (CURRVAL('userSeqGen'), 3);
@@ -97,15 +102,6 @@ where id = 3;
 
 insert into user_auth(deleted, is_enabled, last_password_set, verification_code)
 values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');
-
-insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
-                      payment_credentials)
-values ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
-        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 'parepare');
-
-insert into user_auth_roles(user_auth_id, roles_id)
-values (6, 3),
-       (6, 4);
 
 insert into message(id, client_email, admin_email, is_sent_by_admin, time, content, is_deleted)
 values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15',
@@ -155,3 +151,6 @@ where id = 1;
 update payment
 set ride_id=2
 where id = 2;
+
+insert into comment(user_email, admin_email, time, content)
+values ('cusotmer@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac je mnogo hot')

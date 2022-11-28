@@ -1,0 +1,12 @@
+<div class="scrollable" style="min-height: 350px">
+  <mat-list>
+    <mat-list-item *ngFor="let request of changesRequests">
+      <img class="avatar" style="margin-right: 10px" [src]="profilePictures.get(request.driver.email)" alt="avatar"/>
+      <div>
+        <div mat-line> {{request.driver.name}} </div>
+        <div mat-line style="font-size: 13px"> {{request.type}} </div>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+  </mat-list>
+</div>

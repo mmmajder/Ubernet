@@ -25,7 +25,12 @@ import {NotificationsService} from "./services/notifications.service";
 import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
-import {GoogleLoginProvider, SocialAuthServiceConfig, SocialLoginModule, FacebookLoginProvider} from "angularx-social-login";
+import {
+  GoogleLoginProvider,
+  SocialAuthServiceConfig,
+  SocialLoginModule,
+  FacebookLoginProvider
+} from "angularx-social-login";
 import {NotFoundPageComponent} from './views/404/not-found-page/not-found-page.component';
 import {DriverModule} from "./views/driver/driver.module";
 import {CustomerModule} from "./views/customer/customer.module";
@@ -37,7 +42,9 @@ import {NgxsModule} from '@ngxs/store';
 import {AuthState} from "./store/states/auth.state";
 import {LoggedUserState} from "./store/states/loggedUser.state";
 import {PagesModule} from "./views/pages/pages.module";
-import { VerifyRegistrationComponent } from './views/verify/verify-registration/verify-registration.component';
+import {VerifyRegistrationComponent} from './views/verify/verify-registration/verify-registration.component';
+import {DriversState} from "./store/states/drivers.state";
+import {CustomersState} from "./store/states/customers.state";
 
 @NgModule({
   declarations: [
@@ -76,7 +83,7 @@ import { VerifyRegistrationComponent } from './views/verify/verify-registration/
     UnauthenticatedModule,
     MapModule,
     PagesModule,
-    NgxsModule.forRoot([AuthState, LoggedUserState]),
+    NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState]),
   ],
   exports: [],
   providers: [
