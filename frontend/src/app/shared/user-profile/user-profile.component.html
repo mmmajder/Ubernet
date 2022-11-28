@@ -1,11 +1,11 @@
 <img src="assets/profile-background.jpg" class="profile-background" alt="profile">
 <div style="margin-left: 20px">
-<div style="display: inline-flex; margin-top: -40px">
-  <img class="avatar-medium" [src]='profileImageSrc' alt="avatar"/>
-  <div>
-  <p style="font-weight: 500; font-size: 1.5rem; margin-top: 10px; margin-left: 15px; color: white">{{user.name}} {{user.surname}}</p>
-  <p style="margin-left: 18px; margin-top: 20px; font-size: 16px">{{user.email}} | {{user.phoneNumber}} | {{user.city}}</p>
+  <div style="display: inline-flex; margin-top: -40px">
+    <img class="avatar-medium" [src]='profileImageSrc' alt="avatar"/>
+    <div>
+      <p class="name">{{user.name}} {{user.surname}}</p>
+      <p class="details">{{user.email}} | {{user.phoneNumber}} | {{user.city}}</p>
+    </div>
   </div>
-</div>
-<mat-divider></mat-divider>
+  <mat-divider></mat-divider>
 </div>

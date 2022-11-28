@@ -19,3 +19,18 @@
   width: 200px;
   border-radius: 5%;
 }
+
+.name {
+  font-weight: 500;
+  font-size: 1.5rem;
+  margin-top: 10px;
+  margin-left: 15px;
+  color: white;
+}
+
+.details {
+  margin-left: 18px;
+  margin-top: 20px;
+  font-size: 16px;
+  margin-right: 40px;
+}

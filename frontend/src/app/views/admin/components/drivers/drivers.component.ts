@@ -4,8 +4,8 @@ import {DriverListItem} from "../../model/DriverListItem";
 import {MatDialog} from "@angular/material/dialog";
 import {
   RegisterNewDriverDialogComponent
-} from "../../components/register-new-driver-dialog/register-new-driver-dialog.component";
-import {DriversProfileDialogComponent} from "../../components/drivers-profile-dialog/drivers-profile-dialog.component";
+} from "../register-new-driver-dialog/register-new-driver-dialog.component";
+import {DriversProfileDialogComponent} from "../drivers-profile-dialog/drivers-profile-dialog.component";
 import {Store} from "@ngxs/store";
 import {Drivers} from "../../../../store/actions/drivers.actions";
 import {Driver} from "../../../../model/Driver";
@@ -18,7 +18,7 @@ import {ImageService} from "../../../../services/image.service";
 })
 export class DriversComponent implements OnInit {
 
-  displayedColumns: string[] = ['activity', 'profilePicture', 'name'];
+  displayedColumns: string[] = ['activity', 'profilePicture', 'name', 'email'];
   driversList: MatTableDataSource<DriverListItem> = new MatTableDataSource<DriverListItem>();
   drivers: Driver[];
   profilePictures: Map<string, string> = new Map<string, string>();

@@ -65,11 +65,11 @@ insert into user_auth_roles(user_auth_id, roles_id)
 values (2, 2),
        (2, 4);
 
-insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
+insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, number_of_tokens)
 values ('ajder.milan2000@gmail.com', 'Customville', false, false, 'Customer',
-        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5),
+        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5, 100.0),
          ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
-        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2);
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 150.0);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (3, 3),
@@ -119,3 +119,6 @@ where id = 1;
 
 insert into ride_customers(ride_id, customers_email)
 values (1, 'ajder.milan2000@gmail.com');
+
+insert into comment(user_email, admin_email, time, content)
+values ('ajder.milan2000@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac je mnogo hot')

@@ -38,6 +38,7 @@ import {AuthState} from "./store/states/auth.state";
 import {LoggedUserState} from "./store/states/loggedUser.state";
 import {PagesModule} from "./views/pages/pages.module";
 import {DriversState} from "./store/states/drivers.state";
+import {CustomersState} from "./store/states/customers.state";
 
 @NgModule({
   declarations: [
@@ -75,7 +76,7 @@ import {DriversState} from "./store/states/drivers.state";
     UnauthenticatedModule,
     MapModule,
     PagesModule,
-    NgxsModule.forRoot([AuthState, LoggedUserState, DriversState]),
+    NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState]),
   ],
   exports: [],
   providers: [

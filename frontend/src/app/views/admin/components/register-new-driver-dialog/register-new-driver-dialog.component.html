@@ -1,9 +1,86 @@
-<mat-stepper [orientation]="(stepperOrientation | async)!">
+<mat-stepper [orientation]="(stepperOrientation | async)!" linear>
   <mat-step [stepControl]="firstFormGroup" label="Fill out driver's data">
     <form [formGroup]="firstFormGroup">
-      <p>Drivers data </p>
+      <p>
+        <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input type="email" matInput [(ngModel)]="email" formControlName="emailFormCtr"
+                 placeholder="Ex. pat@example.com" required>
+          <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="emailFormControl.hasError('required')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+          <mat-label>Phone number</mat-label>
+          <input matInput type="tel" [(ngModel)]="phoneNumber" [formControl]="phoneFormControl" formControlName="phoneFormCtr"
+                 placeholder="Ex. +381 1234567" required>
+          <mat-error *ngIf="phoneFormControl.hasError('required')">
+            Phone number is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p style="margin-top: -10px">
+        <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+          <mat-label>Enter password</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password" formControlName="passwordFormCtr"
+                 [formControl]="passwordFormControl" required>
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="passwordFormControl.hasError('required')">
+            Password is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="passwordFormControl.hasError('minlength')  && !passwordFormControl.hasError('required')">
+            Password has to be <strong>at least 6 characters long</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+          <mat-label>Re-enter password</mat-label>
+          <input matInput [type]="hide2 ? 'password' : 'text'" [(ngModel)]="password2" formControlName="password2FormCtr"
+                 [formControl]="password2FormControl" required>
+          <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide2">
+            <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="password2FormControl.hasError('required')">
+            Re-entered password is <strong>required</strong>
+          </mat-error>
+          <mat-error *ngIf="password !== password2">
+            Passwords are not the same
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p style="margin-top: -10px">
+        <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+          <mat-label>Enter driver's name</mat-label>
+          <input matInput [formControl]="nameFormControl" [(ngModel)]="name" formControlName="nameFormCtr" required>
+          <mat-error *ngIf="nameFormControl.hasError('required')">
+            Name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+          <mat-label>Enter driver's last name</mat-label>
+          <input matInput [formControl]="lastNameFormControl" [(ngModel)]="lastName" formControlName="lastNameFormCtr" required>
+          <mat-error *ngIf="lastNameFormControl.hasError('required')">
+            Last name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p style="margin-top: -10px">
+        <mat-form-field style="width: 100%" appearance="outline">
+          <mat-label>Enter the city driver lives in</mat-label>
+          <input matInput [formControl]="cityFormControl" [(ngModel)]="city" formControlName="cityFormCtr" required>
+          <mat-error *ngIf="cityFormControl.hasError('required')">
+            City is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
       <div>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-raised-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -14,8 +91,8 @@
         <input matInput formControlName="secondCtrl" placeholder="Ex. 1 Main St, New York, NY" required>
       </mat-form-field>
       <div>
-        <button mat-button matStepperPrevious>Back</button>
-        <button mat-button matStepperNext>Next</button>
+        <button mat-raised-button matStepperPrevious>Back</button>
+        <button mat-raised-button matStepperNext>Next</button>
       </div>
     </form>
   </mat-step>
@@ -23,7 +100,7 @@
     <ng-template matStepLabel>Done</ng-template>
     <p>You are now done.</p>
     <div>
-      <button mat-button matStepperPrevious>Back</button>
+      <button mat-raised-button matStepperPrevious>Back</button>
     </div>
   </mat-step>
 </mat-stepper>

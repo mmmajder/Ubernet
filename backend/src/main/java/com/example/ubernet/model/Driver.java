@@ -1,16 +1,13 @@
 package com.example.ubernet.model;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
+import lombok.EqualsAndHashCode;
 
-import javax.persistence.*;
-import java.time.LocalDate;
-import java.util.HashMap;
-import java.util.Map;
+import javax.persistence.Entity;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToOne;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 @Entity
 public class Driver extends User {
@@ -18,5 +15,4 @@ public class Driver extends User {
     private Car car;
     @ManyToOne
     private DriverDailyActivity driverDailyActivity;
-
 }

@@ -102,3 +102,11 @@ mat-card {
   font-weight: 500;
   font-size: 1rem;
 }
+
+.no-padding-card {
+  padding: 0 !important;
+}
+
+th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
+  border-bottom-width: 0.5px !important;
+}

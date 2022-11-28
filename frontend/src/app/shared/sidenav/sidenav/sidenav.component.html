@@ -3,7 +3,11 @@
     <img class="logo" src="assets/logo.png" alt="logo"/>
   </span>
   <span class="example-spacer"></span>
-  <button mat-icon-button>
+  <button mat-button *ngIf="user.role=='CUSTOMER'">
+    <span class="number-of-tokens">{{numberOfTokens}} </span>
+    <mat-icon class="token">monetization_on</mat-icon>
+  </button>
+  <button *ngIf="user.role=='CUSTOMER'" mat-icon-button>
     <mat-icon matBadge="15">notifications</mat-icon>
   </button>
   <button *ngIf="user.role=='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">

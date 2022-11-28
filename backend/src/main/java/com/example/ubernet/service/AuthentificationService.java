@@ -52,7 +52,7 @@ public class AuthentificationService {
         user.setIsBlocked(false);
         user.setUserAuth(getUserAuth(user));
         switch (createUserDTO.getUserRole()) {
-            case CUSTOMER -> customerService.save((Customer) user);
+            case CUSTOMER -> customerService.createCustomer((Customer) user);
             case ADMIN -> adminService.save(user);
             case DRIVER -> driverService.save((Driver) user);
         }
@@ -136,10 +136,7 @@ public class AuthentificationService {
         if (!changePasswordDTO.getNewPassword().equals(changePasswordDTO.getReEnteredNewPassword()))
             return false;
 
-        if (!passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword()))
-            return false;
-
-        return true;
+        return passwordEncoder.matches(changePasswordDTO.getCurrentPassword(), user.getPassword());
     }
 
     public User verify(String verificationCode) {

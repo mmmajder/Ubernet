@@ -4,7 +4,7 @@ import {HomepageContainerComponent} from "./views/homepage/container/homepage-co
 import {NotFoundPageComponent} from "./views/404/not-found-page/not-found-page.component";
 import {ChatContainerComponent} from "./views/admin/container/chat-container/chat-container.component";
 import {MapComponent} from "./views/map/container/map/map.component";
-import {DriversComponent} from "./views/admin/container/drivers/drivers.component";
+import {DriversComponent} from "./views/admin/components/drivers/drivers.component";
 import {AuthGuard} from "./auth.guard";
 import {DashboardContainerComponent} from "./views/pages/dashboard-container/dashboard-container.component";
 import {ProfileContainerComponent} from "./views/pages/profile-container/profile-container.component";

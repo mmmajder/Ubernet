@@ -8,7 +8,8 @@ export class Review {
 }
 
 export class Comment {
-  reviewer: SimpleUser;
-  comment: string;
+  userEmail: string;
+  adminEmail: string;
+  content: string;
   date: string;
 }

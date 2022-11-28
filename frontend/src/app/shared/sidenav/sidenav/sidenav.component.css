@@ -195,3 +195,13 @@
 .sidebar.active .profile #log_out {
   left: 90%;
 }
+
+.token {
+  color: var(--yellow);
+}
+
+.number-of-tokens {
+  font-weight: 500;
+  color: var(--dark);
+  font-size: 20px;
+}

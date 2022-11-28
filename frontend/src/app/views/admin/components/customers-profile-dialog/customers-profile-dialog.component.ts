@@ -4,11 +4,12 @@ import {UserService} from "../../../../services/user.service";
 import {ImageService} from "../../../../services/image.service";
 
 @Component({
-  selector: 'app-drivers-profile-dialog',
-  templateUrl: './drivers-profile-dialog.component.html',
-  styleUrls: ['./drivers-profile-dialog.component.css']
+  selector: 'app-customers-profile-dialog',
+  templateUrl: './customers-profile-dialog.component.html',
+  styleUrls: ['./customers-profile-dialog.component.css']
 })
-export class DriversProfileDialogComponent implements OnInit {
+export class CustomersProfileDialogComponent implements OnInit {
+
   @Input() userEmail: string;
   user: User = new User();
   profileImageSrc: string;
