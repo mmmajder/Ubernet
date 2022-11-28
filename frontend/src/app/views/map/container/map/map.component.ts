@@ -28,7 +28,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   constructor(private mapService: MapService, private ridePayService: RidePayService) {
     //TODO getlogged user
-    this.userRole = UserRole.ADMIN
+    this.userRole = UserRole.CUSTOMER
     this.searchPins = []
     this.totalTime = 0
     this.searchedRoutes = []
@@ -51,7 +51,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   private initPins() {
     this.mapService.getActiveCars().subscribe((activeCars) => {
-      if (this.userRole == UserRole.DRIVER) {
+      if (this.userRole == UserRole.CUSTOMER) {
         //TODO get car of logged user
         let car = activeCars[0]
         let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);

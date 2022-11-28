@@ -39,6 +39,14 @@
       <hr>
       <p> Estimated time: {{estimatedTime}}</p>
       <p> Estimated price: {{estimatedPrice}}</p>
+      <p *ngIf="canOptimize" style="color: var(--dark)">Optimize by <span style="font-weight: 500; cursor: pointer"
+                                                                          (click)="optimizeByPrice()">price</span> or
+        <span style="font-weight: 500; cursor: pointer" (click)="optimizeByPrice()">time</span>.
+      </p>
+      <span style="align-content: center">
+              <button mat-raised-button color="primary" style="width: 49%" (click)="requestRide()">Request ride</button>
+              <button mat-stroked-button color="primary" style="width: 49%; float: right" (click)="reserveRide()">Reserve ride</button>
+      </span>
     </div>
   </mat-card-footer>
 </mat-card>
