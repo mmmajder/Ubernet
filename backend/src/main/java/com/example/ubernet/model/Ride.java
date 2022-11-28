@@ -1,5 +1,6 @@
 package com.example.ubernet.model;
 
+import com.example.ubernet.model.enums.RideState;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,8 @@ public class Ride {
     @Column(unique = true)
     private long id;
 
+    private RideState rideState;
+
     @OneToOne
     private Route route;
 
@@ -33,7 +36,7 @@ public class Ride {
     private LocalDateTime actualStart;
     private LocalDateTime actualEnd;
     private LocalDateTime reservationTime;
-    @OneToMany
+    @ManyToMany
     private Set<Customer> customers;
     @OneToMany
     private Set<Review> carReviews;

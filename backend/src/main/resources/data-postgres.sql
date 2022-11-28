@@ -40,13 +40,15 @@ values (false, 45.267136, 19.833549),
        (false, 45.287136, 19.833549),
        (false, 45.287136, 19.843549);
 
-insert into car (deleted, is_available, car_type_id, position_id,allows_baby, allows_pet)
+insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet)
 values (false, true, 1, 1, true, true),
        (false, true, 2, 3, true, true),
        (false, true, 3, 5, true, true);
 
 insert into car_destinations(car_id, destinations_id)
-values (1, 2), (2, 4), (3, 6);
+values (1, 2),
+       (2, 4),
+       (3, 6);
 
 insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
                     driver_daily_activity_id, car_id)
@@ -76,9 +78,15 @@ values (5, 3),
 -- insert into USER_ROLE (user_id, role_id) values
 --     (CURRVAL('userSeqGen'), 3);
 
-update car set driver_email='driver@gmail.com' where id = 1;
-update car set driver_email='driver2@gmail.com' where id=2;
-update car set driver_email='driver3@gmail.com' where id=3;
+update car
+set driver_email='driver@gmail.com'
+where id = 1;
+update car
+set driver_email='driver2@gmail.com'
+where id = 2;
+update car
+set driver_email='driver3@gmail.com'
+where id = 3;
 
 -- insert into user_auth_roles(user_auth_id, roles_id)
 --
@@ -90,7 +98,8 @@ update car set driver_email='driver3@gmail.com' where id=3;
 insert into user_auth(deleted, is_enabled, last_password_set, verification_code)
 values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');
 
-insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, payment_credentials)
+insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
+                      payment_credentials)
 values ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 'parepare');
 
@@ -99,23 +108,50 @@ values (6, 3),
        (6, 4);
 
 insert into message(id, client_email, admin_email, is_sent_by_admin, time, content, is_deleted)
-values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15', 'Helloooo, the taxi driver is kidnapping me. Please help.', false),
+values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15',
+        'Helloooo, the taxi driver is kidnapping me. Please help.', false),
        (2, 'petar@gmail.com', 'admin@gmail.com', true, '2022-05-21 11:25', 'Oh no.', false);
 
 insert into payment (deleted, is_accepted_payment, total_price)
-values (false, true, 500);
+values (false, true, 500),
+       (false, true, 500),
+       (false, false, 500);
 
 insert into route (deleted, price, time)
-values (false, 500, 1200);
+values (false, 500, 1200),
+       (false, 500, 1200),
+       (false, 500, 1200);
 
 insert into ride (actual_end, actual_start, deleted, reservation_time, scheduled_start, driver_email, payment_id,
-                  route_id)
+                  route_id, ride_state)
 values ('2022-10-27 12:00', '2022-10-31 11:00', false, '2022-10-31 10:00', '2031-10-24 11:00', 'driver@gmail.com', 1,
-        1);
+        1, 3),
+       (now()::timestamp, now()::timestamp, false, now()::timestamp, now()::timestamp, 'driver@gmail.com', 2,
+        2, 3),
+       (now()::timestamp, now()::timestamp, false, now()::timestamp, now()::timestamp, 'driver@gmail.com', 3,
+        3, 1);
+
+insert into ride_customers (ride_id, customers_email)
+values (1, 'customer@gmail.com'),
+       (2, 'customer@gmail.com');
+
+insert into ride_denial (deleted, reason, ride_id)
+values (false, 'Eto tako', 3);
+
+insert into review (comment, rating, customer_email)
+values ('Bravo majstore', 4, 'customer@gmail.com'),
+       ('Bravo majstoreee', 5, 'customer@gmail.com');
+
+insert into ride_driver_reviews (ride_id, driver_reviews_id)
+values (1, 1);
+
+insert into ride_car_reviews (ride_id, car_reviews_id)
+values (1, 1);
 
 update payment
 set ride_id=1
 where id = 1;
 
-insert into ride_customers(ride_id, customers_email)
-values (1, 'customer@gmail.com');
+update payment
+set ride_id=2
+where id = 2;

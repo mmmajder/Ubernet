@@ -51,7 +51,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   private initPins() {
     this.mapService.getActiveCars().subscribe((activeCars) => {
-      if (this.userRole == UserRole.CUSTOMER) {
+      if (this.userRole == UserRole.DRIVER) {
         //TODO get car of logged user
         let car = activeCars[0]
         let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
