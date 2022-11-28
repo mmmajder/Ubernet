@@ -14,3 +14,15 @@ export function secondsToDhms(seconds: number) {
   console.log(dDisplay + hDisplay + mDisplay + sDisplay)
   return dDisplay + hDisplay + mDisplay + sDisplay;
 }
+
+export function formatTime(list: number[]): string {
+  return addZero(list[2]) + '.' + addZero(list[1]) + '.' + list[0] + ' ' + addZero(list[3]) + ':' + addZero(list[4]);
+}
+
+function addZero(n: number): string {
+  if (n == 0)
+    return '00';
+  if (n < 10)
+    return '0' + n;
+  return n.toString();
+}

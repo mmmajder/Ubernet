@@ -44,7 +44,7 @@ values (false, 45.267136, 19.833549),
 --        (false, 45.287136, 19.833549),
 --        (false, 45.287136, 19.863549);
 
-insert into car (deleted, is_available, car_type_id, position_id,allows_baby, allows_pet)
+insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet)
 values (false, true, 1, 1, true, true);
 --        (false, true, 2, 3, 4),
 --        (false, true, 3, 5, 6);
@@ -65,10 +65,11 @@ insert into user_auth_roles(user_auth_id, roles_id)
 values (2, 2),
        (2, 4);
 
-insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id, number_of_tokens)
+insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
+                      number_of_tokens)
 values ('ajder.milan2000@gmail.com', 'Customville', false, false, 'Customer',
         '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5, 100.0),
-         ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
+       ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 150.0);
 
 insert into user_auth_roles(user_auth_id, roles_id)
@@ -99,7 +100,8 @@ values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8r
 --        (2, 4);
 
 insert into message(id, client_email, admin_email, is_sent_by_admin, time, content, is_deleted)
-values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15', 'Helloooo, the taxi driver is kidnapping me. Please help.', false),
+values (1, 'petar@gmail.com', null, false, '2022-05-21 11:15',
+        'Helloooo, the taxi driver is kidnapping me. Please help.', false),
        (2, 'petar@gmail.com', 'admin@gmail.com', true, '2022-05-21 11:25', 'Oh no.', false);
 
 insert into payment (deleted, is_accepted_payment, total_price)
@@ -121,4 +123,7 @@ insert into ride_customers(ride_id, customers_email)
 values (1, 'ajder.milan2000@gmail.com');
 
 insert into comment(user_email, admin_email, time, content)
-values ('ajder.milan2000@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac je mnogo hot')
+values ('ajder.milan2000@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac je mnogo hot'),
+       ('ajder.milan2000@gmail.com', 'admin@gmail.com', '2022-10-27 13:00', 'AHAHHAHAHHAHAH nije'),
+       ('ajder.milan2000@gmail.com', 'admin@gmail.com', '2022-10-27 14:00', 'AHHAHAHHAHA e pa jeste'),
+       ('ajder.milan2000@gmail.com', 'admin@gmail.com', '2022-10-28 12:00', 'ok.')

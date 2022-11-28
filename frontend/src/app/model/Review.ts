@@ -11,5 +11,5 @@ export class Comment {
   userEmail: string;
   adminEmail: string;
   content: string;
-  date: string;
+  time: number[];
 }
