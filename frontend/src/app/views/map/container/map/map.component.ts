@@ -21,7 +21,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   searchPins: Marker[]
   estimatedTimeSearch: string
   totalTime: number
-  estimatedPriceSearch: number;
+  estimatedPriceSearch: string;
   typeOfVehicle: string
   searchedRoutes: any;
   directionRoutes: any;
@@ -146,7 +146,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.estimatedTimeSearch = secondsToDhms(this.totalTime)
         let estimatedLengthInKm = route.summary.totalDistance / 1000
         this.ridePayService.calculatePrice(estimatedLengthInKm, this.typeOfVehicle).subscribe(value => {
-          this.estimatedPriceSearch = Math.round(value * 100) / 100
+          this.estimatedPriceSearch = (Math.round(value * 100) / 100) as unknown as string
         })
       }).addTo(this.map)
       this.searchedRoutes.push(route)

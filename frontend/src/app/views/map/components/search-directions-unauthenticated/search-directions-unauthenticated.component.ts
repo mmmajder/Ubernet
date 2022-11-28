@@ -19,7 +19,7 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   @Input()
   estimatedTime: string;
   @Input()
-  estimatedPrice: number
+  estimatedPrice: string
   @Output() addPinsToMap = new EventEmitter<Position[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
 

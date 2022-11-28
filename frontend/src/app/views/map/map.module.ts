@@ -20,6 +20,8 @@ import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
 import {MatSidenavModule} from "@angular/material/sidenav";
+import {MatStepperModule} from "@angular/material/stepper";
+import {MatCheckboxModule} from "@angular/material/checkbox";
 
 @NgModule({
   declarations: [
@@ -47,6 +49,8 @@ import {MatSidenavModule} from "@angular/material/sidenav";
         MatExpansionModule,
         MatSelectModule,
         MatSidenavModule,
+        MatStepperModule,
+        MatCheckboxModule,
     ],
     exports: [
         MapComponent,

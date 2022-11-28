@@ -16,12 +16,15 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   public destinations: ({ locationName: string })[];
   positions: (Position | null)[];
   @Input() estimatedTime: string;
-  @Input() estimatedPrice: number
+  @Input() estimatedPrice: string
   @Output() addPinsToMap = new EventEmitter<Position[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
   carType: string;
   carTypes: string[];
   canOptimize: boolean = true;
+  public friends: ({ friendEmail: string })[];
+  hasPet: boolean;
+  hasChild: boolean;
 
   constructor(private mapService: MapService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar) {
     this.destinations = [
@@ -29,6 +32,14 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       {locationName: ""}];
     this.carType = 'Default';
     this.estimatesPresented = true;
+    this.estimatedTime = "Search a route to see estimated time"
+    this.estimatedPrice = "Enter a route and type of car to see estimated price"
+    this.friends = [
+      {friendEmail: ""}
+    ]
+
+    this.hasPet = true
+    this.hasChild = true
   }
 
   ngOnInit(): void {
@@ -57,7 +68,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     await this.calculatePositionsSearch()
 
     const validInput = () => {
-      if (this.carType=="Default") {
+      if (this.carType == "Default") {
         return false
       }
       let isValid = true
@@ -144,6 +155,17 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   requestRide() {
+
+  }
+
+  removeFriend(i: number) {
+    this.friends = this.friends.filter(function (elem, index) {
+      return index != i;
+    });
+  }
+
+  addFriend() {
+    this.friends.push({friendEmail: ""})
 
   }
 }
