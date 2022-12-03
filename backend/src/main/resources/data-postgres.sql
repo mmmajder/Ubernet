@@ -44,8 +44,8 @@ values (false, 45.267136, 19.833549),
 --        (false, 45.287136, 19.833549),
 --        (false, 45.287136, 19.863549);
 
-insert into car (deleted, is_available, car_type_id, position_id,allows_baby, allows_pet)
-values (false, true, 1, 1, true, true);
+insert into car (deleted, is_available, car_type_id, position_id,allows_baby, allows_pet, plates, name)
+values (false, true, 1, 1, true, true, 'BMW', 'NS2FAST4U');
 --        (false, true, 2, 3, 4),
 --        (false, true, 3, 5, 6);
 

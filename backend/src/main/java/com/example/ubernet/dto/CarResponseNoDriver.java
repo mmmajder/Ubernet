@@ -7,12 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import javax.persistence.OneToOne;
-
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class CarResponse {
+public class CarResponseNoDriver {
     private long id;
     private CarType carType;
     private String driverEmail;
@@ -20,9 +18,8 @@ public class CarResponse {
     private String name;
     private Boolean allowsBaby;
     private Boolean allowsPet;
-    private Driver driver;
 
-    public CarResponse(Car car){
+    public CarResponseNoDriver(Car car){
         this.id = car.getId();
         this.carType = car.getCarType();
         this.driverEmail = car.getDriver().getEmail();
@@ -30,6 +27,5 @@ public class CarResponse {
         this.plates = car.getPlates();
         this.allowsBaby = car.getAllowsBaby();
         this.allowsPet = car.getAllowsPet();
-        this.driver = car.getDriver();
     }
 }

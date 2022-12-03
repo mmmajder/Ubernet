@@ -74,4 +74,31 @@ public class CarController {
         return ResponseEntity.ok(car);
     }
 
+    @PutMapping("/update")
+    public ResponseEntity<CarResponse> update(@RequestBody CarResponseNoDriver carResponseNoDriver) {
+        System.out.println("uusao u update");
+        Car car = carService.updateCar(carResponseNoDriver);
+
+        if (car == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        CarResponse resp = new CarResponse(car);
+
+        return ResponseEntity.ok(resp);
+    }
+
+    @GetMapping("/driver/{driverEmail}")
+    public ResponseEntity<CarResponse> getCarByDriverEmail(@PathVariable String driverEmail) {
+        Car car = carService.getCarByDriverEmail(driverEmail);
+
+        if (car == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+
+        CarResponse resp = new CarResponse(car);
+
+        return new ResponseEntity<>(resp, HttpStatus.OK);
+    }
+
 }
