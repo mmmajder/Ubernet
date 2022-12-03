@@ -5,20 +5,19 @@ export class Car {
   plates!: string;
   name!: string;
   carType!: CarTypeGetResponse;
-  allowsBabies!: boolean;
-  allowsPets!: boolean;
+  allowsBaby!: boolean;
+  allowsPet!: boolean;
   driverEmail!: string;
+  driver!: any;
 
   constructor(id:number, name: string, plates: string, carType: CarTypeGetResponse, allowsBabies: boolean, allowsPets: boolean,
               driverEmail: string) {
     this.name = name;
     this.plates = plates;
     this.carType = carType;
-    this.allowsBabies = allowsBabies;
-    this.allowsPets = allowsPets;
+    this.allowsBaby = allowsBabies;
+    this.allowsPet = allowsPets;
     this.id = id;
     this.driverEmail = driverEmail;
   }
-
-  constructor(){}
 }
