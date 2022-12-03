@@ -1,20 +1,17 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.LoginSocialDTO;
+import com.example.ubernet.dto.SimpleUser;
 import com.example.ubernet.model.Customer;
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
 import com.example.ubernet.model.UserAuth;
-import com.example.ubernet.model.enums.AuthProvider;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.CustomerRepository;
 import com.example.ubernet.utils.EntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.OneToOne;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +30,6 @@ public class CustomerService {
     public Customer findByEmail(String clientEmail) {
         return (Customer) userService.findByEmail(clientEmail);
     }
-
 
     public Customer createCustomerSocialLogin(LoginSocialDTO loginSocialDTO) {
         UserAuth userAuth = new UserAuth();
@@ -60,4 +56,16 @@ public class CustomerService {
         return roles;
     }
 
+    public List<SimpleUser> getCustomers() {
+        List<SimpleUser> simpleUsers = new ArrayList<>();
+        for (Customer customer : customerRepository.findAll()) {
+            simpleUsers.add(SimpleUser.builder().email(customer.getEmail()).name(customer.getName()).surname(customer.getSurname()).build());
+        }
+        return simpleUsers;
+    }
+
+    public void createCustomer(Customer user) {
+        user.setNumberOfTokens(0);
+        save(user);
+    }
 }

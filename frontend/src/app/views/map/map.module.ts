@@ -17,37 +17,37 @@ import {SearchDirectionsCustomerComponent} from "./components/search-directions-
 import {MapComponent} from "./container/map/map.component";
 import { SearchDirectionsUnauthenticatedComponent } from './components/search-directions-unauthenticated/search-directions-unauthenticated.component';
 import {MatListModule} from "@angular/material/list";
-import { MapUnauthenticatedComponent } from './components/map-unauthenticated/map-unauthenticated.component';
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
+import {MatSidenavModule} from "@angular/material/sidenav";
 
 @NgModule({
   declarations: [
     SearchDirectionsCustomerComponent,
     MapComponent,
     SearchDirectionsUnauthenticatedComponent,
-    MapUnauthenticatedComponent,
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-    MatListModule,
-    MatExpansionModule,
-    MatSelectModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatListModule,
+        MatExpansionModule,
+        MatSelectModule,
+        MatSidenavModule,
+    ],
     exports: [
         MapComponent,
     ],

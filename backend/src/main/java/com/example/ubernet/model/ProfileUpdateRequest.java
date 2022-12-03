@@ -2,6 +2,7 @@ package com.example.ubernet.model;
 
 import com.example.ubernet.model.enums.UserRole;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -12,6 +13,7 @@ import java.sql.Timestamp;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class ProfileUpdateRequest {
     @Id
     @Column(unique = true)

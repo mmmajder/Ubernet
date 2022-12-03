@@ -1,8 +1,5 @@
 package com.example.ubernet.dto;
 
-import com.example.ubernet.model.CarType;
-import com.example.ubernet.model.Driver;
-import com.example.ubernet.model.Position;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -68,12 +68,12 @@ export class AuthService {
   }
 
   public static getHttpOptions() {
-    console.log("MILAN")
     console.log(localStorage.getItem('token'))
     return {
       headers: new HttpHeaders({
         'Access-Control-Allow-Origin': '*',
         'Authorization': localStorage.getItem('token') || 'authkey',
+        'Content-Type':  'application/json',
       })
     };
   }
