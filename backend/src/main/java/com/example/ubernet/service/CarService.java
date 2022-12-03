@@ -130,5 +130,24 @@ public class CarService {
         return getActiveAvailableCar(car);
     }
 
+    public Car getCarByDriverEmail(String email){
+        Driver driver = (Driver) userService.findByEmail(email);
+        Car car = carRepository.findByDriver(driver);
+
+        return car;
+    }
+
+    public Car updateCar(CarResponseNoDriver carResponseNoDriver) {
+        System.out.println("uusao u update u servisu");
+        Car car = findById(carResponseNoDriver.getId());
+        car.setName(carResponseNoDriver.getName());
+        car.setPlates(carResponseNoDriver.getPlates());
+        car.setCarType(carResponseNoDriver.getCarType());
+        car.setAllowsBaby(carResponseNoDriver.getAllowsBaby());
+        car.setAllowsPet(carResponseNoDriver.getAllowsPet());
+
+        return save(car);
+    }
+
 
 }

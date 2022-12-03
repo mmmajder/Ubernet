@@ -31,4 +31,7 @@ public class Car {
     private Driver driver;
     private Boolean allowsBaby;
     private Boolean allowsPet;
+    private String plates;
+    private String name;
+
 }

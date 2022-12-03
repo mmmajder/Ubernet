@@ -1,6 +1,8 @@
 package com.example.ubernet.repository;
 
 import com.example.ubernet.model.Car;
+import com.example.ubernet.model.Driver;
+import com.example.ubernet.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -13,4 +15,6 @@ public interface CarRepository extends JpaRepository<Car, Long> {
 
     @Query(value = "SELECT car FROM Car car WHERE car.driver.driverDailyActivity.isActive=true")
     List<Car> findActiveCars();
+
+    Car findByDriver(Driver driver);
 }
