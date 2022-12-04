@@ -5,6 +5,7 @@ export class User {
   city!: string;
   phoneNumber!: string;
   role!: string;
+  blocked!: boolean;
 }
 
 export class Customer {

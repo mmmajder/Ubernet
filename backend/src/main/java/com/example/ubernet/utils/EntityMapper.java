@@ -13,7 +13,7 @@ public class EntityMapper {
         admin.setUserAuth(user.getUserAuth());
         admin.setPassword(user.getPassword());
         admin.setEmail(user.getEmail());
-        admin.setIsBlocked(user.getIsBlocked());
+        admin.setBlocked(user.getBlocked());
         admin.setPhoneNumber(user.getPhoneNumber());
         admin.setName(user.getName());
         admin.setSurname(user.getSurname());
@@ -32,7 +32,7 @@ public class EntityMapper {
         customer.setEmail(user.getEmail());
         customer.setUserAuth(user.getUserAuth());
         customer.setRole(user.getRole());
-        customer.setIsBlocked(user.getIsBlocked());
+        customer.setBlocked(user.getBlocked());
         return customer;
     }
     public static Driver mapToDriver(User user) {
@@ -46,7 +46,7 @@ public class EntityMapper {
         driver.setEmail(user.getEmail());
         driver.setUserAuth(user.getUserAuth());
         driver.setRole(user.getRole());
-        driver.setIsBlocked(user.getIsBlocked());
+        driver.setBlocked(user.getBlocked());
         return driver;
     }
 

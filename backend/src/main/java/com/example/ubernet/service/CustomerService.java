@@ -43,7 +43,7 @@ public class CustomerService {
         customer.setName(loginSocialDTO.getFirstName());
         customer.setUserAuth(userAuth);
         customer.setSurname(loginSocialDTO.getLastName());
-        customer.setIsBlocked(false);
+        customer.setBlocked(false);
         customer.setRole(UserRole.CUSTOMER);
         save(customer);
         return customer;

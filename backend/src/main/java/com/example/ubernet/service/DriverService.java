@@ -63,6 +63,7 @@ public class DriverService {
                     .city(driver.getCity())
                     .phoneNumber(driver.getPhoneNumber())
                     .isWorking(driver.getDriverDailyActivity().getIsActive())
+                    .blocked(driver.getBlocked())
                     .build());
         }
         return drivers;

@@ -15,7 +15,8 @@
     <img src="assets/no-comments.png" style="height: 250px" alt="no-reservations">
   </mat-card-content>
   <div style="margin-top: 10px">
-    <button mat-stroked-button color="warn" style="width: 49%" (click)="blockThisUser()">Block this user</button>
+    <button mat-stroked-button color="warn" *ngIf="!blocked" style="width: 49%" (click)="blockThisUser()">Block this user</button>
+    <button mat-stroked-button color="warn" *ngIf="blocked" style="width: 49%" (click)="unblockThisUser()">Unblock this user</button>
     <button mat-stroked-button style="width: 49%; float: right" (click)="commentSectionVisible = true">
       Leave a comment
     </button>

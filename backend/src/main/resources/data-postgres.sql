@@ -14,7 +14,7 @@ values (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null);
 
-insert into admin (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
+insert into admin (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id)
 values ('admin@gmail.com', 'Adminville', false, false, 'Admin',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 1);
 
@@ -52,7 +52,7 @@ values (false, true, 1, 1, true, true);
 insert into car_destinations(car_id, destinations_id)
 values (1, 2);
 
-insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
+insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                     driver_daily_activity_id, car_id)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1);
@@ -65,7 +65,7 @@ insert into user_auth_roles(user_auth_id, roles_id)
 values (2, 2),
        (2, 4);
 
-insert into customer (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
+insert into customer (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                       number_of_tokens)
 values ('ajder.milan2000@gmail.com', 'Customville', false, false, 'Customer',
         '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5, 100.0),

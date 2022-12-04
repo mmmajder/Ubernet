@@ -31,4 +31,12 @@ export class UserService {
     return this.http.put<Object>(this.authUrl + "/changePassword/" + email, passwordChangeInfo, AuthService.getHttpOptions());
   }
 
+  public blockUser(email: string) {
+    return this.http.post<boolean>(this.userUrl + "/block?email=" + email, AuthService.getHttpOptions());
+  }
+
+  public unblockUser(email: string) {
+    return this.http.post<boolean>(this.userUrl + "/unblock?email=" + email, AuthService.getHttpOptions());
+  }
+
 }

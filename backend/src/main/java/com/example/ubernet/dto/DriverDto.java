@@ -17,4 +17,5 @@ public class DriverDto {
     private String city;
     private String phoneNumber;
     public boolean isWorking;
+    private boolean blocked;
 }

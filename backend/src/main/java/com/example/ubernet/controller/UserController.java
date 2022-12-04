@@ -30,4 +30,14 @@ public class UserController {
         return new ResponseEntity<>(userEditDTO, HttpStatus.OK);
     }
 
+    @PostMapping("/block")
+    public boolean blockUser(@RequestParam("email") String email) {
+        return userService.blockUser(email, true);
+    }
+
+    @PostMapping("/unblock")
+    public boolean unblockUser(@RequestParam("email") String email) {
+        return userService.blockUser(email, false);
+    }
+
 }

@@ -24,6 +24,7 @@ public class UserService implements UserDetailsService {
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
     private final ProfileUpdateRequestRepository profileUpdateRequestRepository;
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
@@ -103,5 +104,12 @@ public class UserService implements UserDetailsService {
 
     public boolean userExist(String email) {
         return findByEmail(email) != null;
+    }
+
+    public boolean blockUser(String email, boolean block) {
+        User user = findByEmail(email);
+        user.setBlocked(block);
+        userRepository.save(user);
+        return block;
     }
 }

@@ -49,7 +49,7 @@ public class AuthentificationService {
     private User saveUser(CreateUserDTO createUserDTO) {
         User user = DTOMapper.getUser(createUserDTO);
         user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
-        user.setIsBlocked(false);
+        user.setBlocked(false);
         user.setUserAuth(getUserAuth(user));
         switch (createUserDTO.getUserRole()) {
             case CUSTOMER -> customerService.createCustomer((Customer) user);

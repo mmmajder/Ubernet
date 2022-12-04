@@ -2,13 +2,11 @@ package com.example.ubernet.utils;
 
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.*;
-import com.example.ubernet.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class DTOMapper {
-    private static UserService userService;
 
     public static User getUser(CreateUserDTO userDTO) {
         User user = new User();
@@ -50,6 +48,7 @@ public class DTOMapper {
         userResponse.setRole(user.getRole());
         userResponse.setSurname(user.getSurname());
         userResponse.setPhoneNumber(user.getPhoneNumber());
+        userResponse.setBlocked(user.getBlocked());
         return userResponse;
     }
 
