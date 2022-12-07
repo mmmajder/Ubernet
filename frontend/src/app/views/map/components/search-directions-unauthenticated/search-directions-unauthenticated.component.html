@@ -27,10 +27,10 @@
     <mat-card-actions>
       <button mat-raised-button color="primary" style="width: 100%" (click)="showEstimates()">Search</button>
     </mat-card-actions>
-    <div *ngIf="estimatesDisplayed==true">
+    <div *ngIf="estimations!=undefined">
       <hr>
-      <p>Estimated time: {{estimatedTime}}</p>
-      <p>Estimated price: {{estimatedPrice}}</p>
+      <p>Estimated time: {{estimations.time}}</p>
+      <p>Estimated price: {{estimations.price}}</p>
     </div>
   </mat-card-content>
 </mat-card>

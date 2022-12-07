@@ -5,6 +5,8 @@ import {Output, EventEmitter, Input} from '@angular/core';
 import {CarTypeService} from "../../../../services/car-type.service";
 import {PositionDTO} from "../../../../model/PositionDTO";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
+import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -12,34 +14,43 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./search-directions-customer.component.css']
 })
 export class SearchDirectionsCustomerComponent implements OnInit {
-  estimatesPresented: boolean;
-  public destinations: ({ locationName: string })[];
   positions: (Position | null)[];
-  @Input() estimatedTime: string;
-  @Input() estimatedPrice: string
+  @Input() estimations: MapSearchEstimations
   @Output() addPinsToMap = new EventEmitter<Position[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
-  carType: string;
+  // carType: string;
   carTypes: string[];
   canOptimize: boolean = true;
-  public friends: ({ friendEmail: string })[];
+  friends: ({ friendEmail: string })[];
   hasPet: boolean;
   hasChild: boolean;
 
-  constructor(private mapService: MapService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar) {
-    this.destinations = [
-      {locationName: ""},
-      {locationName: ""}];
-    this.carType = 'Default';
-    this.estimatesPresented = true;
-    this.estimatedTime = "Search a route to see estimated time"
-    this.estimatedPrice = "Enter a route and type of car to see estimated price"
-    this.friends = [
-      {friendEmail: ""}
-    ]
+  firstFormGroup: FormGroup;
+  destinationsForm: any;
+  carTypeFormGroup: any;
+  secondFormGroup: FormGroup;
+  friendsFormGroup: FormGroup;
 
-    this.hasPet = true
-    this.hasChild = true
+
+
+  constructor(private mapService: MapService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+    this.friends = [
+      // {friendEmail: ""}
+    ]
+    this.hasChild = false;
+    this.hasPet = false;
+  }
+
+  get destinations() {
+    return (<FormArray>this.destinationsForm.get('destinations'))
+  }
+
+  get carType() {
+    return (<FormArray>this.carTypeFormGroup.get('carType'))
+  }
+
+  get newFriend() {
+    return (<FormControl>this.friendsFormGroup.get('newFriend'))
   }
 
   ngOnInit(): void {
@@ -51,26 +62,56 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         })
       },
     });
+    this.destinationsForm = new FormGroup({
+      destinations: new FormArray([
+        new FormControl("", Validators.required),
+        new FormControl("", Validators.required)
+      ])
+    })
+    this.carTypeFormGroup = new FormGroup({
+      carType: new FormControl("", Validators.required)
+    })
+    this.firstFormGroup = new FormGroup({groups: this.destinationsForm});
+    this.secondFormGroup = new FormGroup({groups: this.carTypeFormGroup});
+    this.friendsFormGroup = new FormGroup({
+        newFriend: new FormControl("", [Validators.required, Validators.email])
+    })
+
   }
 
   addNewDestination() {
-    this.destinations.push({locationName: ""});
+    this.destinations.push(new FormControl("", Validators.required))
   }
 
   removeDestination(number: number) {
-    this.destinations = this.destinations.filter(function (elem, index) {
-      return index != number;
-    });
+    this.destinations.removeAt(number)
+  }
+
+  clearInputFields() {
+    this.destinations.controls.forEach((destination) => {
+      destination.setValue(null)
+    })
+    console.log(this.destinations.value)
   }
 
   async showEstimates() {
+    const validInput = () => {
+      let isValid = true
+      this.destinations.controls.forEach((destination) => {
+        if (destination.value=="") {
+          isValid = false
+        }
+      })
+      return isValid
+    }
+
+    if (!validInput()) {
+      return
+    }
+    console.log(this.destinations)
     this.positions = [];
     await this.calculatePositionsSearch()
-
-    const validInput = () => {
-      if (this.carType == "Default") {
-        return false
-      }
+    const validOutput = () => {
       let isValid = true
       console.log("Pos")
       console.log(this.positions)
@@ -94,10 +135,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       return retPositions
     }
 
-    if (validInput()) {
-      this.getSelectedCarType.emit(this.carType)
+    if (validOutput()) {
       this.addPinsToMap.emit(castToPositions(this.positions))
-      this.estimatesPresented = true;
     } else {
       this._snackBar.open("Please enter all existing locations!", '', {
         duration: 3000,
@@ -108,9 +147,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   calculatePositionsSearch() {
     return new Promise(resolve => {
-      for (let i = 0; i < this.destinations.length; i++) {
-        let destination = this.destinations[i]
-        this.mapService.findAddress(destination.locationName).subscribe((response: Object) => {
+      for (let i = 0; i < this.destinations.value.length; i++) {
+        let destination = this.destinations.value[i]
+        this.mapService.findAddress(destination).subscribe((response: Object) => {
           let positions: PositionDTO[] = Object.values(response)
           if (positions.length == 0) {
             this.positions[i] = null
@@ -131,20 +170,13 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
 
   setDestination(text: string, i: number) {
-    this.destinations[i].locationName = text
   }
 
   changeCarType(event: string) {
     console.log(event)
-    this.carType = event
+    this.getSelectedCarType.emit(this.carType.value)
   }
 
-  clearInputFields() {
-    this.carType = 'Default';
-    this.destinations.forEach((destination) => {
-      destination.locationName = ""
-    })
-  }
 
   optimizeByPrice() {
 
@@ -165,7 +197,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   addFriend() {
-    this.friends.push({friendEmail: ""})
-
+    if (this.newFriend.invalid) {
+      return
+    }
+    this.friends.push({friendEmail: this.newFriend.value})
+    this.newFriend.reset()
   }
 }

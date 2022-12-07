@@ -8,6 +8,7 @@ import {ActiveCarResponse} from "../../../../model/ActiveCarResponse";
 import {Position} from "../../../../model/Position";
 import {secondsToDhms} from "../../../../services/utils.service";
 import {RidePayService} from "../../../../services/ride-price.service";
+import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
 
 @Component({
   selector: 'app-map',
@@ -19,20 +20,22 @@ export class MapComponent implements AfterViewInit, OnInit {
   userRoles = UserRole
   map: L.Map
   searchPins: Marker[]
-  estimatedTimeSearch: string
   totalTime: number
-  estimatedPriceSearch: string;
+  estimationsSearch: MapSearchEstimations
+  // estimatedTimeSearch: string
+  // estimatedPriceSearch: string;
   typeOfVehicle: string
   searchedRoutes: any;
   directionRoutes: any;
 
   constructor(private mapService: MapService, private ridePayService: RidePayService) {
     //TODO getlogged user
-    this.userRole = UserRole.CUSTOMER
-    this.searchPins = []
-    this.totalTime = 0
-    this.searchedRoutes = []
-    this.directionRoutes = {}
+    this.userRole = UserRole.CUSTOMER;
+    this.searchPins = [];
+    this.totalTime = 0;
+    this.searchedRoutes = [];
+    this.directionRoutes = {};
+    this.estimationsSearch = new MapSearchEstimations();
   }
 
   ngOnInit(): void {
@@ -51,7 +54,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   private initPins() {
     this.mapService.getActiveCars().subscribe((activeCars) => {
-      if (this.userRole == UserRole.DRIVER) {
+      if (this.userRole == UserRole.CUSTOMER) {
         //TODO get car of logged user
         let car = activeCars[0]
         let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
@@ -143,11 +146,11 @@ export class MapComponent implements AfterViewInit, OnInit {
       }).on('routesfound', (response) => {
         let route = response.routes[0]
         this.totalTime = route.summary.totalTime
-        this.estimatedTimeSearch = secondsToDhms(this.totalTime)
-        let estimatedLengthInKm = route.summary.totalDistance / 1000
-        this.ridePayService.calculatePrice(estimatedLengthInKm, this.typeOfVehicle).subscribe(value => {
-          this.estimatedPriceSearch = (Math.round(value * 100) / 100) as unknown as string
-        })
+        this.estimationsSearch.time = secondsToDhms(this.totalTime)
+        this.estimationsSearch.lengthInKm = route.summary.totalDistance / 1000
+        if (this.typeOfVehicle != undefined) {
+          this.calculatePrice()
+        }
       }).addTo(this.map)
       this.searchedRoutes.push(route)
       // }
@@ -185,7 +188,17 @@ export class MapComponent implements AfterViewInit, OnInit {
   ngAfterViewInit(): void {
   }
 
+  calculatePrice() {
+    this.ridePayService.calculatePrice(this.estimationsSearch.lengthInKm, this.typeOfVehicle).subscribe(value => {
+      this.estimationsSearch.price = (Math.round(value * 100) / 100) as unknown as string
+    })
+  }
+
   setSelectedCarType(carType: string) {
     this.typeOfVehicle = carType
+    console.log("ASD")
+    if (this.estimationsSearch.time!=undefined) {
+      this.calculatePrice()
+    }
   }
 }
