@@ -31,8 +31,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   secondFormGroup: FormGroup;
   friendsFormGroup: FormGroup;
 
-
-
   constructor(private mapService: MapService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = [
       // {friendEmail: ""}
@@ -66,11 +64,12 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       destinations: new FormArray([
         new FormControl("", Validators.required),
         new FormControl("", Validators.required)
-      ])
+      ]),
     })
     this.carTypeFormGroup = new FormGroup({
       carType: new FormControl("", Validators.required)
     })
+
     this.firstFormGroup = new FormGroup({groups: this.destinationsForm});
     this.secondFormGroup = new FormGroup({groups: this.carTypeFormGroup});
     this.friendsFormGroup = new FormGroup({
@@ -81,6 +80,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   addNewDestination() {
     this.destinations.push(new FormControl("", Validators.required))
+    console.log(this.destinations)
   }
 
   removeDestination(number: number) {

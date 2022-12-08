@@ -25,14 +25,12 @@
                           [ngSwitch]="i"
                           style="width: 100%;">
             <mat-label *ngSwitchCase=0>From:</mat-label>
-            <mat-label *ngSwitchCase=destinationForm.length-1>To:</mat-label>
+            <mat-label *ngSwitchCase=destinations.controls.length-1>To:</mat-label>
             <mat-label *ngSwitchDefault>
               Stop {{i}}:
             </mat-label>
             <input matInput [name]="'dest' + i" formControlName="{{i}}">
-            <!--            <input matInput [name]="'dest' + i" [ngModel]="destinations[i].locationName"-->
-            <!--                   (ngModelChange)="setDestination($event, i)" required>-->
-            <button mat-icon-button matSuffix (click)="removeDestination(i)">
+            <button mat-icon-button matSuffix *ngIf="destinations.controls.length>2" (click)="removeDestination(i)">
               <mat-icon>
                 location_off
               </mat-icon>

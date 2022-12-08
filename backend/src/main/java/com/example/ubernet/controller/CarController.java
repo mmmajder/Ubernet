@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -31,11 +32,11 @@ public class CarController {
 
     @GetMapping("/active")
     public ResponseEntity<List<ActiveCarResponse>> getActiveCars() {
-        List<ActiveCarResponse> cars = carService.getActiveCars();
+        List<Car> cars = carService.getActiveCars();
         if (cars == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(cars);
+        return ResponseEntity.ok(DTOMapper.getListActiveCarResponse(cars));
     }
 
     @GetMapping("/active-available")

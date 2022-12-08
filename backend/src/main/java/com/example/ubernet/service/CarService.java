@@ -65,7 +65,7 @@ public class CarService {
         return carResponses;
     }
 
-    private ActiveCarResponse getActiveAvailableCar(Car car) {
+    public ActiveCarResponse getActiveAvailableCar(Car car) {
         ActiveCarResponse activeAvailableCarResponse = new ActiveCarResponse();
         activeAvailableCarResponse.setCarId(car.getId());
         activeAvailableCarResponse.setDriverEmail(car.getDriver().getEmail());
@@ -100,13 +100,8 @@ public class CarService {
 //        return save(car);
 //    }
 
-    public List<ActiveCarResponse> getActiveCars() {
-        List<Car> cars = carRepository.findActiveCars();
-        List<ActiveCarResponse> carResponses = new ArrayList<>();
-        for (Car car : cars) {
-            carResponses.add(getActiveAvailableCar(car));
-        }
-        return carResponses;
+    public List<Car> getActiveCars() {
+        return carRepository.findActiveCars();
     }
 
     public ActiveCarResponse reachedDestination(Long carId) {

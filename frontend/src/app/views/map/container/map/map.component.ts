@@ -22,8 +22,6 @@ export class MapComponent implements AfterViewInit, OnInit {
   searchPins: Marker[]
   totalTime: number
   estimationsSearch: MapSearchEstimations
-  // estimatedTimeSearch: string
-  // estimatedPriceSearch: string;
   typeOfVehicle: string
   searchedRoutes: any;
   directionRoutes: any;

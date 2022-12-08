@@ -2,6 +2,7 @@ package com.example.ubernet.utils;
 
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.*;
+import com.example.ubernet.service.CarService;
 import com.example.ubernet.service.UserService;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ import java.util.List;
 
 public class DTOMapper {
     private static UserService userService;
-
+    private static CarService carService;
     public static User getUser(CreateUserDTO userDTO) {
         User user = new User();
         user.setName(userDTO.getName());
@@ -96,5 +97,13 @@ public class DTOMapper {
             carTypeResponses.add(DTOMapper.getCarTypeResponse(carType));
         }
         return carTypeResponses;
+    }
+
+    public static List<ActiveCarResponse> getListActiveCarResponse(List<Car> cars) {
+        List<ActiveCarResponse> carResponses = new ArrayList<>();
+        for (Car car : cars) {
+            carResponses.add(carService.getActiveAvailableCar(car));
+        }
+        return carResponses;
     }
 }
