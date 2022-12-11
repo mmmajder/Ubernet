@@ -23,4 +23,7 @@ export class CustomersService {
     return this.http.get<number>(this.customerUrl + "/get-number-of-tokens/" + email, AuthService.getHttpOptions());
   }
 
+  getCustomersEmails(): Observable<string[]> {
+    return this.http.get<string[]>(this.customerUrl + "/getCustomersEmails", AuthService.getHttpOptions());
+  }
 }

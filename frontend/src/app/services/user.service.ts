@@ -27,7 +27,7 @@ export class UserService {
     return this.http.put<UserDTO>(this.userUrl + "/profile?email=" + customer.email, body, AuthService.getHttpOptions());
   }
 
-  public changePassword(email: string, passwordChangeInfo: PasswordChangeInfo){
+  public changePassword(email: string, passwordChangeInfo: PasswordChangeInfo) {
     return this.http.put<Object>(this.authUrl + "/changePassword/" + email, passwordChangeInfo, AuthService.getHttpOptions());
   }
 
@@ -38,5 +38,4 @@ export class UserService {
   public unblockUser(email: string) {
     return this.http.post<boolean>(this.userUrl + "/unblock?email=" + email, AuthService.getHttpOptions());
   }
-
 }

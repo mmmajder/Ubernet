@@ -13,16 +13,12 @@ import {MatCardModule} from '@angular/material/card';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
-import {RestaurantService} from "./services/restaurant.service";
 import {HttpClientModule} from "@angular/common/http";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {MatDialogModule} from "@angular/material/dialog";
-import {RestaurantsModule} from "./views/restaurants/restaurants.module";
-import {RestaurantModule} from "./views/restaurant/restaurant.module";
 import {NotificationsService} from "./services/notifications.service";
-import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
 import {
@@ -45,12 +41,16 @@ import {PagesModule} from "./views/pages/pages.module";
 import {VerifyRegistrationComponent} from './views/verify/verify-registration/verify-registration.component';
 import {DriversState} from "./store/states/drivers.state";
 import {CustomersState} from "./store/states/customers.state";
+import { RidesHistoryComponent } from './views/pages/rides-history/rides-history.component';
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundPageComponent,
-    VerifyRegistrationComponent
+    VerifyRegistrationComponent,
+    RidesHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -72,8 +72,6 @@ import {CustomersState} from "./store/states/customers.state";
     MatPaginatorModule,
     MatSortModule,
     MatDialogModule,
-    RestaurantsModule,
-    RestaurantModule,
     HomepageModule,
     SocialLoginModule,
     BrowserAnimationsModule,
@@ -84,6 +82,8 @@ import {CustomersState} from "./store/states/customers.state";
     MapModule,
     PagesModule,
     NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState]),
+    MatProgressSpinnerModule,
+    MatSelectModule,
   ],
   exports: [],
   providers: [
@@ -114,7 +114,7 @@ import {CustomersState} from "./store/states/customers.state";
         }
       } as SocialAuthServiceConfig,
     },
-    RestaurantService, AuthService, NotificationsService, SocketService, PopupService],
+    AuthService, NotificationsService, PopupService],
   bootstrap: [AppComponent]
 })
 

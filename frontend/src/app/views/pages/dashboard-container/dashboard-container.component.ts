@@ -12,20 +12,15 @@ import {AuthService} from "../../../services/auth.service";
   styleUrls: ['./dashboard-container.component.css']
 })
 export class DashboardContainerComponent implements OnInit {
-  public user: User = new User();
+  public userRole: string = "";
 
-  constructor(private store: Store, private router: Router, private authService: AuthService) {
+  constructor(private store: Store, private router: Router) {
   }
 
   ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
-        this.user.name = resp.loggedUser.name;
-        this.user.surname = resp.loggedUser.surname;
-        this.user.phoneNumber = resp.loggedUser.phoneNumber;
-        this.user.city = resp.loggedUser.city;
-        this.user.email = resp.loggedUser.email;
-        this.user.role = resp.loggedUser.role;
+        this.userRole = resp.loggedUser.role;
       },
       error: () => this.router.navigate(['/'])
     });

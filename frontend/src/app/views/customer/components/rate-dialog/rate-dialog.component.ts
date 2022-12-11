@@ -1,7 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import {
-  CreateRestaurantDialogComponent
-} from "../../../restaurants/components/create-restaurant-dialog/create-restaurant-dialog.component";
 import {FormGroup} from "@angular/forms";
 
 @Component({

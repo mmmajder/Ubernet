@@ -1,13 +1,9 @@
 import {NgModule} from "@angular/core";
-import {NavbarComponent} from './navbar/navbar/navbar.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatMenuModule} from "@angular/material/menu";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
-import {NavbarStore} from "./stores/navbar.store";
-import {RestaurantsStore} from "./stores/restaurants.store";
-import {RestaurantStore} from "./stores/restaurant.store";
 import {SidenavComponent} from './sidenav/sidenav/sidenav.component';
 import {MatBadgeModule} from "@angular/material/badge";
 import {UserChatComponent} from "./user-chat/user-chat.component";
@@ -27,7 +23,7 @@ import {ActivityLogComponent} from "./activity-log/activity-log.component";
 import { ReviewsComponent } from './reviews/reviews.component';
 
 @NgModule({
-  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
+  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -43,8 +39,7 @@ import { ReviewsComponent } from './reviews/reviews.component';
     ReactiveFormsModule,
     MatCardModule,
   ],
-    exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
-  providers: [NavbarStore, RestaurantsStore, RestaurantStore]
+    exports: [SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {
 }
