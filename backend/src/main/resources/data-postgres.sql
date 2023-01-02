@@ -17,6 +17,8 @@ values (false, true, '2021-12-12', null),
 
 insert into admin (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id)
 values ('admin@gmail.com', 'Adminville', false, false, 'Admin',
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 1),
+        ('admin111@gmail.com', 'Adminville', false, false, 'Admin',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 1);
 
 insert into user_auth_roles(user_auth_id, roles_id)

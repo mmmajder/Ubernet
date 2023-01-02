@@ -1,7 +1,8 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {MessageService} from "../../services/message.service";
 import {WebsocketService} from "../../services/websocket.service";
 import {AuthService} from "../../services/auth.service";
+import {Message} from "../../model/Message";
 
 @Component({
   selector: 'app-user-chat',
@@ -9,30 +10,31 @@ import {AuthService} from "../../services/auth.service";
   styleUrls: ['./user-chat.component.css']
 })
 export class UserChatComponent implements OnInit {
-  messages = [{
-    "profileImage": "assets/taxi.jpg",
-    "text": "E imao sam pitanje.. wegbzewugzewze iugvzewfbweizg zufvewi.",
-    "time": "20:00 12.10.2022.",
-    "type": "right"
-  },
-    {
-      "profileImage": "assets/taxi.jpg",
-      "text": "E imao sam pitanje...",
-      "time": "20:00 12.10.2022.",
-      "type": "right"
-    },
-    {
-      "profileImage": "assets/taxi.jpg",
-      "text": "E imao sam pitanje...",
-      "time": "20:00 12.10.2022.",
-      "type": "right"
-    },
-    {
-      "profileImage": "assets/taxi.jpg",
-      "text": "E imao sam pitanje...",
-      "time": "20:00 12.10.2022.",
-      "type": "left"
-    },];
+  messagesWithAdmin: Message[] = [];
+  // messages = [{
+  //   "profileImage": "assets/taxi.jpg",
+  //   "text": "E imao sam pitanje.. wegbzewugzewze iugvzewfbweizg zufvewi.",
+  //   "time": "20:00 12.10.2022.",
+  //   "type": "right"
+  // },
+  //   {
+  //     "profileImage": "assets/taxi.jpg",
+  //     "text": "E imao sam pitanje...",
+  //     "time": "20:00 12.10.2022.",
+  //     "type": "right"
+  //   },
+  //   {
+  //     "profileImage": "assets/taxi.jpg",
+  //     "text": "E imao sam pitanje...",
+  //     "time": "20:00 12.10.2022.",
+  //     "type": "right"
+  //   },
+  //   {
+  //     "profileImage": "assets/taxi.jpg",
+  //     "text": "E imao sam pitanje...",
+  //     "time": "20:00 12.10.2022.",
+  //     "type": "left"
+  //   },];
 
   loggedUser: any = null;
 
@@ -41,7 +43,7 @@ export class UserChatComponent implements OnInit {
   ngOnInit(): void {
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
       this.loggedUser = data;
-      this.webSocketService.openWebSocket(data.email, false);
+      this.webSocketService.openWebSocket(data.email, false, this.messagesWithAdmin);
     });
   }
 

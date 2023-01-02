@@ -2,6 +2,7 @@ import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {MessageService} from "../../../../services/message.service";
 import {WebsocketService} from "../../../../services/websocket.service";
 import {AuthService} from "../../../../services/auth.service";
+import {Message} from "../../../../model/Message";
 
 @Component({
   selector: 'app-chat',
@@ -9,7 +10,7 @@ import {AuthService} from "../../../../services/auth.service";
   styleUrls: ['./admin-chat.component.css']
 })
 export class AdminChatComponent implements OnInit {
-  messages: any = [];
+  @Input() messages: Message[];
   testStr: any;
   @Input() loggedUser: any;
 
@@ -24,11 +25,11 @@ export class AdminChatComponent implements OnInit {
     //   this.loggedUser = data;
     //   // this.webSocketService.openWebSocket(data.email);
     // });
-
-    this.messageService.getMessagesAsAdmin("petar@gmail.com").subscribe((data) => {
-      this.messages = data;
-      console.log(data);
-    });
+    //
+    // this.messageService.getMessagesAsAdmin("petar@gmail.com").subscribe((data) => {
+    //   this.messages = data;
+    //   console.log(data);
+    // });
   }
 
   // ngOnDestroy(): void {

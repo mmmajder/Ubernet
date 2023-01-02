@@ -1,5 +1,6 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
+import {Message} from "../model/Message";
 
 @Injectable({
   providedIn: 'root'
@@ -7,9 +8,10 @@ import {HttpClient, HttpHeaders} from "@angular/common/http";
 export class WebsocketService {
 
   webSocket: WebSocket;
-  messages:any[] = [];
+  messages:Message[];
   email:string;
   isAdmin:boolean;
+
 
   private readonly chatWSUrl: string;
 
@@ -17,35 +19,41 @@ export class WebsocketService {
     this.chatWSUrl = 'ws://localhost:8000/chatWebSocket/';
   }
 
-  public openWebSocket(email:string, isAdmin:boolean){
+  public openWebSocket(email:string, isAdmin:boolean, messages:Message[]){
     this.email = email;
     this.isAdmin = isAdmin;
-    this.webSocket = new WebSocket(this.chatWSUrl + email);
+    if (messages !== undefined)
+      this.messages = messages;
 
-    this.webSocket.onopen = (event) => {
-      console.log("Open " + email,  event)
-    }
+    if (this.webSocket === null || this.webSocket === undefined || this.webSocket.readyState !== this.webSocket.OPEN){
+      this.webSocket = new WebSocket(this.chatWSUrl + email);
 
-    this.webSocket.onmessage = (event) => {
-      let message:any = JSON.parse(event.data);
-
-      if ((this.isAdmin && this.email !== message.adminEmail) || !this.isAdmin){
-        console.log("Stigla poruka sa servera");
-        console.log(message.content);
+      this.webSocket.onopen = (event) => {
+        console.log("Open "  + email, event)
       }
 
+      this.webSocket.onmessage = (event) => {
+        let message:Message = JSON.parse(event.data);
+        console.log(message.content);
+        this.messages.push(message);
+      }
+
+      this.webSocket.onclose = (event) => {
+        console.log("Close "  + email, event)
+      }
     }
 
-    this.webSocket.onclose = (event) => {
-      console.log("Close "  + email, event)
-    }
   }
 
   public sendMessage(message:any){
-    this.webSocket.send(JSON.stringify(message));
+    if (this.webSocket !== null && this.webSocket !== undefined){
+      this.webSocket.send(JSON.stringify(message));
+    }
   }
 
   public closeWebSocket(){
-    this.webSocket.close();
+    if (this.webSocket !== null && this.webSocket !== undefined){
+      this.webSocket.close();
+    }
   }
 }

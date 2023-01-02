@@ -4,11 +4,11 @@
     <div class="col-md-4">
       <mat-card>
         <h4>Messages</h4>
-        <mat-form-field appearance="outline" style="width: 100%">
-          <mat-label>Search</mat-label>
-          <input matInput class="example-right-align">
-          <span matPrefix><mat-icon>search</mat-icon></span>
-        </mat-form-field>
+<!--        <mat-form-field appearance="outline" style="width: 100%">-->
+<!--          <mat-label>Search</mat-label>-->
+<!--          <input matInput class="example-right-align">-->
+<!--          <span matPrefix><mat-icon>search</mat-icon></span>-->
+<!--        </mat-form-field>-->
         <app-list-of-chats></app-list-of-chats>
       </mat-card>
     </div>
@@ -16,12 +16,12 @@
       <mat-card>
         <mat-card-header>
           <div mat-card-avatar style="background-image: url('assets/taxi.jpg'); background-size: cover"></div>
-          <mat-card-title>Pera Peric</mat-card-title>
-          <mat-card-subtitle>pera@gmail.com</mat-card-subtitle>
+          <mat-card-title>{{clientName}}</mat-card-title>
+          <mat-card-subtitle>{{clientEmail}}</mat-card-subtitle>
         </mat-card-header>
         <mat-card-content>
-          <app-chat [loggedUser]="loggedUser"></app-chat>
-          <app-new-message [loggedUser]="loggedUser"></app-new-message>
+          <app-chat [loggedUser]="loggedUser" [messages]="messagesWithClient"></app-chat>
+          <app-new-message [loggedUser]="loggedUser" [messages]="messagesWithClient"></app-new-message>
         </mat-card-content>
       </mat-card>
     </div>

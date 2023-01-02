@@ -77,19 +77,26 @@ public class ChatWebSocket {
 
         if (m.isSentByAdmin()){
             // send to user, show to other admins
+            System.out.println(m.getAdminEmail());
             Session receiverSession = userSessions.get(m.getClientEmail());
             if (receiverSession != null) {
                 receiverSession.getBasicRemote().sendText(o.writeValueAsString(m));
+                System.out.println("Poruka poslata sa " + m.getAdminEmail() + " i ide ka " + m.getClientEmail());
             }
 
             // send to admins
-            for (Session adminSession: adminSessions.values()) {
-                adminSession.getBasicRemote().sendText(o.writeValueAsString(m));
+            for (String adminEmail: adminSessions.keySet()) {
+                if (!m.getAdminEmail().equals(adminEmail)){
+                    Session adminSession = adminSessions.get(adminEmail);
+                    adminSession.getBasicRemote().sendText(o.writeValueAsString(m));
+                    System.out.println("Poruka poslata sa " + m.getAdminEmail() + " i ide ka " + adminEmail);
+                }
             }
 
         } else {
             for (Session adminSession: adminSessions.values()) {
                 adminSession.getBasicRemote().sendText(o.writeValueAsString(m));
+                System.out.println("Poruka poslata sa " + m.getClientEmail() + " i ide ka " + m.getAdminEmail());
             }
         }
 
