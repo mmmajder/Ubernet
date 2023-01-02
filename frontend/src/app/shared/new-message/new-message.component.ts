@@ -1,4 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
+import {WebsocketService} from "../../services/websocket.service";
+import {Message} from "../../model/Message";
 
 @Component({
   selector: 'app-new-message',
@@ -7,15 +9,18 @@ import {Component, OnInit} from '@angular/core';
 })
 export class NewMessageComponent implements OnInit {
 
+  @Input() loggedUser: any;
   messageText: string = "";
 
-  constructor() {
+  constructor(private webSocketService: WebsocketService) {
   }
 
   ngOnInit(): void {
   }
 
   sendMessage() {
-
+    let message:Message = new Message("petar@gmail.com", "admin@gmail.com", true, this.messageText);
+    this.webSocketService.sendMessage(message);
+    this.messageText = "";
   }
 }

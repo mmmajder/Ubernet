@@ -23,7 +23,7 @@ public class MessageResponse {
     private String type;
 
     public MessageResponse(Message m, String type){
-        this.clientEmail = m.getClient().getEmail();
+        this.clientEmail = m.getClientEmail();
         this.adminEmail = m.getAdminEmail();
         this.isSentByAdmin = m.isSentByAdmin();
         this.content = m.getContent();

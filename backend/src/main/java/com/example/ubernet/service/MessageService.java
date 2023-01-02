@@ -5,6 +5,7 @@ import com.example.ubernet.dto.MessageResponse;
 import com.example.ubernet.model.Message;
 import com.example.ubernet.model.User;
 import com.example.ubernet.repository.MessageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -15,13 +16,17 @@ import java.util.stream.Collectors;
 @Service
 public class MessageService {
 
-    private final MessageRepository messageRepository;
-    private final UserService userService;
+    @Autowired
+    private  MessageRepository messageRepository;
+    @Autowired
+    private  UserService userService;
 
-    public MessageService(MessageRepository messageRepository, UserService userService) {
-        this.messageRepository = messageRepository;
-        this.userService = userService;
-    }
+//    public MessageService(MessageRepository messageRepository, UserService userService) {
+//        this.messageRepository = messageRepository;
+//        this.userService = userService;
+//    }
+
+    public MessageService(){}
 
     public boolean doesClientExist(String email){
         return userService.findByEmail(email) != null;
@@ -37,7 +42,8 @@ public class MessageService {
     public Message createMessage(MessageDTO messageDTO) {
         User client = userService.findByEmail(messageDTO.getClientEmail());
         String adminEmail = messageDTO.getAdminEmail();
-        Message message = new Message(client, adminEmail, messageDTO.isSentByAdmin(), messageDTO.getContent());
+        String clientEmail = client.getEmail();
+        Message message = new Message(clientEmail, adminEmail, messageDTO.isSentByAdmin(), messageDTO.getContent());
         save(message);
 
         return message;
@@ -46,7 +52,7 @@ public class MessageService {
     public List<Message> getClientMessages(String email){
         User user = userService.findByEmail(email);
 
-        return messageRepository.findByClient(user);
+        return messageRepository.findByClientEmail(email);
     }
 
     public List<MessageResponse> transformIntoResponses(List<Message> messages, String type){
