@@ -35,7 +35,7 @@ public class Ride {
     private LocalDateTime actualStart;
     private LocalDateTime actualEnd;
     private LocalDateTime reservationTime;
-    @OneToMany
+    @ManyToMany
     private Set<Customer> customers;
     @OneToMany
     private Set<Review> carReviews;

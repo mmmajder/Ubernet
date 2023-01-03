@@ -5,6 +5,8 @@ import com.example.ubernet.dto.RideHistorySimpleResponse;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.repository.RideRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
@@ -20,9 +22,10 @@ public class RideHistoryService {
 
     RideRepository rideRepository;
 
-    public List<RideHistorySimpleResponse> getRides(RideHistoryRequestParam filter) {
-        List<Ride> rides = rideRepository.findByDriverEmail(filter.getDriverEmail(), PageRequest.of(filter.getPageNumber(), filter.getPageSize(), getSort(filter))).getContent();
-        return convertToSimpleRides(rides);
+    public Page<RideHistorySimpleResponse> getRides(RideHistoryRequestParam filter) {
+        Page<Ride> page = rideRepository.findByDriverEmail(filter.getDriverEmail(), PageRequest.of(filter.getPageNumber(), filter.getPageSize(), getSort(filter)));
+//        List<Ride> rides = page.getContent();
+        return convertToSimpleRides(page);
     }
 
     private Sort getSort(RideHistoryRequestParam filter) {
@@ -46,7 +49,7 @@ public class RideHistoryService {
         for (Ride r : rides) {
             simpleRides.add(RideHistorySimpleResponse.builder()
                     .id(r.getId())
-                    .route("Zeleznicka stanica - Nis")
+                    .route("Zeleznicka stanica - Nis - Telep - Lidl Liman 4")
 //                    .route(r.getRoute().stationList())
                     .start(timeToString(r.getActualStart()))
                     .end(timeToString(r.getActualEnd()))
@@ -56,8 +59,23 @@ public class RideHistoryService {
         return simpleRides;
     }
 
+    private Page<RideHistorySimpleResponse> convertToSimpleRides(Page<Ride> page) {
+        List<RideHistorySimpleResponse> simpleRides = new ArrayList<>();
+        for (Ride r : page.getContent()) {
+            simpleRides.add(RideHistorySimpleResponse.builder()
+                    .id(r.getId())
+                    .route("Zeleznicka stanica - Nis - Telep - Lidl Liman 4")
+//                    .route(r.getRoute().stationList())
+                    .start(timeToString(r.getActualStart()))
+                    .end(timeToString(r.getActualEnd()))
+                    .price(r.getPayment().getTotalPrice())
+                    .build());
+        }
+        return new PageImpl<>(simpleRides, page.getPageable(), page.getTotalElements());
+    }
+
     private String timeToString(LocalDateTime time) {
-        DateTimeFormatter customFormat = DateTimeFormatter.ofPattern("yyyy.dd.MM HH:mm");;
+        DateTimeFormatter customFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
         return time.format(customFormat);
     }
 }

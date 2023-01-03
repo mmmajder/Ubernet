@@ -4,6 +4,13 @@ import {Observable} from "rxjs";
 import {Ride} from "../model/Ride";
 import {AuthService} from "./auth.service";
 
+export interface Page {
+  content: Ride[];
+  totalPages: number;
+  size: number;
+  totalElements: number;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -15,7 +22,7 @@ export class RidesHistoryService {
     this.ridesUrl = 'http://localhost:8000/ridesHistory/getRides';
   }
 
-  public getRides(driverEmail = '', customerEmail = '', sortKind = 'start', sortOrder = 'desc', pageNumber = 0, pageSize = 10): Observable<Ride[]> {
+  public getRides(driverEmail = '', customerEmail = '', sortKind = 'start', sortOrder = 'desc', pageNumber = 0, pageSize = 10): Observable<Page> {
     let body = {
       'sortKind': sortKind,
       'sortOrder': sortOrder,
@@ -24,7 +31,7 @@ export class RidesHistoryService {
       'pageNumber': pageNumber,
       'pageSize': pageSize
     }
-    return this.http.post<Ride[]>(this.ridesUrl, body, AuthService.getHttpOptions());
+    return this.http.post<Page>(this.ridesUrl, body, AuthService.getHttpOptions());
   }
 
 }

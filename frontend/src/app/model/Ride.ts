@@ -14,8 +14,10 @@ export class RidesDataSource implements DataSource<Ride> {
 
   private ridesSubject = new BehaviorSubject<Ride[]>([]);
   private loadingSubject = new BehaviorSubject<boolean>(false);
+  private totalNumber = new BehaviorSubject<number>(0);
 
   public loading$ = this.loadingSubject.asObservable();
+  public totalNumber$ = this.totalNumber.asObservable();
 
   constructor(private ridesService: RidesHistoryService) {
   }
@@ -30,7 +32,7 @@ export class RidesDataSource implements DataSource<Ride> {
   }
 
   loadRides(driverEmail = '', customerEmail = '', sortKind = 'start',
-              sortDirection = 'desc', pageIndex = 0, pageSize = 3) {
+            sortDirection = 'desc', pageIndex = 0, pageSize = 3) {
 
     this.loadingSubject.next(true);
 
@@ -40,12 +42,13 @@ export class RidesDataSource implements DataSource<Ride> {
       finalize(() => this.loadingSubject.next(false))
     )
       .subscribe(rides => {
-        this.ridesSubject.next(rides);
-        console.log(rides);
+        if ("content" in rides) {
+          this.ridesSubject.next(rides.content);
+        }
+        if ("totalElements" in rides) {
+          this.totalNumber.next(rides.totalElements);
+        }
+        console.log("TOTAL NUMBER", this.totalNumber);
       });
-  }
-
-  numberOfRides() {
-    return this.ridesSubject.value.length;
   }
 }

@@ -1,10 +1,10 @@
-import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import {RidesHistoryService} from "../../../services/rides-history.service";
-import {Ride, RidesDataSource} from "../../../model/Ride";
+import {RidesDataSource} from "../../../model/Ride";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {ActivatedRoute} from "@angular/router";
-import {debounceTime, distinctUntilChanged, fromEvent, merge, tap} from "rxjs";
+import {merge, tap} from "rxjs";
 import {CustomersService} from "../../../services/customers.service";
 import {DriversService} from "../../../services/drivers.service";
 
@@ -18,12 +18,11 @@ export class RidesHistoryComponent implements OnInit {
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  // @ViewChild('input') input: ElementRef;
   driverEmail: string;
   customerEmail: string;
 
   dataSource: RidesDataSource;
-  displayedColumns = ["id", "route", "price", "start", "end"];
+  displayedColumns = ["id", "route", "price", "start", "end", "details"];
   driversEmails: string[];
   customersEmails: string[];
   search: string = "";
@@ -63,5 +62,9 @@ export class RidesHistoryComponent implements OnInit {
       this.sort.direction,
       this.paginator.pageIndex,
       this.paginator.pageSize);
+  }
+
+  detailsAboutRide(id:number) {
+    console.log(id);
   }
 }
