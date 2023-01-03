@@ -32,7 +32,7 @@ export class RidesDataSource implements DataSource<Ride> {
   }
 
   loadRides(driverEmail = '', customerEmail = '', sortKind = 'start',
-            sortDirection = 'desc', pageIndex = 0, pageSize = 3) {
+            sortDirection = 'desc', pageIndex = 0, pageSize = 10) {
 
     this.loadingSubject.next(true);
 
@@ -48,7 +48,6 @@ export class RidesDataSource implements DataSource<Ride> {
         if ("totalElements" in rides) {
           this.totalNumber.next(rides.totalElements);
         }
-        console.log("TOTAL NUMBER", this.totalNumber);
       });
   }
 }

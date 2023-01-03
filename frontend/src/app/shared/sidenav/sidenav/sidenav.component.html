@@ -57,7 +57,7 @@
       </a>
       <span class="tooltip">Messages</span>
     </li>
-    <li *ngIf="user.role == 'ADMIN'">
+    <li>
       <a (click)="navigate('/rides')" [ngClass]="{ 'currentPage': currentPage == 'rides' }">
         <mat-icon>directions_car</mat-icon>
         <span class="links_name">Rides History</span>

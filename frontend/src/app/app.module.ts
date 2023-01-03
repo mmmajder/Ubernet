@@ -41,7 +41,6 @@ import {PagesModule} from "./views/pages/pages.module";
 import {VerifyRegistrationComponent} from './views/verify/verify-registration/verify-registration.component';
 import {DriversState} from "./store/states/drivers.state";
 import {CustomersState} from "./store/states/customers.state";
-import { RidesHistoryComponent } from './views/pages/rides-history/rides-history.component';
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSelectModule} from "@angular/material/select";
 
@@ -50,7 +49,6 @@ import {MatSelectModule} from "@angular/material/select";
     AppComponent,
     NotFoundPageComponent,
     VerifyRegistrationComponent,
-    RidesHistoryComponent
   ],
   imports: [
     BrowserModule,
@@ -85,7 +83,8 @@ import {MatSelectModule} from "@angular/material/select";
     MatProgressSpinnerModule,
     MatSelectModule,
   ],
-  exports: [],
+  exports: [
+  ],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',

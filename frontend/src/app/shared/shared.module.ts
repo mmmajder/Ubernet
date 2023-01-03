@@ -20,10 +20,15 @@ import {MatCardModule} from "@angular/material/card";
 import {StarRatingComponent} from './star-rating/star-rating.component';
 import {UserProfileComponent} from './user-profile/user-profile.component';
 import {ActivityLogComponent} from "./activity-log/activity-log.component";
-import { ReviewsComponent } from './reviews/reviews.component';
+import {ReviewsComponent} from './reviews/reviews.component';
+import {RidesHistoryComponent} from "./rides-history/rides-history.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
 
 @NgModule({
-  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
+  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -38,8 +43,12 @@ import { ReviewsComponent } from './reviews/reviews.component';
     MatInputModule,
     ReactiveFormsModule,
     MatCardModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule
   ],
-    exports: [SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
+  exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {
 }

@@ -17,7 +17,6 @@ public class RideHistoryController {
 
     @PostMapping("/getRides")
     public Page<RideHistorySimpleResponse> getRides(@RequestBody RideHistoryRequestParam filter) {
-        Page<RideHistorySimpleResponse> rides = rideHistoryService.getRides(filter);
-        return rides;
+        return rideHistoryService.getRides(filter);
     }
 }

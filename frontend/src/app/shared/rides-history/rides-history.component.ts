@@ -1,12 +1,9 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
-import {RidesHistoryService} from "../../../services/rides-history.service";
-import {RidesDataSource} from "../../../model/Ride";
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {RidesHistoryService} from "../../services/rides-history.service";
+import {RidesDataSource} from "../../model/Ride";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
-import {ActivatedRoute} from "@angular/router";
 import {merge, tap} from "rxjs";
-import {CustomersService} from "../../../services/customers.service";
-import {DriversService} from "../../../services/drivers.service";
 
 @Component({
   selector: 'app-rides-history',
@@ -14,39 +11,26 @@ import {DriversService} from "../../../services/drivers.service";
   styleUrls: ['./rides-history.component.css']
 })
 export class RidesHistoryComponent implements OnInit {
-  public userRole: string = "";
+
+  @Input() driverEmail: string;
+  @Input() customerEmail: string;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
-  driverEmail: string;
-  customerEmail: string;
 
   dataSource: RidesDataSource;
   displayedColumns = ["id", "route", "price", "start", "end", "details"];
-  driversEmails: string[];
-  customersEmails: string[];
-  search: string = "";
 
-  constructor(private ridesHistoryService: RidesHistoryService, private route: ActivatedRoute, private customersService: CustomersService, private driversService: DriversService) {
+  constructor(private ridesHistoryService: RidesHistoryService) {
   }
 
   ngOnInit() {
     this.dataSource = new RidesDataSource(this.ridesHistoryService);
     this.dataSource.loadRides();
-
-    this.driversService.getDriversEmails().subscribe({
-      next: res => this.driversEmails = res
-    });
-    this.customersService.getCustomersEmails().subscribe({
-      next: res => this.customersEmails = res
-    });
   }
 
   ngAfterViewInit() {
-    // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
-
-    // on sort or paginate events, load a new page
     merge(this.sort.sortChange, this.paginator.page)
       .pipe(
         tap(() => this.loadRides())
@@ -64,7 +48,7 @@ export class RidesHistoryComponent implements OnInit {
       this.paginator.pageSize);
   }
 
-  detailsAboutRide(id:number) {
+  detailsAboutRide(id: number) {
     console.log(id);
   }
 }

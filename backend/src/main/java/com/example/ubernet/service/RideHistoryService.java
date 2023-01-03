@@ -23,8 +23,14 @@ public class RideHistoryService {
     RideRepository rideRepository;
 
     public Page<RideHistorySimpleResponse> getRides(RideHistoryRequestParam filter) {
-        Page<Ride> page = rideRepository.findByDriverEmail(filter.getDriverEmail(), PageRequest.of(filter.getPageNumber(), filter.getPageSize(), getSort(filter)));
-//        List<Ride> rides = page.getContent();
+        PageRequest pageRequest = PageRequest.of(filter.getPageNumber(), filter.getPageSize(), getSort(filter));
+        if (filter.getCustomerEmail().equals("") && filter.getDriverEmail().equals(""))
+            return convertToSimpleRides(rideRepository.findAll(pageRequest));
+        if (filter.getCustomerEmail().equals(""))
+            return convertToSimpleRides(rideRepository.findByDriverEmail(filter.getDriverEmail(), pageRequest));
+        if (filter.getDriverEmail().equals(""))
+            return convertToSimpleRides(rideRepository.findByCustomersEmail(filter.getCustomerEmail(), pageRequest));
+        Page<Ride> page = rideRepository.findByDriverEmailAndCustomersEmail(filter.getDriverEmail(), filter.getCustomerEmail(), pageRequest);
         return convertToSimpleRides(page);
     }
 
@@ -42,21 +48,6 @@ public class RideHistoryService {
             case "end" -> "actualEnd";
             default -> sortKind;
         };
-    }
-
-    private List<RideHistorySimpleResponse> convertToSimpleRides(List<Ride> rides) {
-        List<RideHistorySimpleResponse> simpleRides = new ArrayList<>();
-        for (Ride r : rides) {
-            simpleRides.add(RideHistorySimpleResponse.builder()
-                    .id(r.getId())
-                    .route("Zeleznicka stanica - Nis - Telep - Lidl Liman 4")
-//                    .route(r.getRoute().stationList())
-                    .start(timeToString(r.getActualStart()))
-                    .end(timeToString(r.getActualEnd()))
-                    .price(r.getPayment().getTotalPrice())
-                    .build());
-        }
-        return simpleRides;
     }
 
     private Page<RideHistorySimpleResponse> convertToSimpleRides(Page<Ride> page) {
