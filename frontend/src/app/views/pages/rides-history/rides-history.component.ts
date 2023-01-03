@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit} from '@angular/core';
+import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {RidesHistoryService} from "../../../services/rides-history.service";
 import {Ride, RidesDataSource} from "../../../model/Ride";
 import {MatPaginator} from "@angular/material/paginator";
@@ -15,26 +15,26 @@ import {DriversService} from "../../../services/drivers.service";
 })
 export class RidesHistoryComponent implements OnInit {
   public userRole: string = "";
-  rides: Ride[];
 
-  private paginator: MatPaginator;
-  private sort: MatSort;
-  input: ElementRef;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatSort) sort: MatSort;
+  // @ViewChild('input') input: ElementRef;
   driverEmail: string;
   customerEmail: string;
 
   dataSource: RidesDataSource;
-  displayedColumns = ["seqNo", "description", "duration"];
+  displayedColumns = ["id", "route", "price", "start", "end"];
   driversEmails: string[];
   customersEmails: string[];
+  search: string = "";
 
   constructor(private ridesHistoryService: RidesHistoryService, private route: ActivatedRoute, private customersService: CustomersService, private driversService: DriversService) {
   }
 
   ngOnInit() {
-    this.rides = this.route.snapshot.data["rides"];
     this.dataSource = new RidesDataSource(this.ridesHistoryService);
     this.dataSource.loadRides();
+
     this.driversService.getDriversEmails().subscribe({
       next: res => this.driversEmails = res
     });
@@ -44,19 +44,6 @@ export class RidesHistoryComponent implements OnInit {
   }
 
   ngAfterViewInit() {
-
-    // server-side search
-    fromEvent(this.input.nativeElement, 'keyup')
-      .pipe(
-        debounceTime(150),
-        distinctUntilChanged(),
-        tap(() => {
-          this.paginator.pageIndex = 0;
-          this.loadRides();
-        })
-      )
-      .subscribe();
-
     // reset the paginator after sorting
     this.sort.sortChange.subscribe(() => this.paginator.pageIndex = 0);
 
@@ -70,12 +57,11 @@ export class RidesHistoryComponent implements OnInit {
 
   loadRides() {
     this.dataSource.loadRides(
-      this.input.nativeElement.value,
       this.driverEmail,
       this.customerEmail,
+      this.sort.active,
       this.sort.direction,
       this.paginator.pageIndex,
       this.paginator.pageSize);
   }
-
 }

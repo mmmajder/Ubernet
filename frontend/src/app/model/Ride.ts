@@ -3,7 +3,11 @@ import {BehaviorSubject, catchError, finalize, Observable, of} from "rxjs";
 import {RidesHistoryService} from "../services/rides-history.service";
 
 export class Ride {
-
+  id: number;
+  route: string;
+  price: number;
+  start: string;
+  end: string;
 }
 
 export class RidesDataSource implements DataSource<Ride> {
@@ -25,16 +29,23 @@ export class RidesDataSource implements DataSource<Ride> {
     this.loadingSubject.complete();
   }
 
-  loadRides(filter = '', driverEmail = '', customerEmail = '',
-              sortDirection = 'asc', pageIndex = 0, pageSize = 3) {
+  loadRides(driverEmail = '', customerEmail = '', sortKind = 'start',
+              sortDirection = 'desc', pageIndex = 0, pageSize = 3) {
 
     this.loadingSubject.next(true);
 
-    this.ridesService.getRides(filter, driverEmail, customerEmail, sortDirection,
+    this.ridesService.getRides(driverEmail, customerEmail, sortKind, sortDirection,
       pageIndex, pageSize).pipe(
       catchError(() => of([])),
       finalize(() => this.loadingSubject.next(false))
     )
-      .subscribe(rides => this.ridesSubject.next(rides));
+      .subscribe(rides => {
+        this.ridesSubject.next(rides);
+        console.log(rides);
+      });
+  }
+
+  numberOfRides() {
+    return this.ridesSubject.value.length;
   }
 }

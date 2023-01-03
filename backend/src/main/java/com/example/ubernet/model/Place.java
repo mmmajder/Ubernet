@@ -10,13 +10,12 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Position {
+public class Place {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
-
-    private Double x;
-    private Double y;
-    private Boolean deleted = false;
+    private String name;
+    @OneToOne
+    private Position position;
 }

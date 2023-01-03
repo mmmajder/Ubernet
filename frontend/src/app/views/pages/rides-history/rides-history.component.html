@@ -1,21 +1,16 @@
 <app-sidenav currentPage="rides"></app-sidenav>
-<div class="course">
-
-  <mat-form-field appearance="outline">
-    <mat-label>Search rides</mat-label>
-    <input matInput [(ngModel)]="search" #input>
-  </mat-form-field>
+<div style="margin-left: 100px">
 
   <mat-form-field appearance="outline">
     <mat-label>Driver</mat-label>
-    <mat-select [(ngModel)]="driverEmail" (ngModelChange)="loadLessonsPage()">
+    <mat-select [(ngModel)]="driverEmail" (ngModelChange)="loadRides()">
       <mat-option *ngFor="let type of driversEmails" [value]="type">{{type}}</mat-option>
     </mat-select>
   </mat-form-field>
 
   <mat-form-field appearance="outline">
     <mat-label>Customer</mat-label>
-    <mat-select [(ngModel)]="customerEmail" (ngModelChange)="loadLessonsPage()">
+    <mat-select [(ngModel)]="customerEmail" (ngModelChange)="loadRides()">
       <mat-option *ngFor="let type of customersEmails" [value]="type">{{type}}</mat-option>
     </mat-select>
   </mat-form-field>
@@ -23,31 +18,40 @@
   <div class="spinner-container" *ngIf="dataSource.loading$ | async">
     <mat-spinner></mat-spinner>
   </div>
-  <mat-table class="lessons-table mat-elevation-z8" [dataSource]="dataSource">
+  <mat-table [dataSource]="dataSource"  matSort matSortActive="start" matSortDirection="desc" matSortDisableClear>
 
-    <ng-container matColumnDef="seqNo">
-      <mat-header-cell *matHeaderCellDef>#</mat-header-cell>
-      <mat-cell *matCellDef="let lesson">{{lesson.seqNo}}</mat-cell>
+    <ng-container matColumnDef="id">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+      <mat-cell *matCellDef="let ride">{{ride.id}}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="description">
-      <mat-header-cell *matHeaderCellDef>Description</mat-header-cell>
-      <mat-cell class="description-cell"
-                *matCellDef="let lesson">{{lesson.description}}</mat-cell>
-
+    <ng-container matColumnDef="route">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Route</mat-header-cell>
+      <mat-cell *matCellDef="let ride">{{ride.route}}</mat-cell>
     </ng-container>
 
-    <ng-container matColumnDef="duration">
-      <mat-header-cell *matHeaderCellDef>Duration</mat-header-cell>
-      <mat-cell class="duration-cell"
-                *matCellDef="let lesson">{{lesson.duration}}</mat-cell>
+    <ng-container matColumnDef="price">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
+      <mat-cell *matCellDef="let ride">{{ride.price}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="start">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>Start</mat-header-cell>
+      <mat-cell *matCellDef="let ride">{{ride.start}}</mat-cell>
+    </ng-container>
+
+    <ng-container matColumnDef="end">
+      <mat-header-cell *matHeaderCellDef mat-sort-header>End</mat-header-cell>
+      <mat-cell *matCellDef="let ride">{{ride.end}}</mat-cell>
     </ng-container>
 
     <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
-
     <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
 
+    <tr class="mat-row" *matNoDataRow>
+      <td>No data matching the filters</td>
+    </tr>
   </mat-table>
-  <mat-paginator [length]="rides.length" [pageSize]="3"
-                 [pageSizeOptions]="[3, 5, 10]"></mat-paginator>
+  <mat-paginator [pageSize]="3" [length]="dataSource.numberOfRides()"
+                 [pageSizeOptions]="[1, 3, 5, 10]"></mat-paginator>
 </div>

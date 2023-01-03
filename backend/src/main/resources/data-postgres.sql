@@ -112,7 +112,9 @@ values (false, 500, 1200);
 
 insert into ride (actual_end, actual_start, deleted, reservation_time, scheduled_start, driver_email, payment_id,
                   route_id)
-values ('2022-10-27 12:00', '2022-10-31 11:00', false, '2022-10-31 10:00', '2031-10-24 11:00', 'driver@gmail.com', 1,
+values ('2022-10-27 12:00', '2022-10-27 11:00', false, '2022-10-27 10:00', '2031-10-27 11:00', 'driver@gmail.com', 1,
+        1),
+       ('2022-10-30 12:00', '2022-10-30 11:00', false, '2022-10-30 10:00', '2031-10-30 11:00', 'driver@gmail.com', 1,
         1);
 
 update payment
@@ -120,7 +122,8 @@ set ride_id=1
 where id = 1;
 
 insert into ride_customers(ride_id, customers_email)
-values (1, 'ajder.milan2000@gmail.com');
+values (1, 'ajder.milan2000@gmail.com'),
+       (2, 'petar@gmail.com');
 
 insert into comment(user_email, admin_email, time, content)
 values ('ajder.milan2000@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac je mnogo hot'),

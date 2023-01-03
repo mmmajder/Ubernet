@@ -1,6 +1,7 @@
 package com.example.ubernet.model;
 
 
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,8 @@ public class Payment {
 
     private Double totalPrice;
     private Boolean isAcceptedPayment;
+//    @OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
+    @JsonManagedReference
     @OneToOne
     private Ride ride;
     private Boolean deleted = false;

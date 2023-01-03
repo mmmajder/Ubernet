@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {CarTypeGetResponse} from "../model/CarTypeGetResponse";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -15,17 +16,6 @@ export class CarTypeService {
   }
 
   public getCarTypes(): Observable<CarTypeGetResponse[]> {
-    return this.http.get<CarTypeGetResponse[]>(this.carTypeUrl + "/all", CarTypeService.getHttpOptions());
-  }
-
-  public static getHttpOptions() {
-    console.log("MILAN")
-    console.log(localStorage.getItem('token'))
-    return {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': localStorage.getItem('token') || 'authkey',
-      })
-    };
+    return this.http.get<CarTypeGetResponse[]>(this.carTypeUrl + "/all", AuthService.getHttpOptions());
   }
 }
