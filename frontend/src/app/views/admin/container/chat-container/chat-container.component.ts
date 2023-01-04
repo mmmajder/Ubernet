@@ -62,7 +62,7 @@ export class ChatContainerComponent implements OnInit {
     // add message as a new chat
     // TODO test when user-chat disappearance is fixed
     this.userService.getUserFullname(message.clientEmail).subscribe(data => {
-      let fullname:string = data;
+      let fullname:string = data.name + " " + data.lastname;
       let c:Chat = new Chat(message.clientEmail, fullname, message);
       this.chats.unshift(c);
     });

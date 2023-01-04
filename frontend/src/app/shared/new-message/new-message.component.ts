@@ -3,6 +3,7 @@ import {WebsocketService} from "../../services/websocket.service";
 import {Message} from "../../model/Message";
 import {MatTooltipModule} from '@angular/material/tooltip';
 import {Chat} from "../../model/Chat";
+import {dateTimeNowToString} from "../../services/utils.service";
 
 @Component({
   selector: 'app-new-message',
@@ -37,10 +38,10 @@ export class NewMessageComponent implements OnInit {
     let message:Message;
 
     if (this.loggedUser.role === "ADMIN"){
-      message = new Message(this.clientEmail, this.loggedUser.email, true, this.messageText);
+      message = new Message(this.clientEmail, this.loggedUser.email, true, this.messageText, dateTimeNowToString());
     }
     else{
-      message = new Message(this.loggedUser.email, "", false, this.messageText);
+      message = new Message(this.loggedUser.email, "", false, this.messageText, dateTimeNowToString());
     }
 
     return message;

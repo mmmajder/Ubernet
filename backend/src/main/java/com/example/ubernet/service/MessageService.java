@@ -46,6 +46,8 @@ public class MessageService {
 
     public MessageDTO createMessageDTO(Message message){
         MessageDTO messageDTO = new MessageDTO(message);
+        String time = transformDateTimeToStringForMessages(message.getTime());
+        messageDTO.setTime(time);
 
         return messageDTO;
     }

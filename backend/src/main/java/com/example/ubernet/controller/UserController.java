@@ -1,5 +1,6 @@
 package com.example.ubernet.controller;
 
+import com.example.ubernet.dto.FullnameDTO;
 import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.service.UserService;
@@ -22,10 +23,10 @@ public class UserController {
     }
 
     @GetMapping("/fullname/{email}")
-    public ResponseEntity<String> getUserFullname(@PathVariable("email") String email) {
-        String fullname =  userService.getUserFullname(email);
-        
-        return new ResponseEntity<>(fullname, HttpStatus.OK);
+    public ResponseEntity<FullnameDTO> getUserFullname(@PathVariable("email") String email) {
+        FullnameDTO fullnameDTO =  userService.getUserFullname(email);
+
+        return new ResponseEntity<>(fullnameDTO, HttpStatus.OK);
     }
 
     @PutMapping("/profile")

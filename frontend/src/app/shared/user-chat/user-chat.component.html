@@ -5,5 +5,5 @@
       <app-message [message]="message" [isUserAdmin]="false"></app-message>
     </mat-list-item>
   </mat-list>
-  <app-new-message></app-new-message>
+  <app-new-message [loggedUser]="loggedUser" [messages]="messagesWithAdmin"></app-new-message>
 </div>

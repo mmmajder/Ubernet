@@ -1,8 +1,8 @@
-<div *ngIf="isSentByTheUser"  [matTooltip]="message.clientEmail" [matTooltipPosition]="'right'"
+<div *ngIf="isSentByTheUser"  [matTooltip]="message.time" [matTooltipPosition]="'right'"
      matTooltipClass="message-tooltip">
   <span mat-line class="left">{{message.content}}</span>
 </div>
-<div *ngIf="!isSentByTheUser" [matTooltip]="message.clientEmail"  [matTooltipPosition]="'left'"
+<div *ngIf="!isSentByTheUser" [matTooltip]="message.time"  [matTooltipPosition]="'left'"
      matTooltipClass="message-tooltip">
   <span mat-line class="right">{{message.content}}</span>
 </div>

@@ -22,7 +22,7 @@ public class MessageDTO {
     private boolean isSentByAdmin;
     @NotEmpty
     private String content;
-    @NotNull
+    private String time;
 //    private LocalDateTime time;
 
     public MessageDTO(Message message){

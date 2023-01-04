@@ -1,5 +1,6 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.dto.FullnameDTO;
 import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.model.*;
@@ -112,13 +113,14 @@ public class UserService implements UserDetailsService {
         return findByEmail(email) != null;
     }
 
-    public String getUserFullname(String email) {
+    public FullnameDTO getUserFullname(String email) {
         User u = findByEmail(email);
 
         if (u != null){
-            return u.getName().concat(" ").concat(u.getSurname());
+            FullnameDTO fullnameDTO = new FullnameDTO(u.getName(), u.getSurname());
+            return fullnameDTO;
         } else {
-            return "";
+            return null;
         }
     }
 }

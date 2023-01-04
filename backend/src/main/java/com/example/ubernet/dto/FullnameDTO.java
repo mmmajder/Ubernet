@@ -5,7 +5,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
 
-import javax.validation.constraints.Email;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.NotNull;
 
@@ -13,12 +12,7 @@ import javax.validation.constraints.NotNull;
 @AllArgsConstructor
 @NoArgsConstructor
 @ToString
-public class MessageFromClient {
-    private String clientEmail;
-    private String adminEmail;
-    @NotNull
-    private boolean isSentByAdmin;
-    @NotEmpty
-    private String content;
-    private String time;
+public class FullnameDTO {
+    private String name;
+    private String lastname;
 }

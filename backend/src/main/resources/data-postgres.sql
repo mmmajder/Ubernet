@@ -98,12 +98,12 @@ values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8r
 insert into message(id, client_email, admin_email, is_sent_by_admin, time, content, is_deleted)
 values (99998, 'petar@gmail.com', null, false, '2022-05-21 11:15',
         'Helloooo, the taxi driver is kidnapping me. Please help.', false),
-       (99999, 'petar@gmail.com', 'admin@gmail.com', true, '2022-05-21 11:25', 'Oh no.', false),
-       (999997, 'customer@gmail.com', null, false, '2022-06-25 11:15',
-        'This service is so fun to use.', false),
-       (999998, 'customer@gmail.com', null, false, '2022-06-25 11:16',
-        'I dont have any questions. I just wanted to let you know what I think:))', false),
-       (999999, 'customer@gmail.com', 'admin@gmail.com', true, '2022-06-26 11:25', 'Ok thx.', false);
+       (99999, 'petar@gmail.com', 'admin@gmail.com', true, '2022-05-21 11:25', 'Oh no.', false);--,
+--        (999997, 'customer@gmail.com', null, false, '2022-06-25 11:15',
+--         'This service is so fun to use.', false),
+--        (999998, 'customer@gmail.com', null, false, '2022-06-25 11:16',
+--         'I dont have any questions. I just wanted to let you know what I think:))', false),
+--        (999999, 'customer@gmail.com', 'admin@gmail.com', true, '2022-06-26 11:25', 'Ok thx.', false);
 
 insert into payment (deleted, is_accepted_payment, total_price)
 values (false, true, 500),

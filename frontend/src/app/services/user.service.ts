@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {Customer, User, UserDTO} from "../model/User";
 import {AuthService} from "./auth.service";
 import {PasswordChangeInfo} from "../model/PasswordChangeInfo";
+import {Fullname} from "../model/Fullname";
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +32,8 @@ export class UserService {
     return this.http.put<Object>(this.authUrl + "/changePassword/" + email, passwordChangeInfo, AuthService.getHttpOptions());
   }
 
-  public getUserFullname(email: string): Observable<string> {
-    return this.http.get<string>(this.userUrl + "/fullname/" + email, AuthService.getHttpOptions());
+  public getUserFullname(email: string): Observable<Fullname> {
+    return this.http.get<Fullname>(this.userUrl + "/fullname/" + email, AuthService.getHttpOptions());
   }
 
 }

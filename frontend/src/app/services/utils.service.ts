@@ -11,3 +11,13 @@ export function secondsToDhms(seconds: number) {
   let sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
   return dDisplay + hDisplay + mDisplay + sDisplay;
 }
+
+export function dateTimeNowToString(): string{
+  function pad2(n:number) { return n < 10 ? '0' + n : n }
+  let date = new Date();
+  let dateStr:string = pad2( date.getDate()) + "." + pad2(date.getMonth() + 1) + "." + date.getFullYear().toString() + ". "  + pad2( date.getHours() ) + ":" + pad2( date.getMinutes() );
+
+  return dateStr;
+}
+
+
