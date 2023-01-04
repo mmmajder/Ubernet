@@ -17,8 +17,6 @@ import org.springframework.web.socket.server.standard.ServerEndpointExporter;
 @EnableWebSocket
 public class WebSocketConfiguration implements WebSocketConfigurer {
 
-//    private @Autowired
-//    AutowireCapableBeanFactory beanFactory;
 
     @Override
     public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
@@ -30,20 +28,4 @@ public class WebSocketConfiguration implements WebSocketConfigurer {
         return new ServerEndpointExporter();
     }
 
-//    @Override
-//    public void registerWebSocketHandlers(WebSocketHandlerRegistry registry) {
-//        //registry.addHandler(unitWebSocketHandler, "/unit").setAllowedOrigins("*");
-//    }
-//
-//    @Bean
-//    public ChatWebSocket chatWebSocket() {
-//        ChatWebSocket wcchat = new ChatWebSocket();
-//        beanFactory.autowireBean(wcchat);
-//        return wcchat;
-//    }
-//
-//    @Bean
-//    public ServerEndpointExporter serverEndpointExporter() {
-//        return new ServerEndpointExporter();
-//    }
 }

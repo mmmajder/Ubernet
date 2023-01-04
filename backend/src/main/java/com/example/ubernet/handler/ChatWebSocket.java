@@ -7,30 +7,15 @@ import com.example.ubernet.model.User;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.service.MessageService;
 import com.example.ubernet.service.UserService;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.CodePointLength;
-import org.springframework.beans.factory.annotation.Autowire;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Configurable;
-import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.ApplicationContext;
-import org.springframework.context.annotation.aspectj.EnableSpringConfigured;
 import org.springframework.stereotype.Component;
-import org.springframework.stereotype.Service;
-import org.springframework.web.socket.server.standard.SpringConfigurator;
 
-import javax.persistence.ManyToOne;
 import javax.websocket.*;
 import javax.websocket.server.PathParam;
 import javax.websocket.server.ServerEndpoint;
 import java.io.IOException;
-import java.time.LocalDateTime;
 import java.util.HashMap;
-import java.util.Map;
 
 @Component
 @ServerEndpoint(value = "/chatWebSocket/{username}")
