@@ -8,12 +8,12 @@
     <mat-icon class="token">monetization_on</mat-icon>
   </button>
   <button *ngIf="user.role=='CUSTOMER'" mat-icon-button>
-    <mat-icon matBadge="15">notifications</mat-icon>
+    <mat-icon>notifications</mat-icon>
   </button>
   <button *ngIf="user.role=='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">
-    <mat-icon matBadge="15">help</mat-icon>
+    <mat-icon>help</mat-icon>
   </button>
-  <img src="assets/taxi.jpg" class="avatar" style="margin-left: 20px; margin-right: 10px;" alt="avatar"/>
+  <img [src]="profilePictureSrc" class="avatar" style="margin-left: 20px; margin-right: 10px;" alt="avatar"/>
   <p class="name" (click)="navigate('/profile')">{{user.name}} {{user.surname}}</p>
 </mat-toolbar>
 

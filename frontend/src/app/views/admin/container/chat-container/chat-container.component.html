@@ -15,7 +15,8 @@
     <div class="col-md-8">
       <mat-card>
         <mat-card-header>
-          <div mat-card-avatar style="background-image: url('assets/taxi.jpg'); background-size: cover"></div>
+<!--          <img class="avatar" style="margin-right: 10px" src="assets/taxi.jpg"  alt="avatar"/>-->
+          <div mat-card-avatar style="background-image: url({{openChatProfilePicture}}); background-size: cover"></div>
           <mat-card-title>{{clientName}}</mat-card-title>
           <mat-card-subtitle>{{clientEmail}}</mat-card-subtitle>
         </mat-card-header>

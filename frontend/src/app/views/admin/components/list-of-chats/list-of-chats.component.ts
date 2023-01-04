@@ -1,4 +1,12 @@
-import {Component, Input, OnInit, Output, EventEmitter } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  IterableDiffer, IterableDiffers
+} from '@angular/core';
 import {Message} from "../../../../model/Message";
 import {Chat} from "../../../../model/Chat";
 import {ImageService} from "../../../../services/image.service";
@@ -11,24 +19,42 @@ import {ImageService} from "../../../../services/image.service";
 export class ListOfChatsComponent implements OnInit {
   @Input() chats: Chat[];
   @Output() onChatSelection = new EventEmitter<Chat>();
+  iterableDiffer: IterableDiffer<Chat>;
+  profilePictures:  any; // {'email':'image_src'}
+  hasRequestedProfilePictures: any; // {'email': true}
 
-  constructor(private imageService: ImageService) {
+  constructor(private imageService: ImageService, private iterableDiffers: IterableDiffers) {
+    // this.iterableDiffer = this.iterableDiffers.find(this.chats).create();
   }
 
   ngOnInit(): void {
+    this.profilePictures = {};
+    this.hasRequestedProfilePictures = {};
   }
 
-  // public getProfileImage(clientEmail:string) {
-  //   return "assets/taxi.jpg";
-  //   // console.log("getprofileimage")
-  //   // this.imageService.getProfileImage(clientEmail)
-  //   //   .subscribe((encodedImage: any) => {
-  //   //     if (encodedImage === null)
-  //   //       return "assets/taxi.jpg";
-  //   //     else
-  //   //       return `data:image/jpeg;base64,${encodedImage.data}`;
-  //   //   });
-  // }
+  ngOnDestroy(): void {
+    this.profilePictures = {};
+    this.hasRequestedProfilePictures = {};
+  }
+
+  ngDoCheck() {
+    this.getProfileImages(this.chats);
+  }
+
+  public getProfileImages(chats:Chat[]): void{
+    for (let c of chats){
+      if (!this.hasRequestedProfilePictures.hasOwnProperty(c.clientEmail) && !this.profilePictures.hasOwnProperty(c.clientEmail)){
+        this.hasRequestedProfilePictures[c.clientEmail] = true;
+        this.imageService.getProfileImage(c.clientEmail)
+          .subscribe((encodedImage: any) => {
+            if (encodedImage === null)
+              this.profilePictures[c.clientEmail] = "assets/taxi.jpg";
+            else
+              this.profilePictures[c.clientEmail] =  `data:image/jpeg;base64,${encodedImage.data}`;
+          });
+      }
+    }
+  }
 
   selectChat(email: string) {
     // console.log("selectChat")

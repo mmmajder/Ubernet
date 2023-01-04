@@ -5,6 +5,7 @@ import {AuthService} from "../../../../services/auth.service";
 import {Message} from "../../../../model/Message";
 import {Chat} from "../../../../model/Chat";
 import {UserService} from "../../../../services/user.service";
+import {ImageService} from "../../../../services/image.service";
 
 @Component({
   selector: 'app-chat-container',
@@ -18,9 +19,10 @@ export class ChatContainerComponent implements OnInit {
   clientName:string;
   clientEmail:string;
   messagesWithClient:Message[] = [];
+  openChatProfilePicture:string;
 
   constructor(private messageService: MessageService, private webSocketService: WebsocketService, private authService:AuthService
-              , private userService:UserService) { }
+              , private userService:UserService, private imageService: ImageService) { }
 
   ngOnInit(): void {
     console.log("init admin")
@@ -79,6 +81,7 @@ export class ChatContainerComponent implements OnInit {
       this.clientName = selectedChat.clientFullname;
       this.clientEmail = selectedChat.clientEmail;
       this.loadChatMessages();
+      this.getOpenChatProfilePicture();
     }
   }
 
@@ -91,6 +94,7 @@ export class ChatContainerComponent implements OnInit {
       this.prepareForSelectedChat(selectedChat);
       //TODO change profile photo
       this.loadChatMessages();
+      this.getOpenChatProfilePicture();
     }
   }
 
@@ -117,6 +121,17 @@ export class ChatContainerComponent implements OnInit {
         this.messagesWithClient.push(m);
       }
     });
+  }
+
+  private getOpenChatProfilePicture():void{
+    this.imageService.getProfileImage(this.clientEmail)
+      .subscribe((encodedImage: any) => {
+        console.log(encodedImage);
+        if (encodedImage === null)
+          this.openChatProfilePicture = "assets/taxi.jpg";
+        else
+          this.openChatProfilePicture =  `data:image/jpeg;base64,${encodedImage.data}`;
+      });
   }
 
 }
