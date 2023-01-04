@@ -31,4 +31,8 @@ export class UserService {
     return this.http.put<Object>(this.authUrl + "/changePassword/" + email, passwordChangeInfo, AuthService.getHttpOptions());
   }
 
+  public getUserFullname(email: string): Observable<string> {
+    return this.http.get<string>(this.userUrl + "/fullname/" + email, AuthService.getHttpOptions());
+  }
+
 }

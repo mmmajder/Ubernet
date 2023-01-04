@@ -8,7 +8,7 @@
 export class Message {
   clientEmail !: string;
   adminEmail: string;
-  sentByAdmin!: boolean;
+  sentByAdmin: boolean;
   content!: string;
 
   constructor(clientEmail : string, adminEmail: string, isSentByAdmin: boolean, content: string) {

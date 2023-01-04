@@ -3,6 +3,8 @@ import {MessageService} from "../../services/message.service";
 import {WebsocketService} from "../../services/websocket.service";
 import {AuthService} from "../../services/auth.service";
 import {Message} from "../../model/Message";
+import {Observable} from "rxjs";
+import {Chat} from "../../model/Chat";
 
 @Component({
   selector: 'app-user-chat',
@@ -10,40 +12,21 @@ import {Message} from "../../model/Message";
   styleUrls: ['./user-chat.component.css']
 })
 export class UserChatComponent implements OnInit {
-  messagesWithAdmin: Message[] = [];
-  // messages = [{
-  //   "profileImage": "assets/taxi.jpg",
-  //   "text": "E imao sam pitanje.. wegbzewugzewze iugvzewfbweizg zufvewi.",
-  //   "time": "20:00 12.10.2022.",
-  //   "type": "right"
-  // },
-  //   {
-  //     "profileImage": "assets/taxi.jpg",
-  //     "text": "E imao sam pitanje...",
-  //     "time": "20:00 12.10.2022.",
-  //     "type": "right"
-  //   },
-  //   {
-  //     "profileImage": "assets/taxi.jpg",
-  //     "text": "E imao sam pitanje...",
-  //     "time": "20:00 12.10.2022.",
-  //     "type": "right"
-  //   },
-  //   {
-  //     "profileImage": "assets/taxi.jpg",
-  //     "text": "E imao sam pitanje...",
-  //     "time": "20:00 12.10.2022.",
-  //     "type": "left"
-  //   },];
+  messagesWithAdmin:Message[] = [];
 
   loggedUser: any = null;
 
   constructor(private messageService: MessageService, private webSocketService: WebsocketService, private authService:AuthService) { }
 
   ngOnInit(): void {
+    console.log("init user chat")
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
       this.loggedUser = data;
-      this.webSocketService.openWebSocket(data.email, false, this.messagesWithAdmin);
+
+      if (this.loggedUser.role !== "ADMIN"){
+        this.webSocketService.openWebSocket(data.email, false, this.onNewMessageFromWebSocket.bind(this));
+        this.loadMessages();
+      }
     });
   }
 
@@ -51,4 +34,15 @@ export class UserChatComponent implements OnInit {
     this.webSocketService.closeWebSocket();
   }
 
+  public onNewMessageFromWebSocket(message: Message): void {
+    this.messagesWithAdmin.push(message);
+  }
+
+  private loadMessages(): void {
+    this.messageService.getMessagesForClientEmail(this.loggedUser.email).subscribe(data => {
+      for (let m of data){
+        this.messagesWithAdmin.push(m);
+      }
+    });
+  }
 }

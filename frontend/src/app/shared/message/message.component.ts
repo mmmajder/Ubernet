@@ -17,20 +17,24 @@ export class MessageComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("ispisuje se nova poruka")
-    console.log(this.message);
+    // console.log("ispisuje se nova poruka")
+    // console.log(this.message);
+    this.determineIfMessageWasSentOrReceived();
+
+    // if (this.isSentByTheUser){
+    //   console.log("generisem poslatu poruku")
+    // } else {
+    //   console.log("generisem primljenu poruku")
+    // }
+    //
+    // console.log(this.message);
+  }
+
+  determineIfMessageWasSentOrReceived(): void {
     this.isSentByTheUser = false;
     if (this.message.sentByAdmin === this.isUserAdmin){
       this.isSentByTheUser = true;
     }
-
-    if (this.isSentByTheUser){
-      console.log("generisem poslatu poruku")
-    } else {
-      console.log("generisem primljenu poruku")
-    }
-
-    console.log(this.message);
   }
 
 }

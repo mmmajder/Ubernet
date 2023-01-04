@@ -1,8 +1,9 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.MessageDTO;
-import com.example.ubernet.dto.MessageResponse;
+import com.example.ubernet.dto.MessageFromClient;
 import com.example.ubernet.model.Message;
+import com.example.ubernet.model.Chat;
 import com.example.ubernet.model.User;
 import com.example.ubernet.repository.MessageRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,11 +23,6 @@ public class MessageService {
     private  MessageRepository messageRepository;
     @Autowired
     private  UserService userService;
-
-//    public MessageService(MessageRepository messageRepository, UserService userService) {
-//        this.messageRepository = messageRepository;
-//        this.userService = userService;
-//    }
 
     public MessageService(){}
 
@@ -39,48 +37,64 @@ public class MessageService {
             return true;
     }
 
-    public Message createMessage(MessageDTO messageDTO) {
-        User client = userService.findByEmail(messageDTO.getClientEmail());
-        String adminEmail = messageDTO.getAdminEmail();
-        String clientEmail = client.getEmail();
-        Message message = new Message(clientEmail, adminEmail, messageDTO.isSentByAdmin(), messageDTO.getContent());
+    public Message createMessage(MessageFromClient messageFromClient) {
+        Message message = new Message(messageFromClient);
         save(message);
 
         return message;
     }
 
+    public MessageDTO createMessageDTO(Message message){
+        MessageDTO messageDTO = new MessageDTO(message);
+
+        return messageDTO;
+    }
+
+    public List<MessageDTO> createMessageDTOs(List<Message> messages){
+        return messages.stream().map(m -> createMessageDTO(m)).collect(Collectors.toList());
+    }
+
     public List<Message> getClientMessages(String email){
-        User user = userService.findByEmail(email);
-
-        return messageRepository.findByClientEmail(email);
+        return messageRepository.findByClientEmail(email).stream().filter(m -> m.getIsDeleted() == false).collect(Collectors.toList());
     }
 
-    public List<MessageResponse> transformIntoResponses(List<Message> messages, String type){
-        return messages.stream().map(m -> transferIntoResponse(m, type)).collect(Collectors.toList());
+    public List<Chat> getChats(){
+        List<Message> mostRecentMessages = findMostRecentMessageForEachClient();
+        mostRecentMessages.sort(Comparator.comparing(Message::getTime).reversed());
+
+        return transformIntoChats(mostRecentMessages);
     }
 
-    public MessageResponse transferIntoResponse(Message m, String type){
-        MessageResponse r = new MessageResponse(m, determineType(m, type));
-        r.setTime(transformDateTimeToStringForMessages(m.getTime()));
+    private List<Message> findMostRecentMessageForEachClient(){
+        List<String> uniqueEmails = messageRepository.findUniqueClientEmails();
+        List<Message> mostRecentMessages = new ArrayList<>();
 
-        return r;
-    }
-
-    // TODO clean this and change 'right', 'left' into something more meaningful
-    private String determineType(Message m, String type) {
-        if (type.equals("admin")) {
-            if (m.isSentByAdmin())
-                type = "right";
-            else
-                type = "left";
-        } else { // sent by a customer or a driver
-            if (m.isSentByAdmin())
-                type = "left";
-            else
-                type = "right";
+        for (String e : uniqueEmails) {
+            Message mostRecentMessage = getMessegeWithTheMostRecentTimeByClientEmail(e);
+            mostRecentMessages.add(mostRecentMessage);
         }
 
-        return type;
+        return mostRecentMessages;
+    }
+
+    private List<Chat> transformIntoChats(List<Message> mostRecentMessages){
+        List<Chat> chats = new ArrayList<>();
+
+        for (Message m : mostRecentMessages){
+            User u = userService.findByEmail(m.getClientEmail());
+            Chat chat = new Chat(m, u.getName(), u.getSurname());
+            chats.add(chat);
+        }
+
+        return chats;
+    }
+
+    private Message getMessegeWithHighestIdByClientEmail(String clientEmail){
+        return messageRepository.findFirstByClientEmailAndIsDeletedOrderByIdDesc(clientEmail, false);
+    }
+
+    private Message getMessegeWithTheMostRecentTimeByClientEmail(String clientEmail){
+        return messageRepository.findFirstByClientEmailAndIsDeletedOrderByTimeDesc(clientEmail, false);
     }
 
     public String transformDateTimeToStringForMessages(LocalDateTime dateTime){

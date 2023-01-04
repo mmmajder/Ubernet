@@ -21,6 +21,13 @@ public class UserController {
         return userService.getUser(email);
     }
 
+    @GetMapping("/fullname/{email}")
+    public ResponseEntity<String> getUserFullname(@PathVariable("email") String email) {
+        String fullname =  userService.getUserFullname(email);
+        
+        return new ResponseEntity<>(fullname, HttpStatus.OK);
+    }
+
     @PutMapping("/profile")
     public ResponseEntity<UserEditDTO> updateProfile(@RequestParam("email") String email, @RequestBody UserEditDTO userEditDTO) {
         userEditDTO = userService.editUser(email, userEditDTO);

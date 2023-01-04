@@ -1,5 +1,6 @@
 package com.example.ubernet.model;
 
+import com.example.ubernet.dto.MessageFromClient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,6 +32,15 @@ public class Message {
         this.adminEmail = adminEmail;
         this.isSentByAdmin = isSentByAdmin;
         this.content = content;
+        this.time = LocalDateTime.now();
+        this.isDeleted = false;
+    }
+
+    public Message(MessageFromClient messageFromClient){
+        this.clientEmail = messageFromClient.getClientEmail();
+        this.adminEmail = messageFromClient.getAdminEmail();
+        this.isSentByAdmin = messageFromClient.isSentByAdmin();
+        this.content = messageFromClient.getContent();
         this.time = LocalDateTime.now();
         this.isDeleted = false;
     }

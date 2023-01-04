@@ -1,5 +1,6 @@
 package com.example.ubernet.handler;
 
+import com.example.ubernet.dto.MessageDTO;
 import com.example.ubernet.dto.MessageFromClient;
 import com.example.ubernet.model.Message;
 import com.example.ubernet.model.User;
@@ -8,6 +9,7 @@ import com.example.ubernet.service.MessageService;
 import com.example.ubernet.service.UserService;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.CodePointLength;
@@ -40,9 +42,7 @@ public class ChatWebSocket {
     private static HashMap<String, Session> adminSessions = new HashMap<>();
     private static HashMap<String, Session> userSessions = new HashMap<>();
 
-//    @Autowired
     private  UserService userService;
-//    @Autowired
     private   MessageService messageService;
 
     public ChatWebSocket(){
@@ -71,36 +71,47 @@ public class ChatWebSocket {
     public void onMessage(String message, Session session) throws IOException {
         ObjectMapper o = new ObjectMapper();
         MessageFromClient m = o.readValue(message, MessageFromClient.class);
-        System.out.println("PORUKA NA SERVERU");
-        System.out.println(message);
-        System.out.println(m);
+        Message createdMessage = messageService.createMessage(m);
+        messageService.save(createdMessage);
+        MessageDTO messageDTO = messageService.createMessageDTO(createdMessage);
+        sendMessageToSessions(messageDTO);
+    }
+
+    private void sendMessageToSessions(MessageDTO m) throws IOException {
+        ObjectMapper o = new ObjectMapper();
+        o.findAndRegisterModules();
 
         if (m.isSentByAdmin()){
-            // send to user, show to other admins
-            System.out.println(m.getAdminEmail());
-            Session receiverSession = userSessions.get(m.getClientEmail());
-            if (receiverSession != null) {
-                receiverSession.getBasicRemote().sendText(o.writeValueAsString(m));
-                System.out.println("Poruka poslata sa " + m.getAdminEmail() + " i ide ka " + m.getClientEmail());
-            }
+            sendToCustomerSession(m, o);
+            sendToAdminSessionsExceptToTheAdminThatSentTheMessage(m,o);
+        } else { // sent by customer or by driver
+            sendToAllAdminSessions(m, o);
+        }
+    }
 
-            // send to admins
-            for (String adminEmail: adminSessions.keySet()) {
-                if (!m.getAdminEmail().equals(adminEmail)){
-                    Session adminSession = adminSessions.get(adminEmail);
-                    adminSession.getBasicRemote().sendText(o.writeValueAsString(m));
-                    System.out.println("Poruka poslata sa " + m.getAdminEmail() + " i ide ka " + adminEmail);
-                }
-            }
+    private void sendToCustomerSession(MessageDTO m, ObjectMapper o) throws IOException {
+        Session receiverSession = userSessions.get(m.getClientEmail());
+        if (receiverSession != null) {
+            receiverSession.getBasicRemote().sendText(o.writeValueAsString(m));
+            System.out.println("Poruka poslata sa " + m.getAdminEmail() + " i ide ka " + m.getClientEmail());
+        }
+    }
 
-        } else {
-            for (Session adminSession: adminSessions.values()) {
+    private void sendToAdminSessionsExceptToTheAdminThatSentTheMessage(MessageDTO m, ObjectMapper o) throws IOException {
+        for (String adminEmail: adminSessions.keySet()) {
+            if (!m.getAdminEmail().equals(adminEmail)){
+                Session adminSession = adminSessions.get(adminEmail);
                 adminSession.getBasicRemote().sendText(o.writeValueAsString(m));
-                System.out.println("Poruka poslata sa " + m.getClientEmail() + " i ide ka " + m.getAdminEmail());
+                System.out.println("Poruka poslata sa " + m.getAdminEmail() + " i ide ka " + adminEmail);
             }
         }
+    }
 
-//        messageService.save(m);
+    private void sendToAllAdminSessions(MessageDTO m, ObjectMapper o) throws IOException {
+        for (Session adminSession: adminSessions.values()) {
+            adminSession.getBasicRemote().sendText(o.writeValueAsString(m));
+            System.out.println("Poruka poslata sa " + m.getClientEmail() + " i ide ka " + m.getAdminEmail());
+        }
     }
 
     @OnClose

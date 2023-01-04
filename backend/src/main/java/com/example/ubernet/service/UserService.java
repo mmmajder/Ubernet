@@ -111,4 +111,14 @@ public class UserService implements UserDetailsService {
     public boolean userExist(String email) {
         return findByEmail(email) != null;
     }
+
+    public String getUserFullname(String email) {
+        User u = findByEmail(email);
+
+        if (u != null){
+            return u.getName().concat(" ").concat(u.getSurname());
+        } else {
+            return "";
+        }
+    }
 }

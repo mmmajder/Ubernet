@@ -1,7 +1,6 @@
 package com.example.ubernet.config;
 
 import com.example.ubernet.handler.ChatWebSocket;
-import com.example.ubernet.model.Chat;
 import com.example.ubernet.service.MessageService;
 import com.example.ubernet.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
