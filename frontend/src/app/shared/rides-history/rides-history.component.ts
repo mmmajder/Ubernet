@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {RidesHistoryService} from "../../services/rides-history.service";
 import {RidesDataSource} from "../../model/Ride";
 import {MatPaginator} from "@angular/material/paginator";
@@ -10,7 +10,7 @@ import {merge, tap} from "rxjs";
   templateUrl: './rides-history.component.html',
   styleUrls: ['./rides-history.component.css']
 })
-export class RidesHistoryComponent implements OnInit {
+export class RidesHistoryComponent {
 
   @Input() driverEmail: string;
   @Input() customerEmail: string;
@@ -22,11 +22,7 @@ export class RidesHistoryComponent implements OnInit {
   displayedColumns = ["id", "route", "price", "start", "end", "details"];
 
   constructor(private ridesHistoryService: RidesHistoryService) {
-  }
-
-  ngOnInit() {
     this.dataSource = new RidesDataSource(this.ridesHistoryService);
-    this.dataSource.loadRides();
   }
 
   ngAfterViewInit() {
@@ -38,7 +34,9 @@ export class RidesHistoryComponent implements OnInit {
       .subscribe();
   }
 
-  loadRides() {
+  loadRides(driverEmail: string = this.driverEmail, customerEmail: string = this.customerEmail) {
+    this.driverEmail = driverEmail;
+    this.customerEmail = customerEmail;
     this.dataSource.loadRides(
       this.driverEmail,
       this.customerEmail,

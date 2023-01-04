@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {Store} from "@ngxs/store";
 import {Router} from "@angular/router";
 import {CurrentlyLogged} from "../../../store/actions/loggedUser.actions";
@@ -11,40 +11,40 @@ import {CustomersService} from "../../../services/customers.service";
   templateUrl: './rides-history-container.component.html',
   styleUrls: ['./rides-history-container.component.css']
 })
-export class RidesHistoryContainerComponent implements OnInit {
+export class RidesHistoryContainerComponent {
   @ViewChild('child') ridesHistoryComponent: RidesHistoryComponent;
 
-  public userRole: string = "";
-  driverEmail: string;
-  customerEmail: string;
+  userRole: string = "";
+  loggedUserEmail: string = "";
+  driverEmail: string = "";
+  customerEmail: string = "";
   driversEmails: string[];
   customersEmails: string[];
 
   constructor(private store: Store, private router: Router, private driversService: DriversService, private customersService: CustomersService) {
-  }
-
-  ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
         this.userRole = resp.loggedUser.role;
+        this.loggedUserEmail = resp.loggedUser.email;
+
         if (this.userRole == "ADMIN") {
           this.loadCustomerEmails();
           this.loadDriversEmails();
-        }
-        else if (this.userRole == "DRIVER") {
+        } else if (this.userRole == "DRIVER") {
           this.loadCustomerEmails();
           this.driverEmail = resp.loggedUser.email;
-        }
-        else if (this.userRole == "CUSTOMER") {
+        } else if (this.userRole == "CUSTOMER") {
           this.customerEmail = resp.loggedUser.email;
         }
+
+        this.loadRides();
       },
       error: () => this.router.navigate(['/'])
     });
   }
 
   loadRides() {
-    this.ridesHistoryComponent.loadRides();
+    this.ridesHistoryComponent.loadRides(this.driverEmail, this.customerEmail);
   }
 
   loadCustomerEmails() {
