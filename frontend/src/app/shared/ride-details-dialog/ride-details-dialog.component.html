@@ -1,0 +1,75 @@
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+</head>
+<div class="container">
+  <h1>Details about ride</h1>
+  <hr style="width: 100%">
+  <div class="row">
+
+    <div class="col-md-6">
+      <h3>Customer(s) info</h3>
+      <mat-list style="margin-top: -20px !important;">
+        <mat-list-item *ngFor="let customer of ride.customers">
+          <img class="avatar" [src]="profilePictures.get(customer.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
+          <div>
+            <div mat-line> {{customer.name}} {{customer.surname}}
+              <span style="color: gray">{{customer.email}}</span>
+            </div>
+          </div>
+          <mat-divider></mat-divider>
+        </mat-list-item>
+      </mat-list>
+
+      <div style="margin-top: 10px">
+        <h3>Driver info</h3>
+        <mat-list style="margin-top: -20px !important">
+          <mat-list-item>
+            <img class="avatar" [src]="profilePictures.get(ride.driver.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
+            <div>
+              <div mat-line> {{ride.driver.name}} {{ride.driver.surname}}
+                <span style="color: gray">{{ride.driver.email}}</span>
+              </div>
+            </div>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </mat-list>
+
+        <div class="details" style="margin-top: 10px">
+          <span>ALLOWS PETS</span>
+          <!--DODATI-->
+          <span style="float: right">YES</span>
+        </div>
+        <div class="details">
+          <span>BABY SETS</span>
+          <!--DODATI-->
+          <span style="float: right">YES</span>
+        </div>
+        <mat-divider></mat-divider>
+
+        <div class="details">
+          <span>TOTAL COST</span>
+          <span style="float: right">{{ride.totalPrice}}</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-6">
+      <div class="map-container">
+        <div class="map-frame">
+          <div id="map">
+          </div>
+        </div>
+      </div>
+
+      <mat-list>
+        <div mat-subheader>Route</div>
+        <mat-list-item *ngFor="let station of ride.checkPoints">
+          <mat-icon matListItemIcon>circle</mat-icon>
+          <div matListItemTitle>{{station.name}}</div>
+        </mat-list-item>
+      </mat-list>
+    </div>
+  </div>
+</div>

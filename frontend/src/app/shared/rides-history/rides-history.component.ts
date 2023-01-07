@@ -1,9 +1,11 @@
 import {Component, Input, ViewChild} from '@angular/core';
 import {RidesHistoryService} from "../../services/rides-history.service";
-import {RidesDataSource} from "../../model/Ride";
+import {Ride, RidesDataSource} from "../../model/Ride";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {merge, tap} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {RideDetailsDialogComponent} from "../ride-details-dialog/ride-details-dialog.component";
 
 @Component({
   selector: 'app-rides-history',
@@ -21,7 +23,7 @@ export class RidesHistoryComponent {
   dataSource: RidesDataSource;
   displayedColumns = ["id", "route", "price", "start", "end", "details"];
 
-  constructor(private ridesHistoryService: RidesHistoryService) {
+  constructor(private ridesHistoryService: RidesHistoryService, public dialog: MatDialog) {
     this.dataSource = new RidesDataSource(this.ridesHistoryService);
   }
 
@@ -46,7 +48,11 @@ export class RidesHistoryComponent {
       this.paginator.pageSize);
   }
 
-  detailsAboutRide(id: number) {
-    console.log(id);
+  detailsAboutRide(id: number, ride: Ride) {
+    const dialogRef = this.dialog.open(RideDetailsDialogComponent, {
+      height: '600px',
+      width: '1000px',
+    });
+    dialogRef.componentInstance.id = id;
   }
 }

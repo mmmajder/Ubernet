@@ -16,7 +16,7 @@ export class DriversProfileDialogComponent implements OnInit {
   constructor(private userService: UserService, private imageService: ImageService) {
   }
 
-  ngOnInit(): void {
+  ngOnInit() {
     this.userService.getUser(this.userEmail).subscribe(
       (user: User) => this.user = user
     );
@@ -28,5 +28,4 @@ export class DriversProfileDialogComponent implements OnInit {
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
       });
   }
-
 }

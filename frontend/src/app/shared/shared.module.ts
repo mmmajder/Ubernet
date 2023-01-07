@@ -26,28 +26,31 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
+import { RideDetailsDialogComponent } from './ride-details-dialog/ride-details-dialog.component';
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
-  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatMenuModule,
-    CommonModule,
-    MatButtonModule,
-    MatBadgeModule,
-    MatListModule,
-    MatTooltipModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule
-  ],
+  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatMenuModule,
+        CommonModule,
+        MatButtonModule,
+        MatBadgeModule,
+        MatListModule,
+        MatTooltipModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatChipsModule
+    ],
   exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {

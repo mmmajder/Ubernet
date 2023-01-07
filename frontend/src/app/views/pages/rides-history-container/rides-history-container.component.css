@@ -6,3 +6,8 @@
   font-weight: 400;
   margin-top: -10px;
 }
+
+mat-form-field {
+  margin-right: 5px;
+  width: 300px;
+}
