@@ -1,13 +1,9 @@
 import {NgModule} from "@angular/core";
-import {NavbarComponent} from './navbar/navbar/navbar.component';
 import {MatToolbarModule} from "@angular/material/toolbar";
 import {MatIconModule} from "@angular/material/icon";
 import {MatMenuModule} from "@angular/material/menu";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
-import {NavbarStore} from "./stores/navbar.store";
-import {RestaurantsStore} from "./stores/restaurants.store";
-import {RestaurantStore} from "./stores/restaurant.store";
 import {SidenavComponent} from './sidenav/sidenav/sidenav.component';
 import {MatBadgeModule} from "@angular/material/badge";
 import {UserChatComponent} from "./user-chat/user-chat.component";
@@ -24,27 +20,38 @@ import {MatCardModule} from "@angular/material/card";
 import {StarRatingComponent} from './star-rating/star-rating.component';
 import {UserProfileComponent} from './user-profile/user-profile.component';
 import {ActivityLogComponent} from "./activity-log/activity-log.component";
-import { ReviewsComponent } from './reviews/reviews.component';
+import {ReviewsComponent} from './reviews/reviews.component';
+import {RidesHistoryComponent} from "./rides-history/rides-history.component";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatTableModule} from "@angular/material/table";
+import {MatPaginatorModule} from "@angular/material/paginator";
+import {MatSortModule} from "@angular/material/sort";
+import { RideDetailsDialogComponent } from './ride-details-dialog/ride-details-dialog.component';
+import {MatChipsModule} from "@angular/material/chips";
 
 @NgModule({
-  declarations: [NavbarComponent, SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatMenuModule,
-    CommonModule,
-    MatButtonModule,
-    MatBadgeModule,
-    MatListModule,
-    MatTooltipModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatCardModule,
-  ],
-    exports: [NavbarComponent, SidenavComponent, MessageComponent, NewMessageComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
-  providers: [NavbarStore, RestaurantsStore, RestaurantStore]
+  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatMenuModule,
+        CommonModule,
+        MatButtonModule,
+        MatBadgeModule,
+        MatListModule,
+        MatTooltipModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatChipsModule
+    ],
+  exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {
 }

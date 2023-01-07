@@ -5,6 +5,7 @@
     <div>
       <p class="name">{{user.name}} {{user.surname}}</p>
       <p class="details">{{user.email}} | {{user.phoneNumber}} | {{user.city}}</p>
+      <p class="details blocked" *ngIf="user.blocked">This user is blocked.</p>
     </div>
   </div>
   <mat-divider></mat-divider>

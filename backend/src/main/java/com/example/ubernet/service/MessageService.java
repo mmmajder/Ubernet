@@ -20,21 +20,19 @@ import java.util.stream.Collectors;
 public class MessageService {
 
     @Autowired
-    private  MessageRepository messageRepository;
+    private MessageRepository messageRepository;
     @Autowired
-    private  UserService userService;
+    private UserService userService;
 
-    public MessageService(){}
+    public MessageService() {
+    }
 
-    public boolean doesClientExist(String email){
+    public boolean clientExist(String email) {
         return userService.findByEmail(email) != null;
     }
 
-    public boolean doesAdminExist(String email){
-        if (email != null && userService.findByEmail(email) == null)
-            return false;
-        else
-            return true;
+    public boolean adminExist(String email) {
+        return email == null || userService.findByEmail(email) != null;
     }
 
     public Message createMessage(MessageFromClient messageFromClient) {
@@ -44,7 +42,7 @@ public class MessageService {
         return message;
     }
 
-    public MessageDTO createMessageDTO(Message message){
+    public MessageDTO createMessageDTO(Message message) {
         MessageDTO messageDTO = new MessageDTO(message);
         String time = transformDateTimeToStringForMessages(message.getTime());
         messageDTO.setTime(time);
@@ -52,22 +50,22 @@ public class MessageService {
         return messageDTO;
     }
 
-    public List<MessageDTO> createMessageDTOs(List<Message> messages){
-        return messages.stream().map(m -> createMessageDTO(m)).collect(Collectors.toList());
+    public List<MessageDTO> createMessageDTOs(List<Message> messages) {
+        return messages.stream().map(this::createMessageDTO).collect(Collectors.toList());
     }
 
-    public List<Message> getClientMessages(String email){
-        return messageRepository.findByClientEmail(email).stream().filter(m -> m.getIsDeleted() == false).collect(Collectors.toList());
+    public List<Message> getClientMessages(String email) {
+        return messageRepository.findByClientEmail(email).stream().filter(m -> !m.getIsDeleted()).collect(Collectors.toList());
     }
 
-    public List<Chat> getChats(){
+    public List<Chat> getChats() {
         List<Message> mostRecentMessages = findMostRecentMessageForEachClient();
         mostRecentMessages.sort(Comparator.comparing(Message::getTime).reversed());
 
         return transformIntoChats(mostRecentMessages);
     }
 
-    private List<Message> findMostRecentMessageForEachClient(){
+    private List<Message> findMostRecentMessageForEachClient() {
         List<String> uniqueEmails = messageRepository.findUniqueClientEmails();
         List<Message> mostRecentMessages = new ArrayList<>();
 
@@ -79,10 +77,10 @@ public class MessageService {
         return mostRecentMessages;
     }
 
-    private List<Chat> transformIntoChats(List<Message> mostRecentMessages){
+    private List<Chat> transformIntoChats(List<Message> mostRecentMessages) {
         List<Chat> chats = new ArrayList<>();
 
-        for (Message m : mostRecentMessages){
+        for (Message m : mostRecentMessages) {
             User u = userService.findByEmail(m.getClientEmail());
             Chat chat = new Chat(m, u.getName(), u.getSurname());
             chats.add(chat);
@@ -91,17 +89,16 @@ public class MessageService {
         return chats;
     }
 
-    private Message getMessegeWithHighestIdByClientEmail(String clientEmail){
+    private Message getMessegeWithHighestIdByClientEmail(String clientEmail) {
         return messageRepository.findFirstByClientEmailAndIsDeletedOrderByIdDesc(clientEmail, false);
     }
 
-    private Message getMessegeWithTheMostRecentTimeByClientEmail(String clientEmail){
+    private Message getMessegeWithTheMostRecentTimeByClientEmail(String clientEmail) {
         return messageRepository.findFirstByClientEmailAndIsDeletedOrderByTimeDesc(clientEmail, false);
     }
 
-    public String transformDateTimeToStringForMessages(LocalDateTime dateTime){
+    public String transformDateTimeToStringForMessages(LocalDateTime dateTime) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy. hh:mm");
-
         return dateTime.format(formatter);
     }
 

@@ -1,5 +1,6 @@
 package com.example.ubernet.controller;
 
+import com.example.ubernet.dto.CommentDTO;
 import com.example.ubernet.model.Comment;
 import com.example.ubernet.service.CommentService;
 import lombok.AllArgsConstructor;
@@ -20,9 +21,9 @@ public class CommentsController {
         return commentService.getComments(userEmail);
     }
 
-    @PostMapping("/add-comment/{userEmail}")
-    public void addComment(@PathVariable String userEmail, @RequestBody String adminEmail, String content) {
-        commentService.addComment(userEmail, adminEmail, content);
+    @PostMapping("/add-comment")
+    public void addComment(@RequestBody CommentDTO commentDTO) {
+        commentService.addComment(commentDTO);
     }
 
 }

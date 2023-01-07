@@ -30,7 +30,7 @@ public class User implements UserDetails {
     @OneToOne
     private UserAuth userAuth;
     private UserRole role;
-    private Boolean isBlocked;
+    private Boolean blocked;
 
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
@@ -41,13 +41,11 @@ public class User implements UserDetails {
 
     @Override
     public String getPassword() {
-        System.out.println(password);
         return password;
     }
 
     @Override
     public String getUsername() {
-        System.out.println(email);
         return email;
     }
 

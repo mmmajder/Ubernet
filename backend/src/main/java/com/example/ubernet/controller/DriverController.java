@@ -11,6 +11,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,6 +24,11 @@ public class DriverController {
     @GetMapping("/get-drivers")
     public List<DriverDto> getDrivers() {
         return driverService.getDrivers();
+    }
+
+    @GetMapping("/getDriversEmails")
+    public ArrayList<String> getDriversEmails() {
+        return driverService.getDriversEmails();
     }
 
     @PutMapping("/toggle-activity/{email}")

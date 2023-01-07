@@ -10,6 +10,9 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
+
 @AllArgsConstructor
 @RestController
 @CrossOrigin("*")
@@ -36,6 +39,16 @@ public class UserController {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(userEditDTO, HttpStatus.OK);
+    }
+
+    @PostMapping("/block")
+    public boolean blockUser(@RequestParam("email") String email) {
+        return userService.blockUser(email, true);
+    }
+
+    @PostMapping("/unblock")
+    public boolean unblockUser(@RequestParam("email") String email) {
+        return userService.blockUser(email, false);
     }
 
 }

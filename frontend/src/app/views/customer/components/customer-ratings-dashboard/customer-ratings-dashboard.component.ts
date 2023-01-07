@@ -1,8 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {RideToRate} from "../../../../model/RideToRate";
-import {
-  CreateRestaurantDialogComponent
-} from "../../../restaurants/components/create-restaurant-dialog/create-restaurant-dialog.component";
 import {MatDialog} from "@angular/material/dialog";
 import {RateDialogComponent} from "../rate-dialog/rate-dialog.component";
 

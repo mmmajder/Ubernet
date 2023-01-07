@@ -1,0 +1,23 @@
+table {
+  width: 100%;
+}
+
+mat-form-field {
+  margin: 5px;
+}
+
+.mat-column-id,
+.mat-column-details,
+.mat-column-price {
+  max-width: 60px;
+}
+
+.mat-column-start,
+.mat-column-end {
+  max-width: 150px;
+}
+
+::ng-deep .mat-form-field-appearance-outline .mat-form-field-outline {
+  background-color: white;
+  border-radius: 5px;
+}

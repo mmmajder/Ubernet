@@ -9,7 +9,6 @@ import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
 import com.example.ubernet.repository.UserRepository;
 import com.example.ubernet.utils.DTOMapper;
-import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -20,17 +19,17 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.Optional;
 
-//@AllArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
     @Autowired
-    private  UserRepository userRepository;
+    private UserRepository userRepository;
     @Autowired
-    private  RoleRepository roleRepository;
+    private RoleRepository roleRepository;
     @Autowired
-    private  ProfileUpdateRequestRepository profileUpdateRequestRepository;
+    private ProfileUpdateRequestRepository profileUpdateRequestRepository;
 
-    public UserService(){}
+    public UserService() {
+    }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
@@ -115,12 +114,13 @@ public class UserService implements UserDetailsService {
 
     public FullnameDTO getUserFullname(String email) {
         User u = findByEmail(email);
+        return u != null ? new FullnameDTO(u.getName(), u.getSurname()) : null;
+    }
 
-        if (u != null){
-            FullnameDTO fullnameDTO = new FullnameDTO(u.getName(), u.getSurname());
-            return fullnameDTO;
-        } else {
-            return null;
-        }
+    public boolean blockUser(String email, boolean block) {
+        User user = findByEmail(email);
+        user.setBlocked(block);
+        userRepository.save(user);
+        return block;
     }
 }
