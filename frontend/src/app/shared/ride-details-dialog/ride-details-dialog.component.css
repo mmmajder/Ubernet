@@ -33,3 +33,26 @@ img.avatar {
 div.mat-line {
   font-size: 14px;
 }
+
+.review-star {
+  font-size: 12px;
+  color: gray;
+  margin-left: 10px;
+}
+
+.review-comment {
+  margin-top: -10px;
+  font-size: 14px;
+  margin-left: 10px;
+}
+
+.review-star mat-icon {
+  vertical-align: bottom;
+}
+
+.review-background {
+  background-color: var(--light-gray);
+  border-radius: var(--border-radius);
+  padding: 5px;
+  margin-top: 5px;
+}

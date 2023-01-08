@@ -9,34 +9,63 @@
   <div class="row">
 
     <div class="col-md-6">
-      <h3>Customer(s) info</h3>
-      <mat-list style="margin-top: -20px !important;">
-        <mat-list-item *ngFor="let customer of ride.customers">
-          <img class="avatar" [src]="profilePictures.get(customer.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
-          <div>
-            <div mat-line> {{customer.name}} {{customer.surname}}
+      <h4 style="color: var(--gray)">Customers info</h4>
+      <div style="margin-top: -10px !important;">
+        <div *ngFor="let customer of ride.customers" style="margin-top: 5px">
+          <div style="display: flex; align-items: center; width: 100%">
+            <img class="avatar" [src]="profilePictures.get(customer.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
+            <div> {{customer.name}} {{customer.surname}}
               <span style="color: gray">{{customer.email}}</span>
             </div>
+            <button *ngIf="hasReviews(customer.email)" (click)="toggleReviews(customer.email)" mat-icon-button
+                    color="primary" style="margin-left: auto">
+              <mat-icon>reviews</mat-icon>
+            </button>
           </div>
-          <mat-divider></mat-divider>
-        </mat-list-item>
-      </mat-list>
+
+          <div *ngIf="showReviews.get(customer.email)">
+            <div class="review-background">
+              <p class="review-star">{{driverReviews.get(customer.email)?.rating}}
+                <mat-icon>star</mat-icon>
+                for driver
+              </p>
+              <p class="review-comment">{{driverReviews.get(customer.email)?.comment}}</p>
+            </div>
+            <div class="review-background">
+              <p class="review-star">{{driverReviews.get(customer.email)?.rating}}
+                <mat-icon>star</mat-icon>
+                for car
+              </p>
+              <p class="review-comment">{{carReviews.get(customer.email)?.comment}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
 
       <div style="margin-top: 10px">
-        <h3>Driver info</h3>
-        <mat-list style="margin-top: -20px !important">
-          <mat-list-item>
-            <img class="avatar" [src]="profilePictures.get(ride.driver.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
-            <div>
-              <div mat-line> {{ride.driver.name}} {{ride.driver.surname}}
-                <span style="color: gray">{{ride.driver.email}}</span>
-              </div>
-            </div>
-            <mat-divider></mat-divider>
-          </mat-list-item>
-        </mat-list>
+        <h4 style="color: var(--gray)">Driver info</h4>
+        <div style="display: flex; margin-top: -5px !important; align-items: center; width: 100%">
+          <img class="avatar" [src]="profilePictures.get(ride.driver.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
+          <div> {{ride.driver.name}} {{ride.driver.surname}}
+            <span style="color: gray">{{ride.driver.email}}</span>
+          </div>
+          <button *ngIf="hasReviews(ride.driver.email)" (click)="toggleReviews(ride.driver.email)" mat-icon-button
+                  color="primary" style="margin-left: auto">
+            <mat-icon>reviews</mat-icon>
+          </button>
+        </div>
 
         <div class="details" style="margin-top: 10px">
+          <span>START</span>
+          <!--DODATI-->
+          <span style="float: right">{{ride.actualStart}}</span>
+        </div>
+        <div class="details">
+          <span>END</span>
+          <!--DODATI-->
+          <span style="float: right">{{ride.actualEnd}}</span>
+        </div>
+        <div class="details">
           <span>ALLOWS PETS</span>
           <!--DODATI-->
           <span style="float: right">YES</span>
@@ -50,7 +79,7 @@
 
         <div class="details">
           <span>TOTAL COST</span>
-          <span style="float: right">{{ride.totalPrice}}</span>
+          <span style="float: right; font-weight: 500">{{ride.totalPrice}}</span>
         </div>
       </div>
     </div>

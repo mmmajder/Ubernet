@@ -21,15 +21,15 @@ export class SidenavComponent implements OnInit {
   @Input() currentPage: string = 'dashboard';
   numberOfTokens: number = 0;
 
-  public profilePictureSrc:string;
-  private hasRequestedProfilePicture:boolean = false;
-  public static _this:any;
+  public profilePictureSrc: string;
+  private hasRequestedProfilePicture: boolean = false;
+  public static _this: any;
 
   someMethod() {
     this.trigger?.openMenu();
   }
 
-  constructor(private store: Store, private router: Router, private customerService: CustomersService, private imageService:ImageService) {
+  constructor(private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService) {
     this.store.select(state => state.loggedUser).subscribe({
       next: (user) => {
         this.user = user;
@@ -44,8 +44,8 @@ export class SidenavComponent implements OnInit {
 
   }
 
-  ngDoCheck():void {
-    if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture){
+  ngDoCheck(): void {
+    if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture) {
       this.hasRequestedProfilePicture = true;
       this.getProfilePicture();
     }
@@ -59,7 +59,7 @@ export class SidenavComponent implements OnInit {
     }
   }
 
-  private getProfilePicture():void{
+  private getProfilePicture(): void {
     this.imageService.getProfileImage(this.user.email)
       .subscribe((encodedImage: any) => {
         console.log(encodedImage);
@@ -70,7 +70,7 @@ export class SidenavComponent implements OnInit {
       });
   }
 
-  public static changeProfilePicture(profilePictureSrc:string): void{
+  public static changeProfilePicture(profilePictureSrc: string): void {
     SidenavComponent._this.profilePictureSrc = profilePictureSrc;
   }
 
