@@ -15,4 +15,5 @@ public class UserResponse {
     private String city;
     private String phoneNumber;
     private UserRole role;
+    private boolean blocked;
 }

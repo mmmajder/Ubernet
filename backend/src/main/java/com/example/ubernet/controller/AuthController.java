@@ -93,7 +93,6 @@ public class AuthController {
 
     @GetMapping("/currently-logged-user")
     public ResponseEntity<UserResponse> loggedUser(Authentication authentication) {
-        System.out.println("loggedUserrrr");
         User user = userService.getLoggedUser(authentication);
         if (user == null) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);

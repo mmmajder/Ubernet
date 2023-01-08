@@ -1,10 +1,12 @@
 <div style="padding: 20px">
-  <div *ngIf="comments.length > 0" class="scrollable" style="min-height: 200px">
+  <div *ngIf="comments.length > 0" class="scrollable" style="max-height: 300px; margin-top: -20px">
     <mat-list>
       <mat-list-item *ngFor="let comment of comments">
-        <div mat-line> {{comment.adminEmail}} </div>
-        <div mat-line style="font-size: 13px"> {{comment.content}} </div>
-        <div mat-line style="font-size: 13px"> {{comment.date}} </div>
+        <div mat-line>
+          <span style="font-size: 14px; font-weight: 500"> {{comment.adminEmail}} </span>&nbsp;&nbsp;&nbsp;
+          <span style="font-size: 12px; color: var(--gray); font-weight: 400"> {{formatTime(comment.time)}} </span>
+        </div>
+        <div mat-line> {{comment.content}} </div>
         <mat-divider></mat-divider>
       </mat-list-item>
     </mat-list>
@@ -13,7 +15,8 @@
     <img src="assets/no-comments.png" style="height: 250px" alt="no-reservations">
   </mat-card-content>
   <div style="margin-top: 10px">
-    <button mat-stroked-button color="warn" style="width: 49%" (click)="blockThisUser()">Block this user</button>
+    <button mat-stroked-button color="warn" *ngIf="!blocked" style="width: 49%" (click)="blockThisUser()">Block this user</button>
+    <button mat-stroked-button color="warn" *ngIf="blocked" style="width: 49%" (click)="unblockThisUser()">Unblock this user</button>
     <button mat-stroked-button style="width: 49%; float: right" (click)="commentSectionVisible = true">
       Leave a comment
     </button>
@@ -22,9 +25,11 @@
     <mat-form-field style="width: 100%; max-height: 150px; margin-top: 10px; margin-bottom: -10px"
                     appearance="outline">
       <mat-label>Comment</mat-label>
-      <textarea matInput [ngModel]="content" placeholder="Ex. This driver is..."></textarea>
+      <textarea matInput [(ngModel)]="content" placeholder="Ex. This driver is..."></textarea>
       <mat-error *ngIf="commentFormControl.hasError('required')">You can't leave an empty comment</mat-error>
     </mat-form-field>
-    <button [disabled]="content.length == 0" mat-raised-button color="primary" style="width: 100%" (click)="leaveAComment()">Comment</button>
+    <button mat-raised-button color="primary" style="width: 100%"
+            (click)="leaveAComment()">Comment
+    </button>
   </div>
 </div>

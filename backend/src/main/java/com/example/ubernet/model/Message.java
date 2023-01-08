@@ -1,5 +1,6 @@
 package com.example.ubernet.model;
 
+import com.example.ubernet.dto.MessageFromClient;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -17,8 +18,7 @@ public class Message {
     @Column(unique = true)
     private long id;
 
-    @ManyToOne
-    private User client;
+    private String clientEmail;
     private String adminEmail;
     private boolean isSentByAdmin; // for easier filtering in repos
 
@@ -27,11 +27,20 @@ public class Message {
 
     private Boolean isDeleted = false;
 
-    public Message(User client, String adminEmail, boolean isSentByAdmin, String content){
-        this.client = client;
+    public Message(String clientEmail, String adminEmail, boolean isSentByAdmin, String content){
+        this.clientEmail = clientEmail;
         this.adminEmail = adminEmail;
         this.isSentByAdmin = isSentByAdmin;
         this.content = content;
+        this.time = LocalDateTime.now();
+        this.isDeleted = false;
+    }
+
+    public Message(MessageFromClient messageFromClient){
+        this.clientEmail = messageFromClient.getClientEmail();
+        this.adminEmail = messageFromClient.getAdminEmail();
+        this.isSentByAdmin = messageFromClient.isSentByAdmin();
+        this.content = messageFromClient.getContent();
         this.time = LocalDateTime.now();
         this.isDeleted = false;
     }

@@ -18,6 +18,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   @Input() estimations: MapSearchEstimations
   @Output() addPinsToMap = new EventEmitter<Position[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
+  @Output() optimizeByPrice = new EventEmitter()
+  @Output() optimizeByTime = new EventEmitter()
   // carType: string;
   carTypes: string[];
   canOptimize: boolean = true;
@@ -178,8 +180,12 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
 
-  optimizeByPrice() {
+  optimizePrice() {
+    this.optimizeByPrice.emit()
+  }
 
+  optimizeTime() {
+    this.optimizeByTime.emit()
   }
 
   reserveRide() {

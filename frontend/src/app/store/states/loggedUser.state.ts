@@ -15,6 +15,7 @@ import {UserService} from "../../services/user.service";
     role: '',
     email: '',
     city: '',
+    blocked: false
   }
 })
 @Injectable()
@@ -33,7 +34,8 @@ export class LoggedUserState {
           phoneNumber: user.phoneNumber,
           city: user.city,
           role: user.role,
-          email: user.email
+          email: user.email,
+          blocked: user.blocked
         });
       })
     );

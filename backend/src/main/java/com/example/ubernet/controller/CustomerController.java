@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -23,6 +24,11 @@ public class CustomerController {
     @GetMapping("/get-number-of-tokens/{email}")
     public double getNumberOfTokens(@PathVariable String email) {
         return customerService.findByEmail(email).getNumberOfTokens();
+    }
+
+    @GetMapping("/getCustomersEmails")
+    public ArrayList<String> getCustomersEmails() {
+        return customerService.getCustomersEmails();
     }
 
 }

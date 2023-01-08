@@ -9,8 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DTOMapper {
-    private static UserService userService;
-    private static CarService carService;
     public static User getUser(CreateUserDTO userDTO) {
         User user = new User();
         user.setName(userDTO.getName());
@@ -51,6 +49,7 @@ public class DTOMapper {
         userResponse.setRole(user.getRole());
         userResponse.setSurname(user.getSurname());
         userResponse.setPhoneNumber(user.getPhoneNumber());
+        userResponse.setBlocked(user.getBlocked());
         return userResponse;
     }
 
@@ -58,6 +57,10 @@ public class DTOMapper {
         CarResponse carResponse = new CarResponse();
         carResponse.setCarType(car.getCarType());
         carResponse.setDriver(car.getDriver());
+        PositionDTO positionDTO = new PositionDTO();
+        positionDTO.setX(car.getPosition().getX());
+        positionDTO.setY(car.getPosition().getY());
+        carResponse.setPosition(positionDTO);
         return carResponse;
     }
 
@@ -102,7 +105,37 @@ public class DTOMapper {
     public static List<ActiveCarResponse> getListActiveCarResponse(List<Car> cars) {
         List<ActiveCarResponse> carResponses = new ArrayList<>();
         for (Car car : cars) {
-            carResponses.add(carService.getActiveAvailableCar(car));
+            carResponses.add(getActiveAvailableCar(car));
+        }
+        return carResponses;
+    }
+
+    private static ActiveCarResponse getActiveAvailableCar(Car car) {
+        ActiveCarResponse activeAvailableCarResponse = new ActiveCarResponse();
+        activeAvailableCarResponse.setCarId(car.getId());
+        activeAvailableCarResponse.setDriverEmail(car.getDriver().getEmail());
+        activeAvailableCarResponse.setCurrentPosition(car.getPosition());
+        activeAvailableCarResponse.setCurrentRide(car.getCurrentRide());
+        return activeAvailableCarResponse;
+    }
+
+    public static List<Position> getPositions(List<List<Double>> positionsDTO) {
+        List<Position> positions = new ArrayList<>();
+        for (List<Double> pos :
+                positionsDTO) {
+            Position position = new Position();
+            position.setX(pos.get(0));
+            position.setY(pos.get(1));
+            positions.add(position);
+        }
+        return positions;
+    }
+
+    public static List<CarResponse> getListCarResponse(List<Car> cars) {
+        List<CarResponse> carResponses = new ArrayList<>();
+        for (Car car :
+                cars) {
+            carResponses.add(getCarResponse(car));
         }
         return carResponses;
     }

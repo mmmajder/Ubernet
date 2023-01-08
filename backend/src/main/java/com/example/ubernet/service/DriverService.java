@@ -1,10 +1,7 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.DriverDto;
-import com.example.ubernet.model.Car;
-import com.example.ubernet.model.Driver;
-import com.example.ubernet.model.DriverDailyActivity;
-import com.example.ubernet.model.User;
+import com.example.ubernet.model.*;
 import com.example.ubernet.repository.DriverRepository;
 import com.example.ubernet.utils.EntityMapper;
 import lombok.AllArgsConstructor;
@@ -12,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 @Service
@@ -63,8 +61,13 @@ public class DriverService {
                     .city(driver.getCity())
                     .phoneNumber(driver.getPhoneNumber())
                     .isWorking(driver.getDriverDailyActivity().getIsActive())
+                    .blocked(driver.getBlocked())
                     .build());
         }
         return drivers;
+    }
+
+    public ArrayList<String> getDriversEmails() {
+        return (ArrayList<String>) driverRepository.findAll().stream().map(Driver::getEmail).collect(Collectors.toList());
     }
 }

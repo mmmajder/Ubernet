@@ -19,4 +19,8 @@ export class DriversService {
     return this.http.get<Driver[]>(this.driverUrl + "/get-drivers", AuthService.getHttpOptions());
   }
 
+  getDriversEmails(): Observable<string[]> {
+    return this.http.get<string[]>(this.driverUrl + "/getDriversEmails", AuthService.getHttpOptions());
+  }
+
 }

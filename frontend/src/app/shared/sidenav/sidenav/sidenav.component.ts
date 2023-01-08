@@ -5,6 +5,7 @@ import {Store} from "@ngxs/store";
 import {Router} from "@angular/router";
 import {User} from "../../../model/User";
 import {CustomersService} from "../../../services/customers.service";
+import {ImageService} from "../../../services/image.service";
 
 @Component({
   selector: 'app-sidenav',
@@ -20,20 +21,34 @@ export class SidenavComponent implements OnInit {
   @Input() currentPage: string = 'dashboard';
   numberOfTokens: number = 0;
 
+  public profilePictureSrc:string;
+  private hasRequestedProfilePicture:boolean = false;
+  public static _this:any;
+
   someMethod() {
     this.trigger?.openMenu();
   }
 
-  constructor(private store: Store, private router: Router, private customerService: CustomersService) {
+  constructor(private store: Store, private router: Router, private customerService: CustomersService, private imageService:ImageService) {
     this.store.select(state => state.loggedUser).subscribe({
       next: (user) => {
         this.user = user;
         this.setNumberOfTokens();
+
       }
     })
+    SidenavComponent._this = this;
   }
 
   ngOnInit(): void {
+
+  }
+
+  ngDoCheck():void {
+    if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture){
+      this.hasRequestedProfilePicture = true;
+      this.getProfilePicture();
+    }
   }
 
   setNumberOfTokens() {
@@ -42,6 +57,21 @@ export class SidenavComponent implements OnInit {
         next: value => this.numberOfTokens = value
       })
     }
+  }
+
+  private getProfilePicture():void{
+    this.imageService.getProfileImage(this.user.email)
+      .subscribe((encodedImage: any) => {
+        console.log(encodedImage);
+        if (encodedImage === null)
+          this.profilePictureSrc = "assets/taxi.jpg";
+        else
+          this.profilePictureSrc = `data:image/jpeg;base64,${encodedImage.data}`;
+      });
+  }
+
+  public static changeProfilePicture(profilePictureSrc:string): void{
+    SidenavComponent._this.profilePictureSrc = profilePictureSrc;
   }
 
   toggle() {

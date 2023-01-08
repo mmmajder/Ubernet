@@ -1,4 +1,15 @@
-import {Component, OnInit} from '@angular/core';
+import {
+  Component,
+  Input,
+  OnInit,
+  Output,
+  EventEmitter,
+  SimpleChanges,
+  IterableDiffer, IterableDiffers
+} from '@angular/core';
+import {Message} from "../../../../model/Message";
+import {Chat} from "../../../../model/Chat";
+import {ImageService} from "../../../../services/image.service";
 
 @Component({
   selector: 'app-list-of-chats',
@@ -6,36 +17,53 @@ import {Component, OnInit} from '@angular/core';
   styleUrls: ['./list-of-chats.component.css']
 })
 export class ListOfChatsComponent implements OnInit {
-  chats = [{
-      "profileImage": "assets/taxi.jpg",
-      "name": "Pera Peric",
-      "lastMessage": "E imao sam pitanje...",
-    },
-    {
-      "profileImage": "assets/taxi.jpg",
-      "name": "Pera Peric",
-      "lastMessage": "E imao sam pitanje..."
-    },
-    {
-      "profileImage": "assets/taxi.jpg",
-      "name": "Pera Peric",
-      "lastMessage": "E imao sam pitanje..."
-    },
-    {
-      "profileImage": "assets/taxi.jpg",
-      "name": "Pera Peric",
-      "lastMessage": "E imao sam pitanje..."
-    },
-    {
-      "profileImage": "assets/taxi.jpg",
-      "name": "Pera Peric",
-      "lastMessage": "E imao sam pitanje..."
-    }];
+  @Input() chats: Chat[];
+  @Output() onChatSelection = new EventEmitter<Chat>();
+  iterableDiffer: IterableDiffer<Chat>;
+  profilePictures:  any; // {'email':'image_src'}
+  hasRequestedProfilePictures: any; // {'email': true}
 
-  constructor() {
+  constructor(private imageService: ImageService, private iterableDiffers: IterableDiffers) {
+    // this.iterableDiffer = this.iterableDiffers.find(this.chats).create();
   }
 
   ngOnInit(): void {
+    this.profilePictures = {};
+    this.hasRequestedProfilePictures = {};
+  }
+
+  ngOnDestroy(): void {
+    this.profilePictures = {};
+    this.hasRequestedProfilePictures = {};
+  }
+
+  ngDoCheck() {
+    this.getProfileImages(this.chats);
+  }
+
+  public getProfileImages(chats:Chat[]): void{
+    for (let c of chats){
+      if (!this.hasRequestedProfilePictures.hasOwnProperty(c.clientEmail) && !this.profilePictures.hasOwnProperty(c.clientEmail)){
+        this.hasRequestedProfilePictures[c.clientEmail] = true;
+        this.imageService.getProfileImage(c.clientEmail)
+          .subscribe((encodedImage: any) => {
+            if (encodedImage === null)
+              this.profilePictures[c.clientEmail] = "assets/taxi.jpg";
+            else
+              this.profilePictures[c.clientEmail] =  `data:image/jpeg;base64,${encodedImage.data}`;
+          });
+      }
+    }
+  }
+
+  selectChat(email: string) {
+    // console.log("selectChat")
+    for (let c of this.chats){
+      if (c.clientEmail === email){
+        this.onChatSelection.emit(c);
+        console.log("emit(chat) for " + email)
+      }
+    }
   }
 
 }

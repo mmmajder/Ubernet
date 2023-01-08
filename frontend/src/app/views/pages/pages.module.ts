@@ -18,11 +18,15 @@ import {AdminModule} from "../admin/admin.module";
 import {CustomerModule} from "../customer/customer.module";
 import {DriverModule} from "../driver/driver.module";
 import { ProfileContainerComponent } from './profile-container/profile-container.component';
+import { RidesHistoryContainerComponent } from './rides-history-container/rides-history-container.component';
+import {MatSelectModule} from "@angular/material/select";
+import {AppModule} from "../../app.module";
 
 @NgModule({
   declarations: [
     DashboardContainerComponent,
-    ProfileContainerComponent
+    ProfileContainerComponent,
+    RidesHistoryContainerComponent
   ],
   imports: [
     MatToolbarModule,
@@ -42,7 +46,8 @@ import { ProfileContainerComponent } from './profile-container/profile-container
     SharedModule,
     AdminModule,
     CustomerModule,
-    DriverModule
+    DriverModule,
+    MatSelectModule
   ],
   exports: [
     DashboardContainerComponent

@@ -1,8 +1,9 @@
 import {Position} from "./Position";
+import {CurrentRide} from "./CurrentRide";
 
 export class ActiveCarResponse {
-  carId!:number;
-  driverEmail!:string;
-  destinations!:Position[];
+  carId!: number;
+  driverEmail!: string;
   currentPosition!: Position;
+  currentRide!: CurrentRide
 }

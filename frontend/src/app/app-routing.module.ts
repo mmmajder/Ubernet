@@ -9,6 +9,7 @@ import {AuthGuard} from "./auth.guard";
 import {DashboardContainerComponent} from "./views/pages/dashboard-container/dashboard-container.component";
 import {ProfileContainerComponent} from "./views/pages/profile-container/profile-container.component";
 import {VerifyRegistrationComponent} from "./views/verify/verify-registration/verify-registration.component";
+import {RidesHistoryContainerComponent} from "./views/pages/rides-history-container/rides-history-container.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
@@ -17,6 +18,7 @@ const routes: Routes = [
   {path: 'chat', component: ChatContainerComponent},
   {path: 'admin/drivers', component: DriversComponent},
   {path: 'profile', component: ProfileContainerComponent},
+  {path: 'rides', component: RidesHistoryContainerComponent},
   {path: 'verify/:verificationCode', component: VerifyRegistrationComponent},
   {path: '**', component: NotFoundPageComponent},
   // {canActivate: [AuthGuard]}

@@ -110,3 +110,8 @@ mat-card {
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   border-bottom-width: 0.5px !important;
 }
+
+button:focus,
+mat-form-field {
+  outline: none;
+}

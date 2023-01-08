@@ -1,5 +1,6 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.dto.FullnameDTO;
 import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.model.*;
@@ -8,7 +9,7 @@ import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
 import com.example.ubernet.repository.UserRepository;
 import com.example.ubernet.utils.DTOMapper;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,12 +19,18 @@ import org.springframework.stereotype.Service;
 import java.sql.Timestamp;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final ProfileUpdateRequestRepository profileUpdateRequestRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private ProfileUpdateRequestRepository profileUpdateRequestRepository;
+
+    public UserService() {
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
@@ -103,5 +110,17 @@ public class UserService implements UserDetailsService {
 
     public boolean userExist(String email) {
         return findByEmail(email) != null;
+    }
+
+    public FullnameDTO getUserFullname(String email) {
+        User u = findByEmail(email);
+        return u != null ? new FullnameDTO(u.getName(), u.getSurname()) : null;
+    }
+
+    public boolean blockUser(String email, boolean block) {
+        User user = findByEmail(email);
+        user.setBlocked(block);
+        userRepository.save(user);
+        return block;
     }
 }

@@ -9,6 +9,8 @@ import {Position} from "../../../../model/Position";
 import {secondsToDhms} from "../../../../services/utils.service";
 import {RidePayService} from "../../../../services/ride-price.service";
 import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
+import * as SockJS from 'sockjs-client';
+import * as Stomp from 'stompjs';
 
 @Component({
   selector: 'app-map',
@@ -25,6 +27,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   typeOfVehicle: string
   searchedRoutes: any;
   directionRoutes: any;
+  private stompClient: any;
+  private pins: Marker[];
 
   constructor(private mapService: MapService, private ridePayService: RidePayService) {
     //TODO getlogged user
@@ -34,11 +38,32 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.searchedRoutes = [];
     this.directionRoutes = {};
     this.estimationsSearch = new MapSearchEstimations();
+    this.pins = []
   }
 
   ngOnInit(): void {
     this.initMap()
+    this.initializeWebSocketConnection();
     this.initPins()
+  }
+
+
+  initializeWebSocketConnection() {
+    let ws = new SockJS('http://localhost:8000/socket');
+    this.stompClient = Stomp.over(ws);
+    this.stompClient.debug = null;
+    let that = this;
+    this.stompClient.connect({}, function () {
+      that.openGlobalSocket();
+    });
+  }
+
+  openGlobalSocket() {
+    this.stompClient.subscribe("/map-updates/update-vehicle-position", (message: any) => {
+      console.log(message)
+      this.removePins()
+      this.initPins();
+    })
   }
 
   private initMap() {
@@ -50,17 +75,26 @@ export class MapComponent implements AfterViewInit, OnInit {
     }).addTo(this.map);
   }
 
+  removePins() {
+    if (this.pins!=[])
+      this.pins.forEach((marker: Marker) => {
+        this.map.removeLayer(marker)
+      })
+  }
+
   private initPins() {
     this.mapService.getActiveCars().subscribe((activeCars) => {
-      if (this.userRole == UserRole.CUSTOMER) {
+      if (this.userRole == UserRole.DRIVER) {
         //TODO get car of logged user
         let car = activeCars[0]
         let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
         this.initDirections(car, marker)
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
+          console.log(car)
           let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
-          this.initDirections(car, marker)
+          this.pins.push(marker);
+          // this.initDirections(car, marker)
         })
       }
     })
@@ -68,28 +102,26 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   initDirections = (car: ActiveCarResponse, marker: Marker<any>) => {
-    let positionPosition = L.latLng(car.currentPosition.y, car.currentPosition.x)
-    let destinationPosition = L.latLng(car.destinations[0].y, car.destinations[0].x)
-    this.removeRoutingControls(this.directionRoutes[car.carId])
+    let waypoints = [L.latLng(car.currentPosition.y, car.currentPosition.x)]
+    car.currentRide.destinations.forEach((destination: Position) => {
+      waypoints.push(L.latLng(destination.y, destination.x))
+    })
     let route = L.Routing.control({
-      waypoints: [
-        positionPosition,
-        destinationPosition
-      ],
+      waypoints: waypoints,
       routeWhileDragging: false,
       addWaypoints: false,
       fitSelectedRoutes: false,
-
-    }).on('routesfound', (e) => {
-      let timeSlots = this.mapService.getTimeSlots(e);   // get time when reaching new location
-      while (timeSlots.length < e.routes[0].coordinates.length) {
+    }).on('routesfound', (response) => {
+      let timeSlots = this.mapService.getTimeSlots(response);   // get time when reaching new location
+      this.mapService.saveFoundPositionsOfRide(response.routes[0].coordinates, timeSlots)
+      while (timeSlots.length < response.routes[0].coordinates.length) {
         timeSlots.push(timeSlots[timeSlots.length - 1])
       }
-      e.routes[0].coordinates.forEach((coordinate: any, index: any) => {
+      response.routes[0].coordinates.forEach((coordinate: any, index: any) => {
         setTimeout(() => {
           marker.setLatLng([coordinate.lat, coordinate.lng]);
-          if (index == e.routes[0].coordinates.length - 1) {
-            this.setNewPosition(car, marker)
+          if (index == response.routes[0].coordinates.length - 1) {
+            // this.setNewDestination(car, marker)
           }
         }, 100 * timeSlots[index])
       })
@@ -98,23 +130,23 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
 
-  setNewPosition(car: ActiveCarResponse, marker: Marker<any>): ActiveCarResponse {
-    console.log(car.carId)
-    let returnData = car;
-    this.mapService.setNewPositionOfCar(car.carId).subscribe(() => {
-      let getNewDestination = () => {
-        this.mapService.getCarById(car.carId).subscribe((newCarData) => {
-          if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
-            getNewDestination()
-          } else {
-            this.initDirections(newCarData, marker)
-          }
-        })
-      }
-      getNewDestination()
-    })
-    return returnData;
-  }
+  // setNewDestination(car: ActiveCarResponse, marker: Marker<any>): ActiveCarResponse {
+  //   console.log(car.carId)
+  //   let returnData = car;
+  //   this.mapService.setNewDestinationOfCar(car.carId).subscribe(() => {
+  //     let getNewDestination = () => {
+  //       this.mapService.getCarById(car.carId).subscribe((newCarData) => {
+  //         if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
+  //           getNewDestination()
+  //         } else {
+  //           this.initDirections(newCarData, marker)
+  //         }
+  //       })
+  //     }
+  //     getNewDestination()
+  //   })
+  //   return returnData;
+  // }
 
   removeRoutingControls = (routingControls: any) => {
     if (routingControls == undefined) {
@@ -135,12 +167,24 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
 
     const drawRoutes = () => {
+
       let route = L.Routing.control({
         waypoints: checkPoints,
+        altLineOptions: {
+          extendToWaypoints: false,
+          missingRouteTolerance: 0,
+          styles: [
+            {color: 'blue', opacity: 0.5}
+          ],
+        },
+
         routeWhileDragging: true,
         addWaypoints: false,
         showAlternatives: true,
         useZoomParameter: false,
+
+        // geocoder: L.control.Geocode.nominatim()
+
       }).on('routesfound', (response) => {
         let route = response.routes[0]
         this.totalTime = route.summary.totalTime
@@ -149,7 +193,12 @@ export class MapComponent implements AfterViewInit, OnInit {
         if (this.typeOfVehicle != undefined) {
           this.calculatePrice()
         }
-      }).addTo(this.map)
+      })
+        .on('routeselected', function (e) {
+          var route = e.route
+          console.log(route)
+        })
+        .addTo(this.map)
       this.searchedRoutes.push(route)
       // }
     }
@@ -194,9 +243,17 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   setSelectedCarType(carType: string) {
     this.typeOfVehicle = carType
-    console.log("ASD")
-    if (this.estimationsSearch.time!=undefined) {
+    if (this.estimationsSearch.time != undefined) {
       this.calculatePrice()
     }
+  }
+
+  optimizeRouteByPrice() {
+    console.log(this.searchedRoutes)
+    this.mapService.optimizeRouteByPrice()
+  }
+
+  optimizeRouteByTime() {
+
   }
 }

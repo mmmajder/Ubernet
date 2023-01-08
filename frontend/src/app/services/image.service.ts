@@ -25,10 +25,11 @@ export class ImageService {
     let formData = new FormData();
     formData.append("file", file);
 
-    return this.http.post<Object>(this.imageUrl + "/" + email, formData, AuthService.getHttpOptions());
+    return this.http.post<Object>(this.imageUrl + "/" + email, formData, this.httpOptions); // do not change for AuthService.getHttpOptions() because of 'Content-Type' header
   }
 
   public getProfileImage(email: string) {
+    console.log("getProfileImage service")
     return this.http.get(this.imageUrl + "/" + email, this.httpOptions);
   }
 }

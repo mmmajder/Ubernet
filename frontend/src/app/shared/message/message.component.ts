@@ -1,4 +1,5 @@
 import {Component, Input, OnInit} from '@angular/core';
+import {Message} from "../../model/Message";
 
 @Component({
   selector: 'app-message',
@@ -6,12 +7,34 @@ import {Component, Input, OnInit} from '@angular/core';
   styleUrls: ['./message.component.css']
 })
 export class MessageComponent implements OnInit {
-  @Input() message: any;
+  @Input() message: Message;
+  @Input() isUserAdmin:boolean;
+  isSentByTheUser:boolean; // depending upon if the message was sent or received the message will be rendered on right or left side of the chat
   hideTime: boolean = true;
 
-  constructor() { }
+  constructor() {
+
+  }
 
   ngOnInit(): void {
+    // console.log("ispisuje se nova poruka")
+    // console.log(this.message);
+    this.determineIfMessageWasSentOrReceived();
+
+    // if (this.isSentByTheUser){
+    //   console.log("generisem poslatu poruku")
+    // } else {
+    //   console.log("generisem primljenu poruku")
+    // }
+    //
+    // console.log(this.message);
+  }
+
+  determineIfMessageWasSentOrReceived(): void {
+    this.isSentByTheUser = false;
+    if (this.message.sentByAdmin === this.isUserAdmin){
+      this.isSentByTheUser = true;
+    }
   }
 
 }

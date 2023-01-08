@@ -5,6 +5,7 @@ import {Customer} from "../../../model/User";
 import {CurrentlyLogged, UpdateCustomerData} from "../../../store/actions/loggedUser.actions";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ImageService} from "../../../services/image.service";
+import {SidenavComponent} from "../../sidenav/sidenav/sidenav.component";
 
 @Component({
   selector: 'app-profile-data',
@@ -79,6 +80,7 @@ export class ProfileDataComponent implements OnInit {
         .subscribe((encodedImage: any) => {
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
           this.resetFileUploader();
+          SidenavComponent.changeProfilePicture(`data:image/jpeg;base64,${encodedImage.data}`);
         });
     }
   }

@@ -22,10 +22,11 @@ export class CommentsService {
 
   public addComments(userEmail: string, adminEmail: string, content: string): Observable<Object> {
     let body = {
+      'userEmail': userEmail,
       'adminEmail': adminEmail,
       'content': content
     }
-    return this.http.post<Object>(this.commentsUrl + "/add-comment/" + userEmail, body, AuthService.getHttpOptions());
+    return this.http.post<Object>(this.commentsUrl + "/add-comment", body, AuthService.getHttpOptions());
   }
 
 }

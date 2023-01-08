@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {ActiveCarResponse} from "../model/ActiveCarResponse";
+import {Coordinate} from "../model/Coordinate";
 
 @Injectable({
   providedIn: 'root'
@@ -25,12 +26,20 @@ export class MapService {
     return this.http.get<ActiveCarResponse[]>(this.mapUrl + "/active", this.httpOptions);
   }
 
-  public setNewPositionOfCar(carId: number) {
+  public setNewDestinationOfCar(carId: number) {
     return this.http.put<ActiveCarResponse>(this.mapUrl + "/position/", carId, this.httpOptions);
   }
 
   public getCarById(carId: number): Observable<ActiveCarResponse> {
     return this.http.get<ActiveCarResponse>(this.mapUrl + "/" + carId, this.httpOptions);
+  }
+
+  public saveFoundPositionsOfRide(coordinates: Coordinate[], timeSlots: number[]) {
+    const data = {
+      "coordinates": coordinates,
+      "timeSlots": timeSlots
+    }
+    return this.http.put<ActiveCarResponse>(this.mapUrl + "/save-position/", data, this.httpOptions);
   }
 
 
@@ -90,5 +99,9 @@ export class MapService {
   findAddress(address: string) {
     var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + address
     return this.http.get(url);
+  }
+
+  public optimizeRouteByPrice() {
+    // return this.http.put<ActiveCarResponse>(this.mapUrl + "/position/", carId, this.httpOptions);
   }
 }

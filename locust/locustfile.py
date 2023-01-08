@@ -1,8 +1,11 @@
 from random import random
+from turtledemo.planet_and_moon import G
 
-import locust
 from locust import HttpUser, task, between, run_single_user
-import json
+
+import osmnx as ox
+import networkx as nx
+
 
 class MyTaskSet(HttpUser):
     # host = "http://localhost:8000"
@@ -14,13 +17,52 @@ class MyTaskSet(HttpUser):
 
     @task
     def getCurrentState(self):
-        response = self.client.get("/car/active-available")
-        print("Response status code:", response.status_code)
-        for car in response.json():
-            if (car["destinations"][0]["x"] == car["currentPosition"]["x"]) and \
-                    (car["destinations"][0]["y"] == car["currentPosition"]["y"]):
-                new_destination = {"carId": car["carId"], "newDestinations": [{"y": car["destinations"][-1]["y"] + (random() - 0.5) / 200,
-                                                                    "x": car["destinations"][-1]["x"] + (random() - 0.5) / 200}]}
-                self.client.put("/car/new-destination", json=new_destination)
+        activeAvailableCars = self.client.get("/car/active-available")
+        for car in activeAvailableCars.json():
+            if not car["currentRide"]:
+                # while True:
+                print(car["currentPosition"])
+                position = car["currentPosition"]["y"], car["currentPosition"]["x"]
+                graph = ox.graph_from_point(position, dist=1000, network_type='drive', simplify=False)
+                graph = ox.add_edge_speeds(graph)
+                graph = ox.add_edge_travel_times(graph)
+                orig_node = ox.nearest_nodes(graph,
+                                             car["currentPosition"]["x"],
+                                             car["currentPosition"]["y"])
+                print(orig_node)
+
+                destx = car["currentPosition"]["x"] + (random() - 0.5) / 200
+                desty = car["currentPosition"]["y"] + (random() - 0.5) / 200
+                print(destx)
+                print(desty)
+                dest_node = ox.nearest_nodes(graph, destx, desty)
+                print(dest_node)
+
+                shortest_route = nx.shortest_path(graph,
+                                                  orig_node,
+                                                  dest_node,
+                                                  weight='time')
+
+                print(shortest_route)
+
+                print("Conversion")
+                points = []
+                for node in shortest_route:
+                    print(graph.nodes[node])
+                    latitude = graph.nodes[node]['x']
+                    longitude = graph.nodes[node]['y']
+                    points.append({'latitude': latitude, 'longitude': longitude})
+                print(points)
+
+                print(shortest_route)
+                for i in range(len(shortest_route) - 1):
+                    node1 = shortest_route[i]
+                    node2 = shortest_route[i + 1]
+                    edge = graph[node1][node2]  # get the edge connecting the two nodes
+                    print("edge")
+                    print(edge)
+                    points[i]['time'] = edge[0]['length'] / 50
+
+                print(points)
 
     wait_time = between(0.5, 10)

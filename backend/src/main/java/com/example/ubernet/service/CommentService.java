@@ -1,5 +1,6 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.dto.CommentDTO;
 import com.example.ubernet.model.Comment;
 import com.example.ubernet.repository.CommentRepository;
 import lombok.AllArgsConstructor;
@@ -17,11 +18,11 @@ public class CommentService {
         return commentRepository.findByUserEmail(userEmail);
     }
 
-    public void addComment(String userEmail, String adminEmail, String content) {
+    public void addComment(CommentDTO commentDTO) {
         commentRepository.save(Comment.builder()
-                .userEmail(userEmail)
-                .adminEmail(adminEmail)
-                .content(content)
+                .userEmail(commentDTO.getUserEmail())
+                .adminEmail(commentDTO.getAdminEmail())
+                .content(commentDTO.getContent())
                 .time(LocalDateTime.now())
                 .build());
     }

@@ -21,8 +21,10 @@ public class Car {
     private Boolean deleted=false;
     @OneToOne
     private Position position;
-    @OneToMany
-    private List<Position> destinations;
+
+    @OneToOne
+    private CurrentRide currentRide;
+
     @OneToOne
     private CarType carType;
     private Boolean isAvailable;
@@ -31,4 +33,7 @@ public class Car {
     private Driver driver;
     private Boolean allowsBaby;
     private Boolean allowsPet;
+    private String plates;
+    private String name;
+
 }
