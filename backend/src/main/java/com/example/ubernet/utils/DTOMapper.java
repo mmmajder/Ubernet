@@ -2,8 +2,6 @@ package com.example.ubernet.utils;
 
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.*;
-import com.example.ubernet.service.CarService;
-import com.example.ubernet.service.UserService;
 
 import java.util.ArrayList;
 import java.util.List;

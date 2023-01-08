@@ -12,7 +12,6 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -60,7 +59,6 @@ public class CarController {
     }
 
 
-
     @PutMapping("/position")
     public ResponseEntity<ActiveCarResponse> reachedDestination(@RequestBody Long carId) {
         ActiveCarResponse car = carService.reachedDestination(carId);
@@ -106,7 +104,6 @@ public class CarController {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
-
     //New
     @PutMapping("/new-current_ride")
     public ResponseEntity<CarResponse> setNewCurrentRideForCar(@RequestBody SetNewCurrentRideForCarDTO setNewCurrentRideForCarDTO) {
@@ -135,5 +132,4 @@ public class CarController {
         this.simpMessagingTemplate.convertAndSend("/map-updates/update-vehicle-position", carsResponse);
         return ResponseEntity.ok(carsResponse);
     }
-
 }

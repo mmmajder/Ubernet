@@ -132,7 +132,7 @@ public class CarService {
         return getActiveAvailableCar(car);
     }
 
-    public Car getCarByDriverEmail(String email) {
+    public Car getCarByDriverEmail(String email){
         Driver driver = (Driver) userService.findByEmail(email);
         Car car = carRepository.findByDriver(driver);
 

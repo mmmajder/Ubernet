@@ -28,6 +28,7 @@ import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import { RideDetailsDialogComponent } from './ride-details-dialog/ride-details-dialog.component';
 import {MatChipsModule} from "@angular/material/chips";
+import {MatExpansionModule} from "@angular/material/expansion";
 
 @NgModule({
   declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent],
@@ -49,7 +50,8 @@ import {MatChipsModule} from "@angular/material/chips";
         MatTableModule,
         MatPaginatorModule,
         MatSortModule,
-        MatChipsModule
+        MatChipsModule,
+        MatExpansionModule
     ],
   exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })

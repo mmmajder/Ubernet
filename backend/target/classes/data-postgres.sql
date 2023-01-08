@@ -43,21 +43,12 @@ values (false, 45.267136, 19.833549),
        (false, 45.287136, 19.833549),
        (false, 45.287136, 19.843549);
 
--- insert into current_ride (deleted, time_of_start_of_ride)
--- values (false, now()::timestamp),
---        (false, now()::timestamp),
---        (false, now()::timestamp);
 
 -- insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
 insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name)
 values (false, true, 1, 1, true, true, 'BMW', 'NS2FAST4U'),
        (false, true, 2, 3, true, true, 'Audi', 'NS-GLAMOC1'),
        (false, true, 3, 5, true, true, 'Yugo', 'BTACAB1312');
-
--- insert into car_destinations(car_id, destinations_id)
--- values (1, 2),
---        (2, 4),
---        (3, 6);
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                     driver_daily_activity_id, car_id)

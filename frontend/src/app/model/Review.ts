@@ -7,6 +7,13 @@ export class Review {
   date: string;
 }
 
+export class RideReview {
+  id: number;
+  customer: SimpleUser;
+  rating: number;
+  comment: string;
+}
+
 export class Comment {
   userEmail: string;
   adminEmail: string;
