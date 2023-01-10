@@ -11,6 +11,7 @@ import {RidePayService} from "../../../../services/ride-price.service";
 import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
 import * as SockJS from 'sockjs-client';
 import * as Stomp from 'stompjs';
+import {RideService} from "../../../../services/ride.service";
 
 @Component({
   selector: 'app-map',
@@ -29,8 +30,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   directionRoutes: any;
   private stompClient: any;
   private pins: Marker[];
+  selectedRoute: any;
 
-  constructor(private mapService: MapService, private ridePayService: RidePayService) {
+  constructor(private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService) {
     //TODO getlogged user
     this.userRole = UserRole.CUSTOMER;
     this.searchPins = [];
@@ -60,10 +62,38 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   openGlobalSocket() {
     this.stompClient.subscribe("/map-updates/update-vehicle-position", (message: any) => {
-      console.log(message)
       this.removePins()
       this.initPins();
     })
+    this.stompClient.subscribe("/map-updates/update-route-for-selected-car", (message: any) => {
+      console.log(JSON.parse(message.body))
+      console.log("petar")
+      this.createRouteForSelectedCar(JSON.parse(message.body))
+    })
+  }
+
+  createRouteForSelectedCar(ride: any) {
+    let checkPoints: LatLng[] = []
+    let start = ride.driver.car.position
+    let end = ride.driver.car.currentRide.positions[0].position
+    checkPoints.push(L.latLng(start.y, start.x))
+    checkPoints.push(L.latLng(end.y, end.x))
+    console.log(ride.driver.car.currentRide.positions)
+    console.log(start)
+    console.log(end)
+    let route = L.Routing.control({
+      waypoints: checkPoints,
+      altLineOptions: {
+        extendToWaypoints: false,
+        missingRouteTolerance: 0,
+      },
+    }).on('routesfound', (response) => {
+      let route = response.routes[0]
+      this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe(() => {
+        console.log("STIGAO sam")
+      })
+    }).addTo(this.map)
+
   }
 
   private initMap() {
@@ -76,13 +106,14 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   removePins() {
-    if (this.pins!=[])
+    if (this.pins != [])
       this.pins.forEach((marker: Marker) => {
         this.map.removeLayer(marker)
       })
   }
 
-  private initPins() {
+
+  initPins() {
     this.mapService.getActiveCars().subscribe((activeCars) => {
       if (this.userRole == UserRole.DRIVER) {
         //TODO get car of logged user
@@ -91,7 +122,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.initDirections(car, marker)
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
-          console.log(car)
+          console.log(car.currentPosition.y, car.currentPosition.x)
           let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
           this.pins.push(marker);
           // this.initDirections(car, marker)
@@ -130,23 +161,23 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
 
-  // setNewDestination(car: ActiveCarResponse, marker: Marker<any>): ActiveCarResponse {
-  //   console.log(car.carId)
-  //   let returnData = car;
-  //   this.mapService.setNewDestinationOfCar(car.carId).subscribe(() => {
-  //     let getNewDestination = () => {
-  //       this.mapService.getCarById(car.carId).subscribe((newCarData) => {
-  //         if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
-  //           getNewDestination()
-  //         } else {
-  //           this.initDirections(newCarData, marker)
-  //         }
-  //       })
-  //     }
-  //     getNewDestination()
-  //   })
-  //   return returnData;
-  // }
+// setNewDestination(car: ActiveCarResponse, marker: Marker<any>): ActiveCarResponse {
+//   console.log(car.carId)
+//   let returnData = car;
+//   this.mapService.setNewDestinationOfCar(car.carId).subscribe(() => {
+//     let getNewDestination = () => {
+//       this.mapService.getCarById(car.carId).subscribe((newCarData) => {
+//         if (newCarData.currentPosition.id === newCarData.destinations[0].id) {
+//           getNewDestination()
+//         } else {
+//           this.initDirections(newCarData, marker)
+//         }
+//       })
+//     }
+//     getNewDestination()
+//   })
+//   return returnData;
+// }
 
   removeRoutingControls = (routingControls: any) => {
     if (routingControls == undefined) {
@@ -158,7 +189,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     })
   }
 
-  drawSearchedRoute(positions: Position[]) {
+  drawSearchedRoute(positions
+                      :
+                      Position[]
+  ) {
     this.removeRoutingControls(this.searchedRoutes)
 
     let checkPoints: LatLng[] = []
@@ -167,7 +201,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
 
     const drawRoutes = () => {
-
       let route = L.Routing.control({
         waypoints: checkPoints,
         altLineOptions: {
@@ -194,9 +227,11 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.calculatePrice()
         }
       })
-        .on('routeselected', function (e) {
-          var route = e.route
+        .on('routeselected', (e) => {
+          let route = e.route
+          console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
           console.log(route)
+          this.selectedRoute = e.route
         })
         .addTo(this.map)
       this.searchedRoutes.push(route)
@@ -232,7 +267,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   });
 
 
-  ngAfterViewInit(): void {
+  ngAfterViewInit()
+    :
+    void {
   }
 
   calculatePrice() {
@@ -241,7 +278,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     })
   }
 
-  setSelectedCarType(carType: string) {
+  setSelectedCarType(carType
+                       :
+                       string
+  ) {
     this.typeOfVehicle = carType
     if (this.estimationsSearch.time != undefined) {
       this.calculatePrice()
@@ -256,4 +296,5 @@ export class MapComponent implements AfterViewInit, OnInit {
   optimizeRouteByTime() {
 
   }
+
 }

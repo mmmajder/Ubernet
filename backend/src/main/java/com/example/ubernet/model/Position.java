@@ -19,4 +19,5 @@ public class Position {
     private Double x;
     private Double y;
     private Boolean deleted = false;
+
 }

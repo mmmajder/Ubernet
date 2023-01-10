@@ -1,9 +1,6 @@
 <mat-card class="destination-input">
   <mat-stepper labelPosition="bottom" [linear]="true" #stepper>
     <mat-step [stepControl]="firstFormGroup">
-      <!--      <mat-step [stepControl]="firstFormGroup">-->
-      <!--Step 1-->
-      <!--      <form [formGroup]="firstFormGroup">-->
       <ng-template matStepLabel>Direction</ng-template>
       <!--      <mat-card-header>-->
       <div>
@@ -62,7 +59,6 @@
                       [formGroup]="carTypeFormGroup">
         <mat-label>Choose car type</mat-label>
         <mat-select formControlName="carType" (ngModelChange)="changeCarType($event)">
-          <!--          <mat-select formControlName="carType" (ngModelChange)="changeCarType($event)">-->
           <mat-option *ngFor="let type of carTypes" [value]="type">{{type}}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -132,7 +128,8 @@
       <div style="overflow-y:scroll; max-height: 300px; margin-bottom: 10px">
         <div>
           <span>Directions:</span>
-          <div appearance="outline" *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i"
+          <div appearance="outline"
+               *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i"
                style="width: 100%">{{i + 1}} {{destination.value}}
           </div>
         </div>
@@ -147,23 +144,22 @@
         <span *ngIf="hasChild==true">Children seat is required. </span>
         <span *ngIf="hasPet==true">Pet transport is required.</span>
         <div style="margin-top: 10px">
+          <span>When:</span>
+          <span class="default-time-example">
+            <input aria-label="default time" [ngxTimepicker]="defaultValue" [(ngModel)]="timeOfRide" readonly>
+              <ngx-material-timepicker #defaultValue></ngx-material-timepicker>
+          </span>
         </div>
       </div>
       <span>
         <button mat-raised-button color="primary" style="width: 49%"
                 (click)="requestRide()">Request ride</button>
-        <button mat-stroked-button color="primary" style="width: 49%; float: right"
-                (click)="reserveRide()">Reserve ride</button>
+<!--        <button mat-stroked-button color="primary" style="width: 49%; float: right"-->
+<!--                (click)="reserveRide()">Reserve ride</button>-->
         </span>
       <button mat-button matStepperPrevious
               style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Back
       </button>
-      <!--            <span style="align-content: center">-->
-      <!--                            <button mat-raised-button color="primary" style="width: 49%"-->
-      <!--                                    (click)="requestRide()">Request ride</button>-->
-      <!--                            <button mat-stroked-button color="primary" style="width: 49%; float: right"-->
-      <!--                                    (click)="reserveRide()">Reserve ride</button>-->
-      <!--                    </span>-->
     </mat-step>
   </mat-stepper>
   <div
@@ -173,12 +169,5 @@
       can estimate price and time of your ride</p>
     <p *ngIf="estimations.time!=undefined"> Estimated time: {{estimations.time}}</p>
     <p *ngIf="estimations.price!=undefined"> Estimated price: {{estimations.price}}</p>
-
-    <!--    <span style="align-content: center">-->
-    <!--                      <button mat-raised-button color="primary" style="width: 49%"-->
-    <!--                              (click)="requestRide()">Request ride</button>-->
-    <!--                      <button mat-stroked-button color="primary" style="width: 49%; float: right"-->
-    <!--                              (click)="reserveRide()">Reserve ride</button>-->
-    <!--              </span>-->
   </div>
 </mat-card>

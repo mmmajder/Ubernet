@@ -7,6 +7,10 @@ import {PositionDTO} from "../../../../model/PositionDTO";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {Ride} from "../../../../model/Ride";
+import {RideCreate} from "../../../../model/RideCreate";
+import {RideService} from "../../../../services/ride.service";
+import {FriendEmailDTO} from "../../../../model/FriendEmailDTO";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -16,10 +20,12 @@ import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angul
 export class SearchDirectionsCustomerComponent implements OnInit {
   positions: (Position | null)[];
   @Input() estimations: MapSearchEstimations
+  @Input() selectedRoute: any
   @Output() addPinsToMap = new EventEmitter<Position[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
   @Output() optimizeByTime = new EventEmitter()
+  // @Output() requestRide = new EventEmitter()
   // carType: string;
   carTypes: string[];
   canOptimize: boolean = true;
@@ -32,13 +38,15 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   carTypeFormGroup: any;
   secondFormGroup: FormGroup;
   friendsFormGroup: FormGroup;
+  timeOfRide: String
 
-  constructor(private mapService: MapService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+  constructor(private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = [
       // {friendEmail: ""}
     ]
     this.hasChild = false;
     this.hasPet = false;
+    this.timeOfRide = new Date().toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
   }
 
   get destinations() {
@@ -75,7 +83,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.firstFormGroup = new FormGroup({groups: this.destinationsForm});
     this.secondFormGroup = new FormGroup({groups: this.carTypeFormGroup});
     this.friendsFormGroup = new FormGroup({
-        newFriend: new FormControl("", [Validators.required, Validators.email])
+      newFriend: new FormControl("", [Validators.required, Validators.email])
     })
 
   }
@@ -100,7 +108,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     const validInput = () => {
       let isValid = true
       this.destinations.controls.forEach((destination) => {
-        if (destination.value=="") {
+        if (destination.value == "") {
           isValid = false
         }
       })
@@ -193,7 +201,24 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   requestRide() {
-
+    let route = this.selectedRoute
+    let ride = new RideCreate()
+    ride.coordinates = route.coordinates
+    ride.instructions = route.instructions
+    ride.carType = this.carType.value
+    ride.totalDistance = route.summary.totalDistance
+    ride.totalTime = route.summary.totalTime
+    ride.hasPet = this.hasPet
+    ride.hasChild = this.hasChild
+    ride.passengers = []
+    ride.reservationTime = this.timeOfRide
+    this.friends.forEach((friend: FriendEmailDTO) => {
+      ride.passengers.push(friend.friendEmail)
+    })
+    console.log(ride)
+    this.rideService.createRide(ride).subscribe((res: Ride) => {
+      console.log(res)
+    })
   }
 
   removeFriend(i: number) {

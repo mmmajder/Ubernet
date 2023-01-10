@@ -22,6 +22,7 @@ import {MatSelectModule} from "@angular/material/select";
 import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
 
 @NgModule({
   declarations: [
@@ -51,6 +52,7 @@ import {MatCheckboxModule} from "@angular/material/checkbox";
         MatSidenavModule,
         MatStepperModule,
         MatCheckboxModule,
+        NgxMaterialTimepickerModule,
     ],
     exports: [
         MapComponent,

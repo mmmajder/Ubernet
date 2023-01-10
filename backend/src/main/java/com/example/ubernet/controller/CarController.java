@@ -49,6 +49,15 @@ public class CarController {
         return ResponseEntity.ok(DTOMapper.getListActiveCarResponse(cars));
     }
 
+    @GetMapping("/active-nonavailable-new-route")
+    public ResponseEntity<List<ActiveCarResponse>> getActiveNonAvailableCarsNewRoute() {
+        List<Car> cars = carService.getActiveNonAvailableCarsNewRoute();
+        if (cars == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return ResponseEntity.ok(DTOMapper.getListActiveCarResponse(cars));
+    }
+
     @PutMapping("/new-destination")
     public ResponseEntity<CarResponse> setNewDestinationForAvailableCar(@Valid @RequestBody SetNewDestinationDTO setNewDestinationDTO) {
         Car car = carService.setNewDestination(setNewDestinationDTO);
@@ -114,17 +123,6 @@ public class CarController {
         return ResponseEntity.ok(DTOMapper.getCarResponse(car));
     }
 
-    @PutMapping("/new-position/{carId}")
-    public ResponseEntity<CarResponse> setNewPositionForCar(@PathVariable Long carId) {
-        Car car = carService.setNewPosition(carId);
-        if (car == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        CarResponse carResponse = DTOMapper.getCarResponse(car);
-        this.simpMessagingTemplate.convertAndSend("/map-updates/update-vehicle-position", carResponse);
-        return ResponseEntity.ok(carResponse);
-    }
-
     @PutMapping("/new-position")
     public ResponseEntity<List<CarResponse>> setNewPositionForCar() {
         List<Car> cars = carService.setNewPositions();
@@ -132,4 +130,5 @@ public class CarController {
         this.simpMessagingTemplate.convertAndSend("/map-updates/update-vehicle-position", carsResponse);
         return ResponseEntity.ok(carsResponse);
     }
+
 }

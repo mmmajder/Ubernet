@@ -50,6 +50,7 @@ values (false, true, 1, 1, true, true, 'BMW', 'NS2FAST4U'),
        (false, true, 2, 3, true, true, 'Audi', 'NS-GLAMOC1'),
        (false, true, 3, 5, true, true, 'Yugo', 'BTACAB1312');
 
+
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                     driver_daily_activity_id, car_id)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',

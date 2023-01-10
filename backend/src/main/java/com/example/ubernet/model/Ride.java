@@ -26,7 +26,6 @@ public class Ride {
     @OrderBy("checkPoints")
     private Route route;
 
-//    @OneToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @OneToOne
     private Payment payment;

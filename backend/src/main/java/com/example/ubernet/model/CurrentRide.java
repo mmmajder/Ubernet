@@ -20,7 +20,7 @@ public class CurrentRide {
     @Column(unique = true)
     private long id;
 
-    private Boolean deleted=false;
+    private Boolean deleted = false;
 
     @OneToMany
     private List<Position> destinations;
@@ -29,4 +29,6 @@ public class CurrentRide {
     private List<PositionInTime> positions;
 
     private LocalDateTime timeOfStartOfRide;
+
+    private boolean shouldGetRouteToClient;
 }

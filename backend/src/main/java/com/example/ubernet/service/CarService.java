@@ -3,11 +3,11 @@ package com.example.ubernet.service;
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.*;
 import com.example.ubernet.repository.CarRepository;
+import com.example.ubernet.utils.MapUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -59,13 +59,17 @@ public class CarService {
     }
 
     public List<Car> getActiveAvailableCars() {
-        List<Car> cars = carRepository.findActiveAvailableCars();
-//        List<ActiveCarResponse> carResponses = new ArrayList<>();
-//        for (Car car : cars) {
-//            carResponses.add(getActiveAvailableCar(car));
-//        }
-        return cars;
+        return carRepository.findActiveAvailableCars();
     }
+
+    public List<Car> getActiveNonAvailableCars() {
+        return carRepository.findActiveNonAvailableCars();
+    }
+
+    public List<Car> getActiveNonAvailableCarsNewRoute() {
+        return carRepository.findActiveNonAvailableCarsNewRoute();
+    }
+
 
     private ActiveCarResponse getActiveAvailableCar(Car car) {
         ActiveCarResponse activeAvailableCarResponse = new ActiveCarResponse();
@@ -132,7 +136,7 @@ public class CarService {
         return getActiveAvailableCar(car);
     }
 
-    public Car getCarByDriverEmail(String email){
+    public Car getCarByDriverEmail(String email) {
         Driver driver = (Driver) userService.findByEmail(email);
         Car car = carRepository.findByDriver(driver);
 
@@ -173,12 +177,15 @@ public class CarService {
         return currentRide;
     }
 
-    public Car setNewPosition(Long carId) {
+    public Car setNewPositionAvailableCar(Long carId) {
         Car car = findById(carId);
         if (car == null) {
             return null;
         }
         if (car.getCurrentRide() == null) {
+            return null;
+        }
+        if (car.getCurrentRide().getDestinations().size() == 0) {
             return null;
         }
         car.getCurrentRide().getDestinations().remove(0);
@@ -192,10 +199,95 @@ public class CarService {
     }
 
     public List<Car> setNewPositions() {
-        List<Car> cars = getActiveAvailableCars();
+        List<Car> cars = setNewPositionForAvailableCars();
+        cars.addAll(setNewPositionForNonAvailableCars());
+        return cars;
+    }
+
+    private List<Car> setNewPositionForNonAvailableCars() {
+        List<Car> cars = getActiveNonAvailableCars();
         for (Car car : cars) {
-            setNewPosition(car.getId());
+            setNewPositionNonAvailableCar(car.getId());
         }
         return cars;
     }
+
+    private Car setNewPositionNonAvailableCar(long carId) {
+        Car car = findById(carId);
+        if (car == null) {
+            return null;
+        }
+        if (car.getCurrentRide() == null) {
+            return null;
+        }
+        if (car.getCurrentRide().isShouldGetRouteToClient()) {
+            return null;
+        }
+        removeNonAvailableCarPositions(car);
+        save(car);
+        if (car.getCurrentRide().getPositions().size() == 0) {
+            return null;
+        }
+        car.setPosition(getNextPosition(car.getCurrentRide()).getPosition());
+        return save(car);
+    }
+
+    private PositionInTime getNextPosition(CurrentRide currentRide) {
+        double minTime = Double.POSITIVE_INFINITY;
+        PositionInTime next = null;
+        for (PositionInTime positionInTime : currentRide.getPositions()) {
+            if (positionInTime.getSecondsPast() < minTime) {
+                minTime = positionInTime.getSecondsPast();
+                next = positionInTime;
+            }
+        }
+        return next;
+    }
+
+    private void removeNonAvailableCarPositions(Car car) {
+        CurrentRide currentRide = car.getCurrentRide();
+        while (true) {
+            if (currentRide.getPositions().size() == 0) {
+                car.setIsAvailable(true);
+                save(car);
+                return;
+            }
+            PositionInTime currentPositionInTime = getNextPosition(car.getCurrentRide());
+            double pastTime = currentPositionInTime.getSecondsPast();
+            LocalDateTime finishTime = currentRide.getTimeOfStartOfRide().plusSeconds((long) pastTime);
+            if (finishTime.isBefore(LocalDateTime.now())) {
+                currentRide.getPositions().remove(currentPositionInTime);
+                currentRideService.save(currentRide);
+            } else {
+                currentRideService.save(currentRide);
+//                car.setPosition(car.getCurrentRide().getPositions().get(0).getPosition());
+//                save(car);
+                return;
+            }
+        }
+    }
+
+    private List<Car> setNewPositionForAvailableCars() {
+        List<Car> cars = getActiveAvailableCars();
+        for (Car car : cars) {
+            setNewPositionAvailableCar(car.getId());
+        }
+        return cars;
+    }
+
+    public Car getClosestFreeCar(LatLngDTO latLngDTO) {
+        List<Car> activeAvailableCars = getActiveAvailableCars();
+        Car closestCar = null;
+        double minDistance = Double.POSITIVE_INFINITY;
+        for (Car car : activeAvailableCars) {
+            double distance = MapUtils.calculateDistance(car.getPosition().getX(), car.getPosition().getY(), latLngDTO.getLat(), latLngDTO.getLng());
+            if (distance < minDistance) {
+                closestCar = car;
+                minDistance = distance;
+            }
+        }
+        return closestCar;
+    }
+
+
 }

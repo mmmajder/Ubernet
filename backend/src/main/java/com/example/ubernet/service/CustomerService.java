@@ -2,6 +2,7 @@ package com.example.ubernet.service;
 
 import com.example.ubernet.dto.LoginSocialDTO;
 import com.example.ubernet.dto.SimpleUser;
+import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.Customer;
 import com.example.ubernet.model.Role;
 import com.example.ubernet.model.User;
@@ -14,7 +15,9 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @AllArgsConstructor
@@ -72,5 +75,17 @@ public class CustomerService {
 
     public ArrayList<String> getCustomersEmails() {
         return (ArrayList<String>) customerRepository.findAll().stream().map(Customer::getEmail).collect(Collectors.toList());
+    }
+
+    public Set<Customer> getCustomersByEmails(List<String> customerEmails) {
+        Set<Customer> customers = new HashSet<>();
+        for (String email : customerEmails) {
+            Customer customer = findByEmail(email);
+            if (customer == null) {
+                throw new NotFoundException("Customer with this email does not exist");
+            }
+            customers.add(customer);
+        }
+        return customers;
     }
 }

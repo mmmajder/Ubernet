@@ -18,10 +18,20 @@ public class PositionInTime {
     @Column(unique = true)
     private long id;
 
-    private Boolean deleted=false;
+    private Boolean deleted = false;
 
-    private double secondsPassed;
+    private double secondsPast;
 
     @OneToOne
     private Position position;
+
+    @Override
+    public String toString() {
+        return "PositionInTime{" +
+                "id=" + id +
+                ", deleted=" + deleted +
+                ", secondsPast=" + secondsPast +
+                ", position=" + position +
+                '}';
+    }
 }

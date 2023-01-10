@@ -20,7 +20,7 @@ public class Route {
     @Column(unique = true)
     private long id;
 
-    private int time;
+    private Double time;
     private Double price;
     @OneToMany
     private List<Place> checkPoints;
