@@ -23,12 +23,10 @@ public class CurrentRide {
     private Boolean deleted = false;
 
     @OneToMany
-    private List<Position> destinations;
-
-    @OneToMany
     private List<PositionInTime> positions;
 
     private LocalDateTime timeOfStartOfRide;
-
+    private LocalDateTime timeOfStartOfApproachingRide;
+    private boolean isFreeRide;
     private boolean shouldGetRouteToClient;
 }

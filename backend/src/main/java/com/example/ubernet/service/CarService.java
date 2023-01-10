@@ -1,13 +1,16 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.*;
+import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.repository.CarRepository;
+import com.example.ubernet.repository.PositionInTimeRepository;
 import com.example.ubernet.utils.MapUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -19,6 +22,7 @@ public class CarService {
     private final CarTypeService carTypeService;
     private final PositionService positionService;
     private final CurrentRideService currentRideService;
+    private final PositionInTimeRepository positionInTimeRepository;
 
     public Car createCar(CreateCarDTO createCarDTO) {
         User user = userService.findByEmail(createCarDTO.getEmail());
@@ -80,30 +84,30 @@ public class CarService {
         return activeAvailableCarResponse;
     }
 
-    public Car setNewDestination(SetNewDestinationDTO setNewDestinationDTO) {
-        Optional<Car> optionalCar = carRepository.findById(setNewDestinationDTO.getCarId());
-        if (optionalCar.isEmpty()) {
-            return null;
-        }
-        return setDestination(setNewDestinationDTO, optionalCar.get());
-    }
+//    public Car setNewDestination(SetNewDestinationDTO setNewDestinationDTO) {
+//        Optional<Car> optionalCar = carRepository.findById(setNewDestinationDTO.getCarId());
+//        if (optionalCar.isEmpty()) {
+//            return null;
+//        }
+//        return setDestination(setNewDestinationDTO, optionalCar.get());
+//    }
 
-    private Car setDestination(SetNewDestinationDTO setNewDestinationDTO, Car car) {
-        for (Position position : setNewDestinationDTO.getNewDestinations()) {
-            positionService.save(position);
-        }
-        CurrentRide currentRide = new CurrentRide();
-        currentRide.setDestinations(setNewDestinationDTO.getNewDestinations());
-        currentRide.setTimeOfStartOfRide(LocalDateTime.now());
-
-        currentRideService.save(currentRide);
-//        car.setPosition(car.getCurrentRide().getPositions().get(0).getPosition());
-//        car.getCurrentRide().setDestinations(setNewDestinationDTO.getNewDestinations());
-        car.setCurrentRide(currentRide);
-        System.out.println("SET");
-        System.out.println(car.getId());
-        return carRepository.save(car);
-    }
+//    private Car setDestination(SetNewDestinationDTO setNewDestinationDTO, Car car) {
+//        for (Position position : setNewDestinationDTO.getNewDestinations()) {
+//            positionService.save(position);
+//        }
+//        CurrentRide currentRide = new CurrentRide();
+//        currentRide.setDestinations(setNewDestinationDTO.getNewDestinations());
+//        currentRide.setTimeOfStartOfRide(LocalDateTime.now());
+//
+//        currentRideService.save(currentRide);
+////        car.setPosition(car.getCurrentRide().getPositions().get(0).getPosition());
+////        car.getCurrentRide().setDestinations(setNewDestinationDTO.getNewDestinations());
+//        car.setCurrentRide(currentRide);
+//        System.out.println("SET");
+//        System.out.println(car.getId());
+//        return carRepository.save(car);
+//    }
 
 //    public Car setFuturePositions(FuturePositionsDTO futurePositionsDTO) {
 //        Car car = findById(futurePositionsDTO.getCarId());
@@ -157,43 +161,54 @@ public class CarService {
 
 
     //New
-    public Car setNewCurrentRide(List<Position> positions, Long carId) {
+    public Car setNewFreeRide(List<Position> positions, Long carId) {
         Car car = findById(carId);
         if (car == null) {
-            return null;
+            throw new NotFoundException("Car with this id does not exist");
         }
         positionService.savePositions(positions);
-        car.setCurrentRide(createNewCurrentRide(positions));
+        car.setCurrentRide(createNewFreeRide(positions));
         return save(car);
     }
 
-    public CurrentRide createNewCurrentRide(List<Position> positions) {
+    public CurrentRide createNewFreeRide(List<Position> positions) {
         CurrentRide currentRide = new CurrentRide();
         currentRide.setDeleted(false);
-//        currentRide.setPositions(positions);
+        currentRide.setPositions(createPositionsWithEmptyTime(positions));
         currentRide.setTimeOfStartOfRide(LocalDateTime.now());
-        currentRide.setDestinations(positions);
+        currentRide.setFreeRide(true);
         currentRideService.save(currentRide);
         return currentRide;
+    }
+
+    private List<PositionInTime> createPositionsWithEmptyTime(List<Position> positions) {
+        List<PositionInTime> positionInTimeList = new ArrayList<>();
+        for (Position position : positions) {
+            PositionInTime positionInTime = new PositionInTime();
+            positionInTime.setPosition(position);
+            positionInTimeList.add(positionInTime);
+            positionInTimeRepository.save(positionInTime);
+        }
+        return positionInTimeList;
     }
 
     public Car setNewPositionAvailableCar(Long carId) {
         Car car = findById(carId);
         if (car == null) {
-            return null;
+            throw new NotFoundException("Car with this id does not exist");
         }
         if (car.getCurrentRide() == null) {
+            throw new NotFoundException("Current ride does not exist");
+        }
+        if (car.getCurrentRide().getPositions().size() == 0) {
             return null;
         }
-        if (car.getCurrentRide().getDestinations().size() == 0) {
-            return null;
-        }
-        car.getCurrentRide().getDestinations().remove(0);
+        car.getCurrentRide().getPositions().remove(0);
         save(car);
-        if (car.getCurrentRide().getDestinations().size() == 0) {
+        if (car.getCurrentRide().getPositions().size() == 0) {
             return null;
         }
-        car.setPosition(car.getCurrentRide().getDestinations().get(0));
+        car.setPosition(car.getCurrentRide().getPositions().get(0).getPosition());
         currentRideService.save(car.getCurrentRide());
         return save(car);
     }
@@ -212,24 +227,24 @@ public class CarService {
         return cars;
     }
 
-    private Car setNewPositionNonAvailableCar(long carId) {
+    private void setNewPositionNonAvailableCar(long carId) {
         Car car = findById(carId);
         if (car == null) {
-            return null;
+            throw new NotFoundException("Car with this id does not exist");
         }
         if (car.getCurrentRide() == null) {
-            return null;
+            throw new NotFoundException("Current ride does not exist");
         }
         if (car.getCurrentRide().isShouldGetRouteToClient()) {
-            return null;
+            return;
         }
         removeNonAvailableCarPositions(car);
         save(car);
         if (car.getCurrentRide().getPositions().size() == 0) {
-            return null;
+            return;
         }
         car.setPosition(getNextPosition(car.getCurrentRide()).getPosition());
-        return save(car);
+        save(car);
     }
 
     private PositionInTime getNextPosition(CurrentRide currentRide) {
@@ -280,7 +295,7 @@ public class CarService {
         Car closestCar = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Car car : activeAvailableCars) {
-            double distance = MapUtils.calculateDistance(car.getPosition().getX(), car.getPosition().getY(), latLngDTO.getLat(), latLngDTO.getLng());
+            double distance = MapUtils.calculateDistance(car.getPosition().getX(), car.getPosition().getY(), latLngDTO.getLng(), latLngDTO.getLat()); // switch
             if (distance < minDistance) {
                 closestCar = car;
                 minDistance = distance;

@@ -155,7 +155,6 @@ public class RideService {
             positionInTime.setSecondsPast(newPositions.get(newPositions.size() - 1).getSecondsPast() + positionInTime.getSecondsPast());
             positionInTimeService.save(positionInTime);
         }
-        currentRide.setDestinations(null);
         currentRide.setPositions(newPositions);
         currentRide.getPositions().addAll(oldPositions);
         currentRide.setShouldGetRouteToClient(false);

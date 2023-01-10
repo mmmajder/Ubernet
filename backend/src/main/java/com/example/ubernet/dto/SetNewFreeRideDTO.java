@@ -1,6 +1,5 @@
 package com.example.ubernet.dto;
 
-import com.example.ubernet.model.Position;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -11,7 +10,7 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
-public class SetNewCurrentRideForCarDTO {
+public class SetNewFreeRideDTO {
     private Long carId;
     private List<List<Double>> positions;
 }

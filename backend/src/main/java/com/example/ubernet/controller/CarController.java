@@ -58,16 +58,6 @@ public class CarController {
         return ResponseEntity.ok(DTOMapper.getListActiveCarResponse(cars));
     }
 
-    @PutMapping("/new-destination")
-    public ResponseEntity<CarResponse> setNewDestinationForAvailableCar(@Valid @RequestBody SetNewDestinationDTO setNewDestinationDTO) {
-        Car car = carService.setNewDestination(setNewDestinationDTO);
-        if (car == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(DTOMapper.getCarResponse(car));
-    }
-
-
     @PutMapping("/position")
     public ResponseEntity<ActiveCarResponse> reachedDestination(@RequestBody Long carId) {
         ActiveCarResponse car = carService.reachedDestination(carId);
@@ -114,9 +104,9 @@ public class CarController {
     }
 
     //New
-    @PutMapping("/new-current_ride")
-    public ResponseEntity<CarResponse> setNewCurrentRideForCar(@RequestBody SetNewCurrentRideForCarDTO setNewCurrentRideForCarDTO) {
-        Car car = carService.setNewCurrentRide(DTOMapper.getPositions(setNewCurrentRideForCarDTO.getPositions()), setNewCurrentRideForCarDTO.getCarId());
+    @PutMapping("/new-free-ride")
+    public ResponseEntity<CarResponse> setNewFreeRide(@RequestBody SetNewFreeRideDTO setNewFreeRideDTO) {
+        Car car = carService.setNewFreeRide(DTOMapper.getPositions(setNewFreeRideDTO.getPositions()), setNewFreeRideDTO.getCarId());
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
