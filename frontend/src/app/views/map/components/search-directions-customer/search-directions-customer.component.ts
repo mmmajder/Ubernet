@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {Position} from "../../../../model/Position";
+import {Place, Position} from "../../../../model/Position";
 import {MapService} from "../../../../services/map.service";
 import {Output, EventEmitter, Input} from '@angular/core';
 import {CarTypeService} from "../../../../services/car-type.service";
@@ -11,6 +11,8 @@ import {Ride} from "../../../../model/Ride";
 import {RideCreate} from "../../../../model/RideCreate";
 import {RideService} from "../../../../services/ride.service";
 import {FriendEmailDTO} from "../../../../model/FriendEmailDTO";
+import {PaymentComponent} from "../payment/payment.component";
+import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -18,10 +20,10 @@ import {FriendEmailDTO} from "../../../../model/FriendEmailDTO";
   styleUrls: ['./search-directions-customer.component.css']
 })
 export class SearchDirectionsCustomerComponent implements OnInit {
-  positions: (Position | null)[];
+  positions: (Place | null)[];
   @Input() estimations: MapSearchEstimations
   @Input() selectedRoute: any
-  @Output() addPinsToMap = new EventEmitter<Position[]>();
+  @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
   @Output() optimizeByTime = new EventEmitter()
@@ -40,7 +42,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   friendsFormGroup: FormGroup;
   timeOfRide: String
 
-  constructor(private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+  constructor(public dialog: MatDialog, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = [
       // {friendEmail: ""}
     ]
@@ -62,6 +64,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+
     this.carTypeService.getCarTypes().subscribe({
       next: (carTypeGetResponse) => {
         this.carTypes = []
@@ -135,8 +139,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       return isValid;
     }
 
-    const castToPositions = (positions: (Position | null)[]) => {
-      let retPositions: Position[] = []
+    const castToPlace = (positions: (Place | null)[]) => {
+      let retPositions: Place[] = []
       positions.forEach((position) => {
         if (position != null) {
           retPositions.push(position)
@@ -146,7 +150,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     }
 
     if (validOutput()) {
-      this.addPinsToMap.emit(castToPositions(this.positions))
+      this.addPinsToMap.emit(castToPlace(this.positions))
     } else {
       this._snackBar.open("Please enter all existing locations!", '', {
         duration: 3000,
@@ -168,7 +172,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
             console.log(response)
             position.x = Object.values(response)[0].lon
             position.y = Object.values(response)[0].lat
-            this.positions[i] = position
+            this.positions[i] = {
+              "position": position,
+              "name": destination
+            }
           }
         })
       }
@@ -212,13 +219,25 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     ride.hasChild = this.hasChild
     ride.passengers = []
     ride.reservationTime = this.timeOfRide
+    ride.route = this.positions
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })
     console.log(ride)
-    this.rideService.createRide(ride).subscribe((res: Ride) => {
-      console.log(res)
-    })
+
+
+    const dialogRef = this.dialog.open(PaymentComponent, {
+      data: {
+        dataKey: ride
+      }
+    });
+
+    dialogRef.afterClosed().subscribe((result:any) => {
+      console.log(`Dialog result: ${result}`);
+    });
+
+
+
   }
 
   removeFriend(i: number) {

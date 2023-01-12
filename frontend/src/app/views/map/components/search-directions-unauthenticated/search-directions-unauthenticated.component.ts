@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Position} from "../../../../model/Position";
+import {Place, Position} from "../../../../model/Position";
 import {MapService} from "../../../../services/map.service";
 import {CarTypeService} from "../../../../services/car-type.service";
 import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
@@ -11,7 +11,7 @@ import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
 })
 export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   estimatesDisplayed: boolean
-  positions: Position[]
+  positions: Place[]
   fromValue: string;
   toValue: string;
   carType: string;
@@ -22,7 +22,7 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   // @Input()
   // estimatedPrice: string
   @Input() estimations: MapSearchEstimations
-  @Output() addPinsToMap = new EventEmitter<Position[]>();
+  @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
 
   constructor(private mapService: MapService, private carTypeService: CarTypeService) {
@@ -59,7 +59,10 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
           let position = new Position()
           position.x = Object.values(response)[0].lon
           position.y = Object.values(response)[0].lat
-          this.positions[i] = position
+          this.positions[i] = {
+            "position": position,
+            "name": destination
+          }
         })
       }
       setTimeout(() => {

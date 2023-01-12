@@ -26,7 +26,7 @@
             <mat-label *ngSwitchDefault>
               Stop {{i}}:
             </mat-label>
-            <input matInput [name]="'dest' + i" formControlName="{{i}}">
+            <input matInput [name]="'dest' + i" formControlName="{{i}}" id="fromInput">
             <button mat-icon-button matSuffix *ngIf="destinations.controls.length>2" (click)="removeDestination(i)">
               <mat-icon>
                 location_off
@@ -152,10 +152,8 @@
         </div>
       </div>
       <span>
-        <button mat-raised-button color="primary" style="width: 49%"
+        <button id="request" mat-raised-button color="primary" style="width: 100%"
                 (click)="requestRide()">Request ride</button>
-<!--        <button mat-stroked-button color="primary" style="width: 49%; float: right"-->
-<!--                (click)="reserveRide()">Reserve ride</button>-->
         </span>
       <button mat-button matStepperPrevious
               style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Back

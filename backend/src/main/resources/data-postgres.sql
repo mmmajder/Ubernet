@@ -46,9 +46,9 @@ values (false, 45.267136, 19.833549),
 
 -- insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
 insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name)
-values (false, true, 1, 1, true, true, 'BMW', 'NS2FAST4U'),
-       (false, true, 2, 3, true, true, 'Audi', 'NS-GLAMOC1'),
-       (false, true, 3, 5, true, true, 'Yugo', 'BTACAB1312');
+values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW'),
+       (false, true, 2, 3, true, true, 'NS-GLAMOC1', 'Audi'),
+       (false, true, 3, 5, true, true, 'BTACAB1312', 'Yugo');
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,

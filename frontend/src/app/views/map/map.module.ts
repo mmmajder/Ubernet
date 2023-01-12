@@ -13,9 +13,13 @@ import {CommonModule} from "@angular/common";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
-import {SearchDirectionsCustomerComponent} from "./components/search-directions-customer/search-directions-customer.component";
+import {
+  SearchDirectionsCustomerComponent
+} from "./components/search-directions-customer/search-directions-customer.component";
 import {MapComponent} from "./container/map/map.component";
-import { SearchDirectionsUnauthenticatedComponent } from './components/search-directions-unauthenticated/search-directions-unauthenticated.component';
+import {
+  SearchDirectionsUnauthenticatedComponent
+} from './components/search-directions-unauthenticated/search-directions-unauthenticated.component';
 import {MatListModule} from "@angular/material/list";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {MatSelectModule} from "@angular/material/select";
@@ -23,40 +27,45 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
+import {PaymentComponent} from './components/payment/payment.component';
+import {NgxPayPalModule} from "ngx-paypal";
 
 @NgModule({
   declarations: [
     SearchDirectionsCustomerComponent,
     MapComponent,
     SearchDirectionsUnauthenticatedComponent,
+    PaymentComponent,
   ],
-    imports: [
-        MatToolbarModule,
-        MatIconModule,
-        MatButtonModule,
-        MatTableModule,
-        MatCardModule,
-        MatSortModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatDialogModule,
-        FormsModule,
-        CommonModule,
-        MatSnackBarModule,
-        ReactiveFormsModule,
-        MatMenuModule,
-        SharedModule,
-        MatListModule,
-        MatExpansionModule,
-        MatSelectModule,
-        MatSidenavModule,
-        MatStepperModule,
-        MatCheckboxModule,
-        NgxMaterialTimepickerModule,
-    ],
-    exports: [
-        MapComponent,
-    ],
+  imports: [
+    MatToolbarModule,
+    MatIconModule,
+    MatButtonModule,
+    MatTableModule,
+    MatCardModule,
+    MatSortModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatDialogModule,
+    FormsModule,
+    CommonModule,
+    MatSnackBarModule,
+    ReactiveFormsModule,
+    MatMenuModule,
+    SharedModule,
+    MatListModule,
+    MatExpansionModule,
+    MatSelectModule,
+    MatSidenavModule,
+    MatStepperModule,
+    MatCheckboxModule,
+    NgxMaterialTimepickerModule,
+    NgxPayPalModule
+
+  ],
+  exports: [
+    MapComponent,
+  ],
   bootstrap: []
 })
 export class MapModule {

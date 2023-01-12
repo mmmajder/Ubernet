@@ -1,26 +1,27 @@
 package com.example.ubernet.model;
 
 import lombok.AllArgsConstructor;
-import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-@Data
+
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-public class Position {
+@Getter
+@Setter
+public class PaymentCredentials {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 
-    private Double x;
-    private Double y;
-    private Boolean deleted = false;
+    private String payPalEmail;
 
-    public Position(Double x, Double y) {
-        this.x = x;
-        this.y = y;
-    }
+    @OneToOne
+    private CreditCard creditCard;
+
+
 }

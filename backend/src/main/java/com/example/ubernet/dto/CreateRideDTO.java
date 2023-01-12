@@ -27,4 +27,5 @@ public class CreateRideDTO {
     @Min(value = 0)
     private double totalTime;
     private String reservationTime;
+    private List<PlaceDTO> route;
 }

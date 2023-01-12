@@ -11,6 +11,7 @@ import {Logout} from "./store/actions/authentication.actions";
 export class AppComponent implements OnInit {
   title = 'ubernet';
 
+
   constructor(private actions: Actions, private router: Router) {
   }
 
@@ -19,4 +20,5 @@ export class AppComponent implements OnInit {
       this.router.navigate(['']);
     });
   }
+
 }

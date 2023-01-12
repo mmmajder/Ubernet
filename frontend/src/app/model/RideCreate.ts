@@ -1,5 +1,6 @@
 import {LatLngDTO} from "./LatLngDTO";
 import {InstructionDTO} from "./InstructionDTO";
+import {Place} from "./Position";
 
 export class RideCreate {
   coordinates: LatLngDTO[]
@@ -11,4 +12,5 @@ export class RideCreate {
   hasChild: boolean
   passengers: String[]
   reservationTime: String;
+  route: (Place | null)[];
 }

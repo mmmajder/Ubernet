@@ -3,14 +3,18 @@ package com.example.ubernet.service;
 import com.example.ubernet.dto.CreateRideDTO;
 import com.example.ubernet.dto.InstructionDTO;
 import com.example.ubernet.dto.LatLngDTO;
+import com.example.ubernet.dto.PlaceDTO;
 import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.RideState;
+import com.example.ubernet.repository.PlaceRepository;
 import com.example.ubernet.repository.RideRepository;
 import com.example.ubernet.utils.MapUtils;
 import com.example.ubernet.utils.TimeUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -19,6 +23,7 @@ import java.util.Set;
 
 @AllArgsConstructor
 @Service
+@Transactional
 public class RideService {
     private final RideRepository rideRepository;
     private final CarService carService;
@@ -28,7 +33,7 @@ public class RideService {
     private final PositionInTimeService positionInTimeService;
     private final RouteService routeService;
     private final CurrentRideService currentRideService;
-
+    private final PlaceRepository placeRepository;
     public Ride findById(Long id) {
         return rideRepository.findById(id).orElse(null);
     }
@@ -51,9 +56,6 @@ public class RideService {
         car.setCurrentRide(currentRide);
         carService.save(car);
 
-//        currentRide.setTimeOfStartOfRide();
-
-
         Driver driver = car.getDriver();
 
         Set<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
@@ -62,11 +64,18 @@ public class RideService {
         route.setDeleted(false);
         route.setPrice(createRideDTO.getTotalDistance() * 120 / 1000 + carTypeService.findCarTypeByName(createRideDTO.getCarType()).getPriceForType());
         route.setTime(createRideDTO.getTotalTime());
+        List<Place> places = new ArrayList<>();
+        for (PlaceDTO placeDTO : createRideDTO.getRoute()) {
+            Position position = new Position(placeDTO.getPosition().getX(), placeDTO.getPosition().getY());
+            positionService.save(position);
+            Place place = new Place(placeDTO.getName(), position);
+            placeRepository.save(place);
+            places.add(place);
+        }
+        route.setCheckPoints(places);
 
         routeService.save(route);
-//        route.setCheckPoints();
 
-        //12
         Ride ride = new Ride();
         ride.setDeleted(false);
         ride.setCustomers(customers);
@@ -76,6 +85,7 @@ public class RideService {
         ride.setRoute(route);
 
         save(ride);
+
         return ride;
     }
 

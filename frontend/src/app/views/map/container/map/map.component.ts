@@ -5,7 +5,7 @@ import 'leaflet-routing-machine';
 import {MapService} from "../../../../services/map.service";
 import {UserRole} from "../../../../model/UserRole";
 import {ActiveCarResponse} from "../../../../model/ActiveCarResponse";
-import {Position} from "../../../../model/Position";
+import {Place, Position} from "../../../../model/Position";
 import {secondsToDhms} from "../../../../services/utils.service";
 import {RidePayService} from "../../../../services/ride-price.service";
 import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
@@ -66,8 +66,6 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.initPins();
     })
     this.stompClient.subscribe("/map-updates/update-route-for-selected-car", (message: any) => {
-      console.log(JSON.parse(message.body))
-      console.log("petar")
       this.createRouteForSelectedCar(JSON.parse(message.body))
     })
   }
@@ -78,9 +76,6 @@ export class MapComponent implements AfterViewInit, OnInit {
     let end = ride.driver.car.currentRide.positions[0].position
     checkPoints.push(L.latLng(start.y, start.x))
     checkPoints.push(L.latLng(end.y, end.x))
-    console.log(ride.driver.car.currentRide.positions)
-    console.log(start)
-    console.log(end)
     let route = L.Routing.control({
       waypoints: checkPoints,
       altLineOptions: {
@@ -122,7 +117,6 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.initDirections(car, marker)
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
-          console.log(car.currentPosition.y, car.currentPosition.x)
           let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
           this.pins.push(marker);
           // this.initDirections(car, marker)
@@ -189,15 +183,12 @@ export class MapComponent implements AfterViewInit, OnInit {
     })
   }
 
-  drawSearchedRoute(positions
-                      :
-                      Position[]
-  ) {
+  drawSearchedRoute(positions: Place[]) {
     this.removeRoutingControls(this.searchedRoutes)
 
     let checkPoints: LatLng[] = []
     for (let i = 0; i < positions.length; i++) {
-      checkPoints.push(L.latLng(positions[i].y, positions[i].x))
+      checkPoints.push(L.latLng(positions[i].position.y, positions[i].position.x))
     }
 
     const drawRoutes = () => {

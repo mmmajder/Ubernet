@@ -18,4 +18,9 @@ public class Place {
     private String name;
     @OneToOne
     private Position position;
+
+    public Place(String name, Position position) {
+        this.name = name;
+        this.position = position;
+    }
 }
