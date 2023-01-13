@@ -31,6 +31,10 @@ public class CustomerService {
         return customerRepository.save(EntityMapper.mapToCustomer(user));
     }
 
+    public Customer save(Customer customer) {
+        return customerRepository.save(customer);
+    }
+
     public Customer findByEmail(String clientEmail) {
         return (Customer) userService.findByEmail(clientEmail);
     }
@@ -87,5 +91,15 @@ public class CustomerService {
             customers.add(customer);
         }
         return customers;
+    }
+
+    public double addTokens(String email, double tokens) {
+        Customer customer = findByEmail(email);
+        if (customer == null) {
+            throw new NotFoundException("Customer does not exist");
+        }
+        customer.setNumberOfTokens(customer.getNumberOfTokens() + tokens);
+        save(customer);
+        return customer.getNumberOfTokens();
     }
 }

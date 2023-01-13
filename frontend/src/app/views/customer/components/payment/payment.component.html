@@ -1,0 +1,15 @@
+<div class="payment-container scrollable" style="overflow-x: hidden;">
+  <h2 mat-dialog-title>
+    <mat-icon class="token">monetization_on</mat-icon>
+    Buy tokens
+  </h2>
+  <mat-dialog-content class="mat-typography">
+    <mat-form-field appearance="outline" style="width: 100%">
+      <mat-label>Enter amount of tokens in USD</mat-label>
+      <input matInput [(ngModel)]="tokens" (keyup)="updateValidation()">
+    </mat-form-field>
+  </mat-dialog-content>
+  <script
+    src="https://www.paypal.com/sdk/js?client-id=AYMcJQ_j3eEtHkeGxMLIYuTmcmkMl0pHqGt21aA6WEkTJGZLdE_JPF_BCj1N2_mNC4mSgDfGbKAz_g7Z"></script>
+  <ngx-paypal *ngIf="validTokenValue" [config]="payPalConfig"></ngx-paypal>
+</div>

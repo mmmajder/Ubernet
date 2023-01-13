@@ -3,7 +3,7 @@
     <img class="logo" src="assets/logo.png" alt="logo"/>
   </span>
   <span class="example-spacer"></span>
-  <button mat-button *ngIf="user.role=='CUSTOMER'">
+  <button mat-button *ngIf="user.role=='CUSTOMER'" (click)="addTokens()">
     <span class="number-of-tokens">{{numberOfTokens}} </span>
     <mat-icon class="token">monetization_on</mat-icon>
   </button>

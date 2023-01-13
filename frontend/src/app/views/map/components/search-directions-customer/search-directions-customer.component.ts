@@ -11,8 +11,6 @@ import {Ride} from "../../../../model/Ride";
 import {RideCreate} from "../../../../model/RideCreate";
 import {RideService} from "../../../../services/ride.service";
 import {FriendEmailDTO} from "../../../../model/FriendEmailDTO";
-import {PaymentComponent} from "../payment/payment.component";
-import {MatDialog} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -27,8 +25,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
   @Output() optimizeByTime = new EventEmitter()
-  // @Output() requestRide = new EventEmitter()
-  // carType: string;
   carTypes: string[];
   canOptimize: boolean = true;
   friends: ({ friendEmail: string })[];
@@ -42,7 +38,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   friendsFormGroup: FormGroup;
   timeOfRide: String
 
-  constructor(public dialog: MatDialog, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+  constructor(private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = [
       // {friendEmail: ""}
     ]
@@ -225,17 +221,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     })
     console.log(ride)
 
-
-    const dialogRef = this.dialog.open(PaymentComponent, {
-      data: {
-        dataKey: ride
-      }
-    });
-
-    dialogRef.afterClosed().subscribe((result:any) => {
-      console.log(`Dialog result: ${result}`);
-    });
-
+    this.rideService.createRide(ride).subscribe((res: Ride) => {
+      console.log(res)
+    })
 
 
   }

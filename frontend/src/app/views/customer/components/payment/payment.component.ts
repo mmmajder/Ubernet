@@ -1,12 +1,13 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Inject, OnInit} from '@angular/core';
 import {ICreateOrderRequest, IPayPalConfig} from "ngx-paypal";
-import {IAddressPortable, IPartyName, IPhone, ITaxInfo} from "ngx-paypal/lib/models/paypal-models";
-import * as $ from 'jquery'
-import {MAT_DIALOG_DATA, MatDialogRef} from '@angular/material/dialog';
-import {Inject} from '@angular/core';
-import {Ride} from "../../../../model/Ride";
-import {RideService} from "../../../../services/ride.service";
-import {RideCreate} from "../../../../model/RideCreate";
+import {MatDialogRef} from '@angular/material/dialog';
+import {CustomersService} from "../../../../services/customers.service";
+import {MAT_DIALOG_DATA} from '@angular/material/dialog';
+import {User} from "../../../../model/User";
+import {Store} from "@ngxs/store";
+import {Observable} from "rxjs";
+import {TokensState} from "../../../../store/states/tokens.state";
+import {SetTokens} from "../../../../store/actions/tokens.action";
 
 @Component({
   selector: 'app-payment',
@@ -16,14 +17,19 @@ import {RideCreate} from "../../../../model/RideCreate";
 export class PaymentComponent implements OnInit {
   public payPalConfig ?: IPayPalConfig;
   defaultCardNumber: string;
-  private rideService: any;
-  private ride: RideCreate;
+  tokens: string;
+  validTokenValue: boolean;
+  user: User;
 
-  constructor(rideService: RideService, @Inject(MAT_DIALOG_DATA) public data: any, private dialogRef: MatDialogRef<PaymentComponent>) {
-    console.log("Miki")
-    console.log(data)
-    this.ride = data.dataKey
-    this.rideService = rideService
+  customerService: CustomersService;
+  //
+  tokenState$: Observable<TokensState>;
+
+  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private store:Store, private dialogRef: MatDialogRef<PaymentComponent>, customerService:CustomersService) {
+    this.validTokenValue = false
+    this.customerService = customerService
+    this.user = data.user
+    this.tokenState$ = this.store.select(state => state.tokens)
   }
 
   ngOnInit(): void {
@@ -79,11 +85,11 @@ export class PaymentComponent implements OnInit {
           {
             amount: {
               currency_code: 'USD',
-              value: '9.99',
+              value: this.tokens,
               breakdown: {
                 item_total: {
                   currency_code: 'USD',
-                  value: '9.99'
+                  value: this.tokens
                 }
               }
             },
@@ -94,7 +100,7 @@ export class PaymentComponent implements OnInit {
                 category: 'DIGITAL_GOODS',
                 unit_amount: {
                   currency_code: 'USD',
-                  value: '9.99',
+                  value: this.tokens,
                 },
               }
             ]
@@ -116,12 +122,10 @@ export class PaymentComponent implements OnInit {
       },
       onClientAuthorization: (data) => {
         console.log('onClientAuthorization - you should probably inform your server about completed transaction at this point', data);
-        console.log(this.ride)
-        this.rideService.createRide(this.ride).subscribe((res: Ride) => {
-          console.log(res)
-          this.dialogRef.close();
+        this.customerService.addTokens(this.user.email, +this.tokens).subscribe(tokens => {
+          this.store.dispatch([new SetTokens(tokens)])
         })
-        // this.showSuccess = true;
+        this.dialogRef.close()
       },
       onCancel: (data, actions) => {
         console.log('OnCancel', data, actions);
@@ -130,19 +134,12 @@ export class PaymentComponent implements OnInit {
         console.log('OnError', err);
       },
       onClick: async (data, actions) => {
-        // const delay = (ms: number) => {
-        //   return new Promise(resolve => setTimeout(resolve, ms));
-        // }
         console.log('onClick', data, actions);
-        // await delay(5000);
-        // console.log("stigao sam")
-        // $("#credit-card-number").val("1234123413241234")
-        // $("#request").on("click", () => {
-        //   console.log("Kliknuo sam")
-        // })
       },
     };
   }
 
-
+  updateValidation() {
+    this.validTokenValue = !isNaN(Number(this.tokens));
+  }
 }

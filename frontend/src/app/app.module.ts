@@ -43,6 +43,7 @@ import {DriversState} from "./store/states/drivers.state";
 import {CustomersState} from "./store/states/customers.state";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSelectModule} from "@angular/material/select";
+import {TokensState} from "./store/states/tokens.state";
 
 @NgModule({
   declarations: [
@@ -79,7 +80,9 @@ import {MatSelectModule} from "@angular/material/select";
     UnauthenticatedModule,
     MapModule,
     PagesModule,
-    NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState]),
+    NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState, TokensState]),
+    // NgxsReduxDevtoolsPluginModule.forRoot(),
+    // NgxsLoggerPluginModule.forRoot(),
     MatProgressSpinnerModule,
     MatSelectModule,
   ],

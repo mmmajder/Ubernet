@@ -1,11 +1,16 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from "@angular/material/menu";
 import {Logout} from "../../../store/actions/authentication.actions";
-import {Store} from "@ngxs/store";
+import {Select, Store} from "@ngxs/store";
 import {Router} from "@angular/router";
 import {User} from "../../../model/User";
 import {CustomersService} from "../../../services/customers.service";
 import {ImageService} from "../../../services/image.service";
+import {PaymentComponent} from "../../../views/customer/components/payment/payment.component";
+import {MatDialog} from "@angular/material/dialog";
+import {Observable, Subscription} from "rxjs";
+import {TokensState, TokensStateModel} from "../../../store/states/tokens.state";
+import {SetTokens} from "../../../store/actions/tokens.action";
 
 @Component({
   selector: 'app-sidenav',
@@ -19,7 +24,10 @@ export class SidenavComponent implements OnInit {
 
   user: User;
   @Input() currentPage: string = 'dashboard';
-  numberOfTokens: number = 0;
+
+  @Select(TokensState.value) numberOfTokens$!:Observable<number>
+  numberOfTokens!: number;
+  private valueSubscription: Subscription;
 
   public profilePictureSrc: string;
   private hasRequestedProfilePicture: boolean = false;
@@ -28,13 +36,15 @@ export class SidenavComponent implements OnInit {
   someMethod() {
     this.trigger?.openMenu();
   }
+  constructor(public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService) {
+    this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
+      this.numberOfTokens = value;
+    });
 
-  constructor(private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService) {
     this.store.select(state => state.loggedUser).subscribe({
       next: (user) => {
         this.user = user;
         this.setNumberOfTokens();
-
       }
     })
     SidenavComponent._this = this;
@@ -54,7 +64,10 @@ export class SidenavComponent implements OnInit {
   setNumberOfTokens() {
     if (this.user.role == "CUSTOMER") {
       this.customerService.getNumberOfTokens(this.user.email).subscribe({
-        next: value => this.numberOfTokens = value
+        next: value => {
+          this.store.dispatch([new SetTokens(value)])
+          // this.numberOfTokens = value
+        }
       })
     }
   }
@@ -87,5 +100,13 @@ export class SidenavComponent implements OnInit {
 
   navigate(page: string) {
     this.router.navigate([page]);
+  }
+
+  addTokens() {
+    const dialogRef = this.dialog.open(PaymentComponent, {
+      data: {
+        "user": this.user
+      }
+    });
   }
 }

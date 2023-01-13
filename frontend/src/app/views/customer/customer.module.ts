@@ -34,6 +34,8 @@ import {
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {RateDialogComponent} from './components/rate-dialog/rate-dialog.component';
+import {NgxPayPalModule} from "ngx-paypal";
+import {PaymentComponent} from "./components/payment/payment.component";
 
 @NgModule({
   declarations: [
@@ -44,6 +46,7 @@ import {RateDialogComponent} from './components/rate-dialog/rate-dialog.componen
     CustomersUpcomingRidesComponent,
     CustomerRatingsDashboardComponent,
     RateDialogComponent,
+    PaymentComponent
   ],
   imports: [
     MatToolbarModule,
@@ -65,12 +68,14 @@ import {RateDialogComponent} from './components/rate-dialog/rate-dialog.componen
     MatTabsModule,
     MatChipsModule,
     MatTooltipModule,
+    NgxPayPalModule
   ],
   exports: [
     DashboardCustomerContainerComponent,
     ProfileDataComponent,
     UnauthenticatedModule,
     ProfileCustomerContainerComponent,
+    PaymentComponent
   ],
 })
 export class CustomerModule {

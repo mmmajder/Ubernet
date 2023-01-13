@@ -1,3 +1,8 @@
+/*kredencijali za placanje
+username:  sb-qq2m924846107@personal.example.com
+password:  n?I7/iR2
+ */
+
 insert into Role (name)
 VALUES ('ROLE_ADMIN');/*1*/
 insert into Role (name)

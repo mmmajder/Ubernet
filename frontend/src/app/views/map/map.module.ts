@@ -27,15 +27,12 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
-import {PaymentComponent} from './components/payment/payment.component';
-import {NgxPayPalModule} from "ngx-paypal";
 
 @NgModule({
   declarations: [
     SearchDirectionsCustomerComponent,
     MapComponent,
     SearchDirectionsUnauthenticatedComponent,
-    PaymentComponent,
   ],
   imports: [
     MatToolbarModule,
@@ -60,8 +57,6 @@ import {NgxPayPalModule} from "ngx-paypal";
     MatStepperModule,
     MatCheckboxModule,
     NgxMaterialTimepickerModule,
-    NgxPayPalModule
-
   ],
   exports: [
     MapComponent,
