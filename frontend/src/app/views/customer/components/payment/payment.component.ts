@@ -107,9 +107,9 @@ export class PaymentComponent implements OnInit {
           }
         ]
       },
-      advanced: {
-        commit: 'true',
-      },
+      // advanced: {
+      //   commit: 'true',
+      // },
       style: {
         label: 'paypal',
         layout: 'vertical'

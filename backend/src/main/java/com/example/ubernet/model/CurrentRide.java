@@ -29,4 +29,5 @@ public class CurrentRide {
     private LocalDateTime timeOfStartOfApproachingRide;
     private boolean isFreeRide;
     private boolean shouldGetRouteToClient;
+    private Integer numberOfRoute;
 }

@@ -103,6 +103,16 @@ public class CarController {
         return new ResponseEntity<>(resp, HttpStatus.OK);
     }
 
+    @GetMapping("/active-driver/{driverEmail}")
+    public ResponseEntity<ActiveCarResponse> getActiveCarByDriverEmail(@PathVariable String driverEmail) {
+        Car car = carService.getCarByActiveDriverEmail(driverEmail);
+
+        if (car == null) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity<>(DTOMapper.getActiveCarResponse(car), HttpStatus.OK);
+    }
+
     //New
     @PutMapping("/new-free-ride")
     public ResponseEntity<CarResponse> setNewFreeRide(@RequestBody SetNewFreeRideDTO setNewFreeRideDTO) {

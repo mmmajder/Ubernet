@@ -3,6 +3,7 @@ package com.example.ubernet.dto;
 import com.example.ubernet.model.Car;
 import com.example.ubernet.model.CarType;
 import com.example.ubernet.model.Driver;
+import com.example.ubernet.model.Position;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -32,5 +33,13 @@ public class CarResponse {
         this.allowsBaby = car.getAllowsBaby();
         this.allowsPet = car.getAllowsPet();
         this.driver = car.getDriver();
+        this.position = getPositionDTO(car.getPosition());
+    }
+
+    private PositionDTO getPositionDTO(Position position) {
+        PositionDTO positionDTO = new PositionDTO();
+        positionDTO.setY(position.getY());
+        positionDTO.setX(position.getX());
+        return positionDTO;
     }
 }

@@ -24,4 +24,8 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @Query(value = "SELECT car FROM Car car WHERE car.isAvailable=false and car.driver.driverDailyActivity.isActive=true " +
             "and car.currentRide.shouldGetRouteToClient=true")
     List<Car> findActiveNonAvailableCarsNewRoute();
+
+    @Query(value = "SELECT car FROM Car car WHERE car.isAvailable=false and car.driver.driverDailyActivity.isActive=true " +
+            "and car.futureRide is null")
+    List<Car> getActiveNotAvailableNotReservedCars();
 }

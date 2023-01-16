@@ -9,7 +9,7 @@ import {ImageService} from "../../../services/image.service";
 import {PaymentComponent} from "../../../views/customer/components/payment/payment.component";
 import {MatDialog} from "@angular/material/dialog";
 import {Observable, Subscription} from "rxjs";
-import {TokensState, TokensStateModel} from "../../../store/states/tokens.state";
+import {TokensState} from "../../../store/states/tokens.state";
 import {SetTokens} from "../../../store/actions/tokens.action";
 
 @Component({
@@ -25,7 +25,7 @@ export class SidenavComponent implements OnInit {
   user: User;
   @Input() currentPage: string = 'dashboard';
 
-  @Select(TokensState.value) numberOfTokens$!:Observable<number>
+  @Select(TokensState.value) numberOfTokens$!: Observable<number>
   numberOfTokens!: number;
   private valueSubscription: Subscription;
 
@@ -36,6 +36,7 @@ export class SidenavComponent implements OnInit {
   someMethod() {
     this.trigger?.openMenu();
   }
+
   constructor(public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService) {
     this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
       this.numberOfTokens = value;
@@ -66,7 +67,6 @@ export class SidenavComponent implements OnInit {
       this.customerService.getNumberOfTokens(this.user.email).subscribe({
         next: value => {
           this.store.dispatch([new SetTokens(value)])
-          // this.numberOfTokens = value
         }
       })
     }

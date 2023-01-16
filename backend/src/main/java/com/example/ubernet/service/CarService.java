@@ -1,6 +1,7 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.*;
+import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.repository.CarRepository;
@@ -12,7 +13,6 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 @Service
@@ -142,9 +142,15 @@ public class CarService {
 
     public Car getCarByDriverEmail(String email) {
         Driver driver = (Driver) userService.findByEmail(email);
-        Car car = carRepository.findByDriver(driver);
+        return carRepository.findByDriver(driver);
+    }
 
-        return car;
+    public Car getCarByActiveDriverEmail(String driverEmail) {
+        Driver driver = (Driver) userService.findByEmail(driverEmail);
+        if (!driver.getDriverDailyActivity().getIsActive()) {
+            throw new BadRequestException("Driver is not active.");
+        }
+        return carRepository.findByDriver(driver);
     }
 
     public Car updateCar(CarResponseNoDriver carResponseNoDriver) {
@@ -177,6 +183,7 @@ public class CarService {
         currentRide.setPositions(createPositionsWithEmptyTime(positions));
         currentRide.setTimeOfStartOfRide(LocalDateTime.now());
         currentRide.setFreeRide(true);
+        currentRide.setNumberOfRoute(0);
         currentRideService.save(currentRide);
         return currentRide;
     }
@@ -241,6 +248,11 @@ public class CarService {
         removeNonAvailableCarPositions(car);
         save(car);
         if (car.getCurrentRide().getPositions().size() == 0) {
+            if (car.getFutureRide() != null) {
+                car.setCurrentRide(car.getFutureRide());
+                car.setFutureRide(null);
+                save(car);
+            }
             return;
         }
         car.setPosition(getNextPosition(car.getCurrentRide()).getPosition());
@@ -292,9 +304,13 @@ public class CarService {
 
     public Car getClosestFreeCar(LatLngDTO latLngDTO) {
         List<Car> activeAvailableCars = getActiveAvailableCars();
+        return getClosestCar(latLngDTO, activeAvailableCars);
+    }
+
+    private Car getClosestCar(LatLngDTO latLngDTO, List<Car> cars) {
         Car closestCar = null;
         double minDistance = Double.POSITIVE_INFINITY;
-        for (Car car : activeAvailableCars) {
+        for (Car car : cars) {
             double distance = MapUtils.calculateDistance(car.getPosition().getX(), car.getPosition().getY(), latLngDTO.getLng(), latLngDTO.getLat()); // switch
             if (distance < minDistance) {
                 closestCar = car;
@@ -302,6 +318,12 @@ public class CarService {
             }
         }
         return closestCar;
+    }
+
+
+    public Car getClosestCarWhenAllAreNotAvailable(LatLngDTO latLngDTO) {
+        List<Car> activeNotReservedCars = carRepository.getActiveNotAvailableNotReservedCars();
+        return getClosestCar(latLngDTO, activeNotReservedCars);
     }
 
 

@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
-import {CarTypeGetResponse} from "../model/CarTypeGetResponse";
-import {CreditCard} from "../model/CreditCard";
-import {AuthService} from "./auth.service";
 import {Car} from "../model/Car";
+import {ActiveCarResponse} from "../model/ActiveCarResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +21,10 @@ export class CarService {
 
   public getCar(driverEmail: string): Observable<Car> {
     return this.http.get<Car>(this.carUrl + "/driver/" + driverEmail, CarService.getHttpOptions());
+  }
+
+  public getActiveCar(driverEmail: string): Observable<ActiveCarResponse> {
+    return this.http.get<ActiveCarResponse>(this.carUrl + "/active-driver/" + driverEmail, CarService.getHttpOptions());
   }
 
   public static getHttpOptions() {

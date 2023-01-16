@@ -3,7 +3,7 @@ import {PositionInTime} from "./PositionInTime";
 
 export class CurrentRide {
   currenRideId!: number;
-  destinations!: Position[];
-  positions!: PositionInTime;
+  positions!: PositionInTime[];
   currentRide!: any
+  numberOfRoute!: number
 }

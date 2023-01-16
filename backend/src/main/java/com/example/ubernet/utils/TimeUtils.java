@@ -19,7 +19,8 @@ public class TimeUtils {
         boolean isMorning = time.split("\\s+")[1].equals("AM");
         int hours = Integer.parseInt(time.split(":")[0]);
         if (!isMorning) {
-            hours += 12;
+            if (hours != 12)
+                hours += 12;
         } else if (hours == 12) {
             hours = 0;
         }

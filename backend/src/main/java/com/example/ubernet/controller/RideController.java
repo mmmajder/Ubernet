@@ -26,9 +26,7 @@ public class RideController {
         if (ride == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-
         this.simpMessagingTemplate.convertAndSend("/map-updates/update-route-for-selected-car", ride);
-
         return ResponseEntity.ok(ride);
     }
 

@@ -116,6 +116,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     }
 
     if (!validInput()) {
+      this._snackBar.open("Please enter all existing locations!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
       return
     }
     console.log(this.destinations)
@@ -126,8 +130,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       console.log("Pos")
       console.log(this.positions)
       this.positions.forEach((position) => {
-        console.log("position")
-        console.log(position)
         if (position == undefined) {
           isValid = false;
         }
@@ -221,8 +223,20 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     })
     console.log(ride)
 
-    this.rideService.createRide(ride).subscribe((res: Ride) => {
-      console.log(res)
+    this.rideService.createRide(ride).subscribe({
+      next: (res: Ride) => {
+        this._snackBar.open("Successfully reserved ride", '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        })
+      },
+      error: (res: any) => {
+        console.log(res)
+        this._snackBar.open(res.error, '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        })
+      }
     })
 
 

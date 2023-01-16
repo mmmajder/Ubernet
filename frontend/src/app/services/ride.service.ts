@@ -3,6 +3,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {RideCreate} from "../model/RideCreate";
 import {Ride} from "../model/Ride";
+import {PositionInTime} from "../model/PositionInTime";
+import {Position} from "../model/Position";
 
 @Injectable({
   providedIn: 'root'
@@ -21,6 +23,15 @@ export class RideService {
 
   public createRouteForSelectedCar(ride: RideCreate, carId: number): Observable<void> {
     return this.http.post<void>(this.rideUrl + "/update-car-route/" + carId, ride, RideService.getHttpOptions());
+  }
+
+  public getLastPosition(positionsInTime:PositionInTime[]):Position {
+    let lastPosition = positionsInTime[0]
+    positionsInTime.forEach((positionsInTime:PositionInTime) => {
+      if (positionsInTime.secondsPassed>lastPosition.secondsPassed)
+        lastPosition = positionsInTime;
+    })
+    return lastPosition.position;
   }
 
   public static getHttpOptions() {

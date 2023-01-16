@@ -28,4 +28,5 @@ public class CreateRideDTO {
     private double totalTime;
     private String reservationTime;
     private List<PlaceDTO> route;
+    private Integer numberOfRoute;
 }

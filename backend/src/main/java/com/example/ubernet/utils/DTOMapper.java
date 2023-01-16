@@ -103,12 +103,12 @@ public class DTOMapper {
     public static List<ActiveCarResponse> getListActiveCarResponse(List<Car> cars) {
         List<ActiveCarResponse> carResponses = new ArrayList<>();
         for (Car car : cars) {
-            carResponses.add(getActiveAvailableCar(car));
+            carResponses.add(getActiveCarResponse(car));
         }
         return carResponses;
     }
 
-    private static ActiveCarResponse getActiveAvailableCar(Car car) {
+    public static ActiveCarResponse getActiveCarResponse(Car car) {
         ActiveCarResponse activeAvailableCarResponse = new ActiveCarResponse();
         activeAvailableCarResponse.setCarId(car.getId());
         activeAvailableCarResponse.setDriverEmail(car.getDriver().getEmail());

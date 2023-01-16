@@ -34,6 +34,7 @@ public class RideService {
     private final RouteService routeService;
     private final CurrentRideService currentRideService;
     private final PlaceRepository placeRepository;
+
     public Ride findById(Long id) {
         return rideRepository.findById(id).orElse(null);
     }
@@ -43,23 +44,28 @@ public class RideService {
     }
 
     public Ride createRide(CreateRideDTO createRideDTO) {
-        Car car = carService.getClosestFreeCar(createRideDTO.getCoordinates().get(0));
-        if (car == null) {
-            throw new NotFoundException("All cars are not free");
-        }
+        Car car = getCarForRide(createRideDTO);
         car.setIsAvailable(false);
-        CurrentRide currentRide = new CurrentRide();
-        currentRide.setPositions(createRideDestinations(createRideDTO));
-        currentRide.setShouldGetRouteToClient(true);
+        setCurrentOfFutureRide(createRideDTO, car);
+        return setRide(createRideDTO, car);
+    }
 
-        currentRideService.save(currentRide);
-        car.setCurrentRide(currentRide);
-        carService.save(car);
-
-        Driver driver = car.getDriver();
-
+    private Ride setRide(CreateRideDTO createRideDTO, Car car) {
+        Route route = setRoute(createRideDTO);
         Set<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
+        Driver driver = car.getDriver();
+        Ride ride = new Ride();
+        ride.setDeleted(false);
+        ride.setCustomers(customers);
+        ride.setReservationTime(TimeUtils.getDateTimeForReservationMaxFiveHoursAdvance(createRideDTO.getReservationTime()));
+        ride.setRideState(createRideState(ride.getReservationTime()));
+        ride.setDriver(driver);
+        ride.setRoute(route);
+        save(ride);
+        return ride;
+    }
 
+    private Route setRoute(CreateRideDTO createRideDTO) {
         Route route = new Route();
         route.setDeleted(false);
         route.setPrice(createRideDTO.getTotalDistance() * 120 / 1000 + carTypeService.findCarTypeByName(createRideDTO.getCarType()).getPriceForType());
@@ -75,18 +81,32 @@ public class RideService {
         route.setCheckPoints(places);
 
         routeService.save(route);
+        return route;
+    }
 
-        Ride ride = new Ride();
-        ride.setDeleted(false);
-        ride.setCustomers(customers);
-        ride.setReservationTime(TimeUtils.getDateTimeForReservationMaxFiveHoursAdvance(createRideDTO.getReservationTime()));
-        ride.setRideState(createRideState(ride.getReservationTime()));
-        ride.setDriver(driver);
-        ride.setRoute(route);
+    private void setCurrentOfFutureRide(CreateRideDTO createRideDTO, Car car) {
+        CurrentRide currentRide = new CurrentRide();
+        currentRide.setPositions(createRideDestinations(createRideDTO));
+        currentRide.setShouldGetRouteToClient(true);
+        currentRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
+        currentRideService.save(currentRide);
 
-        save(ride);
+        if (car.getCurrentRide()==null || car.getCurrentRide().isFreeRide()) {
+            car.setCurrentRide(currentRide);
+        } else {
+            car.setFutureRide(currentRide);
+        }
+        carService.save(car);
+    }
 
-        return ride;
+    private Car getCarForRide(CreateRideDTO createRideDTO) {
+        Car car = carService.getClosestFreeCar(createRideDTO.getCoordinates().get(0));
+        if (car == null) {
+            car = carService.getClosestCarWhenAllAreNotAvailable(createRideDTO.getCoordinates().get(0));
+            if (car == null)
+                throw new NotFoundException("All cars are not free");
+        }
+        return car;
     }
 
     private RideState createRideState(LocalDateTime reservationTime) {
@@ -158,17 +178,34 @@ public class RideService {
         if (car == null) {
             throw new NotFoundException("Car does not exist");
         }
-        CurrentRide currentRide = car.getCurrentRide();
-        List<PositionInTime> newPositions = createRideDestinations(createRideDTO);
-        List<PositionInTime> oldPositions = currentRide.getPositions();
-        for (PositionInTime positionInTime : oldPositions) {
-            positionInTime.setSecondsPast(newPositions.get(newPositions.size() - 1).getSecondsPast() + positionInTime.getSecondsPast());
-            positionInTimeService.save(positionInTime);
+        if (car.getFutureRide()==null) {
+            CurrentRide currentRide = car.getCurrentRide();
+            List<PositionInTime> newPositions = createRideDestinations(createRideDTO);
+            List<PositionInTime> oldPositions = currentRide.getPositions();
+            for (PositionInTime positionInTime : oldPositions) {
+                positionInTime.setSecondsPast(newPositions.get(newPositions.size() - 1).getSecondsPast() + positionInTime.getSecondsPast());
+                positionInTimeService.save(positionInTime);
+            }
+            currentRide.setPositions(newPositions);
+            currentRide.getPositions().addAll(oldPositions);
+            currentRide.setShouldGetRouteToClient(false);
+            currentRide.setTimeOfStartOfRide(LocalDateTime.now());
+            currentRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
+            currentRideService.save(currentRide);
+        } else {
+            CurrentRide futureRide = car.getFutureRide();
+            List<PositionInTime> newPositions = createRideDestinations(createRideDTO);
+            List<PositionInTime> oldPositions = futureRide.getPositions();
+            for (PositionInTime positionInTime : oldPositions) {
+                positionInTime.setSecondsPast(newPositions.get(newPositions.size() - 1).getSecondsPast() + positionInTime.getSecondsPast());
+                positionInTimeService.save(positionInTime);
+            }
+            futureRide.setPositions(newPositions);
+            futureRide.getPositions().addAll(oldPositions);
+            futureRide.setShouldGetRouteToClient(false);
+            futureRide.setTimeOfStartOfRide(LocalDateTime.now());
+            futureRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
+            currentRideService.save(futureRide);
         }
-        currentRide.setPositions(newPositions);
-        currentRide.getPositions().addAll(oldPositions);
-        currentRide.setShouldGetRouteToClient(false);
-        currentRide.setTimeOfStartOfRide(LocalDateTime.now());
-        currentRideService.save(currentRide);
     }
 }
