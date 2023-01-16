@@ -11,6 +11,8 @@ import {Ride} from "../../../../model/Ride";
 import {RideCreate} from "../../../../model/RideCreate";
 import {RideService} from "../../../../services/ride.service";
 import {FriendEmailDTO} from "../../../../model/FriendEmailDTO";
+import {User} from "../../../../model/User";
+import {PaymentDTO} from "../../../../model/PaymentDTO";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -21,6 +23,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   positions: (Place | null)[];
   @Input() estimations: MapSearchEstimations
   @Input() selectedRoute: any
+  @Input() loggedUser: User
   @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
@@ -60,8 +63,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
-
     this.carTypeService.getCarTypes().subscribe({
       next: (carTypeGetResponse) => {
         this.carTypes = []
@@ -105,9 +106,28 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   async showEstimates() {
-    const validInput = () => {
+    if (!validInput(this.destinations.controls)) {
+      this._snackBar.open("Please enter all existing locations!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
+      return
+    }
+    this.positions = [];
+    await this.calculatePositionsSearch()
+
+    if (validOutput(this.positions)) {
+      this.addPinsToMap.emit(castToPlace(this.positions))
+    } else {
+      this._snackBar.open("Please enter all existing locations!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
+    }
+
+    function validInput(destinations: any[]) {
       let isValid = true
-      this.destinations.controls.forEach((destination) => {
+      destinations.forEach((destination) => {
         if (destination.value == "") {
           isValid = false
         }
@@ -115,21 +135,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       return isValid
     }
 
-    if (!validInput()) {
-      this._snackBar.open("Please enter all existing locations!", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      })
-      return
-    }
-    console.log(this.destinations)
-    this.positions = [];
-    await this.calculatePositionsSearch()
-    const validOutput = () => {
+    function validOutput(positions: (Place | null)[]) {
       let isValid = true
-      console.log("Pos")
-      console.log(this.positions)
-      this.positions.forEach((position) => {
+      positions.forEach((position) => {
         if (position == undefined) {
           isValid = false;
         }
@@ -137,7 +145,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       return isValid;
     }
 
-    const castToPlace = (positions: (Place | null)[]) => {
+    function castToPlace(positions: (Place | null)[]) {
       let retPositions: Place[] = []
       positions.forEach((position) => {
         if (position != null) {
@@ -145,15 +153,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         }
       })
       return retPositions
-    }
-
-    if (validOutput()) {
-      this.addPinsToMap.emit(castToPlace(this.positions))
-    } else {
-      this._snackBar.open("Please enter all existing locations!", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      })
     }
   }
 
@@ -206,24 +205,29 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   requestRide() {
+    let payment = new PaymentDTO();
+    payment.customerThatPayed = this.loggedUser.email
+    payment.totalPrice = +this.estimations.price
     let route = this.selectedRoute
     let ride = new RideCreate()
     ride.coordinates = route.coordinates
     ride.instructions = route.instructions
     ride.carType = this.carType.value
-    ride.totalDistance = route.summary.totalDistance
-    ride.totalTime = route.summary.totalTime
     ride.hasPet = this.hasPet
     ride.hasChild = this.hasChild
-    ride.passengers = []
+    ride.passengers = this.friends.map((friend)=> {return friend.friendEmail})
+    ride.totalDistance = route.summary.totalDistance
+    ride.totalTime = route.summary.totalTime
     ride.reservationTime = this.timeOfRide
     ride.route = this.positions
+    ride.numberOfRoute = route.routesIndex    //TODO
+    ride.payment = payment
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })
     console.log(ride)
 
-    this.rideService.createRide(ride).subscribe({
+    this.rideService.createRideRequest(ride).subscribe({
       next: (res: Ride) => {
         this._snackBar.open("Successfully reserved ride", '', {
           duration: 3000,

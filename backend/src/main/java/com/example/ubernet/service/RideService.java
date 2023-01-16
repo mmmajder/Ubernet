@@ -100,9 +100,9 @@ public class RideService {
     }
 
     private Car getCarForRide(CreateRideDTO createRideDTO) {
-        Car car = carService.getClosestFreeCar(createRideDTO.getCoordinates().get(0));
+        Car car = carService.getClosestFreeCar(createRideDTO);
         if (car == null) {
-            car = carService.getClosestCarWhenAllAreNotAvailable(createRideDTO.getCoordinates().get(0));
+            car = carService.getClosestCarWhenAllAreNotAvailable(createRideDTO);
             if (car == null)
                 throw new NotFoundException("All cars are not free");
         }

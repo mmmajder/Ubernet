@@ -51,9 +51,10 @@ export class MapComponent implements AfterViewInit, OnInit {
   ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
-        console.log(resp)
         this.loggedUser = resp.loggedUser;
-        this.userRole = resp.loggedUser.userRole
+        if (resp.loggedUser.role === "CUSTOMER") {
+          this.userRole = UserRole.CUSTOMER
+        }
         this.initMap()
         this.initializeWebSocketConnection();
         this.initPins()

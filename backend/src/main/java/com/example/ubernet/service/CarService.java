@@ -302,15 +302,22 @@ public class CarService {
         return cars;
     }
 
-    public Car getClosestFreeCar(LatLngDTO latLngDTO) {
+    public Car getClosestFreeCar(CreateRideDTO createRideDTO) {
         List<Car> activeAvailableCars = getActiveAvailableCars();
-        return getClosestCar(latLngDTO, activeAvailableCars);
+        return getClosestCar(createRideDTO.getCoordinates().get(0), activeAvailableCars,
+                createRideDTO.isHasPet(), createRideDTO.isHasChild());
     }
 
-    private Car getClosestCar(LatLngDTO latLngDTO, List<Car> cars) {
+    private Car getClosestCar(LatLngDTO latLngDTO, List<Car> cars, boolean hasPet, boolean hasChild) {
         Car closestCar = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Car car : cars) {
+            if (hasPet && !car.getAllowsPet()) {
+                continue;
+            }
+            if (hasChild && !car.getAllowsBaby()) {
+                continue;
+            }
             double distance = MapUtils.calculateDistance(car.getPosition().getX(), car.getPosition().getY(), latLngDTO.getLng(), latLngDTO.getLat()); // switch
             if (distance < minDistance) {
                 closestCar = car;
@@ -321,9 +328,10 @@ public class CarService {
     }
 
 
-    public Car getClosestCarWhenAllAreNotAvailable(LatLngDTO latLngDTO) {
+    public Car getClosestCarWhenAllAreNotAvailable(CreateRideDTO createRideDTO) {
         List<Car> activeNotReservedCars = carRepository.getActiveNotAvailableNotReservedCars();
-        return getClosestCar(latLngDTO, activeNotReservedCars);
+        return getClosestCar(createRideDTO.getCoordinates().get(0), activeNotReservedCars,
+                createRideDTO.isHasPet(), createRideDTO.isHasChild());
     }
 
 

@@ -9,6 +9,7 @@ import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -24,10 +25,7 @@ public class Payment {
 
     private Double totalPrice;
     private Boolean isAcceptedPayment;
-//    @OneToOne(mappedBy = "payment", fetch = FetchType.LAZY)
-    @JsonManagedReference
-    @OneToOne
-    private Ride ride;
     private Boolean deleted = false;
-
+    @OneToMany
+    private List<Customer> customersThatPayed;
 }

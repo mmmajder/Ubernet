@@ -17,7 +17,7 @@ export class RideService {
     this.rideUrl = 'http://localhost:8000/ride';
   }
 
-  public createRide(ride: RideCreate): Observable<Ride> {
+  public createRideRequest(ride: RideCreate): Observable<Ride> {
     return this.http.post<Ride>(this.rideUrl + "/create", ride, RideService.getHttpOptions());
   }
 

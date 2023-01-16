@@ -1,5 +1,6 @@
 package com.example.ubernet.dto;
 
+import com.example.ubernet.model.Payment;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,4 +30,5 @@ public class CreateRideDTO {
     private String reservationTime;
     private List<PlaceDTO> route;
     private Integer numberOfRoute;
+    private PaymentDTO payment;
 }

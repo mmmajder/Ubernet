@@ -26,7 +26,6 @@ public class Ride {
     @OrderBy("checkPoints")
     private Route route;
 
-    @JsonBackReference
     @OneToOne
     private Payment payment;
     @OneToOne

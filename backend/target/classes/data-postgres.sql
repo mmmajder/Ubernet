@@ -52,8 +52,8 @@ values (false, 45.267136, 19.833549),
 -- insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
 insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name)
 values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW'),
-       (false, true, 2, 3, true, true, 'NS-GLAMOC1', 'Audi'),
-       (false, true, 3, 5, true, true, 'BTACAB1312', 'Yugo');
+       (false, true, 2, 3, false, false, 'NS-GLAMOC1', 'Audi'),
+       (false, true, 3, 5, true, false, 'BTACAB1312', 'Yugo');
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
@@ -133,13 +133,13 @@ values ('2022-10-27 12:00', '2022-10-27 11:00', false, '2022-10-27 10:00', '2031
        ('2022-10-30 12:00', '2022-10-30 11:00', false, '2022-10-30 10:00', '2031-10-30 11:00', 'driver@gmail.com', 1,
         1, 3);
 
-update payment
-set ride_id=1
-where id = 1;
-
-update payment
-set ride_id=2
-where id = 2;
+-- update payment
+-- set ride_id=1
+-- where id = 1;
+--
+-- update payment
+-- set ride_id=2
+-- where id = 2;
 
 insert into ride_customers(ride_id, customers_email)
 values (1, 'customer@gmail.com'),
