@@ -1,5 +1,7 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.model.CustomerPayment;
+import com.example.ubernet.model.Payment;
 import com.example.ubernet.model.User;
 import com.example.ubernet.utils.EmailContentUtils;
 import lombok.AllArgsConstructor;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.List;
 import java.util.Objects;
 
 @AllArgsConstructor
@@ -50,5 +53,24 @@ public class EmailService {
         helper.setText(content, true);
         javaMailSender.send(message);
         System.out.println("Email sent!");
+    }
+
+    @Async
+    public void sendEmailToOtherPassangers(List<CustomerPayment> customerPayments) throws MailException, MessagingException {
+        for (CustomerPayment customerPayment : customerPayments) {
+            if (customerPayment.getUrl() == null) continue;
+            System.out.println("Sending email...");
+            MimeMessage message = javaMailSender.createMimeMessage();
+            message.setSubject("Uber ride request");
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setTo("ubernet-test@outlook.com");
+            helper.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
+            String content = EmailContentUtils.getRideRequestContent(customerPayments.get(0), customerPayment.getCustomer(), customerPayment.getPricePerCustomer());
+            String verifyURL = "http://localhost:4200/request-ride/" + customerPayment.getUrl();
+            content = content.replace("[[URL]]", verifyURL);
+            helper.setText(content, true);
+            javaMailSender.send(message);
+            System.out.println("Email sent!");
+        }
     }
 }

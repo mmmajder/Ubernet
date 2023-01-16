@@ -2,6 +2,7 @@ package com.example.ubernet.service;
 
 import com.example.ubernet.dto.LoginSocialDTO;
 import com.example.ubernet.dto.SimpleUser;
+import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.Customer;
 import com.example.ubernet.model.Role;
@@ -13,6 +14,7 @@ import com.example.ubernet.utils.EntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -84,13 +86,17 @@ public class CustomerService {
     public Set<Customer> getCustomersByEmails(List<String> customerEmails) {
         Set<Customer> customers = new HashSet<>();
         for (String email : customerEmails) {
-            Customer customer = findByEmail(email);
-            if (customer == null) {
-                throw new NotFoundException("Customer with this email does not exist");
-            }
-            customers.add(customer);
+            customers.add(getCustomerByEmail(email));
         }
         return customers;
+    }
+
+    public Customer getCustomerByEmail(String email) {
+        Customer customer = findByEmail(email);
+        if (customer == null) {
+            throw new NotFoundException("Customer with this email does not have Ubernet account");
+        }
+        return customer;
     }
 
     public double addTokens(String email, double tokens) {
@@ -101,5 +107,26 @@ public class CustomerService {
         customer.setNumberOfTokens(customer.getNumberOfTokens() + tokens);
         save(customer);
         return customer.getNumberOfTokens();
+    }
+
+    @Transactional
+    public void checkIfCustomersCanPay(Set<Customer> customers, Double totalPrice, Customer issueCustomer) {
+        double avgPrice = totalPrice / (customers.size() + 1);
+        StringBuilder errorMessage = new StringBuilder();
+        for (Customer customer : customers) {
+            if (customer.getNumberOfTokens() < avgPrice) {
+                errorMessage.append(customer.getName()).append(" ").append(customer.getSurname());
+            }
+        }
+        if (issueCustomer.getNumberOfTokens()<avgPrice) {
+            if (errorMessage.toString().equals("")) {
+                throw new BadRequestException("You do not have enough money to pay for ride");
+            } else {
+                errorMessage.append(" and you");
+            }
+        }
+        if (!errorMessage.toString().equals("")) {
+            throw new BadRequestException("Following users do not have enough money: " + errorMessage);
+        }
     }
 }

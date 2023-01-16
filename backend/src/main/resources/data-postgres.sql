@@ -51,19 +51,19 @@ values (false, 45.267136, 19.833549),
 
 -- insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
 insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name)
-values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW'),
-       (false, true, 2, 3, false, false, 'NS-GLAMOC1', 'Audi'),
-       (false, true, 3, 5, true, false, 'BTACAB1312', 'Yugo');
+values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW');
+--        (false, true, 2, 3, false, false, 'NS-GLAMOC1', 'Audi'),
+--        (false, true, 3, 5, true, false, 'BTACAB1312', 'Yugo');
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                     driver_daily_activity_id, car_id)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1),
-       ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2),
-       ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3);
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1);
+--        ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
+--         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2),
+--        ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
+--         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (2, 2),
@@ -76,9 +76,9 @@ values (2, 2),
 insert into customer (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                       number_of_tokens)
 values ('customer@gmail.com', 'Customville', false, false, 'Customer',
-        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5, 100.0),
+        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5, 1000.0),
        ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
-        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 150.0);
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 11150.0);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (5, 3),
@@ -89,12 +89,12 @@ values (5, 3),
 update car
 set driver_email='driver@gmail.com'
 where id = 1;
-update car
-set driver_email='driver2@gmail.com'
-where id = 2;
-update car
-set driver_email='driver3@gmail.com'
-where id = 3;
+-- update car
+-- set driver_email='driver2@gmail.com'
+-- where id = 2;
+-- update car
+-- set driver_email='driver3@gmail.com'
+-- where id = 3;
 
 insert into user_auth(deleted, is_enabled, last_password_set, verification_code)
 values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');

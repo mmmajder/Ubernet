@@ -28,19 +28,5 @@ public class RideRequestService {
 //        return rideRequestRepository.save(rideRequest);
 //    }
 
-    private List<Customer> getCustomersByEmail(List<String> emails) {
-        List<Customer> customers = new ArrayList<>();
-        for (String email : emails) {
-            customers.add(getCustomerByEmail(email));
-        }
-        return customers;
-    }
 
-    private Customer getCustomerByEmail(String clientEmail) {
-        Customer customer = customerRepository.findByEmail(clientEmail);
-        if (customer == null) {
-            throw new BadRequestException("Client with that email does not exist");
-        }
-        return customer;
-    }
 }

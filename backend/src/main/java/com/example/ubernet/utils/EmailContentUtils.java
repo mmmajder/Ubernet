@@ -1,5 +1,9 @@
 package com.example.ubernet.utils;
 
+import com.example.ubernet.model.Customer;
+import com.example.ubernet.model.CustomerPayment;
+import com.example.ubernet.model.Payment;
+
 public class EmailContentUtils {
     public static String getVerificationContent() {
         String title = "Verify your email address\r\n";
@@ -12,6 +16,14 @@ public class EmailContentUtils {
         String title = "Set new password\r\n";
         String body = "Click the button below to set your new password.\r\n";
         String buttonText = "Set password\r\n";
+        return originalTemplate(title, body, buttonText);
+    }
+
+    public static String getRideRequestContent(CustomerPayment caller, Customer receiver, Double price) {
+        String title = "You have been added to Uber ride\r\n";
+        String body = "Hi " + receiver.getName() + " " + receiver.getSurname() + "! " + caller.getCustomer().getName() + " " + caller.getCustomer().getSurname() + " invited you to " +
+                "go on the same ride and split fair!\r\nPrice: " + price + " \r\nClick the button below to accept the request.\r\n";
+        String buttonText = "Accept\r\n";
         return originalTemplate(title, body, buttonText);
     }
 

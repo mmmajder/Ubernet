@@ -327,7 +327,6 @@ public class CarService {
         return closestCar;
     }
 
-
     public Car getClosestCarWhenAllAreNotAvailable(CreateRideDTO createRideDTO) {
         List<Car> activeNotReservedCars = carRepository.getActiveNotAvailableNotReservedCars();
         return getClosestCar(createRideDTO.getCoordinates().get(0), activeNotReservedCars,

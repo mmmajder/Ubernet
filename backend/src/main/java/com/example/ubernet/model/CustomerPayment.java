@@ -1,28 +1,23 @@
 package com.example.ubernet.model;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @Entity
-@NoArgsConstructor
 @AllArgsConstructor
-
-public class Payment {
-
+@NoArgsConstructor
+public class CustomerPayment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
-
-    private Double totalPrice;
-    private Boolean isAcceptedPayment;
-    private Boolean deleted = false;
-    @OneToMany
-    private List<CustomerPayment> customers;
+    @ManyToOne
+    private Customer customer;
+    private boolean payed;
+    private String url;
+    private Double pricePerCustomer;
 }

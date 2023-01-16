@@ -4,16 +4,21 @@ import com.example.ubernet.dto.CreateRideDTO;
 import com.example.ubernet.dto.InstructionDTO;
 import com.example.ubernet.dto.LatLngDTO;
 import com.example.ubernet.dto.PlaceDTO;
+import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.RideState;
+import com.example.ubernet.repository.CustomerPaymentRepository;
+import com.example.ubernet.repository.PaymentRepository;
 import com.example.ubernet.repository.PlaceRepository;
 import com.example.ubernet.repository.RideRepository;
 import com.example.ubernet.utils.MapUtils;
 import com.example.ubernet.utils.TimeUtils;
 import lombok.AllArgsConstructor;
+import net.bytebuddy.utility.RandomString;
 import org.springframework.stereotype.Service;
 
+import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
@@ -34,6 +39,9 @@ public class RideService {
     private final RouteService routeService;
     private final CurrentRideService currentRideService;
     private final PlaceRepository placeRepository;
+    private final EmailService emailService;
+    private final CustomerPaymentRepository customerPaymentRepository;
+    private final PaymentRepository paymentRepository;
 
     public Ride findById(Long id) {
         return rideRepository.findById(id).orElse(null);
@@ -44,10 +52,47 @@ public class RideService {
     }
 
     public Ride createRide(CreateRideDTO createRideDTO) {
-        Car car = getCarForRide(createRideDTO);
-        car.setIsAvailable(false);
-        setCurrentOfFutureRide(createRideDTO, car);
-        return setRide(createRideDTO, car);
+        Set<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
+        Customer issueCustomer = customerService.getCustomerByEmail(createRideDTO.getPayment().getCustomerThatPayed());
+        customerService.checkIfCustomersCanPay(customers, createRideDTO.getPayment().getTotalPrice(), issueCustomer);
+        double price = createRideDTO.getPayment().getTotalPrice() / (customers.size() + 1);
+        issueCustomer.setNumberOfTokens(issueCustomer.getNumberOfTokens() - price);
+        customerService.save(issueCustomer);
+
+        Payment payment = new Payment();
+        List<CustomerPayment> customerPayments = new ArrayList<>();
+        CustomerPayment customerPayment = new CustomerPayment();
+        customerPayment.setCustomer(issueCustomer);
+        customerPayment.setPayed(true);
+        customerPaymentRepository.save(customerPayment);
+        customerPayments.add(customerPayment);
+        for (Customer customer : customers) {
+            CustomerPayment customersPayment = new CustomerPayment();
+            customersPayment.setCustomer(customer);
+            customersPayment.setPayed(false);
+            customersPayment.setUrl(RandomString.make(64));
+            customerPaymentRepository.save(customersPayment);
+            customerPayments.add(customersPayment);
+        }
+        for (CustomerPayment pay : customerPayments) {
+            pay.setPricePerCustomer(createRideDTO.getPayment().getTotalPrice() / customerPayments.size());
+        }
+        payment.setCustomers(customerPayments);
+        payment.setDeleted(false);
+        payment.setTotalPrice(createRideDTO.getPayment().getTotalPrice());
+        payment.setIsAcceptedPayment(createRideDTO.getPassengers().size() == 0);
+        paymentRepository.save(payment);
+        try {
+            emailService.sendEmailToOtherPassangers(payment.getCustomers());
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
+        return new Ride();
+//        Car car = getCarForRide(createRideDTO);
+//        car.setIsAvailable(false);
+//        setCurrentOfFutureRide(createRideDTO, car);
+//        return setRide(createRideDTO, car);
     }
 
     private Ride setRide(CreateRideDTO createRideDTO, Car car) {
@@ -91,7 +136,7 @@ public class RideService {
         currentRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
         currentRideService.save(currentRide);
 
-        if (car.getCurrentRide()==null || car.getCurrentRide().isFreeRide()) {
+        if (car.getCurrentRide() == null || car.getCurrentRide().isFreeRide()) {
             car.setCurrentRide(currentRide);
         } else {
             car.setFutureRide(currentRide);
@@ -178,7 +223,7 @@ public class RideService {
         if (car == null) {
             throw new NotFoundException("Car does not exist");
         }
-        if (car.getFutureRide()==null) {
+        if (car.getFutureRide() == null) {
             CurrentRide currentRide = car.getCurrentRide();
             List<PositionInTime> newPositions = createRideDestinations(createRideDTO);
             List<PositionInTime> oldPositions = currentRide.getPositions();
@@ -207,5 +252,18 @@ public class RideService {
             futureRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
             currentRideService.save(futureRide);
         }
+    }
+
+    public void acceptSplitFair(String url) {
+        CustomerPayment customerPayment = customerPaymentRepository.findByUrl(url);
+        if (customerPayment == null) throw new BadRequestException("Url is incorrect");
+        if (customerPayment.isPayed()) throw new BadRequestException("Payment has already been accepted");
+        customerPayment.setPayed(true);
+        customerPaymentRepository.save(customerPayment);
+        double price = customerPayment.getPricePerCustomer();
+        Customer customer = customerPayment.getCustomer();
+        customer.setNumberOfTokens(customer.getNumberOfTokens() - price);
+        customerService.save(customer);
+
     }
 }

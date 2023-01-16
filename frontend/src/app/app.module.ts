@@ -44,12 +44,14 @@ import {CustomersState} from "./store/states/customers.state";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSelectModule} from "@angular/material/select";
 import {TokensState} from "./store/states/tokens.state";
+import { RequestRideComponent } from './views/request-ride-accept/request-ride/request-ride.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundPageComponent,
     VerifyRegistrationComponent,
+    RequestRideComponent,
   ],
   imports: [
     BrowserModule,

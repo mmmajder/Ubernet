@@ -25,6 +25,10 @@ export class RideService {
     return this.http.post<void>(this.rideUrl + "/update-car-route/" + carId, ride, RideService.getHttpOptions());
   }
 
+  public acceptRequestSplitFair(url: string):Observable<any> {
+    return this.http.put<any>(this.rideUrl + "/accept-request-split-fair/" + url, RideService.getHttpOptions());
+  }
+
   public getLastPosition(positionsInTime:PositionInTime[]):Position {
     let lastPosition = positionsInTime[0]
     positionsInTime.forEach((positionsInTime:PositionInTime) => {
@@ -43,4 +47,6 @@ export class RideService {
       })
     };
   }
+
+
 }
