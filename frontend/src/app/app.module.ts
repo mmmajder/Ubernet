@@ -44,14 +44,16 @@ import {CustomersState} from "./store/states/customers.state";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSelectModule} from "@angular/material/select";
 import {TokensState} from "./store/states/tokens.state";
-import { RequestRideComponent } from './views/request-ride-accept/request-ride/request-ride.component';
+import { RequestSplitFareMailAcceptComponent } from './views/request-ride-accept/request-split-fare-mail-accept/request-split-fare-mail-accept.component';
+import { RideSplitFareDialogComponent } from './views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundPageComponent,
     VerifyRegistrationComponent,
-    RequestRideComponent,
+    RequestSplitFareMailAcceptComponent,
+    RideSplitFareDialogComponent,
   ],
   imports: [
     BrowserModule,

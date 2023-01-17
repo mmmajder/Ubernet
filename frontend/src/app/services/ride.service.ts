@@ -5,6 +5,8 @@ import {RideCreate} from "../model/RideCreate";
 import {Ride} from "../model/Ride";
 import {PositionInTime} from "../model/PositionInTime";
 import {Position} from "../model/Position";
+import {RideDetails} from "../model/RideDetails";
+import {RideDTO} from "../model/RideDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -25,8 +27,12 @@ export class RideService {
     return this.http.post<void>(this.rideUrl + "/update-car-route/" + carId, ride, RideService.getHttpOptions());
   }
 
-  public acceptRequestSplitFair(url: string):Observable<any> {
-    return this.http.put<any>(this.rideUrl + "/accept-request-split-fair/" + url, RideService.getHttpOptions());
+  public acceptRequestSplitFare(url: string):Observable<any> {
+    return this.http.put<any>(this.rideUrl + "/accept-request-split-fare/" + url, RideService.getHttpOptions());
+  }
+
+  public getById(id: number):Observable<RideDTO> {
+    return this.http.get<RideDTO>(this.rideUrl + "/" + id, RideService.getHttpOptions());
   }
 
   public getLastPosition(positionsInTime:PositionInTime[]):Position {
@@ -47,6 +53,7 @@ export class RideService {
       })
     };
   }
+
 
 
 }

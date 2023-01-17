@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {AuthService} from "./auth.service";
-import {SimpleUser} from "../model/User";
+import {Customer, SimpleUser} from "../model/User";
 
 @Injectable({
   providedIn: 'root'
@@ -23,6 +23,10 @@ export class CustomersService {
     return this.http.get<number>(this.customerUrl + "/get-number-of-tokens/" + email, AuthService.getHttpOptions());
   }
 
+  public getById(email: String): Observable<Customer> {
+    return this.http.get<Customer>(this.customerUrl + "/" + email, AuthService.getHttpOptions());
+  }
+
   public addTokens(email: string, tokens: number): Observable<number> {
     let amount = {
       "tokens": tokens
@@ -33,4 +37,6 @@ export class CustomersService {
   getCustomersEmails(): Observable<string[]> {
     return this.http.get<string[]>(this.customerUrl + "/getCustomersEmails", AuthService.getHttpOptions());
   }
+
+
 }

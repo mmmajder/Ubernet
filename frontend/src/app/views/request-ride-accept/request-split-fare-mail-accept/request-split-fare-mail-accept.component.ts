@@ -5,10 +5,10 @@ import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-request-ride',
-  templateUrl: './request-ride.component.html',
-  styleUrls: ['./request-ride.component.css']
+  templateUrl: './request-split-fare-mail-accept.component.html',
+  styleUrls: ['./request-split-fare-mail-accept.component.css']
 })
-export class RequestRideComponent implements OnInit {
+export class RequestSplitFareMailAcceptComponent implements OnInit {
   response: string;
 
   constructor(private route: ActivatedRoute, private router: Router, private rideService: RideService, private _snackBar: MatSnackBar) {
@@ -16,7 +16,7 @@ export class RequestRideComponent implements OnInit {
 
   ngOnInit(): void {
     let url = this.route.snapshot.paramMap.get('acceptRideUrl')!;
-    this.rideService.acceptRequestSplitFair(url).subscribe({
+    this.rideService.acceptRequestSplitFare(url).subscribe({
       next: () => {
         this.response = "Successfully accepted payment"
       },

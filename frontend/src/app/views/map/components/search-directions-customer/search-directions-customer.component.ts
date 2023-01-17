@@ -215,13 +215,13 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     ride.carType = this.carType.value
     ride.hasPet = this.hasPet
     ride.hasChild = this.hasChild
-    ride.passengers = this.friends.map((friend)=> {return friend.friendEmail})
     ride.totalDistance = route.summary.totalDistance
     ride.totalTime = route.summary.totalTime
     ride.reservationTime = this.timeOfRide
     ride.route = this.positions
     ride.numberOfRoute = route.routesIndex    //TODO
     ride.payment = payment
+    ride.passengers = []
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })

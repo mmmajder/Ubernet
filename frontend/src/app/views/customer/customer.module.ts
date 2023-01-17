@@ -46,7 +46,7 @@ import {PaymentComponent} from "./components/payment/payment.component";
     CustomersUpcomingRidesComponent,
     CustomerRatingsDashboardComponent,
     RateDialogComponent,
-    PaymentComponent
+    PaymentComponent,
   ],
   imports: [
     MatToolbarModule,
@@ -70,13 +70,13 @@ import {PaymentComponent} from "./components/payment/payment.component";
     MatTooltipModule,
     NgxPayPalModule
   ],
-  exports: [
-    DashboardCustomerContainerComponent,
-    ProfileDataComponent,
-    UnauthenticatedModule,
-    ProfileCustomerContainerComponent,
-    PaymentComponent
-  ],
+    exports: [
+        DashboardCustomerContainerComponent,
+        ProfileDataComponent,
+        UnauthenticatedModule,
+        ProfileCustomerContainerComponent,
+        PaymentComponent,
+    ],
 })
 export class CustomerModule {
 }

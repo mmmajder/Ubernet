@@ -1,0 +1,82 @@
+import {Component, Inject, OnInit} from '@angular/core';
+import {MAT_DIALOG_DATA} from "@angular/material/dialog";
+import {NotificationDTO} from "../../../model/NotificationDTO";
+import {RideService} from "../../../services/ride.service";
+import {Customer, User} from "../../../model/User";
+import {CustomersService} from "../../../services/customers.service";
+import {Place} from "../../../model/Position";
+import {RideDTO} from "../../../model/RideDTO";
+import {Store} from "@ngxs/store";
+import {MatSnackBar} from "@angular/material/snack-bar";
+
+@Component({
+  selector: 'app-ride-split-fare-dialog',
+  templateUrl: './ride-split-fare-dialog.component.html',
+  styleUrls: ['./ride-split-fare-dialog.component.css']
+})
+export class RideSplitFareDialogComponent implements OnInit {
+
+  notification: NotificationDTO
+  price: number;
+  name: string;
+  surname: string;
+  path: string;
+  ride: RideDTO;
+  loggedUser: User;
+
+  constructor(private _snackBar: MatSnackBar, private store: Store, @Inject(MAT_DIALOG_DATA) public data: NotificationDTO, private rideService: RideService, private customerService: CustomersService) {
+    this.notification = data;
+  }
+
+  ngOnInit(): void {
+    this.store.select(state => state.loggedUser).subscribe({
+      next: (user) => {
+        this.loggedUser = user;
+      }
+    })
+    console.log(this.notification)
+    this.rideService.getById(this.notification.rideId).subscribe((ride) => {
+      console.log("ride")
+      console.log(ride)
+      this.ride = ride;
+      this.path = this.printCheckpoints(ride.route.checkPoints)
+      let sender = ride.customers[0]
+      this.price = ride.payment.totalPrice
+      this.name = sender.name
+      this.surname = sender.surname
+    })
+  }
+
+  printCheckpoints(checkPoints: Place[]) {
+    let res = ""
+    checkPoints.forEach((checkPoint, index) => {
+      if (index === 0) res += checkPoint.name
+      else res += " -> " + checkPoint.name
+    })
+    return res
+  }
+
+  accept() {
+    console.log(this.ride)
+    this.ride.payment.customers.forEach((customerPayment) => {
+      console.log(customerPayment)
+      console.log(this.loggedUser)
+      if (customerPayment.customer.email === this.loggedUser.email) {
+        this.rideService.acceptRequestSplitFare(customerPayment.url).subscribe({
+          next: () => {
+            this._snackBar.open("Successfully accepted split fare request!", '', {
+              duration: 3000,
+              panelClass: ['snack-bar']
+            })
+          },
+          error: (resp) => {
+            this._snackBar.open(resp.error, '', {
+              duration: 3000,
+              panelClass: ['snack-bar']
+            })
+          }
+        })
+      }
+    })
+  }
+}

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import {LatLng, Marker} from 'leaflet';
 import 'leaflet-routing-machine';
@@ -18,6 +18,7 @@ import {Router} from "@angular/router";
 import {Store} from "@ngxs/store";
 import {CarService} from "../../../../services/car.service";
 import {PositionInTime} from "../../../../model/PositionInTime";
+import {SidenavComponent} from "../../../../shared/sidenav/sidenav/sidenav.component";
 
 @Component({
   selector: 'app-map',
@@ -38,6 +39,8 @@ export class MapComponent implements AfterViewInit, OnInit {
   pins: Marker[];
   selectedRoute: any;
   loggedUser: User;
+
+  @ViewChild(SidenavComponent) sideNav: SidenavComponent;
 
   constructor(private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
     this.searchPins = [];
@@ -73,9 +76,8 @@ export class MapComponent implements AfterViewInit, OnInit {
     let ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
     this.stompClient.debug = null;
-    let that = this;
-    this.stompClient.connect({}, function () {
-      that.openGlobalSocket();
+    this.stompClient.connect({}, () => {
+      this.openGlobalSocket();
     });
   }
 
@@ -87,33 +89,44 @@ export class MapComponent implements AfterViewInit, OnInit {
     })
     this.stompClient.subscribe("/map-updates/update-route-for-selected-car", (message: any) => {
       this.createRouteForSelectedCar(JSON.parse(message.body))
+      console.log(message)
+      // this.sideNav.notify(JSON.parse(message.body).customers)
     })
+    // this.stompClient.subscribe("/notify/split-fare-" + this.loggedUser.email, (message: any) => {
+    //   console.log(message)
+    //   console.log("Stigao sam na drugu stranu")
+    //   this.sideNav.notify(JSON.parse(message.body))
+    // })
+
   }
 
   createRouteForSelectedCar(ride: any) {
     let checkPoints: LatLng[] = []
     let start: Position
-    if (ride.driver.car.futureRide === null)
-      start = ride.driver.car.position
-    else
-      start = this.rideService.getLastPosition(ride.driver.car.futureRide.positions)
-    let end = ride.driver.car.currentRide.positions[0].position
-    checkPoints.push(L.latLng(start.y, start.x))
-    checkPoints.push(L.latLng(end.y, end.x))
-    let route = L.Routing.control({
-      waypoints: checkPoints,
-      altLineOptions: {
-        extendToWaypoints: false,
-        missingRouteTolerance: 0,
-      },
-    }).on('routesfound', (response) => {
-      let route = response.routes[0]
-      console.log("OOOOOOOOOOO")
-      console.log(route)
-      this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe(() => {
-        console.log("STIGAO sam")
-      })
-    }).addTo(this.map)
+
+    //ne brisi
+
+    // if (ride.driver.car.futureRide === null)
+    //   start = ride.driver.car.position
+    // else
+    //   start = this.rideService.getLastPosition(ride.driver.car.futureRide.positions)
+    // let end = ride.driver.car.currentRide.positions[0].position
+    // checkPoints.push(L.latLng(start.y, start.x))
+    // checkPoints.push(L.latLng(end.y, end.x))
+    // let route = L.Routing.control({
+    //   waypoints: checkPoints,
+    //   altLineOptions: {
+    //     extendToWaypoints: false,
+    //     missingRouteTolerance: 0,
+    //   },
+    // }).on('routesfound', (response) => {
+    //   let route = response.routes[0]
+    //   console.log("OOOOOOOOOOO")
+    //   console.log(route)
+    //   this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe(() => {
+    //     console.log("STIGAO sam")
+    //   })
+    // }).addTo(this.map)
 
   }
 

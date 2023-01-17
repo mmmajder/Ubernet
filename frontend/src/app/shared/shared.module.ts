@@ -29,30 +29,31 @@ import {MatSortModule} from "@angular/material/sort";
 import { RideDetailsDialogComponent } from './ride-details-dialog/ride-details-dialog.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {MatExpansionModule} from "@angular/material/expansion";
+import {NotificationsComponent} from "./notification/notifications.component";
 
 @NgModule({
-  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent],
-    imports: [
-        MatToolbarModule,
-        MatIconModule,
-        MatMenuModule,
-        CommonModule,
-        MatButtonModule,
-        MatBadgeModule,
-        MatListModule,
-        MatTooltipModule,
-        FormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatProgressSpinnerModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatChipsModule,
-        MatExpansionModule
-    ],
+  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
+  imports: [
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
+    CommonModule,
+    MatButtonModule,
+    MatBadgeModule,
+    MatListModule,
+    MatTooltipModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatChipsModule,
+    MatExpansionModule,
+  ],
   exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {

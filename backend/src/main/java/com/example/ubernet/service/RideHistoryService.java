@@ -93,8 +93,8 @@ public class RideHistoryService {
                 .build();
     }
 
-    private Set<SimpleUser> createSimpleUsers(Set<Customer> customers) {
-        return new HashSet<>() {{
+    private List<SimpleUser> createSimpleUsers(List<Customer> customers) {
+        return new ArrayList<>() {{
             for (Customer customer : customers)
                 add(SimpleUser.builder()
                         .email(customer.getEmail())

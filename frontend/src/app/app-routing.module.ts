@@ -10,7 +10,7 @@ import {DashboardContainerComponent} from "./views/pages/dashboard-container/das
 import {ProfileContainerComponent} from "./views/pages/profile-container/profile-container.component";
 import {VerifyRegistrationComponent} from "./views/verify/verify-registration/verify-registration.component";
 import {RidesHistoryContainerComponent} from "./views/pages/rides-history-container/rides-history-container.component";
-import {RequestRideComponent} from "./views/request-ride-accept/request-ride/request-ride.component";
+import {RequestSplitFareMailAcceptComponent} from "./views/request-ride-accept/request-split-fare-mail-accept/request-split-fare-mail-accept.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
@@ -21,7 +21,7 @@ const routes: Routes = [
   {path: 'profile', component: ProfileContainerComponent},
   {path: 'rides', component: RidesHistoryContainerComponent},
   {path: 'verify/:verificationCode', component: VerifyRegistrationComponent},
-  {path: 'request-ride/:acceptRideUrl', component: RequestRideComponent},
+  {path: 'request-ride/:acceptRideUrl', component: RequestSplitFareMailAcceptComponent},
   {path: '**', component: NotFoundPageComponent},
   // {canActivate: [AuthGuard]}
 ];

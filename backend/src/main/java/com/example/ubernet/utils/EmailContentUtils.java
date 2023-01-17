@@ -2,7 +2,8 @@ package com.example.ubernet.utils;
 
 import com.example.ubernet.model.Customer;
 import com.example.ubernet.model.CustomerPayment;
-import com.example.ubernet.model.Payment;
+
+import java.util.Objects;
 
 public class EmailContentUtils {
     public static String getVerificationContent() {
@@ -22,14 +23,14 @@ public class EmailContentUtils {
     public static String getRideRequestContent(CustomerPayment caller, Customer receiver, Double price) {
         String title = "You have been added to Uber ride\r\n";
         String body = "Hi " + receiver.getName() + " " + receiver.getSurname() + "! " + caller.getCustomer().getName() + " " + caller.getCustomer().getSurname() + " invited you to " +
-                "go on the same ride and split fair!\r\nPrice: " + price + " \r\nClick the button below to accept the request.\r\n";
+                "go on the same ride and split fare!\r\nPrice: " + price + " \r\nClick the button below to accept the request.\r\n";
         String buttonText = "Accept\r\n";
         return originalTemplate(title, body, buttonText);
     }
 
     private static String originalTemplate(String title, String body, String buttonText) {
         String button = "";
-        if (buttonText!="") {
+        if (!buttonText.equals("")) {
             button =  "                                    <a href=\"[[URL]]\" target=\"_blank\" style=\"font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.0; font-weight: bold; color: #ffffff; text-transform: uppercase; text-decoration: none; border-radius: 30px; -webkit-border-radius: 30px; -moz-border-radius: 30px; display: block; padding: 12px 25px 12px 25px;\">\r\n"
                     + buttonText
                     + "                                            </a>\r\n";

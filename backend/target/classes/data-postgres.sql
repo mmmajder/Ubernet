@@ -46,7 +46,13 @@ values (false, 45.267136, 19.833549),
        (false, 45.275136, 19.833549),
        (false, 45.275136, 19.843549),
        (false, 45.287136, 19.833549),
-       (false, 45.287136, 19.843549);
+       (false, 45.287136, 19.843549),
+
+       (false, 45.238548, 19.848225),
+       (false, 45.243097, 19.836284),
+       (false, 45.256863, 19.844129),
+       (false, 45.255055, 19.810161),
+       (false, 45.246540, 19.849282);
 
 
 -- insert into driver (email, city, deleted, is_blocked, name, password, phone_number, role, surname, user_auth_id,
@@ -114,10 +120,36 @@ values (false, true, 500),
        (false, true, 500),
        (false, false, 500);
 
+insert into customer_payment (payed, price_per_customer, url, customer_email)
+values (false, 250, 'url1', 'customer@gmail.com'),
+       (false, 250, 'url2', 'petar@gmail.com');
+
+insert into payment_customers (payment_id, customers_id)
+values (1, 1),
+       (1, 2);
+
 insert into route (deleted, price, time)
 values (false, 500, 1200),
        (false, 500, 1200),
        (false, 500, 1200);
+
+insert into place(name, position_id)
+values ('Stajaliste na keju, Novi Sad', 7),
+       ('Stajaliste kod limanske pijace, Novi Sad', 8),
+       ('Stajaliste kod trifkovicevog trga, Novi Sad', 9),
+       ('Stajaliste na telepu, Novi Sad', 10),
+       ('Stajaliste kod velike menze, Novi Sad', 11),
+       ('Stajaliste na keju, Novi Sad', 7),
+       ('Stajaliste kod limanske pijace, Novi Sad', 8);
+
+insert into route_check_points(route_id, check_points_id)
+values (1, 1),
+       (1, 2),
+       (1, 3),
+       (2, 4),
+       (2, 5),
+       (3, 6),
+       (3, 7);
 
 -- insert into ride_denial (deleted, reason, ride_id)
 -- values (false, 'Eto tako', 1);
@@ -143,10 +175,11 @@ values ('2022-10-27 12:00', '2022-10-27 11:00', false, '2022-10-27 10:00', '2031
 
 insert into ride_customers(ride_id, customers_email)
 values (1, 'customer@gmail.com'),
-    (2, 'petar@gmail.com'),
-    (3, 'petar@gmail.com'),
-    (4, 'customer@gmail.com'),
-    (4, 'petar@gmail.com');
+       (2, 'petar@gmail.com'),
+       (3, 'petar@gmail.com'),
+       (4, 'petar@gmail.com'),
+       (4, 'customer@gmail.com');
+
 
 insert into review (comment, rating, customer_email)
 values ('Bravo majstore', 4, 'customer@gmail.com'),
@@ -162,4 +195,7 @@ insert into comment(user_email, admin_email, time, content)
 values ('customer@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac je mnogo hot'),
        ('customer@gmail.com', 'admin@gmail.com', '2022-10-27 13:00', 'AHAHHAHAHHAHAH nije'),
        ('customer@gmail.com', 'admin@gmail.com', '2022-10-27 14:00', 'AHHAHAHHAHA e pa jeste'),
-       ('customer@gmail.com', 'admin@gmail.com', '2022-10-28 12:00', 'ok.')
+       ('customer@gmail.com', 'admin@gmail.com', '2022-10-28 12:00', 'ok.');
+
+insert into notification(opened, receiver_email, text, type, ride_id)
+values (false, 'customer@gmail.com', 'You have been invited to split fate for ride', 0, 4);

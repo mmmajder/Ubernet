@@ -3,7 +3,7 @@ import {MatMenuTrigger} from "@angular/material/menu";
 import {Logout} from "../../../store/actions/authentication.actions";
 import {Select, Store} from "@ngxs/store";
 import {Router} from "@angular/router";
-import {User} from "../../../model/User";
+import {Customer, User} from "../../../model/User";
 import {CustomersService} from "../../../services/customers.service";
 import {ImageService} from "../../../services/image.service";
 import {PaymentComponent} from "../../../views/customer/components/payment/payment.component";
@@ -11,6 +11,9 @@ import {MatDialog} from "@angular/material/dialog";
 import {Observable, Subscription} from "rxjs";
 import {TokensState} from "../../../store/states/tokens.state";
 import {SetTokens} from "../../../store/actions/tokens.action";
+import {NotificationDTO} from "../../../model/NotificationDTO";
+import * as SockJS from "sockjs-client";
+import * as Stomp from "stompjs";
 
 @Component({
   selector: 'app-sidenav',
@@ -25,6 +28,8 @@ export class SidenavComponent implements OnInit {
   user: User;
   @Input() currentPage: string = 'dashboard';
 
+  @Input()
+
   @Select(TokensState.value) numberOfTokens$!: Observable<number>
   numberOfTokens!: number;
   private valueSubscription: Subscription;
@@ -32,15 +37,14 @@ export class SidenavComponent implements OnInit {
   public profilePictureSrc: string;
   private hasRequestedProfilePicture: boolean = false;
   public static _this: any;
+  notificationBadgeHidden: boolean;
 
-  someMethod() {
-    this.trigger?.openMenu();
-  }
 
   constructor(public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService) {
     this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
       this.numberOfTokens = value;
     });
+    this.notificationBadgeHidden = true
 
     this.store.select(state => state.loggedUser).subscribe({
       next: (user) => {
@@ -52,8 +56,28 @@ export class SidenavComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.initializeWebSocketConnection();
   }
+
+  private stompClient: any;
+
+  initializeWebSocketConnection() {
+    let ws = new SockJS('http://localhost:8000/socket');
+    this.stompClient = Stomp.over(ws);
+    this.stompClient.debug = null;
+    this.stompClient.connect({}, () => {
+      this.openGlobalSocket();
+    });
+  }
+
+  openGlobalSocket() {
+    this.stompClient.subscribe("/notify/split-fare-" + this.user.email, (message: any) => {
+      console.log(message)
+      console.log("Stigao sam na drugu stranu")
+      this.notify(JSON.parse(message.body))
+    })
+  }
+
 
   ngDoCheck(): void {
     if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture) {
@@ -109,4 +133,14 @@ export class SidenavComponent implements OnInit {
       }
     });
   }
+
+  notify(notification: NotificationDTO) {
+    console.log("notificationBadgeHidden")
+    console.log(notification)
+    console.log(this.user.email)
+    // if (this.user.email===customer.email) {
+    this.notificationBadgeHidden = false
+    // }
+  }
+
 }

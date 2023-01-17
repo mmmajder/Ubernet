@@ -7,8 +7,8 @@
     <span class="number-of-tokens">{{numberOfTokens}} </span>
     <mat-icon class="token">monetization_on</mat-icon>
   </button>
-  <button *ngIf="user.role=='CUSTOMER'" mat-icon-button>
-    <mat-icon>notifications</mat-icon>
+  <button *ngIf="user.role=='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="notificationMenu">
+    <mat-icon matBadge="!" matBadgeColor="warn" [matBadgeHidden]="notificationBadgeHidden">notifications</mat-icon>
   </button>
   <button *ngIf="user.role=='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>help</mat-icon>
@@ -77,3 +77,9 @@
 <mat-menu #menu="matMenu">
   <app-user-chat></app-user-chat>
 </mat-menu>
+<mat-menu #notificationMenu="matMenu">
+  <app-notifications></app-notifications>
+<!--  <button mat-menu-item>Item 1</button>-->
+<!--  <button mat-menu-item>Item 2</button>-->
+</mat-menu>
+

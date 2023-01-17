@@ -20,23 +20,8 @@ export class CustomersUpcomingRidesComponent implements OnInit {
       {
         'name': 'Pera',
         'photo': '../../assets/default-profile-picture.jpg'
-      }]},
-      {
-        'time': '15:10h',
-        'timeLeft': '15min',
-        'start': 'Bulevar Kralja Petra 5',
-        'destination': 'Trzni centar Promenada',
-        'friends': [
-          {
-            'name': 'Pera',
-            'photo': '../../assets/default-profile-picture.jpg'
-          },
-          {
-            'name': 'Pera',
-            'photo': '../../assets/default-profile-picture.jpg'
-          }
-        ]
-      }];
+      }]
+  }];
 
   constructor() {
   }

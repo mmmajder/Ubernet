@@ -83,8 +83,8 @@ public class CustomerService {
         return (ArrayList<String>) customerRepository.findAll().stream().map(Customer::getEmail).collect(Collectors.toList());
     }
 
-    public Set<Customer> getCustomersByEmails(List<String> customerEmails) {
-        Set<Customer> customers = new HashSet<>();
+    public List<Customer> getCustomersByEmails(List<String> customerEmails) {
+        List<Customer> customers = new ArrayList<>();
         for (String email : customerEmails) {
             customers.add(getCustomerByEmail(email));
         }
@@ -110,7 +110,7 @@ public class CustomerService {
     }
 
     @Transactional
-    public void checkIfCustomersCanPay(Set<Customer> customers, Double totalPrice, Customer issueCustomer) {
+    public void checkIfCustomersCanPay(List<Customer> customers, Double totalPrice, Customer issueCustomer) {
         double avgPrice = totalPrice / (customers.size() + 1);
         StringBuilder errorMessage = new StringBuilder();
         for (Customer customer : customers) {

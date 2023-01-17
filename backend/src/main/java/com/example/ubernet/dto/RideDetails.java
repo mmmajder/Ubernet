@@ -19,7 +19,7 @@ public class RideDetails {
     private List<Place> checkPoints;
     private Double totalPrice;
     private SimpleUser driver;
-    private Set<SimpleUser> customers;
+    private List<SimpleUser> customers;
     private String scheduledStart;
     private String actualStart;
     private String actualEnd;

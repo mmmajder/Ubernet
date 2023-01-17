@@ -1,0 +1,2 @@
+<button *ngFor="let notification of notifications" id="{{notification.id}}" mat-menu-item (click)="notificationClicked($event)">{{notification.text}}</button>
+

@@ -29,6 +29,6 @@ public class WebSocketConfiguration implements WebSocketConfigurer, WebSocketMes
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-        registry.enableSimpleBroker("/map-updates");
+        registry.enableSimpleBroker("/map-updates", "/notify");
     }
 }

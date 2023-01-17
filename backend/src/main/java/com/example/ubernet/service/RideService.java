@@ -7,6 +7,7 @@ import com.example.ubernet.dto.PlaceDTO;
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.*;
+import com.example.ubernet.model.enums.NotificationType;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.CustomerPaymentRepository;
 import com.example.ubernet.repository.PaymentRepository;
@@ -16,6 +17,7 @@ import com.example.ubernet.utils.MapUtils;
 import com.example.ubernet.utils.TimeUtils;
 import lombok.AllArgsConstructor;
 import net.bytebuddy.utility.RandomString;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -42,6 +44,8 @@ public class RideService {
     private final EmailService emailService;
     private final CustomerPaymentRepository customerPaymentRepository;
     private final PaymentRepository paymentRepository;
+    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final NotificationService notificationService;
 
     public Ride findById(Long id) {
         return rideRepository.findById(id).orElse(null);
@@ -52,7 +56,7 @@ public class RideService {
     }
 
     public Ride createRide(CreateRideDTO createRideDTO) {
-        Set<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
+        List<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
         Customer issueCustomer = customerService.getCustomerByEmail(createRideDTO.getPayment().getCustomerThatPayed());
         customerService.checkIfCustomersCanPay(customers, createRideDTO.getPayment().getTotalPrice(), issueCustomer);
         double price = createRideDTO.getPayment().getTotalPrice() / (customers.size() + 1);
@@ -84,11 +88,15 @@ public class RideService {
         paymentRepository.save(payment);
         try {
             emailService.sendEmailToOtherPassangers(payment.getCustomers());
+
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }
 
-        return new Ride();
+        Ride ride = new Ride();
+        ride.setCustomers(customers);
+//        rideService.save(ride);
+        return ride;
 //        Car car = getCarForRide(createRideDTO);
 //        car.setIsAvailable(false);
 //        setCurrentOfFutureRide(createRideDTO, car);
@@ -97,7 +105,7 @@ public class RideService {
 
     private Ride setRide(CreateRideDTO createRideDTO, Car car) {
         Route route = setRoute(createRideDTO);
-        Set<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
+        List<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
         Driver driver = car.getDriver();
         Ride ride = new Ride();
         ride.setDeleted(false);
@@ -254,7 +262,7 @@ public class RideService {
         }
     }
 
-    public void acceptSplitFair(String url) {
+    public void acceptSplitFare(String url) {
         CustomerPayment customerPayment = customerPaymentRepository.findByUrl(url);
         if (customerPayment == null) throw new BadRequestException("Url is incorrect");
         if (customerPayment.isPayed()) throw new BadRequestException("Payment has already been accepted");
@@ -265,5 +273,19 @@ public class RideService {
         customer.setNumberOfTokens(customer.getNumberOfTokens() - price);
         customerService.save(customer);
 
+    }
+
+    public void notifyCustomers(List<Customer> customers, long rideId) {
+        for (Customer customer: customers) {
+            Notification notification = new Notification();
+            notification.setOpened(false);
+            notification.setText("You have been invited to split fare for ride.");
+            notification.setType(NotificationType.SPLIT_FARE);
+            notification.setReceiverEmail(customer.getEmail());
+            notification.setRideId(rideId);
+            notification.setTimeCreated(LocalDateTime.now());
+            notificationService.save(notification);
+            this.simpMessagingTemplate.convertAndSend("/notify/split-fare-" + customer.getEmail(), notification);
+        }
     }
 }
