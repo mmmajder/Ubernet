@@ -14,6 +14,7 @@ import {SetTokens} from "../../../store/actions/tokens.action";
 import {NotificationDTO} from "../../../model/NotificationDTO";
 import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
+import {NotificationService} from "../../../services/notification.service";
 
 @Component({
   selector: 'app-sidenav',
@@ -40,16 +41,18 @@ export class SidenavComponent implements OnInit {
   notificationBadgeHidden: boolean;
 
 
-  constructor(public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService) {
+  constructor(public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService, private notificationService: NotificationService) {
     this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
       this.numberOfTokens = value;
     });
-    this.notificationBadgeHidden = true
 
     this.store.select(state => state.loggedUser).subscribe({
       next: (user) => {
         this.user = user;
         this.setNumberOfTokens();
+        this.notificationService.areNotificationSeen(this.user.email).subscribe((res: boolean) => {
+          this.notificationBadgeHidden = res;
+        })
       }
     })
     SidenavComponent._this = this;
@@ -132,6 +135,12 @@ export class SidenavComponent implements OnInit {
         "user": this.user
       }
     });
+  }
+
+  hideBadge() {
+    this.notificationService.openNotificationForCustomer(this.user.email).subscribe(() => {
+      this.notificationBadgeHidden = true
+    })
   }
 
   notify(notification: NotificationDTO) {

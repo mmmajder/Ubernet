@@ -7,7 +7,7 @@
     <span class="number-of-tokens">{{numberOfTokens}} </span>
     <mat-icon class="token">monetization_on</mat-icon>
   </button>
-  <button *ngIf="user.role=='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="notificationMenu">
+  <button *ngIf="user.role=='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="notificationMenu" (click)="hideBadge()">
     <mat-icon matBadge="!" matBadgeColor="warn" [matBadgeHidden]="notificationBadgeHidden">notifications</mat-icon>
   </button>
   <button *ngIf="user.role=='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">

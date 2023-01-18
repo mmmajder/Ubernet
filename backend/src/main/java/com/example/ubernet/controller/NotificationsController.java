@@ -28,4 +28,15 @@ public class NotificationsController {
         Notification notification = notificationService.getNotificationById(id);
         return ResponseEntity.ok(notification);
     }
+
+    @GetMapping("/is-opened/{email}")
+    public ResponseEntity<Boolean> areNotificationSeen(@PathVariable String email) {
+        boolean areOpened = notificationService.areNotificationsSeenForUser(email);
+        return ResponseEntity.ok(areOpened);
+    }
+
+    @PutMapping("/open/{email}")
+    public void openNotificationForCustomer(@PathVariable String email) {
+        notificationService.openNotificationForCustomer(email);
+    }
 }

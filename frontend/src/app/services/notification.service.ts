@@ -23,6 +23,14 @@ export class NotificationService {
     return this.http.get<NotificationDTO>(this.notificationUrl + "/by-id/" + id, NotificationService.getHttpOptions());
   }
 
+  public areNotificationSeen(email: string): Observable<boolean> {
+    return this.http.get<boolean>(this.notificationUrl + "/is-opened/" + email, NotificationService.getHttpOptions());
+  }
+
+  public openNotificationForCustomer(email: string): Observable<void> {
+    return this.http.put<void>(this.notificationUrl + "/open/" + email, NotificationService.getHttpOptions());
+  }
+
   public static getHttpOptions() {
     console.log(localStorage.getItem('token'))
     return {
@@ -32,4 +40,6 @@ export class NotificationService {
       })
     };
   }
+
+
 }
