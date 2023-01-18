@@ -40,11 +40,11 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   secondFormGroup: FormGroup;
   friendsFormGroup: FormGroup;
   timeOfRide: String
+  typeOfRequest: string;
 
   constructor(private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
-    this.friends = [
-      // {friendEmail: ""}
-    ]
+    this.friends = []
+    this.typeOfRequest = "now"
     this.hasChild = false;
     this.hasPet = false;
     this.timeOfRide = new Date().toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
@@ -219,9 +219,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     ride.totalTime = route.summary.totalTime
     ride.reservationTime = this.timeOfRide
     ride.route = this.positions
-    ride.numberOfRoute = route.routesIndex    //TODO
+    ride.numberOfRoute = route.routesIndex
     ride.payment = payment
-    ride.passengers = []
+    ride.passengers = [this.loggedUser.email]
+    ride.reservation = this.typeOfRequest === "reserve"
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })

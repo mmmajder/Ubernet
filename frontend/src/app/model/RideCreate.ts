@@ -16,4 +16,5 @@ export class RideCreate {
   route: (Place | null)[];
   numberOfRoute: number;
   payment: PaymentDTO;
+  reservation: boolean;
 }

@@ -26,7 +26,6 @@ import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @Service
@@ -55,52 +54,163 @@ public class RideService {
         return rideRepository.save(ride);
     }
 
+    @Transactional
     public Ride createRide(CreateRideDTO createRideDTO) {
-        List<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
-        Customer issueCustomer = customerService.getCustomerByEmail(createRideDTO.getPayment().getCustomerThatPayed());
-        customerService.checkIfCustomersCanPay(customers, createRideDTO.getPayment().getTotalPrice(), issueCustomer);
-        double price = createRideDTO.getPayment().getTotalPrice() / (customers.size() + 1);
-        issueCustomer.setNumberOfTokens(issueCustomer.getNumberOfTokens() - price);
-        customerService.save(issueCustomer);
-
-        Payment payment = new Payment();
-        List<CustomerPayment> customerPayments = new ArrayList<>();
-        CustomerPayment customerPayment = new CustomerPayment();
-        customerPayment.setCustomer(issueCustomer);
-        customerPayment.setPayed(true);
-        customerPaymentRepository.save(customerPayment);
-        customerPayments.add(customerPayment);
-        for (Customer customer : customers) {
-            CustomerPayment customersPayment = new CustomerPayment();
-            customersPayment.setCustomer(customer);
-            customersPayment.setPayed(false);
-            customersPayment.setUrl(RandomString.make(64));
-            customerPaymentRepository.save(customersPayment);
-            customerPayments.add(customersPayment);
-        }
-        for (CustomerPayment pay : customerPayments) {
-            pay.setPricePerCustomer(createRideDTO.getPayment().getTotalPrice() / customerPayments.size());
-        }
-        payment.setCustomers(customerPayments);
-        payment.setDeleted(false);
-        payment.setTotalPrice(createRideDTO.getPayment().getTotalPrice());
-        payment.setIsAcceptedPayment(createRideDTO.getPassengers().size() == 0);
-        paymentRepository.save(payment);
-        try {
-            emailService.sendEmailToOtherPassangers(payment.getCustomers());
-
-        } catch (MessagingException e) {
-            throw new RuntimeException(e);
-        }
-
         Ride ride = new Ride();
-        ride.setCustomers(customers);
+        ride.setRideState(getRideStateCreateRide(createRideDTO));
+        ride.setRoute(getRouteCreateRide(createRideDTO));
+        ride.setPayment(getPaymentCreateRide(createRideDTO));
+        ride.setRequestTime(LocalDateTime.now());
+        ride.setCustomers(getCustomersCreateRide(createRideDTO.getPassengers()));
+        ride.setDeleted(false);
+        ride.setReservation(createRideDTO.isReservation());
+        if (createRideDTO.isReservation()) {
+            ride.setScheduledStart(TimeUtils.getDateTimeForReservationMaxFiveHoursMin15MinutesAdvance(createRideDTO.getReservationTime()));
+        }
+        if (ride.getRideState() == RideState.WAITING) {
+            Car car = getCarForRide(createRideDTO);
+            ride.setDriver(car.getDriver());
+            // TODO dodeliti vozilu voznju
+        }
+        return rideRepository.save(ride);
+
+//        List<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
+//        Customer issueCustomer = customerService.getCustomerByEmail(createRideDTO.getPayment().getCustomerThatPayed());
+//        customerService.checkIfCustomersCanPay(customers, createRideDTO.getPayment().getTotalPrice() / customers.size(), issueCustomer);
+//        double price = createRideDTO.getPayment().getTotalPrice() / (customers.size() + 1);
+//        issueCustomer.setNumberOfTokens(issueCustomer.getNumberOfTokens() - price);
+//        customerService.save(issueCustomer);
+
+//        Payment payment = new Payment();
+//        List<CustomerPayment> customerPayments = new ArrayList<>();
+//        CustomerPayment customerPayment = new CustomerPayment();
+//        customerPayment.setCustomer(issueCustomer);
+//        customerPayment.setPayed(true);
+//        customerPaymentRepository.save(customerPayment);
+//        customerPayments.add(customerPayment);
+//        for (Customer customer : customers) {
+//            CustomerPayment customersPayment = new CustomerPayment();
+//            customersPayment.setCustomer(customer);
+//            customersPayment.setPayed(false);
+//            customersPayment.setUrl(RandomString.make(64));
+//            customerPaymentRepository.save(customersPayment);
+//            customerPayments.add(customersPayment);
+//        }
+//        for (CustomerPayment pay : customerPayments) {
+//            pay.setPricePerCustomer(createRideDTO.getPayment().getTotalPrice() / customerPayments.size());
+//        }
+//        payment.setCustomers(customerPayments);
+//        payment.setDeleted(false);
+//        payment.setTotalPrice(createRideDTO.getPayment().getTotalPrice());
+//        payment.setIsAcceptedPayment(createRideDTO.getPassengers().size() == 0);
+//        paymentRepository.save(payment);
+//        try {
+//            emailService.sendEmailToOtherPassangers(payment.getCustomers());
+//
+//        } catch (MessagingException e) {
+//            throw new RuntimeException(e);
+//        }
+
+//        Ride ride = new Ride();
+//        ride.setCustomers(customers);
 //        rideService.save(ride);
-        return ride;
+//        return ride;
 //        Car car = getCarForRide(createRideDTO);
 //        car.setIsAvailable(false);
 //        setCurrentOfFutureRide(createRideDTO, car);
 //        return setRide(createRideDTO, car);
+    }
+
+    private List<Customer> getCustomersCreateRide(List<String> passengers) {
+        return customerService.getCustomersByEmails(passengers);
+    }
+
+    private Payment getPaymentCreateRide(CreateRideDTO createRideDTO) {
+        Payment payment = new Payment();
+        payment.setDeleted(false);
+        payment.setTotalPrice(createRideDTO.getPayment().getTotalPrice());
+        payment.setIsAcceptedPayment(createRideDTO.getPassengers().size() == 1);
+        payment.setCustomers(getCustomerPaymentsCreateRide(createRideDTO));
+        paymentRepository.save(payment);
+        return payment;
+    }
+
+    private List<CustomerPayment> getCustomerPaymentsCreateRide(CreateRideDTO createRideDTO) {
+        List<CustomerPayment> customerPayments = new ArrayList<>();
+        List<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
+        double avgPrice = createRideDTO.getPayment().getTotalPrice() / customers.size();
+        customerPayments.add(createCustomerPaymentForIssueCustomerCreateRide(createRideDTO, avgPrice));
+        customerPayments.addAll(createCustomerPaymentForInvitedCustomersAndSendMails(customers, avgPrice));
+        return customerPayments;
+//        payment.setCustomers(customerPayments);
+//
+//        paymentRepository.save(payment);
+//        try {
+//            emailService.sendEmailToOtherPassangers(payment.getCustomers());
+//
+//        } catch (MessagingException e) {
+//            throw new RuntimeException(e);
+//        }
+    }
+
+    private List<CustomerPayment> createCustomerPaymentForInvitedCustomersAndSendMails(List<Customer> customers, double avgPrice) {
+        List<CustomerPayment> customerPayments = new ArrayList<>();
+        for (int i = 1; i < customers.size(); i++) {
+            CustomerPayment customerPayment = new CustomerPayment();
+            customerPayment.setCustomer(customers.get(i));
+            customerPayment.setPayed(false);
+            customerPayment.setPricePerCustomer(avgPrice);
+            customerPayment.setUrl(RandomString.make(64));
+            customerPaymentRepository.save(customerPayment);
+            customerPayments.add(customerPayment);
+        }
+        try {
+            emailService.sendEmailToOtherPassangers(customerPayments);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+        return customerPayments;
+    }
+
+    private CustomerPayment createCustomerPaymentForIssueCustomerCreateRide(CreateRideDTO createRideDTO, double avgPrice) {
+        Customer issueCustomer = customerService.getCustomerByEmail(createRideDTO.getPayment().getCustomerThatPayed());
+        customerService.checkIfCustomersCanPay(avgPrice, issueCustomer);
+        issueCustomer.setNumberOfTokens(issueCustomer.getNumberOfTokens() - avgPrice);
+        customerService.save(issueCustomer);
+
+        CustomerPayment customerPayment = new CustomerPayment();
+        customerPayment.setCustomer(issueCustomer);
+        customerPayment.setPayed(true);
+        customerPayment.setPricePerCustomer(avgPrice);
+        customerPaymentRepository.save(customerPayment);
+        return customerPayment;
+    }
+
+    private Route getRouteCreateRide(CreateRideDTO createRideDTO) {
+        Route route = new Route();
+        route.setDeleted(false);
+        route.setPrice(createRideDTO.getTotalDistance() / 1000 * 120 + carTypeService.findCarTypeByName(createRideDTO.getCarType()).getPriceForType());
+        route.setTime(createRideDTO.getTotalTime());
+        List<Place> places = new ArrayList<>();
+        for (PlaceDTO placeDTO : createRideDTO.getRoute()) {
+            Position position = new Position(placeDTO.getPosition().getX(), placeDTO.getPosition().getY());
+            positionService.save(position);
+            Place place = new Place(placeDTO.getName(), position);
+            placeRepository.save(place);
+            places.add(place);
+        }
+        route.setCheckPoints(places);
+        routeService.save(route);
+        return route;
+    }
+
+    private RideState getRideStateCreateRide(CreateRideDTO createRideDTO) {
+        if (createRideDTO.isReservation() && createRideDTO.getPassengers().size() == 1) {
+            return RideState.RESERVED;
+        } else if (!createRideDTO.isReservation() && createRideDTO.getPassengers().size() == 1) {
+            return RideState.WAITING;
+        }
+        return RideState.REQUESTED;
     }
 
     private Ride setRide(CreateRideDTO createRideDTO, Car car) {
@@ -110,8 +220,8 @@ public class RideService {
         Ride ride = new Ride();
         ride.setDeleted(false);
         ride.setCustomers(customers);
-        ride.setReservationTime(TimeUtils.getDateTimeForReservationMaxFiveHoursAdvance(createRideDTO.getReservationTime()));
-        ride.setRideState(createRideState(ride.getReservationTime()));
+        ride.setRequestTime(TimeUtils.getDateTimeForReservationMaxFiveHoursMin15MinutesAdvance(createRideDTO.getReservationTime()));
+        ride.setRideState(createRideState(ride.getRequestTime()));
         ride.setDriver(driver);
         ride.setRoute(route);
         save(ride);
@@ -266,26 +376,64 @@ public class RideService {
         CustomerPayment customerPayment = customerPaymentRepository.findByUrl(url);
         if (customerPayment == null) throw new BadRequestException("Url is incorrect");
         if (customerPayment.isPayed()) throw new BadRequestException("Payment has already been accepted");
+        Ride ride = rideRepository.getRideByCustomerPaymentURL(url);
+        if (ride.isReservation() && reservationPassed(ride.getScheduledStart())) {
+            throw new BadRequestException("Reservation time has passed! You are not able to get on this ride any more.");
+        }
+        acceptSplitFarePay(customerPayment);
+        //todo check if all payed
+        if (allPassangersPayed(ride.getPayment().getCustomers())) {
+            Payment payment = ride.getPayment();
+            payment.setIsAcceptedPayment(true);
+            paymentRepository.save(payment);
+            ride.setRideState(getRideStateAllPassangersPayed(ride));
+            if (ride.getRideState() == RideState.WAITING) {
+                //todo inicjalizuj voznju
+            }
+            //todo notify every one
+        }
+    }
+
+    private boolean reservationPassed(LocalDateTime scheduledStart) {
+        return scheduledStart.isAfter(LocalDateTime.now());
+    }
+
+    private void acceptSplitFarePay(CustomerPayment customerPayment) {
+        Customer customer = customerPayment.getCustomer();
+        double price = customerPayment.getPricePerCustomer();
+        if (customer.getNumberOfTokens() < price) throw new BadRequestException("You do not have enough tokes.");
         customerPayment.setPayed(true);
         customerPaymentRepository.save(customerPayment);
-        double price = customerPayment.getPricePerCustomer();
-        Customer customer = customerPayment.getCustomer();
         customer.setNumberOfTokens(customer.getNumberOfTokens() - price);
         customerService.save(customer);
+    }
 
+    private RideState getRideStateAllPassangersPayed(Ride ride) {
+        if (ride.isReservation()) {
+            if (ride.getScheduledStart().isAfter(LocalDateTime.now().plusMinutes(10)))
+                return RideState.RESERVED;
+        }
+        return RideState.WAITING;
+    }
+
+    private boolean allPassangersPayed(List<CustomerPayment> customerPayments) {
+        for (CustomerPayment customerPayment : customerPayments) {
+            if (!customerPayment.isPayed()) return false;
+        }
+        return true;
     }
 
     public void notifyCustomers(List<Customer> customers, long rideId) {
-        for (Customer customer: customers) {
+        for (int i=1; i< customers.size(); i++) {
             Notification notification = new Notification();
             notification.setOpened(false);
             notification.setText("You have been invited to split fare for ride.");
             notification.setType(NotificationType.SPLIT_FARE);
-            notification.setReceiverEmail(customer.getEmail());
+            notification.setReceiverEmail(customers.get(i).getEmail());
             notification.setRideId(rideId);
             notification.setTimeCreated(LocalDateTime.now());
             notificationService.save(notification);
-            this.simpMessagingTemplate.convertAndSend("/notify/split-fare-" + customer.getEmail(), notification);
+            this.simpMessagingTemplate.convertAndSend("/notify/split-fare-" + customers.get(i).getEmail(), notification);
         }
     }
 }

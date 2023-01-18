@@ -109,24 +109,8 @@ public class CustomerService {
         return customer.getNumberOfTokens();
     }
 
-    @Transactional
-    public void checkIfCustomersCanPay(List<Customer> customers, Double totalPrice, Customer issueCustomer) {
-        double avgPrice = totalPrice / (customers.size() + 1);
-        StringBuilder errorMessage = new StringBuilder();
-        for (Customer customer : customers) {
-            if (customer.getNumberOfTokens() < avgPrice) {
-                errorMessage.append(customer.getName()).append(" ").append(customer.getSurname());
-            }
-        }
-        if (issueCustomer.getNumberOfTokens()<avgPrice) {
-            if (errorMessage.toString().equals("")) {
-                throw new BadRequestException("You do not have enough money to pay for ride");
-            } else {
-                errorMessage.append(" and you");
-            }
-        }
-        if (!errorMessage.toString().equals("")) {
-            throw new BadRequestException("Following users do not have enough money: " + errorMessage);
-        }
+    public void checkIfCustomersCanPay(Double avgPrice, Customer customer) {
+        if (customer.getNumberOfTokens() < avgPrice)
+            throw new BadRequestException("You do not have enough money to pay for ride");
     }
 }

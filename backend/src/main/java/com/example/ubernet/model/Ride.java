@@ -30,16 +30,17 @@ public class Ride {
     private Payment payment;
     @OneToOne
     private Driver driver;
-    private LocalDateTime scheduledStart;
+    private LocalDateTime scheduledStart;  // has only if it is reservation!!!
     private LocalDateTime actualStart;
     private LocalDateTime actualEnd;
-    private LocalDateTime reservationTime;
+    private LocalDateTime requestTime;
     @ManyToMany
     private List<Customer> customers;
     @OneToMany
     private Set<Review> carReviews;
     @OneToMany
     private Set<Review> driverReviews;
+    private boolean isReservation;
 
     private Boolean deleted = false;
 }

@@ -6,11 +6,14 @@ import java.time.LocalDateTime;
 
 public class TimeUtils {
 
-    public static LocalDateTime getDateTimeForReservationMaxFiveHoursAdvance(String time) {
+    public static LocalDateTime getDateTimeForReservationMaxFiveHoursMin15MinutesAdvance(String time) {
         LocalDateTime now = LocalDateTime.now();
         LocalDateTime selectedTime = getSelectedTime(time, now);
         if (selectedTime.isAfter(now.plusHours(5))) {
             throw new BadRequestException("Reservation can be maximum 5 hours in advance");
+        }
+        if (selectedTime.isBefore(now.plusMinutes(15))) {
+            throw new BadRequestException("Reservation can be minimum 15 minutes in advance");
         }
         return selectedTime;
     }
@@ -27,7 +30,7 @@ public class TimeUtils {
         int minutes = Integer.parseInt(time.split("\\s+")[0].split(":")[1]);
 
         LocalDateTime selectedTime = LocalDateTime.of(now.getYear(), now.getMonth(), now.getDayOfMonth(), hours, minutes, 0);
-        if (selectedTime.isBefore(now.minusMinutes(3))) {
+        if (selectedTime.isBefore(now)) {
             selectedTime = selectedTime.plusDays(1);
         }
         return selectedTime;

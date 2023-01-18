@@ -27,6 +27,7 @@ import {MatSidenavModule} from "@angular/material/sidenav";
 import {MatStepperModule} from "@angular/material/stepper";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
+import {MatRadioModule} from "@angular/material/radio";
 
 @NgModule({
   declarations: [
@@ -57,6 +58,7 @@ import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
     MatStepperModule,
     MatCheckboxModule,
     NgxMaterialTimepickerModule,
+    MatRadioModule,
   ],
   exports: [
     MapComponent,

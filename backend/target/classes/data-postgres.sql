@@ -154,16 +154,16 @@ values (1, 1),
 -- insert into ride_denial (deleted, reason, ride_id)
 -- values (false, 'Eto tako', 1);
 
-insert into ride (actual_end, actual_start, deleted, reservation_time, scheduled_start, driver_email, payment_id,
-                  route_id, ride_state)
+insert into ride (actual_end, actual_start, deleted, request_time, scheduled_start, driver_email, payment_id,
+                  route_id, ride_state, is_reservation)
 values ('2022-10-27 12:00', '2022-10-27 11:00', false, '2022-10-27 10:00', '2031-10-27 11:00', 'driver@gmail.com', 1,
-        1, 3),
+        1, 3, false),
        ('2022-10-30 12:00', '2022-10-30 11:00', false, '2022-10-30 10:00', '2031-10-30 11:00', 'driver@gmail.com', 1,
-        1, 3),
+        1, 3, false),
        ('2022-10-30 12:00', '2022-10-30 11:00', false, '2022-10-30 10:00', '2031-10-30 11:00', 'driver@gmail.com', 1,
-        1, 3),
+        1, 3, false),
        ('2022-10-30 12:00', '2022-10-30 11:00', false, '2022-10-30 10:00', '2031-10-30 11:00', 'driver@gmail.com', 1,
-        1, 3);
+        1, 3, false);
 
 -- update payment
 -- set ride_id=1

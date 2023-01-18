@@ -31,4 +31,5 @@ public class CreateRideDTO {
     private List<PlaceDTO> route;
     private Integer numberOfRoute;
     private PaymentDTO payment;
+    private boolean reservation;
 }

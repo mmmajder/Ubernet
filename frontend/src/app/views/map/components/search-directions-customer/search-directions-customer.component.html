@@ -127,7 +127,13 @@
       <ng-template matStepLabel>Summary</ng-template>
       <div style="overflow-y:scroll; max-height: 300px; margin-bottom: 10px">
         <div>
-          <span>Directions:</span>
+          <span><h3>Directions:</h3></span>
+<!--          <mat-list role="list">-->
+<!--            <mat-list-item role="listitem" *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i">-->
+<!--              {{destination.value}}-->
+<!--&lt;!&ndash;              <span>{{destination.value}}</span>&ndash;&gt;-->
+<!--            </mat-list-item>-->
+<!--          </mat-list>-->
           <div appearance="outline"
                *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i"
                style="width: 100%">{{i + 1}} {{destination.value}}
@@ -145,10 +151,14 @@
         <span *ngIf="hasPet==true">Pet transport is required.</span>
         <div style="margin-top: 10px">
           <span>When:</span>
-          <span class="default-time-example">
+          <mat-radio-group [(ngModel)]="typeOfRequest" aria-label="Select an option">
+            <mat-radio-button value="now">Now</mat-radio-button>
+            <mat-radio-button value="reserve">Reserve</mat-radio-button>
+          </mat-radio-group>
+          <div *ngIf="typeOfRequest==='reserve'" class="default-time-example">
             <input aria-label="default time" [ngxTimepicker]="defaultValue" [(ngModel)]="timeOfRide" readonly>
               <ngx-material-timepicker #defaultValue></ngx-material-timepicker>
-          </span>
+          </div>
         </div>
       </div>
       <span>
