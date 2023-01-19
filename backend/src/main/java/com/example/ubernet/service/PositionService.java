@@ -17,8 +17,7 @@ public class PositionService {
     }
 
     public void savePositions(List<Position> positions) {
-        for (Position position :
-                positions) {
+        for (Position position : positions) {
             save(position);
         }
     }

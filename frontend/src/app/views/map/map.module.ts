@@ -28,12 +28,14 @@ import {MatStepperModule} from "@angular/material/stepper";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
 import {MatRadioModule} from "@angular/material/radio";
+import { NotificationDriverComponent } from './components/notification-driver/notification-driver.component';
 
 @NgModule({
   declarations: [
     SearchDirectionsCustomerComponent,
     MapComponent,
     SearchDirectionsUnauthenticatedComponent,
+    NotificationDriverComponent,
   ],
   imports: [
     MatToolbarModule,

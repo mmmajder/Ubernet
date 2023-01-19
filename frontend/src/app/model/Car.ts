@@ -1,6 +1,7 @@
 import {CarTypeGetResponse} from "./CarTypeGetResponse";
 import {CurrentRide} from "./CurrentRide";
 import {Position} from "./Position";
+import {Navigation} from "./Navigation";
 
 export class Car {
   id!: number;
@@ -11,8 +12,7 @@ export class Car {
   allowsPet!: boolean;
   driverEmail!: string;
   driver!: any;
-  currentRide!: CurrentRide
-  futureRide!: CurrentRide
+  navigation!: Navigation
   position!: Position
 
   constructor(id: number, name: string, plates: string, carType: CarTypeGetResponse, allowsBabies: boolean, allowsPets: boolean,

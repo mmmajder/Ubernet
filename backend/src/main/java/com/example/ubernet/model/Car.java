@@ -23,9 +23,12 @@ public class Car {
     private Position position;
 
     @OneToOne
-    private CurrentRide currentRide;
-    @OneToOne
-    private CurrentRide futureRide;
+    private Navigation navigation;
+
+//    @OneToOne
+//    private CurrentRide currentRide;
+//    @OneToOne
+//    private CurrentRide futureRide;
     @OneToOne
     private CarType carType;
     private Boolean isAvailable;
@@ -37,4 +40,20 @@ public class Car {
     private String plates;
     private String name;
 
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", deleted=" + deleted +
+                ", position=" + position +
+                ", navigation=" + navigation +
+                ", carType=" + carType +
+                ", isAvailable=" + isAvailable +
+                ", driver=" + driver.getName() +
+                ", allowsBaby=" + allowsBaby +
+                ", allowsPet=" + allowsPet +
+                ", plates='" + plates + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
 }

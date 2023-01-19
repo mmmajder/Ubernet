@@ -1,0 +1,40 @@
+<mat-card class="destination-input">
+  <mat-list *ngFor="let notification of notifications" id="{{notification.id}}"
+            class="notification-item">
+    <div *ngIf="notification.driverNotificationType==='APPROACH'">
+      Next ride: {{getRideCheckpoints(notification.ride.route)}}
+      <button mat-raised-button color="warn" style="width: 100%; margin-top: 10px">Cancel ride due to health/technical
+        problem
+      </button>
+      <mat-divider style="margin-top: 15px"></mat-divider>
+    </div>
+    <div *ngIf="notification.driverNotificationType==='START'">
+      Start ride: {{getRideCheckpoints(notification.ride.route)}}
+      <span style="display: flex; justify-content: space-around">
+        <button mat-raised-button color="primary" style="width: 49%; margin-top: 10px">Start ride</button>
+        <button mat-raised-button color="warn" style="width: 49%; margin-top: 10px">Passengers did not come</button>
+      </span>
+      <mat-divider style="margin-top: 15px"></mat-divider>
+    </div>
+    <div *ngIf="notification.driverNotificationType==='END'"></div>
+  </mat-list>
+</mat-card>
+<!--<mat-card class="example-card">-->
+<!--  <mat-card-header>-->
+<!--    <div mat-card-avatar class="example-header-image"></div>-->
+<!--    <mat-card-title>Shiba Inu</mat-card-title>-->
+<!--    <mat-card-subtitle>Dog Breed</mat-card-subtitle>-->
+<!--  </mat-card-header>-->
+<!--  <img mat-card-image src="https://material.angular.io/assets/img/examples/shiba2.jpg" alt="Photo of a Shiba Inu">-->
+<!--  <mat-card-content>-->
+<!--    <p>-->
+<!--      The Shiba Inu is the smallest of the six original and distinct spitz breeds of dog from Japan.-->
+<!--      A small, agile dog that copes very well with mountainous terrain, the Shiba Inu was originally-->
+<!--      bred for hunting.-->
+<!--    </p>-->
+<!--  </mat-card-content>-->
+<!--  <mat-card-actions>-->
+<!--    <button mat-button>LIKE</button>-->
+<!--    <button mat-button>SHARE</button>-->
+<!--  </mat-card-actions>-->
+<!--</mat-card>-->

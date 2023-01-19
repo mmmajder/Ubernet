@@ -4,6 +4,7 @@ import com.example.ubernet.dto.CreateRideDTO;
 import com.example.ubernet.model.Notification;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.service.RideService;
+import com.example.ubernet.service.SimpMessagingService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,15 +20,15 @@ import javax.validation.Valid;
 @RequestMapping(value = "/ride", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RideController {
     private final RideService rideService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingService simpMessagingService;
 
     @PostMapping("/create")
-    public ResponseEntity<Ride> createRide(@Valid @RequestBody CreateRideDTO createRideDTO)  {
+    public ResponseEntity<Ride> createRide(@Valid @RequestBody CreateRideDTO createRideDTO) {
         Ride ride = rideService.createRide(createRideDTO);
         if (ride == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        this.simpMessagingTemplate.convertAndSend("/map-updates/update-route-for-selected-car", ride);
+        this.simpMessagingService.updateRouteForSelectedCar(ride.getDriver().getEmail(), ride);
         rideService.notifyCustomers(ride.getCustomers(), ride.getId());
         return ResponseEntity.ok(ride);
     }

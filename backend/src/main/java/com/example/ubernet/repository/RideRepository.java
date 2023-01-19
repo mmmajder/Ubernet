@@ -15,4 +15,7 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     Page<Ride> findAll(Pageable pageable);
     @Query(value = "SELECT ride FROM Ride ride INNER JOIN ride.payment p INNER JOIN  p.customers c where c.url=:url")
     Ride getRideByCustomerPaymentURL(String url);
+
+    @Query(value = "SELECT ride FROM Ride ride WHERE ride.driver.car.id=:carId AND ride.rideState=com.example.ubernet.model.enums.RideState.WAITING")
+    Ride findRideWhereStatusIsWaitingForCarId(long carId);
 }

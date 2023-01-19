@@ -113,7 +113,10 @@ public class DTOMapper {
         activeAvailableCarResponse.setCarId(car.getId());
         activeAvailableCarResponse.setDriverEmail(car.getDriver().getEmail());
         activeAvailableCarResponse.setCurrentPosition(car.getPosition());
-        activeAvailableCarResponse.setCurrentRide(car.getCurrentRide());
+        activeAvailableCarResponse.setApproachFirstRide(car.getNavigation().getApproachFirstRide());
+        activeAvailableCarResponse.setApproachSecondRide(car.getNavigation().getApproachSecondRide());
+        activeAvailableCarResponse.setFirstRide(car.getNavigation().getFirstRide());
+        activeAvailableCarResponse.setSecondRide(car.getNavigation().getSecondRide());
         return activeAvailableCarResponse;
     }
 

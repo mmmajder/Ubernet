@@ -1,10 +1,11 @@
 import {CollectionViewer, DataSource} from "@angular/cdk/collections";
 import {BehaviorSubject, catchError, finalize, Observable, of} from "rxjs";
 import {RidesHistoryService} from "../services/rides-history.service";
+import {RouteDTO} from "./RouteDTO";
 
 export class Ride {
   id: number;
-  route: string;
+  route: RouteDTO;
   price: number;
   start: string;
   end: string;

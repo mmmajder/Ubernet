@@ -3,6 +3,7 @@ package com.example.ubernet.controller;
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.Car;
 import com.example.ubernet.service.CarService;
+import com.example.ubernet.service.SimpMessagingService;
 import com.example.ubernet.utils.DTOMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequestMapping(value = "/car", produces = MediaType.APPLICATION_JSON_VALUE)
 public class CarController {
     private final CarService carService;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingService simpMessagingService;
 
     @PostMapping("/create-car")
     public ResponseEntity<CarResponse> createCar(@Valid @RequestBody CreateCarDTO createCarDTO) {
@@ -78,7 +79,6 @@ public class CarController {
 
     @PutMapping("/update")
     public ResponseEntity<CarResponse> update(@RequestBody CarResponseNoDriver carResponseNoDriver) {
-        System.out.println("uusao u update");
         Car car = carService.updateCar(carResponseNoDriver);
 
         if (car == null) {
@@ -127,7 +127,7 @@ public class CarController {
     public ResponseEntity<List<CarResponse>> setNewPositionForCar() {
         List<Car> cars = carService.setNewPositions();
         List<CarResponse> carsResponse = DTOMapper.getListCarResponse(cars);
-        this.simpMessagingTemplate.convertAndSend("/map-updates/update-vehicle-position", carsResponse);
+        this.simpMessagingService.updateVehiclePosition(carsResponse);
         return ResponseEntity.ok(carsResponse);
     }
 

@@ -25,10 +25,11 @@ export class NotificationsComponent implements OnInit {
     this.store.select(state => state.loggedUser).subscribe({
       next: (user) => {
         this.user = user;
-        this.notificationService.getNotifications(user.email).subscribe((notifications) => {
-          this.notifications = notifications.reverse()
-          console.log(this.notifications)
-        })
+        if (this.user.role === "CUSTOMER")
+          this.notificationService.getNotifications(user.email).subscribe((notifications) => {
+            this.notifications = notifications.reverse()
+            console.log(this.notifications)
+          })
       }
     })
 

@@ -7,12 +7,10 @@ import com.example.ubernet.dto.PlaceDTO;
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.*;
+import com.example.ubernet.model.enums.DriverNotificationType;
 import com.example.ubernet.model.enums.NotificationType;
 import com.example.ubernet.model.enums.RideState;
-import com.example.ubernet.repository.CustomerPaymentRepository;
-import com.example.ubernet.repository.PaymentRepository;
-import com.example.ubernet.repository.PlaceRepository;
-import com.example.ubernet.repository.RideRepository;
+import com.example.ubernet.repository.*;
 import com.example.ubernet.utils.MapUtils;
 import com.example.ubernet.utils.TimeUtils;
 import lombok.AllArgsConstructor;
@@ -43,8 +41,10 @@ public class RideService {
     private final EmailService emailService;
     private final CustomerPaymentRepository customerPaymentRepository;
     private final PaymentRepository paymentRepository;
-    private final SimpMessagingTemplate simpMessagingTemplate;
+    private final SimpMessagingService simpMessagingService;
     private final NotificationService notificationService;
+    private final NavigationRepository navigationRepository;
+    private final DriverNotificationRepository driverNotificationRepository;
 
     public Ride findById(Long id) {
         return rideRepository.findById(id).orElse(null);
@@ -70,9 +70,45 @@ public class RideService {
         if (ride.getRideState() == RideState.WAITING) {
             Car car = getCarForRide(createRideDTO);
             ride.setDriver(car.getDriver());
-            // TODO dodeliti vozilu voznju
+            addNavigation(car, createRideDTO);
+            rideRepository.save(ride);
+            sendNextRideNotificationToDriver(ride);
+
         }
         return rideRepository.save(ride);
+    }
+
+    private void sendNextRideNotificationToDriver(Ride ride) {
+        DriverNotification driverNotification = new DriverNotification();
+        driverNotification.setDriverNotificationType(DriverNotificationType.APPROACH);
+        driverNotification.setRide(ride);
+        driverNotification.setFinished(false);
+        driverNotificationRepository.save(driverNotification);
+        this.simpMessagingService.sendNextRideNotification(ride.getDriver().getEmail(), driverNotification);
+    }
+
+    private void addNavigation(Car car, CreateRideDTO createRideDTO) {
+//        private void setCurrentOfFutureRide(CreateRideDTO createRideDTO, Car car) {
+        CurrentRide currentRide = new CurrentRide();
+        currentRide.setPositions(createRidePositions(createRideDTO));
+        currentRide.setShouldGetRouteToClient(true);
+        currentRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
+        currentRide.setFreeRide(false);
+        currentRideService.save(currentRide);
+        Navigation navigation = car.getNavigation();
+        if (navigation == null) {
+            navigation = new Navigation();
+        }
+        car.setNavigation(navigation);
+        car.setIsAvailable(false);
+        carService.save(car);
+        if (navigation.getFirstRide() == null || navigation.getFirstRide().isFreeRide()) {
+            navigation.setFirstRide(currentRide);
+        } else {
+            navigation.setSecondRide(currentRide);
+        }
+        navigationRepository.save(navigation);
+    }
 
 //        List<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
 //        Customer issueCustomer = customerService.getCustomerByEmail(createRideDTO.getPayment().getCustomerThatPayed());
@@ -119,7 +155,6 @@ public class RideService {
 //        car.setIsAvailable(false);
 //        setCurrentOfFutureRide(createRideDTO, car);
 //        return setRide(createRideDTO, car);
-    }
 
     private List<Customer> getCustomersCreateRide(List<String> passengers) {
         return customerService.getCustomersByEmails(passengers);
@@ -249,16 +284,16 @@ public class RideService {
 
     private void setCurrentOfFutureRide(CreateRideDTO createRideDTO, Car car) {
         CurrentRide currentRide = new CurrentRide();
-        currentRide.setPositions(createRideDestinations(createRideDTO));
+        currentRide.setPositions(createRidePositions(createRideDTO));
         currentRide.setShouldGetRouteToClient(true);
         currentRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
         currentRideService.save(currentRide);
 
-        if (car.getCurrentRide() == null || car.getCurrentRide().isFreeRide()) {
-            car.setCurrentRide(currentRide);
-        } else {
-            car.setFutureRide(currentRide);
-        }
+//        if (car.getCurrentRide() == null || car.getCurrentRide().isFreeRide()) {
+//            car.setCurrentRide(currentRide);
+//        } else {
+//            car.setFutureRide(currentRide);
+//        }
         carService.save(car);
     }
 
@@ -280,7 +315,7 @@ public class RideService {
     }
 
 
-    private List<PositionInTime> createRideDestinations(CreateRideDTO createRideDTO) {
+    private List<PositionInTime> createRidePositions(CreateRideDTO createRideDTO) {
         List<Double> timeSlots = getTimeSlots(createRideDTO);
         List<PositionInTime> positions = new ArrayList<>();
         for (int i = 0; i < timeSlots.size(); i++) {
@@ -341,35 +376,20 @@ public class RideService {
         if (car == null) {
             throw new NotFoundException("Car does not exist");
         }
-        if (car.getFutureRide() == null) {
-            CurrentRide currentRide = car.getCurrentRide();
-            List<PositionInTime> newPositions = createRideDestinations(createRideDTO);
-            List<PositionInTime> oldPositions = currentRide.getPositions();
-            for (PositionInTime positionInTime : oldPositions) {
-                positionInTime.setSecondsPast(newPositions.get(newPositions.size() - 1).getSecondsPast() + positionInTime.getSecondsPast());
-                positionInTimeService.save(positionInTime);
-            }
-            currentRide.setPositions(newPositions);
-            currentRide.getPositions().addAll(oldPositions);
-            currentRide.setShouldGetRouteToClient(false);
-            currentRide.setTimeOfStartOfRide(LocalDateTime.now());
-            currentRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
-            currentRideService.save(currentRide);
+        List<PositionInTime> positionsInTime = createRidePositions(createRideDTO);
+        CurrentRide approach = new CurrentRide();
+        approach.setPositions(positionsInTime);
+        approach.setShouldGetRouteToClient(false);
+        approach.setFreeRide(false);
+        approach.setStartTime(LocalDateTime.now());
+        approach.setNumberOfRoute(createRideDTO.getNumberOfRoute());
+        currentRideService.save(approach);
+        if (car.getNavigation().getSecondRide() == null) {
+            car.getNavigation().setApproachFirstRide(approach);
         } else {
-            CurrentRide futureRide = car.getFutureRide();
-            List<PositionInTime> newPositions = createRideDestinations(createRideDTO);
-            List<PositionInTime> oldPositions = futureRide.getPositions();
-            for (PositionInTime positionInTime : oldPositions) {
-                positionInTime.setSecondsPast(newPositions.get(newPositions.size() - 1).getSecondsPast() + positionInTime.getSecondsPast());
-                positionInTimeService.save(positionInTime);
-            }
-            futureRide.setPositions(newPositions);
-            futureRide.getPositions().addAll(oldPositions);
-            futureRide.setShouldGetRouteToClient(false);
-            futureRide.setTimeOfStartOfRide(LocalDateTime.now());
-            futureRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
-            currentRideService.save(futureRide);
+            car.getNavigation().setApproachSecondRide(approach);
         }
+        navigationRepository.save(car.getNavigation());
     }
 
     public void acceptSplitFare(String url) {
@@ -424,7 +444,7 @@ public class RideService {
     }
 
     public void notifyCustomers(List<Customer> customers, long rideId) {
-        for (int i=1; i< customers.size(); i++) {
+        for (int i = 1; i < customers.size(); i++) {
             Notification notification = new Notification();
             notification.setOpened(false);
             notification.setText("You have been invited to split fare for ride.");
@@ -433,7 +453,7 @@ public class RideService {
             notification.setRideId(rideId);
             notification.setTimeCreated(LocalDateTime.now());
             notificationService.save(notification);
-            this.simpMessagingTemplate.convertAndSend("/notify/split-fare-" + customers.get(i).getEmail(), notification);
+            this.simpMessagingService.notifyCustomersSplitFair(customers.get(i).getEmail(), notification);
         }
     }
 }

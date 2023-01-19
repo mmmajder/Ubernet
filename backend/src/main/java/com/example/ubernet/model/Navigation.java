@@ -6,27 +6,25 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
-import java.util.List;
 
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
 @Getter
 @Setter
-public class CurrentRide {
+public class Navigation {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
 
     private Boolean deleted = false;
-
-    @OneToMany
-    private List<PositionInTime> positions;
-
-    private LocalDateTime startTime;
-    private boolean isFreeRide;
-    private boolean shouldGetRouteToClient;
-    private Integer numberOfRoute;
+    @OneToOne
+    private CurrentRide approachFirstRide;
+    @OneToOne
+    private CurrentRide firstRide;
+    @OneToOne
+    private CurrentRide approachSecondRide;
+    @OneToOne
+    private CurrentRide secondRide;
 }

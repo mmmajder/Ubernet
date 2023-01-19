@@ -147,9 +147,7 @@ export class SidenavComponent implements OnInit {
     console.log("notificationBadgeHidden")
     console.log(notification)
     console.log(this.user.email)
-    // if (this.user.email===customer.email) {
     this.notificationBadgeHidden = false
-    // }
   }
 
 }

@@ -18,6 +18,7 @@
                                   [selectedRoute]="selectedRoute"
                                   [loggedUser]="loggedUser">
   </app-search-directions-customer>
+  <app-notification-driver *ngSwitchCase="userRoles.DRIVER" [loggedUser]="loggedUser"></app-notification-driver>
 </ng-container>
 
 <div class="map-container">

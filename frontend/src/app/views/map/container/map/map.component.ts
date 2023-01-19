@@ -57,6 +57,8 @@ export class MapComponent implements AfterViewInit, OnInit {
         this.loggedUser = resp.loggedUser;
         if (resp.loggedUser.role === "CUSTOMER") {
           this.userRole = UserRole.CUSTOMER
+        } else if (resp.loggedUser.role === "DRIVER") {
+          this.userRole = UserRole.DRIVER
         }
         this.initMap()
         this.initializeWebSocketConnection();
@@ -87,7 +89,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.removePins()
       this.initPins();
     })
-    this.stompClient.subscribe("/map-updates/update-route-for-selected-car", (message: any) => {
+    this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.loggedUser.email, (message: any) => {
       this.createRouteForSelectedCar(JSON.parse(message.body))
       console.log(message)
       // this.sideNav.notify(JSON.parse(message.body).customers)
@@ -103,30 +105,32 @@ export class MapComponent implements AfterViewInit, OnInit {
   createRouteForSelectedCar(ride: any) {
     let checkPoints: LatLng[] = []
     let start: Position
+    let end: Position
 
-    //ne brisi
-
-    // if (ride.driver.car.futureRide === null)
-    //   start = ride.driver.car.position
-    // else
-    //   start = this.rideService.getLastPosition(ride.driver.car.futureRide.positions)
-    // let end = ride.driver.car.currentRide.positions[0].position
-    // checkPoints.push(L.latLng(start.y, start.x))
-    // checkPoints.push(L.latLng(end.y, end.x))
-    // let route = L.Routing.control({
-    //   waypoints: checkPoints,
-    //   altLineOptions: {
-    //     extendToWaypoints: false,
-    //     missingRouteTolerance: 0,
-    //   },
-    // }).on('routesfound', (response) => {
-    //   let route = response.routes[0]
-    //   console.log("OOOOOOOOOOO")
-    //   console.log(route)
-    //   this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe(() => {
-    //     console.log("STIGAO sam")
-    //   })
-    // }).addTo(this.map)
+    console.log(ride)
+    if (ride.driver.car.navigation.approachSecondRide === null) {
+      start = ride.driver.car.position
+      end = ride.driver.car.navigation.firstRide.positions[0].position
+    } else {
+      start = this.rideService.getLastPosition(ride.driver.car.navigation.firstRide)
+      end = ride.driver.car.navigation.secondRide.positions[0].position
+    }
+    checkPoints.push(L.latLng(start.y, start.x))
+    checkPoints.push(L.latLng(end.y, end.x))
+    let route = L.Routing.control({
+      waypoints: checkPoints,
+      altLineOptions: {
+        extendToWaypoints: false,
+        missingRouteTolerance: 0,
+      },
+    }).on('routesfound', (response) => {
+      let route = response.routes[0]
+      console.log("updateCarRoute")
+      console.log(route)
+      this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe(() => {
+        console.log("STIGAO sam")
+      })
+    }).addTo(this.map)
 
   }
 
