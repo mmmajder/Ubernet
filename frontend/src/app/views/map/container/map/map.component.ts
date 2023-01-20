@@ -18,7 +18,8 @@ import {Router} from "@angular/router";
 import {Store} from "@ngxs/store";
 import {CarService} from "../../../../services/car.service";
 import {PositionInTime} from "../../../../model/PositionInTime";
-import {SidenavComponent} from "../../../../shared/sidenav/sidenav/sidenav.component";
+import {DriverNotification} from "../../../../model/DriverNotification";
+import {NotificationDriverComponent} from "../../components/notification-driver/notification-driver.component";
 
 @Component({
   selector: 'app-map',
@@ -39,8 +40,9 @@ export class MapComponent implements AfterViewInit, OnInit {
   pins: Marker[];
   selectedRoute: any;
   loggedUser: User;
+  routeForSelectedCar: L.Routing.Control;
 
-  @ViewChild(SidenavComponent) sideNav: SidenavComponent;
+  @ViewChild(NotificationDriverComponent) notificationDriverComponent: NotificationDriverComponent;
 
   constructor(private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
     this.searchPins = [];
@@ -93,6 +95,10 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.createRouteForSelectedCar(JSON.parse(message.body))
       console.log(message)
     })
+    this.stompClient.subscribe("/notify-driver/decline-ride-" + this.loggedUser.email, (message: any) => {
+      this.map.removeControl(this.routeForSelectedCar);
+      this.notificationDriverComponent.removeDriverNotifications(JSON.parse(message.body));
+    })
   }
 
   createRouteForSelectedCar(ride: any) {
@@ -110,7 +116,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     }
     checkPoints.push(L.latLng(start.y, start.x))
     checkPoints.push(L.latLng(end.y, end.x))
-    let route = L.Routing.control({
+    this.routeForSelectedCar = L.Routing.control({
       waypoints: checkPoints,
       altLineOptions: {
         extendToWaypoints: false,

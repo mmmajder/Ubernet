@@ -5,6 +5,12 @@ import * as Stomp from "stompjs";
 import {DriverNotification} from "../../../../model/DriverNotification";
 import {DriverNotificationService} from "../../../../services/driver-notification.service";
 import {RouteDTO} from "../../../../model/RouteDTO";
+import {MatDialog} from "@angular/material/dialog";
+import {RideDetails} from "../../../../model/RideDetails";
+import {
+  ReasonForRideCancellationComponent
+} from "../reason-for-ride-cancelation/reason-for-ride-cancellation.component";
+import {Place} from "../../../../model/Position";
 
 @Component({
   selector: 'app-notification-driver',
@@ -17,7 +23,7 @@ export class NotificationDriverComponent implements OnInit {
   private stompClient: any;
   notifications: DriverNotification[];
 
-  constructor(private driverNotificationService: DriverNotificationService) {
+  constructor(public dialog: MatDialog, private driverNotificationService: DriverNotificationService) {
     this.notifications = []
   }
 
@@ -59,25 +65,47 @@ export class NotificationDriverComponent implements OnInit {
   }
 
   private initDriverNotifications() {
-    console.log("Driver not")
     this.driverNotificationService.getCurrent(this.loggedUser.email).subscribe((res: DriverNotification[]) => {
-      console.log("Driver yes")
-      console.log(res)
       this.notifications = this.notifications.concat(res);
-      console.log("Asdf")
-      console.log(this.notifications)
     })
   }
 
-  getRideCheckpoints(route: RouteDTO) {
-    let checkPoints = ""
-    route.checkPoints.forEach((checkPoint, index) => {
+  public removeDriverNotifications(driverNotifications: DriverNotification[]) {
+    driverNotifications.forEach((notificationForDelete: DriverNotification) => {
+      this.notifications = this.notifications.filter(notification => notification.id !== notificationForDelete.id)
+    })
+  }
+
+  getRideCheckpoints(checkPoints: Place[]) {
+    let checkPointDisplay = ""
+    checkPoints.forEach((checkPoint, index) => {
       if (index === 0) {
-        checkPoints = checkPoint.name
+        checkPointDisplay = checkPoint.name
       } else {
-        checkPoints = checkPoints + " -> " + checkPoint.name
+        checkPointDisplay = checkPointDisplay + " -> " + checkPoint.name
       }
     })
-    return checkPoints
+    return checkPointDisplay
+  }
+
+
+  startRide(ride: RideDetails) {
+
+  }
+
+  cancelRideTechnicalOrHealthProblem(ride: RideDetails) {
+    this.openReasonDialog(ride, true)
+  }
+
+  cancelRide(ride: RideDetails) {
+    this.openReasonDialog(ride, false)
+  }
+
+  openReasonDialog(ride: RideDetails, shouldSetDriverInactive: boolean) {
+    const dialogRef = this.dialog.open(ReasonForRideCancellationComponent, {
+      data: {
+        ride, shouldSetDriverInactive
+      }
+    })
   }
 }

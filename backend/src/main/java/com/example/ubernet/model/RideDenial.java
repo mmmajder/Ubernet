@@ -1,6 +1,7 @@
 package com.example.ubernet.model;
 
 
+import com.example.ubernet.model.enums.RideDenialType;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -25,5 +26,5 @@ public class RideDenial {
     private Ride ride;
     private String reason;
     private Boolean deleted = false;
-
+    private RideDenialType rideDenialType;
 }

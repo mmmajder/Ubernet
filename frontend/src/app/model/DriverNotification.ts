@@ -1,8 +1,8 @@
-import {Ride} from "./Ride";
+import {RideDetails} from "./RideDetails";
 
 export class DriverNotification {
   id!: number;
-  ride!: Ride;
+  ride!: RideDetails;
   driverNotificationType!: string;
   isFinished!: boolean;
 }

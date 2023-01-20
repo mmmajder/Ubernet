@@ -71,14 +71,15 @@ public class RideService {
         if (ride.getRideState() == RideState.WAITING) {
             initRide(createRideDTO, ride);
             rideRepository.save(ride);
-        } else {
-            rideRepository.save(ride);
-            ride.setRideRequest(createRideRequest(createRideDTO, ride));
         }
+//        else {
+        rideRepository.save(ride);
+        ride.setRideRequest(createRideRequest(createRideDTO));
+//        }
         return rideRepository.save(ride);
     }
 
-    private RideRequest createRideRequest(CreateRideDTO createRideDTO, Ride ride) {
+    private RideRequest createRideRequest(CreateRideDTO createRideDTO) {
         RideRequest rideRequest = new RideRequest();
         rideRequest.setCurrentRide(createCurrentRide(createRideDTO));
         rideRequest.setCarType(createRideDTO.getCarType());
@@ -423,7 +424,7 @@ public class RideService {
         }
         acceptSplitFarePay(customerPayment);
         //todo check if all payed
-        if (allPassangersPayed(ride.getPayment().getCustomers())) {
+        if (allPassengersPayed(ride.getPayment().getCustomers())) {
             Payment payment = ride.getPayment();
             payment.setIsAcceptedPayment(true);
             paymentRepository.save(payment);
@@ -469,7 +470,7 @@ public class RideService {
         return RideState.WAITING;
     }
 
-    private boolean allPassangersPayed(List<CustomerPayment> customerPayments) {
+    private boolean allPassengersPayed(List<CustomerPayment> customerPayments) {
         for (CustomerPayment customerPayment : customerPayments) {
             if (!customerPayment.isPayed()) return false;
         }
@@ -494,7 +495,7 @@ public class RideService {
         List<Ride> rides = this.rideRepository.getReservedRides();
         List<Ride> res = new ArrayList<>();
         for (Ride ride : rides) {
-            if (ride.getScheduledStart().isBefore(LocalDateTime.now().plusMinutes(14))) {
+            if (ride.getScheduledStart().isBefore(LocalDateTime.now().plusMinutes(10))) {
                 res.add(ride);
             }
         }

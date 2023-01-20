@@ -1,9 +1,11 @@
 import {Place} from "./Position";
 import {SimpleUser} from "./User";
-import {Review, RideReview} from "./Review";
+import {RideReview} from "./Review";
+import {RouteDTO} from "./RouteDTO";
 
 export class RideDetails {
   id: number;
+  route: RouteDTO;
   checkPoints: Place[];
   totalPrice: number;
   driver: SimpleUser = new SimpleUser();

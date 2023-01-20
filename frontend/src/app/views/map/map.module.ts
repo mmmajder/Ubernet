@@ -28,7 +28,10 @@ import {MatStepperModule} from "@angular/material/stepper";
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {NgxMaterialTimepickerModule} from "ngx-material-timepicker";
 import {MatRadioModule} from "@angular/material/radio";
-import { NotificationDriverComponent } from './components/notification-driver/notification-driver.component';
+import {NotificationDriverComponent} from './components/notification-driver/notification-driver.component';
+import {
+  ReasonForRideCancellationComponent
+} from "./components/reason-for-ride-cancelation/reason-for-ride-cancellation.component";
 
 @NgModule({
   declarations: [
@@ -36,6 +39,7 @@ import { NotificationDriverComponent } from './components/notification-driver/no
     MapComponent,
     SearchDirectionsUnauthenticatedComponent,
     NotificationDriverComponent,
+    ReasonForRideCancellationComponent,
   ],
   imports: [
     MatToolbarModule,

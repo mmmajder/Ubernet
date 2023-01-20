@@ -1,7 +1,6 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.CreateRideDTO;
-import com.example.ubernet.model.Notification;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.service.RideService;
@@ -10,11 +9,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.List;
 
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
