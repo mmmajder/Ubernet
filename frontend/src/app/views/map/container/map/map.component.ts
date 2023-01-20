@@ -92,14 +92,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.loggedUser.email, (message: any) => {
       this.createRouteForSelectedCar(JSON.parse(message.body))
       console.log(message)
-      // this.sideNav.notify(JSON.parse(message.body).customers)
     })
-    // this.stompClient.subscribe("/notify/split-fare-" + this.loggedUser.email, (message: any) => {
-    //   console.log(message)
-    //   console.log("Stigao sam na drugu stranu")
-    //   this.sideNav.notify(JSON.parse(message.body))
-    // })
-
   }
 
   createRouteForSelectedCar(ride: any) {

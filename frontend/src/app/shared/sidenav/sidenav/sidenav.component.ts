@@ -15,6 +15,7 @@ import {NotificationDTO} from "../../../model/NotificationDTO";
 import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import {NotificationService} from "../../../services/notification.service";
+import {MapComponent} from "../../../views/map/container/map/map.component";
 
 @Component({
   selector: 'app-sidenav',
@@ -25,6 +26,7 @@ export class SidenavComponent implements OnInit {
 
   isActive: boolean = false;
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
+  @ViewChild(MapComponent) mapComponent: MapComponent;
 
   user: User;
   @Input() currentPage: string = 'dashboard';
@@ -79,6 +81,13 @@ export class SidenavComponent implements OnInit {
       console.log("Stigao sam na drugu stranu")
       this.notify(JSON.parse(message.body))
     })
+    // this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.user.email, (message: any) => {
+    //   console.log("poruka")
+    //   this.mapComponent.createRouteForSelectedCar(JSON.parse(message.body))
+    //   console.log(message)
+    //   // this.sideNav.notify(JSON.parse(message.body).customers)
+    // })
+
   }
 
 

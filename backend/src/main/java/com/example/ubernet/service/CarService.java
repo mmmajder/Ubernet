@@ -27,6 +27,7 @@ public class CarService {
     private final SimpMessagingService simpMessagingService;
     private final RideRepository rideRepository;
     private final DriverNotificationRepository driverNotificationRepository;
+
     public Car createCar(CreateCarDTO createCarDTO) {
         User user = userService.findByEmail(createCarDTO.getEmail());
         if (user == null) {
@@ -333,10 +334,9 @@ public class CarService {
         return cars;
     }
 
-    public Car getClosestFreeCar(CreateRideDTO createRideDTO) {
+    public Car getClosestFreeCar(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild) {
         List<Car> activeAvailableCars = getActiveAvailableCars();
-        return getClosestCar(createRideDTO.getCoordinates().get(0), activeAvailableCars,
-                createRideDTO.isHasPet(), createRideDTO.isHasChild());
+        return getClosestCar(firstPositionOfRide, activeAvailableCars, hasPet, hasChild);
     }
 
     private Car getClosestCar(LatLngDTO latLngDTO, List<Car> cars, boolean hasPet, boolean hasChild) {
@@ -358,10 +358,9 @@ public class CarService {
         return closestCar;
     }
 
-    public Car getClosestCarWhenAllAreNotAvailable(CreateRideDTO createRideDTO) {
+    public Car getClosestCarWhenAllAreNotAvailable(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild) {
         List<Car> activeNotReservedCars = carRepository.getActiveNotAvailableNotReservedCars();
-        return getClosestCarAllNotAvailable(createRideDTO.getCoordinates().get(0), activeNotReservedCars,
-                createRideDTO.isHasPet(), createRideDTO.isHasChild());
+        return getClosestCarAllNotAvailable(firstPositionOfRide, activeNotReservedCars, hasPet, hasChild);
     }
 
     private Car getClosestCarAllNotAvailable(LatLngDTO latLngDTO, List<Car> cars, boolean hasPet, boolean hasChild) {
@@ -375,9 +374,9 @@ public class CarService {
                 continue;
             }
             int numberOfPositionsFirstRide = car.getNavigation().getFirstRide().getPositions().size();
-            double lastPostionFirstRideX = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide).getPosition().getX();
-            double lastPostionFirstRideY = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide).getPosition().getY();
-            double distance = MapUtils.calculateDistance(lastPostionFirstRideX, lastPostionFirstRideY, latLngDTO.getLng(), latLngDTO.getLat()); // switch
+            double lastPositionFirstRideX = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide).getPosition().getX();
+            double lastPositionFirstRideY = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide).getPosition().getY();
+            double distance = MapUtils.calculateDistance(lastPositionFirstRideX, lastPositionFirstRideY, latLngDTO.getLng(), latLngDTO.getLat()); // switched
             if (distance < minDistance) {
                 closestCar = car;
                 minDistance = distance;

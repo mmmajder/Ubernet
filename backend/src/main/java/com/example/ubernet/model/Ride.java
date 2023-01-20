@@ -43,4 +43,7 @@ public class Ride {
     private boolean isReservation;
 
     private Boolean deleted = false;
+
+    @OneToOne
+    private RideRequest rideRequest;
 }

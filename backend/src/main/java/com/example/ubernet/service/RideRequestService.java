@@ -2,6 +2,8 @@ package com.example.ubernet.service;
 
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.model.Customer;
+import com.example.ubernet.model.Ride;
+import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -12,9 +14,15 @@ import java.util.List;
 @Service
 @AllArgsConstructor
 public class RideRequestService {
-//    private final RideRequestRepository rideRequestRepository;
-    private final CustomerRepository customerRepository;
     private final RideService rideService;
+    public void sendCarsToReservations() {
+        List<Ride> rides = rideService.getReservedRidesThatShouldStartIn10Minutes();
+        for (Ride ride : rides) {
+            System.out.println(ride);
+            ride.setRideState(RideState.WAITING);
+            rideService.setRidePositions(ride);
+        }
+    }
 
 //    public RideRequest save(RideRequest rideRequest) {
 //        return rideRequestRepository.save(rideRequest);

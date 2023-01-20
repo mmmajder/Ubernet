@@ -11,11 +11,11 @@ import com.example.ubernet.model.enums.DriverNotificationType;
 import com.example.ubernet.model.enums.NotificationType;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.*;
+import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.MapUtils;
 import com.example.ubernet.utils.TimeUtils;
 import lombok.AllArgsConstructor;
 import net.bytebuddy.utility.RandomString;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
@@ -45,6 +45,7 @@ public class RideService {
     private final NotificationService notificationService;
     private final NavigationRepository navigationRepository;
     private final DriverNotificationRepository driverNotificationRepository;
+    private final RideRequestRepository rideRequestRepository;
 
     public Ride findById(Long id) {
         return rideRepository.findById(id).orElse(null);
@@ -57,7 +58,7 @@ public class RideService {
     @Transactional
     public Ride createRide(CreateRideDTO createRideDTO) {
         Ride ride = new Ride();
-        ride.setRideState(getRideStateCreateRide(createRideDTO));
+        ride.setRideState(getRideStateCreateRide(createRideDTO.isReservation(), createRideDTO.getPassengers().size()));
         ride.setRoute(getRouteCreateRide(createRideDTO));
         ride.setPayment(getPaymentCreateRide(createRideDTO));
         ride.setRequestTime(LocalDateTime.now());
@@ -68,14 +69,31 @@ public class RideService {
             ride.setScheduledStart(TimeUtils.getDateTimeForReservationMaxFiveHoursMin15MinutesAdvance(createRideDTO.getReservationTime()));
         }
         if (ride.getRideState() == RideState.WAITING) {
-            Car car = getCarForRide(createRideDTO);
-            ride.setDriver(car.getDriver());
-            addNavigation(car, createRideDTO);
+            initRide(createRideDTO, ride);
             rideRepository.save(ride);
-            sendNextRideNotificationToDriver(ride);
-
+        } else {
+            rideRepository.save(ride);
+            ride.setRideRequest(createRideRequest(createRideDTO, ride));
         }
         return rideRepository.save(ride);
+    }
+
+    private RideRequest createRideRequest(CreateRideDTO createRideDTO, Ride ride) {
+        RideRequest rideRequest = new RideRequest();
+        rideRequest.setCurrentRide(createCurrentRide(createRideDTO));
+        rideRequest.setCarType(createRideDTO.getCarType());
+        rideRequest.setHasChild(createRideDTO.isHasChild());
+        rideRequest.setHasPet(createRideDTO.isHasPet());
+        return rideRequestRepository.save(rideRequest);
+    }
+
+    private void initRide(CreateRideDTO createRideDTO, Ride ride) {
+        Car car = getCarForRide(createRideDTO.getCoordinates().get(0), createRideDTO.isHasPet(), createRideDTO.isHasChild());
+        ride.setDriver(car.getDriver());
+        CurrentRide currentRide = createCurrentRide(createRideDTO);
+        addNavigation(car, currentRide);
+        rideRepository.save(ride);
+        sendNextRideNotificationToDriver(ride);
     }
 
     private void sendNextRideNotificationToDriver(Ride ride) {
@@ -87,14 +105,17 @@ public class RideService {
         this.simpMessagingService.sendNextRideNotification(ride.getDriver().getEmail(), driverNotification);
     }
 
-    private void addNavigation(Car car, CreateRideDTO createRideDTO) {
-//        private void setCurrentOfFutureRide(CreateRideDTO createRideDTO, Car car) {
+    private CurrentRide createCurrentRide(CreateRideDTO createRideDTO) {
         CurrentRide currentRide = new CurrentRide();
         currentRide.setPositions(createRidePositions(createRideDTO));
         currentRide.setShouldGetRouteToClient(true);
         currentRide.setNumberOfRoute(createRideDTO.getNumberOfRoute());
         currentRide.setFreeRide(false);
-        currentRideService.save(currentRide);
+        return currentRideService.save(currentRide);
+    }
+
+    private void addNavigation(Car car, CurrentRide currentRide) {
+//        private void setCurrentOfFutureRide(CreateRideDTO createRideDTO, Car car) {
         Navigation navigation = car.getNavigation();
         if (navigation == null) {
             navigation = new Navigation();
@@ -239,10 +260,10 @@ public class RideService {
         return route;
     }
 
-    private RideState getRideStateCreateRide(CreateRideDTO createRideDTO) {
-        if (createRideDTO.isReservation() && createRideDTO.getPassengers().size() == 1) {
+    private RideState getRideStateCreateRide(boolean isReservation, int numberOfPassengers) {
+        if (isReservation && numberOfPassengers == 1) {
             return RideState.RESERVED;
-        } else if (!createRideDTO.isReservation() && createRideDTO.getPassengers().size() == 1) {
+        } else if (!isReservation && numberOfPassengers == 1) {
             return RideState.WAITING;
         }
         return RideState.REQUESTED;
@@ -297,10 +318,10 @@ public class RideService {
         carService.save(car);
     }
 
-    private Car getCarForRide(CreateRideDTO createRideDTO) {
-        Car car = carService.getClosestFreeCar(createRideDTO);
+    private Car getCarForRide(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild) {
+        Car car = carService.getClosestFreeCar(firstPositionOfRide, hasPet, hasChild);
         if (car == null) {
-            car = carService.getClosestCarWhenAllAreNotAvailable(createRideDTO);
+            car = carService.getClosestCarWhenAllAreNotAvailable(firstPositionOfRide, hasPet, hasChild);
             if (car == null)
                 throw new NotFoundException("All cars are not free");
         }
@@ -407,15 +428,27 @@ public class RideService {
             payment.setIsAcceptedPayment(true);
             paymentRepository.save(payment);
             ride.setRideState(getRideStateAllPassangersPayed(ride));
+            save(ride);
             if (ride.getRideState() == RideState.WAITING) {
                 //todo inicjalizuj voznju
+                setRidePositions(ride);
             }
             //todo notify every one
         }
     }
 
+    public void setRidePositions(Ride ride) {
+        RideRequest rideRequest = ride.getRideRequest();
+        Car car = getCarForRide(DTOMapper.positionToLatLng(rideRequest.getCurrentRide().getPositions().get(0).getPosition()), rideRequest.isHasPet(), rideRequest.isHasChild());
+        ride.setDriver(car.getDriver());
+        addNavigation(car, rideRequest.getCurrentRide());
+        rideRepository.save(ride);
+        this.simpMessagingService.updateRouteForSelectedCar(ride.getDriver().getEmail(), ride);
+        sendNextRideNotificationToDriver(ride);
+    }
+
     private boolean reservationPassed(LocalDateTime scheduledStart) {
-        return scheduledStart.isAfter(LocalDateTime.now());
+        return scheduledStart.isBefore(LocalDateTime.now());
     }
 
     private void acceptSplitFarePay(CustomerPayment customerPayment) {
@@ -455,5 +488,16 @@ public class RideService {
             notificationService.save(notification);
             this.simpMessagingService.notifyCustomersSplitFair(customers.get(i).getEmail(), notification);
         }
+    }
+
+    public List<Ride> getReservedRidesThatShouldStartIn10Minutes() {
+        List<Ride> rides = this.rideRepository.getReservedRides();
+        List<Ride> res = new ArrayList<>();
+        for (Ride ride : rides) {
+            if (ride.getScheduledStart().isBefore(LocalDateTime.now().plusMinutes(14))) {
+                res.add(ride);
+            }
+        }
+        return res;
     }
 }

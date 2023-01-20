@@ -140,4 +140,11 @@ public class DTOMapper {
         }
         return carResponses;
     }
+
+    public static LatLngDTO positionToLatLng(Position position) {
+        LatLngDTO latLngDTO = new LatLngDTO();
+        latLngDTO.setLat(position.getX());
+        latLngDTO.setLng(position.getY());
+        return latLngDTO;
+    }
 }

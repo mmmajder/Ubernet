@@ -1,10 +1,14 @@
 package com.example.ubernet.repository;
 
 import com.example.ubernet.model.Ride;
+import com.google.api.client.util.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+
+import java.time.LocalDateTime;
+import java.util.List;
 
 
 public interface RideRepository extends JpaRepository<Ride, Long> {
@@ -18,4 +22,6 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 
     @Query(value = "SELECT ride FROM Ride ride WHERE ride.driver.car.id=:carId AND ride.rideState=com.example.ubernet.model.enums.RideState.WAITING")
     Ride findRideWhereStatusIsWaitingForCarId(long carId);
+    @Query(value = "SELECT ride FROM Ride ride WHERE ride.isReservation=true AND ride.rideState=com.example.ubernet.model.enums.RideState.RESERVED")
+    List<Ride> getReservedRides();
 }

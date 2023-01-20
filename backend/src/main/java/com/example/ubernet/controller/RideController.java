@@ -3,6 +3,7 @@ package com.example.ubernet.controller;
 import com.example.ubernet.dto.CreateRideDTO;
 import com.example.ubernet.model.Notification;
 import com.example.ubernet.model.Ride;
+import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.service.RideService;
 import com.example.ubernet.service.SimpMessagingService;
 import lombok.AllArgsConstructor;
@@ -13,6 +14,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @AllArgsConstructor
 @CrossOrigin(origins = "*")
@@ -28,7 +30,9 @@ public class RideController {
         if (ride == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        this.simpMessagingService.updateRouteForSelectedCar(ride.getDriver().getEmail(), ride);
+        if (ride.getRideState()== RideState.WAITING) {
+            this.simpMessagingService.updateRouteForSelectedCar(ride.getDriver().getEmail(), ride);
+        }
         rideService.notifyCustomers(ride.getCustomers(), ride.getId());
         return ResponseEntity.ok(ride);
     }
@@ -48,4 +52,10 @@ public class RideController {
         Ride ride = rideService.findById(id);
         return ResponseEntity.ok(ride);
     }
+
+//    @GetMapping("/get-reserved")
+//    public ResponseEntity<List<Ride>> getReserved() {
+//        List<Ride> rides = rideService.getReservedRides();
+//        return rides;
+//    }
 }
