@@ -1,5 +1,5 @@
 import {Place} from "./Position";
-import {SimpleUser} from "./User";
+import {Driver, SimpleUser} from "./User";
 import {RideReview} from "./Review";
 import {RouteDTO} from "./RouteDTO";
 
@@ -8,7 +8,7 @@ export class RideDetails {
   route: RouteDTO;
   checkPoints: Place[];
   totalPrice: number;
-  driver: SimpleUser = new SimpleUser();
+  driver: Driver
   customers: SimpleUser[] = [];
   scheduledStart: string;
   actualStart: string;

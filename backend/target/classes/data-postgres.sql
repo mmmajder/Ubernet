@@ -60,19 +60,19 @@ values (false),
        (false);
 
 insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name, navigation_id)
-values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1),
-       (false, true, 2, 3, false, false, 'NS-GLAMOC1', 'Audi', 2),
-       (false, true, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3);
+values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1);
+--        (false, true, 2, 3, false, false, 'NS-GLAMOC1', 'Audi', 2),
+--        (false, true, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3);
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                     driver_daily_activity_id, car_id)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1),
-       ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2),
-       ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3);
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1);
+--        ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
+--         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2),
+--        ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
+--         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (2, 2),
@@ -98,12 +98,12 @@ values (5, 3),
 update car
 set driver_email='driver@gmail.com'
 where id = 1;
-update car
-set driver_email='driver2@gmail.com'
-where id = 2;
-update car
-set driver_email='driver3@gmail.com'
-where id = 3;
+-- update car
+-- set driver_email='driver2@gmail.com'
+-- where id = 2;
+-- update car
+-- set driver_email='driver3@gmail.com'
+-- where id = 3;
 
 insert into user_auth(deleted, is_enabled, last_password_set, verification_code)
 values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');
@@ -200,8 +200,8 @@ values ('customer@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac
        ('customer@gmail.com', 'admin@gmail.com', '2022-10-27 14:00', 'AHHAHAHHAHA e pa jeste'),
        ('customer@gmail.com', 'admin@gmail.com', '2022-10-28 12:00', 'ok.');
 
-insert into notification(opened, receiver_email, text, type, ride_id)
-values (false, 'customer@gmail.com', 'You have been invited to split fate for ride', 0, 4);
+-- insert into notification(opened, receiver_email, text, type, ride_id)
+-- values (false, 'customer@gmail.com', 'You have been invited to split fate for ride', 0, 4);
 
 insert into driver_notification(driver_notification_type, is_finished, ride_id)
 values (0, true, 1),

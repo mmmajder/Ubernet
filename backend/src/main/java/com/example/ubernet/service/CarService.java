@@ -287,13 +287,17 @@ public class CarService {
     private void removeNonAvailableCarPositions(Car car, CurrentRide currentRide) {
         while (true) {
             if (currentRide.getPositions().size() == 0) {
-                if (car.getNavigation().getApproachFirstRide().getPositions().size() == 0) {
+                if (car.getNavigation().getApproachFirstRide() != null && car.getNavigation().getApproachFirstRide().getPositions().size() == 0) {
                     car.getNavigation().setApproachFirstRide(null);
+                    navigationRepository.save(car.getNavigation());
+                    carRepository.save(car);
                     createNotificationForDriverToStartRide(car);
                 } else if (car.getNavigation().getFirstRide().getPositions().size() == 0) {
                     car.getNavigation().setFirstRide(null);
+                    navigationRepository.save(car.getNavigation());
+                    carRepository.save(car);
+                    createNotificationForDriverToEndRide(car);
                 }
-                navigationRepository.save(car.getNavigation());
                 return;
             }
             PositionInTime currentPositionInTime = getNextPosition(currentRide);
@@ -315,15 +319,24 @@ public class CarService {
         }
     }
 
-    private void createNotificationForDriverToStartRide(Car car) {
+    private void createNotificationForDriverToEndRide(Car car) {
         DriverNotification driverNotification = new DriverNotification();
-        driverNotification.setDriverNotificationType(DriverNotificationType.START);
-        Ride ride = rideRepository.findRideWhereStatusIsWaitingForCarId(car.getId());
+        driverNotification.setDriverNotificationType(DriverNotificationType.END);
+        Ride ride = rideRepository.findRideWhereStatusIsTravelingForCarId(car.getId());
         driverNotification.setRide(ride);
         driverNotification.setFinished(false);
         driverNotificationRepository.save(driverNotification);
-        simpMessagingService.sendStartRideNotificationToDriver(car.getDriver().getEmail(), driverNotification);
+        simpMessagingService.sendEndRideNotification(car.getDriver().getEmail(), driverNotification);
+    }
 
+    private void createNotificationForDriverToStartRide(Car car) {
+        DriverNotification driverNotification = new DriverNotification();
+        driverNotification.setDriverNotificationType(DriverNotificationType.START);
+        Ride ride = rideRepository.findRideWhereStatusIsWaitingForCarId(car.getId()).get(0);
+        driverNotification.setRide(ride);
+        driverNotification.setFinished(false);
+        driverNotificationRepository.save(driverNotification);
+        simpMessagingService.sendStartRideNotificationToDriver(car.getDriver().getEmail(), ride, driverNotification);
     }
 
     private List<Car> setNewPositionForAvailableCars() {
@@ -374,8 +387,8 @@ public class CarService {
                 continue;
             }
             int numberOfPositionsFirstRide = car.getNavigation().getFirstRide().getPositions().size();
-            double lastPositionFirstRideX = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide).getPosition().getX();
-            double lastPositionFirstRideY = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide).getPosition().getY();
+            double lastPositionFirstRideX = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide - 1).getPosition().getX();
+            double lastPositionFirstRideY = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide - 1).getPosition().getY();
             double distance = MapUtils.calculateDistance(lastPositionFirstRideX, lastPositionFirstRideY, latLngDTO.getLng(), latLngDTO.getLat()); // switched
             if (distance < minDistance) {
                 closestCar = car;

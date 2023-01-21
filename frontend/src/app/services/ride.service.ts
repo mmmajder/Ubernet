@@ -7,6 +7,7 @@ import {PositionInTime} from "../model/PositionInTime";
 import {Position} from "../model/Position";
 import {RideDetails} from "../model/RideDetails";
 import {RideDTO} from "../model/RideDTO";
+import {RideDenial} from "../model/RideDenial";
 
 @Injectable({
   providedIn: 'root'
@@ -27,21 +28,24 @@ export class RideService {
     return this.http.post<void>(this.rideUrl + "/update-car-route/" + carId, ride, RideService.getHttpOptions());
   }
 
-  public acceptRequestSplitFare(url: string):Observable<any> {
+  public acceptRequestSplitFare(url: string): Observable<any> {
     return this.http.put<any>(this.rideUrl + "/accept-request-split-fare/" + url, RideService.getHttpOptions());
   }
 
-  public getById(id: number):Observable<RideDTO> {
+  public getById(id: number): Observable<RideDTO> {
     return this.http.get<RideDTO>(this.rideUrl + "/" + id, RideService.getHttpOptions());
   }
 
-  public getLastPosition(positionsInTime:PositionInTime[]):Position {
-    let lastPosition = positionsInTime[0]
-    positionsInTime.forEach((positionsInTime:PositionInTime) => {
-      if (positionsInTime.secondsPassed>lastPosition.secondsPassed)
-        lastPosition = positionsInTime;
-    })
-    return lastPosition.position;
+  public startRide(id: number): Observable<RideDetails> {
+    return this.http.put<RideDetails>(this.rideUrl + "/start-ride/" + id, RideService.getHttpOptions());
+  }
+
+  public endRide(id: number): Observable<RideDetails> {
+    return this.http.put<RideDetails>(this.rideUrl + "/end-ride/" + id, RideService.getHttpOptions());
+  }
+
+  public getLastPosition(positionsInTime: PositionInTime[]): Position {
+    return positionsInTime[positionsInTime.length - 1].position
   }
 
   public static getHttpOptions() {
@@ -53,7 +57,6 @@ export class RideService {
       })
     };
   }
-
 
 
 }

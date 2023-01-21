@@ -50,9 +50,16 @@ public class RideController {
         return ResponseEntity.ok(ride);
     }
 
-//    @GetMapping("/get-reserved")
-//    public ResponseEntity<List<Ride>> getReserved() {
-//        List<Ride> rides = rideService.getReservedRides();
-//        return rides;
-//    }
+    @PutMapping("/start-ride/{rideId}")
+    public ResponseEntity<Ride> startRide(@PathVariable Long rideId) {
+        Ride ride = rideService.startRide(rideId);
+        return ResponseEntity.ok(ride);
+    }
+
+    @PutMapping("/end-ride/{rideId}")
+    public ResponseEntity<Ride> endRide(@PathVariable Long rideId) {
+        Ride ride = rideService.endRide(rideId);
+        return ResponseEntity.ok(ride);
+    }
+
 }

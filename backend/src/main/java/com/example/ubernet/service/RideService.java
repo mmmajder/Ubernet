@@ -501,4 +501,37 @@ public class RideService {
         }
         return res;
     }
+
+    public Ride startRide(Long rideId) {
+        Ride ride = findById(rideId);
+        ride.setRideState(RideState.TRAVELLING);
+        ride.setActualStart(LocalDateTime.now());
+        save(ride);
+        Car car = ride.getDriver().getCar();
+        Navigation navigation = car.getNavigation();
+        navigation.getFirstRide().setStartTime(LocalDateTime.now());
+        currentRideService.save(navigation.getFirstRide());
+        return ride;
+    }
+
+    public Ride endRide(Long rideId) {
+        Ride ride = findById(rideId);
+        if (ride==null) throw new BadRequestException("Ride does not exist");
+        ride.setRideState(RideState.FINISHED);
+        save(ride);
+        Car car = ride.getDriver().getCar();
+        Navigation navigation = ride.getDriver().getCar().getNavigation();
+        if (navigation.getSecondRide()!=null) {
+            navigation.setFirstRide(navigation.getSecondRide());
+            navigation.setSecondRide(null);
+            navigation.setApproachFirstRide(navigation.getApproachSecondRide());
+            navigation.setApproachSecondRide(null);
+        } else {
+            navigation.setFirstRide(null);
+            car.setIsAvailable(true);
+            carService.save(car);
+        }
+        navigationRepository.save(navigation);
+        return ride;
+    }
 }

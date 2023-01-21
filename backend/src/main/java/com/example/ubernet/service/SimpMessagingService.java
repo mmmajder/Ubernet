@@ -1,6 +1,7 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.CarResponse;
+import com.example.ubernet.dto.RideDriverNotificationDTO;
 import com.example.ubernet.model.DriverNotification;
 import com.example.ubernet.model.Notification;
 import com.example.ubernet.model.Ride;
@@ -16,8 +17,15 @@ public class SimpMessagingService {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
-    public void sendStartRideNotificationToDriver(String driverEmail, DriverNotification driverNotification) {
-        this.simpMessagingTemplate.convertAndSend("/notify-driver/start-ride-" + driverEmail, driverNotification);
+    public void sendStartRideNotificationToDriver(String driverEmail, Ride ride, DriverNotification driverNotification) {
+        RideDriverNotificationDTO rideDriverNotificationDTO = new RideDriverNotificationDTO();
+        rideDriverNotificationDTO.setDriverNotification(driverNotification);
+        rideDriverNotificationDTO.setRide(ride);
+        this.simpMessagingTemplate.convertAndSend("/notify-driver/start-ride-" + driverEmail, rideDriverNotificationDTO);
+    }
+
+    public void sendEndRideNotification(String driverEmail, DriverNotification driverNotification) {
+        this.simpMessagingTemplate.convertAndSend("/notify-driver/end-ride-" + driverEmail, driverNotification);
     }
 
     public void sendNextRideNotification(String driverEmail, DriverNotification driverNotification) {
@@ -28,7 +36,6 @@ public class SimpMessagingService {
         this.simpMessagingTemplate.convertAndSend("/notify-driver/decline-ride-" + driverEmail, driverNotifications);
 
     }
-
 
     public void updateRouteForSelectedCar(String driverEmail, Ride ride) {
         this.simpMessagingTemplate.convertAndSend("/map-updates/update-route-for-selected-car-" + driverEmail, ride);
@@ -42,6 +49,7 @@ public class SimpMessagingService {
         this.simpMessagingTemplate.convertAndSend("/notify/split-fare-" + customerEmail, notification);
 
     }
+
 
 
 }

@@ -21,7 +21,9 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
     Ride getRideByCustomerPaymentURL(String url);
 
     @Query(value = "SELECT ride FROM Ride ride WHERE ride.driver.car.id=:carId AND ride.rideState=com.example.ubernet.model.enums.RideState.WAITING")
-    Ride findRideWhereStatusIsWaitingForCarId(long carId);
+    List<Ride> findRideWhereStatusIsWaitingForCarId(long carId);
     @Query(value = "SELECT ride FROM Ride ride WHERE ride.isReservation=true AND ride.rideState=com.example.ubernet.model.enums.RideState.RESERVED")
     List<Ride> getReservedRides();
+    @Query(value = "SELECT ride FROM Ride ride WHERE ride.driver.car.id=:carId AND ride.rideState=com.example.ubernet.model.enums.RideState.TRAVELLING")
+    Ride findRideWhereStatusIsTravelingForCarId(long carId);
 }

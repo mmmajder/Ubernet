@@ -11,6 +11,7 @@ import {
   ReasonForRideCancellationComponent
 } from "../reason-for-ride-cancelation/reason-for-ride-cancellation.component";
 import {Place} from "../../../../model/Position";
+import {RideService} from "../../../../services/ride.service";
 
 @Component({
   selector: 'app-notification-driver',
@@ -23,7 +24,7 @@ export class NotificationDriverComponent implements OnInit {
   private stompClient: any;
   notifications: DriverNotification[];
 
-  constructor(public dialog: MatDialog, private driverNotificationService: DriverNotificationService) {
+  constructor(public dialog: MatDialog, private driverNotificationService: DriverNotificationService, private rideService: RideService) {
     this.notifications = []
   }
 
@@ -76,6 +77,18 @@ export class NotificationDriverComponent implements OnInit {
     })
   }
 
+  public updateNotificationStartRide(notification: DriverNotification) {
+    if (this.notifications.filter(e => e.id === notification.id).length === 0)
+      this.notifications.push(notification)
+    // console.log(ride)
+    // console.log(this.notifications)
+    // this.notifications = this.notifications.filter(notification => notification.ride.id !== ride.id)
+  }
+
+  updateNotificationEndRide(endRideNotification: DriverNotification) {
+    this.notifications.push(endRideNotification);
+  }
+
   getRideCheckpoints(checkPoints: Place[]) {
     let checkPointDisplay = ""
     checkPoints.forEach((checkPoint, index) => {
@@ -90,6 +103,10 @@ export class NotificationDriverComponent implements OnInit {
 
 
   startRide(ride: RideDetails) {
+    this.rideService.startRide(ride.id).subscribe((ride: RideDetails) => {
+      console.log(ride)
+      this.notifications = this.notifications.filter(item => item.ride.id !== ride.id)
+    })
 
   }
 
@@ -102,10 +119,17 @@ export class NotificationDriverComponent implements OnInit {
   }
 
   openReasonDialog(ride: RideDetails, shouldSetDriverInactive: boolean) {
-    const dialogRef = this.dialog.open(ReasonForRideCancellationComponent, {
+    this.dialog.open(ReasonForRideCancellationComponent, {
       data: {
         ride, shouldSetDriverInactive
       }
+    })
+  }
+
+
+  endRide(ride: RideDetails) {
+    this.rideService.endRide(ride.id).subscribe((ride) => {
+      this.notifications = this.notifications.filter(item => item.ride.id !== ride.id)
     })
   }
 }

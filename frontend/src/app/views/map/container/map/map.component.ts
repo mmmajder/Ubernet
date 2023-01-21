@@ -20,6 +20,9 @@ import {CarService} from "../../../../services/car.service";
 import {PositionInTime} from "../../../../model/PositionInTime";
 import {DriverNotification} from "../../../../model/DriverNotification";
 import {NotificationDriverComponent} from "../../components/notification-driver/notification-driver.component";
+import {RideDetails} from "../../../../model/RideDetails";
+import {RideDriverNotificationDTO} from "../../../../model/RideDriverNotificationDTO";
+import {CurrentRide} from "../../../../model/CurrentRide";
 
 @Component({
   selector: 'app-map',
@@ -99,6 +102,31 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.map.removeControl(this.routeForSelectedCar);
       this.notificationDriverComponent.removeDriverNotifications(JSON.parse(message.body));
     })
+    this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: any) => {
+      this.map.removeControl(this.routeForSelectedCar);
+      let rideDriverNotificationDTO: RideDriverNotificationDTO = JSON.parse(message.body)
+      this.notificationDriverComponent.updateNotificationStartRide(rideDriverNotificationDTO.driverNotification);
+      this.createRouteRideWithCustomers(rideDriverNotificationDTO.ride.driver.car.navigation.firstRide)
+    })
+    this.stompClient.subscribe("/notify-driver/end-ride-" + this.loggedUser.email, (message: any) => {
+      this.map.removeControl(this.routeForSelectedCar);
+      let endRideNotification: DriverNotification = JSON.parse(message.body)
+      this.notificationDriverComponent.updateNotificationEndRide(endRideNotification);
+    })
+  }
+
+  createRouteRideWithCustomers(currenRide: CurrentRide) {
+    let start = currenRide.positions[0].position
+    let end = currenRide.positions[currenRide.positions.length - 1].position
+    this.routeForSelectedCar = L.Routing.control({
+      waypoints: [L.latLng(start.y, start.x), L.latLng(end.y, end.x)],
+      altLineOptions: {
+        extendToWaypoints: false,
+        missingRouteTolerance: 0,
+      },
+    }).on('routesfound', (response) => {
+      let route = response.routes[currenRide.numberOfRoute]
+    }).addTo(this.map)
   }
 
   createRouteForSelectedCar(ride: any) {
@@ -107,13 +135,20 @@ export class MapComponent implements AfterViewInit, OnInit {
     let end: Position
 
     console.log(ride)
-    if (ride.driver.car.navigation.approachSecondRide === null) {
+    if (ride.driver.car.navigation.secondRide === null) {
       start = ride.driver.car.position
       end = ride.driver.car.navigation.firstRide.positions[0].position
     } else {
-      start = this.rideService.getLastPosition(ride.driver.car.navigation.firstRide)
+      start = this.rideService.getLastPosition(ride.driver.car.navigation.firstRide.positions)
       end = ride.driver.car.navigation.secondRide.positions[0].position
     }
+    // if (ride.driver.car.navigation.approachSecondRide === null) {
+    //   start = ride.driver.car.position
+    //   end = ride.driver.car.navigation.firstRide.positions[0].position
+    // } else {
+    //   start = this.rideService.getLastPosition(ride.driver.car.navigation.firstRide)
+    //   end = ride.driver.car.navigation.secondRide.positions[0].position
+    // }
     checkPoints.push(L.latLng(start.y, start.x))
     checkPoints.push(L.latLng(end.y, end.x))
     this.routeForSelectedCar = L.Routing.control({
