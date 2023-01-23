@@ -33,7 +33,6 @@ export class DriverNotificationService {
   // }
 
   public static getHttpOptions() {
-    console.log(localStorage.getItem('token'))
     return {
       headers: new HttpHeaders({
         'Access-Control-Allow-Origin': '*',

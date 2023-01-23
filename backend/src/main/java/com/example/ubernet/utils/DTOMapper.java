@@ -147,4 +147,14 @@ public class DTOMapper {
         latLngDTO.setLng(position.getY());
         return latLngDTO;
     }
+
+    public static List<NumberOfRoute> getNumbersOfRoute(List<Integer> numbersOfRoute) {
+        List<NumberOfRoute> numberOfRouteList = new ArrayList<>();
+        for (int number: numbersOfRoute) {
+            NumberOfRoute numberOfRoute = new NumberOfRoute();
+            numberOfRoute.setNumber(number);
+            numberOfRouteList.add(numberOfRoute);
+        }
+        return numberOfRouteList;
+    }
 }

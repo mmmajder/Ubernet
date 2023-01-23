@@ -25,6 +25,7 @@ public class RideDenialService {
     private final DriverNotificationRepository driverNotificationRepository;
     private final SimpMessagingService simpMessagingService;
     private final DriverDailyActivityRepository driverDailyActivityRepository;
+    private final NotificationService notificationService;
 
     public RideDenial save(RideDenial rideDenial) {
         return this.rideDenialRepository.save(rideDenial);
@@ -35,10 +36,13 @@ public class RideDenialService {
         if (ride == null) throw new BadRequestException("Ride does not exist");
         if (cancelRideRequest.isShouldSetDriverInactive()) {
             rideDenialSetDriverInactive(ride);
+            this.notificationService.createNotificationForCustomersCarTechnicalProblem(ride);
         } else {
             rideDenialFreeDriverFromRide(ride);
+            this.notificationService.createNotificationForCustomersDidNotAppear(ride);
         }
         removeDriverNotifications(ride);
+
         //todo notify customers
         return createNewRideDenial(cancelRideRequest, ride);
     }

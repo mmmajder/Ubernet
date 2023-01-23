@@ -28,5 +28,7 @@ public class CurrentRide {
     private LocalDateTime startTime;
     private boolean isFreeRide;
     private boolean shouldGetRouteToClient;
-    private Integer numberOfRoute;
+
+    @OneToMany
+    private List<NumberOfRoute> numberOfRoute;
 }

@@ -16,6 +16,7 @@ import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import {NotificationService} from "../../../services/notification.service";
 import {MapComponent} from "../../../views/map/container/map/map.component";
+import {RideDetails} from "../../../model/RideDetails";
 
 @Component({
   selector: 'app-sidenav',
@@ -76,11 +77,27 @@ export class SidenavComponent implements OnInit {
   }
 
   openGlobalSocket() {
-    this.stompClient.subscribe("/notify/split-fare-" + this.user.email, (message: any) => {
-      console.log(message)
-      console.log("Stigao sam na drugu stranu")
-      this.notify(JSON.parse(message.body))
+    this.stompClient.subscribe("/notify/split-fare-" + this.user.email, () => {
+      this.updateNotificationBadge()
     })
+    this.stompClient.subscribe("/customer/payback-" + this.user.email, (message: any) => {
+      let money: number = JSON.parse(message.body)
+      this.store.dispatch([new SetTokens(money)])
+    })
+    this.stompClient.subscribe("/customer/everyone-payed-" + this.user.email, (message: any) => {
+      this.updateNotificationBadge();
+    })
+    this.stompClient.subscribe("/customer/technical-problem-" + this.user.email, (message: any) => {
+      this.updateNotificationBadge();
+    })
+    this.stompClient.subscribe("/customer/reservation-reminder-" + this.user.email, (message: any) => {
+      this.updateNotificationBadge();
+    })
+    this.stompClient.subscribe("/customer/did-not-appear-" + this.user.email, (message: any) => {
+      this.updateNotificationBadge();
+    })
+
+
     // this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.user.email, (message: any) => {
     //   console.log("poruka")
     //   this.mapComponent.createRouteForSelectedCar(JSON.parse(message.body))
@@ -152,10 +169,7 @@ export class SidenavComponent implements OnInit {
     })
   }
 
-  notify(notification: NotificationDTO) {
-    console.log("notificationBadgeHidden")
-    console.log(notification)
-    console.log(this.user.email)
+  updateNotificationBadge() {
     this.notificationBadgeHidden = false
   }
 

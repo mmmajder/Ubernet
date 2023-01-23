@@ -2,6 +2,7 @@ import {Place} from "./Position";
 import {Driver, SimpleUser} from "./User";
 import {RideReview} from "./Review";
 import {RouteDTO} from "./RouteDTO";
+import {Payment} from "./Payment";
 
 export class RideDetails {
   id: number;
@@ -16,4 +17,5 @@ export class RideDetails {
   reservationTime: string;
   carReviews: RideReview[];
   driverReviews: RideReview[];
+  payment: Payment
 }

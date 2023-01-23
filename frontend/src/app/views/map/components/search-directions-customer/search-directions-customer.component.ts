@@ -7,12 +7,16 @@ import {PositionDTO} from "../../../../model/PositionDTO";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
-import {Ride} from "../../../../model/Ride";
 import {RideCreate} from "../../../../model/RideCreate";
 import {RideService} from "../../../../services/ride.service";
 import {FriendEmailDTO} from "../../../../model/FriendEmailDTO";
-import {User} from "../../../../model/User";
+import {Customer, User} from "../../../../model/User";
 import {PaymentDTO} from "../../../../model/PaymentDTO";
+import {DecrementTokens} from "../../../../store/actions/tokens.action";
+import {RideDetails} from "../../../../model/RideDetails";
+import {Store} from "@ngxs/store";
+import {LeafletRoute} from "../../../../model/LeafletRoute";
+import {CustomersService} from "../../../../services/customers.service";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -22,14 +26,14 @@ import {PaymentDTO} from "../../../../model/PaymentDTO";
 export class SearchDirectionsCustomerComponent implements OnInit {
   positions: (Place | null)[];
   @Input() estimations: MapSearchEstimations
-  @Input() selectedRoute: any
+  @Input() selectedRoute: LeafletRoute[]
   @Input() loggedUser: User
   @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
   @Output() optimizeByTime = new EventEmitter()
   carTypes: string[];
-  canOptimize: boolean = true;
+  canOptimize: boolean;
   friends: ({ friendEmail: string })[];
   hasPet: boolean;
   hasChild: boolean;
@@ -41,13 +45,15 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   friendsFormGroup: FormGroup;
   timeOfRide: String
   typeOfRequest: string;
+  isActive: boolean;
 
-  constructor(private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+  constructor(private customerService: CustomersService, private store: Store, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = []
     this.typeOfRequest = "now"
     this.hasChild = false;
     this.hasPet = false;
     this.timeOfRide = new Date().toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
+    this.canOptimize = false
   }
 
   get destinations() {
@@ -63,6 +69,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.customerService.getById(this.loggedUser.email).subscribe((customer:Customer) => {
+      this.isActive = customer.isActive
+    })
+
     this.carTypeService.getCarTypes().subscribe({
       next: (carTypeGetResponse) => {
         this.carTypes = []
@@ -124,6 +134,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         panelClass: ['snack-bar']
       })
     }
+    this.canOptimize = true;
 
     function validInput(destinations: any[]) {
       let isValid = true
@@ -204,22 +215,38 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   }
 
+  getRoute() {
+    let mergedRoute = new RideCreate();
+    this.selectedRoute.forEach((partOfRoute: LeafletRoute, index: number) => {
+      if (index != 0) {
+        partOfRoute.coordinates.shift()
+      }
+      mergedRoute.coordinates = mergedRoute.coordinates.concat(partOfRoute.coordinates)
+      mergedRoute.instructions = mergedRoute.instructions.concat(partOfRoute.instructions)
+      mergedRoute.totalDistance = mergedRoute.totalDistance + partOfRoute.summary.totalDistance
+      mergedRoute.totalTime = mergedRoute.totalTime + partOfRoute.summary.totalTime
+      mergedRoute.numberOfRoute[index] = partOfRoute.routesIndex
+    })
+    return mergedRoute;
+  }
+
   requestRide() {
     let payment = new PaymentDTO();
     payment.customerThatPayed = this.loggedUser.email
     payment.totalPrice = +this.estimations.price
-    let route = this.selectedRoute
+    let route = this.getRoute()
     let ride = new RideCreate()
+    console.log(route)
     ride.coordinates = route.coordinates
     ride.instructions = route.instructions
     ride.carType = this.carType.value
     ride.hasPet = this.hasPet
     ride.hasChild = this.hasChild
-    ride.totalDistance = route.summary.totalDistance
-    ride.totalTime = route.summary.totalTime
+    ride.totalDistance = route.totalDistance
+    ride.totalTime = route.totalTime
     ride.reservationTime = this.timeOfRide
     ride.route = this.positions
-    ride.numberOfRoute = route.routesIndex
+    ride.numberOfRoute = route.numberOfRoute
     ride.payment = payment
     ride.passengers = [this.loggedUser.email]
     ride.reservation = this.typeOfRequest === "reserve"
@@ -229,7 +256,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     console.log(ride)
 
     this.rideService.createRideRequest(ride).subscribe({
-      next: (res: Ride) => {
+      next: (res: RideDetails) => {
+        this.store.dispatch([new DecrementTokens(res.payment.customers[0].pricePerCustomer)])
         this._snackBar.open("Successfully reserved ride", '', {
           duration: 3000,
           panelClass: ['snack-bar']

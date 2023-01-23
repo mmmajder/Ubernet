@@ -26,6 +26,8 @@ public class Route {
     private List<Place> checkPoints;
     private Boolean deleted = false;
 
+    @OneToMany
+    private List<NumberOfRoute> numberOfRoute;
     public String stationList() {
         return checkPoints.stream().map(Place::getName)
                 .collect(Collectors.joining(" -> "));

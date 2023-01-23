@@ -3,13 +3,17 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {ActiveCarResponse} from "../model/ActiveCarResponse";
 import {Coordinate} from "../model/Coordinate";
+import {CurrentRide} from "../model/CurrentRide";
+import {RideCreate} from "../model/RideCreate";
+import {LeafletRoute} from "../model/LeafletRoute";
 
 @Injectable({
   providedIn: 'root'
 })
 export class MapService {
 
-  private readonly mapUrl: string;
+  private readonly carUrl: string;
+  private readonly mapUrl: string
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -19,19 +23,17 @@ export class MapService {
   };
 
   constructor(private http: HttpClient) {
-    this.mapUrl = 'http://localhost:8000/car';
+    this.carUrl = 'http://localhost:8000/car';
+    this.mapUrl = 'http://localhost:8000/map'
   }
 
   public getActiveCars(): Observable<ActiveCarResponse[]> {
-    return this.http.get<ActiveCarResponse[]>(this.mapUrl + "/active", this.httpOptions);
+    return this.http.get<ActiveCarResponse[]>(this.carUrl + "/active", this.httpOptions);
   }
 
-  public setNewDestinationOfCar(carId: number) {
-    return this.http.put<ActiveCarResponse>(this.mapUrl + "/position/", carId, this.httpOptions);
-  }
-
-  public getCarById(carId: number): Observable<ActiveCarResponse> {
-    return this.http.get<ActiveCarResponse>(this.mapUrl + "/" + carId, this.httpOptions);
+  public optimizeRouteByPrice(selectedRoute: LeafletRoute[]): Observable<CurrentRide> {
+    console.log(selectedRoute)
+    return this.http.put<CurrentRide>(this.mapUrl + "/optimize-by-price", selectedRoute, this.httpOptions);
   }
 
   public saveFoundPositionsOfRide(coordinates: Coordinate[], timeSlots: number[]) {
@@ -39,7 +41,7 @@ export class MapService {
       "coordinates": coordinates,
       "timeSlots": timeSlots
     }
-    return this.http.put<ActiveCarResponse>(this.mapUrl + "/save-position/", data, this.httpOptions);
+    return this.http.put<ActiveCarResponse>(this.carUrl + "/save-position/", data, this.httpOptions);
   }
 
 
@@ -101,7 +103,5 @@ export class MapService {
     return this.http.get(url);
   }
 
-  public optimizeRouteByPrice() {
-    // return this.http.put<ActiveCarResponse>(this.mapUrl + "/position/", carId, this.httpOptions);
-  }
+
 }

@@ -27,4 +27,16 @@ public class Navigation {
     private CurrentRide approachSecondRide;
     @OneToOne
     private CurrentRide secondRide;
+
+    @Override
+    public String toString() {
+        return "Navigation{" +
+                "id=" + id +
+                ", deleted=" + deleted +
+                ", approachFirstRide=" + approachFirstRide +
+                ", firstRide=" + firstRide +
+                ", approachSecondRide=" + approachSecondRide +
+                ", secondRide=" + secondRide +
+                '}';
+    }
 }

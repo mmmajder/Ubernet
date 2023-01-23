@@ -2,6 +2,7 @@ package com.example.ubernet.service;
 
 import com.example.ubernet.dto.CarResponse;
 import com.example.ubernet.dto.RideDriverNotificationDTO;
+import com.example.ubernet.model.Customer;
 import com.example.ubernet.model.DriverNotification;
 import com.example.ubernet.model.Notification;
 import com.example.ubernet.model.Ride;
@@ -49,7 +50,30 @@ public class SimpMessagingService {
         this.simpMessagingTemplate.convertAndSend("/notify/split-fare-" + customerEmail, notification);
 
     }
+    public void sendPaybackNotification(String email, double numberOfTokens) {
+        this.simpMessagingTemplate.convertAndSend("/customer/payback-" + email, numberOfTokens);
+    }
 
+    public void notifyCustomersInitRide(Notification notification) {
+        this.simpMessagingTemplate.convertAndSend("/customer/init-ride-" + notification.getReceiverEmail(), notification);
+    }
 
+    public void notifyCustomersEveryonePayed(Notification notification) {
+        this.simpMessagingTemplate.convertAndSend("/customer/everyone-payed-" + notification.getReceiverEmail(), notification);
+    }
 
+    public void notifyCustomersTechnicalProblem(Notification notification) {
+        this.simpMessagingTemplate.convertAndSend("/customer/technical-problem-" + notification.getReceiverEmail(), notification);
+
+    }
+
+    public void notifyCustomersReservationReminder(Notification notification) {
+        this.simpMessagingTemplate.convertAndSend("/customer/reservation-reminder-" + notification.getReceiverEmail(), notification);
+
+    }
+
+    public void notifyCustomersDidNotAppear(Notification notification) {
+        this.simpMessagingTemplate.convertAndSend("/customer/did-not-appear-" + notification.getReceiverEmail(), notification);
+
+    }
 }

@@ -2,6 +2,7 @@ package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.CreateRideDTO;
 import com.example.ubernet.model.Ride;
+import com.example.ubernet.model.Route;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.service.RideService;
 import com.example.ubernet.service.SimpMessagingService;
@@ -61,5 +62,12 @@ public class RideController {
         Ride ride = rideService.endRide(rideId);
         return ResponseEntity.ok(ride);
     }
+
+    @GetMapping("/find-scheduled-route-client/{email}")
+    public ResponseEntity<Route> findScheduledRouteForClient(@PathVariable String email) {
+        Route route = rideService.findCurrentRouteForClient(email);
+        return ResponseEntity.ok(route);
+    }
+
 
 }

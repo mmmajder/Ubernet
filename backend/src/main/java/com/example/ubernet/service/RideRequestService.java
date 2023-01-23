@@ -1,26 +1,47 @@
 package com.example.ubernet.service;
 
-import com.example.ubernet.exception.BadRequestException;
-import com.example.ubernet.model.Customer;
+import com.example.ubernet.model.CustomerPayment;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @AllArgsConstructor
 public class RideRequestService {
     private final RideService rideService;
+    private final CustomerRepository customerRepository;
+    private final SimpMessagingService simpMessagingService;
+
     public void sendCarsToReservations() {
         List<Ride> rides = rideService.getReservedRidesThatShouldStartIn10Minutes();
         for (Ride ride : rides) {
             System.out.println(ride);
             ride.setRideState(RideState.WAITING);
             rideService.setRidePositions(ride);
+        }
+    }
+
+    public void returnMoneyNotPayedPassedReservations() {
+        List<Ride> rides = rideService.getReservedRidesThatWereNotPayedAndScheduledTimePassed();
+        for (Ride ride : rides) {
+            ride.setRideState(RideState.CANCELED);
+            rideService.save(ride);
+            List<CustomerPayment> customerPayments = ride.getPayment().getCustomers();
+            for (CustomerPayment payment : customerPayments) {
+                if (payment.isPayed()) {
+                    double price = payment.getPricePerCustomer();
+                    payment.getCustomer().setNumberOfTokens(payment.getCustomer().getNumberOfTokens() + price);
+                    customerRepository.save(payment.getCustomer());
+                    // todo notify customer about payback
+                    simpMessagingService.sendPaybackNotification(payment.getCustomer().getEmail(), payment.getCustomer().getNumberOfTokens());
+                    System.out.println("Return money");
+                    System.out.println(payment.getCustomer().getNumberOfTokens());
+                }
+            }
         }
     }
 

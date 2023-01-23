@@ -39,6 +39,7 @@ export class Customer {
   surname!: string;
   city!: string;
   phoneNumber!: string;
+  isActive!: boolean;
 }
 
 export class UserDTO {

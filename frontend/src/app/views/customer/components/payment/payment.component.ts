@@ -44,7 +44,7 @@ export class PaymentComponent implements OnInit {
       createOrderOnClient: (data) => <ICreateOrderRequest>{
         intent: 'CAPTURE',
         payer: {
-          email_address: 'miki@gmail.com',
+          email_address: 'sb-qq2m924846107@personal.example.com',
           name: {
             given_name: "Milan",
             surname: "Ajder",

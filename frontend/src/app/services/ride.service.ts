@@ -8,6 +8,9 @@ import {Position} from "../model/Position";
 import {RideDetails} from "../model/RideDetails";
 import {RideDTO} from "../model/RideDTO";
 import {RideDenial} from "../model/RideDenial";
+import {CurrentRide} from "../model/CurrentRide";
+import {NavigationDisplay} from "../model/NavigationDisplay";
+import {RouteDTO} from "../model/RouteDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -20,8 +23,8 @@ export class RideService {
     this.rideUrl = 'http://localhost:8000/ride';
   }
 
-  public createRideRequest(ride: RideCreate): Observable<Ride> {
-    return this.http.post<Ride>(this.rideUrl + "/create", ride, RideService.getHttpOptions());
+  public createRideRequest(ride: RideCreate): Observable<RideDetails> {
+    return this.http.post<RideDetails>(this.rideUrl + "/create", ride, RideService.getHttpOptions());
   }
 
   public createRouteForSelectedCar(ride: RideCreate, carId: number): Observable<void> {
@@ -44,12 +47,15 @@ export class RideService {
     return this.http.put<RideDetails>(this.rideUrl + "/end-ride/" + id, RideService.getHttpOptions());
   }
 
+  findScheduledRouteForClient(email: string): Observable<RouteDTO> {
+    return this.http.get<RouteDTO>(this.rideUrl + "/find-scheduled-route-client/" + email, RideService.getHttpOptions());
+  }
+
   public getLastPosition(positionsInTime: PositionInTime[]): Position {
     return positionsInTime[positionsInTime.length - 1].position
   }
 
   public static getHttpOptions() {
-    console.log(localStorage.getItem('token'))
     return {
       headers: new HttpHeaders({
         'Access-Control-Allow-Origin': '*',
@@ -57,6 +63,7 @@ export class RideService {
       })
     };
   }
+
 
 
 }

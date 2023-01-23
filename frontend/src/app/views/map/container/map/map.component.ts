@@ -23,6 +23,10 @@ import {NotificationDriverComponent} from "../../components/notification-driver/
 import {RideDetails} from "../../../../model/RideDetails";
 import {RideDriverNotificationDTO} from "../../../../model/RideDriverNotificationDTO";
 import {CurrentRide} from "../../../../model/CurrentRide";
+import {SidenavComponent} from "../../../../shared/sidenav/sidenav/sidenav.component";
+import {LeafletRoute} from "../../../../model/LeafletRoute";
+import {NavigationDisplay} from "../../../../model/NavigationDisplay";
+import {RouteDTO} from "../../../../model/RouteDTO";
 
 @Component({
   selector: 'app-map',
@@ -41,11 +45,13 @@ export class MapComponent implements AfterViewInit, OnInit {
   directionRoutes: Map<number, L.Control>
   private stompClient: any;
   pins: Marker[];
-  selectedRoute: any;
+  selectedRoute: LeafletRoute[];
   loggedUser: User;
-  routeForSelectedCar: L.Routing.Control;
+  routeForSelectedCar: L.Routing.Control[];
+  routeCustomer: L.Routing.Control[]
 
   @ViewChild(NotificationDriverComponent) notificationDriverComponent: NotificationDriverComponent;
+  @ViewChild(SidenavComponent) sideNavComponent: SidenavComponent;
 
   constructor(private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
     this.searchPins = [];
@@ -54,23 +60,48 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.estimationsSearch = new MapSearchEstimations();
     this.pins = []
     this.directionRoutes = new Map<number, L.Control>;
+    this.routeForSelectedCar = []
+    this.selectedRoute = []
+    this.routeCustomer = []
   }
 
   ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
         this.loggedUser = resp.loggedUser;
-        if (resp.loggedUser.role === "CUSTOMER") {
-          this.userRole = UserRole.CUSTOMER
-        } else if (resp.loggedUser.role === "DRIVER") {
-          this.userRole = UserRole.DRIVER
-        }
         this.initMap()
         this.initializeWebSocketConnection();
         this.initPins()
+        if (resp.loggedUser.role === "CUSTOMER") {
+          this.userRole = UserRole.CUSTOMER
+          this.initRouteCustomer()
+        } else if (resp.loggedUser.role === "DRIVER") {
+          this.userRole = UserRole.DRIVER
+          this.initRouteDriver()
+
+        }
+
       },
       error: () => this.router.navigate(['/'])
     });
+  }
+
+  initRouteDriver() {
+    this.routeForSelectedCar.forEach(i => this.map.removeControl(i));
+    this.routeForSelectedCar = []
+    this.carService.findCurrentRideByDriverEmail(this.loggedUser.email).subscribe((navigationDisplay) => {
+      this.createRouteForDriver(navigationDisplay);
+    })
+  }
+
+  initRouteCustomer() {
+    if (this.routeCustomer.length != 0)
+      this.map.removeControl(this.routeCustomer[0]);
+    this.routeCustomer = [];
+    this.rideService.findScheduledRouteForClient(this.loggedUser.email).subscribe((navigationDisplay) => {
+      this.createRouteForCustomer(navigationDisplay);
+    })
+
   }
 
   reinitializeDirectionsForDrivers() {
@@ -96,44 +127,114 @@ export class MapComponent implements AfterViewInit, OnInit {
     })
     this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.loggedUser.email, (message: any) => {
       this.createRouteForSelectedCar(JSON.parse(message.body))
-      console.log(message)
     })
     this.stompClient.subscribe("/notify-driver/decline-ride-" + this.loggedUser.email, (message: any) => {
-      this.map.removeControl(this.routeForSelectedCar);
       this.notificationDriverComponent.removeDriverNotifications(JSON.parse(message.body));
+      this.initRouteDriver()
     })
     this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: any) => {
-      this.map.removeControl(this.routeForSelectedCar);
       let rideDriverNotificationDTO: RideDriverNotificationDTO = JSON.parse(message.body)
       this.notificationDriverComponent.updateNotificationStartRide(rideDriverNotificationDTO.driverNotification);
-      this.createRouteRideWithCustomers(rideDriverNotificationDTO.ride.driver.car.navigation.firstRide)
+      this.initRouteDriver()
     })
     this.stompClient.subscribe("/notify-driver/end-ride-" + this.loggedUser.email, (message: any) => {
-      this.map.removeControl(this.routeForSelectedCar);
       let endRideNotification: DriverNotification = JSON.parse(message.body)
       this.notificationDriverComponent.updateNotificationEndRide(endRideNotification);
+      this.initRouteDriver()
+    })
+    this.stompClient.subscribe("/customer/init-ride-" + this.loggedUser.email, (message: any) => {
+      this.sideNavComponent.updateNotificationBadge()
+      this.initRouteCustomer()
     })
   }
 
-  createRouteRideWithCustomers(currenRide: CurrentRide) {
-    let start = currenRide.positions[0].position
-    let end = currenRide.positions[currenRide.positions.length - 1].position
-    this.routeForSelectedCar = L.Routing.control({
-      waypoints: [L.latLng(start.y, start.x), L.latLng(end.y, end.x)],
+  createRouteForDriver(navigationDisplay: NavigationDisplay) {
+    console.log(navigationDisplay)
+    if (navigationDisplay.firstApproach != null) {
+      let start = navigationDisplay.firstApproach.positions[0].position
+      let end = navigationDisplay.firstApproach.positions[navigationDisplay.firstApproach.positions.length - 1].position
+      this.routeForSelectedCar.push(this.addRouteToMap([L.latLng(start.y, start.x), L.latLng(end.y, end.x)], 0))
+    }
+    if (navigationDisplay.secondApproach != null) {
+      let start = navigationDisplay.secondApproach.positions[0].position
+      let end = navigationDisplay.secondApproach.positions[navigationDisplay.secondApproach.positions.length - 1].position
+      this.routeForSelectedCar.push(this.addRouteToMap([L.latLng(start.y, start.x), L.latLng(end.y, end.x)], 0))
+    }
+    if (navigationDisplay.firstRide != null) {
+      let checkPoints = navigationDisplay.firstRide.checkPoints;
+      checkPoints.forEach((place, index: number) => {
+        if (index != 0) {
+          this.routeForSelectedCar.push(this.addRouteToMap([L.latLng(checkPoints[index - 1].position.y, checkPoints[index - 1].position.x), L.latLng(place.position.y, place.position.x)], navigationDisplay.firstRide.numberOfRoute[index - 1].number))
+        }
+      })
+    }
+    if (navigationDisplay.secondRide != null) {
+      let checkPoints = navigationDisplay.secondRide.checkPoints;
+      checkPoints.forEach((place, index: number) => {
+        if (index != 0) {
+          this.routeForSelectedCar.push(this.addRouteToMap([L.latLng(checkPoints[index - 1].position.y, checkPoints[index - 1].position.x), L.latLng(place.position.y, place.position.x)], navigationDisplay.secondRide.numberOfRoute[index - 1].number))
+        }
+      })
+    }
+  }
+
+  createRouteForCustomer(route: RouteDTO) {
+    if (route != null) {
+      let checkPoints = route.checkPoints;
+      checkPoints.forEach((place, index: number) => {
+        if (index != 0) {
+          this.routeCustomer.push(this.addRouteToMap([L.latLng(checkPoints[index - 1].position.y, checkPoints[index - 1].position.x), L.latLng(place.position.y, place.position.x)], route.numberOfRoute[index - 1].number))
+        }
+      })
+    }
+  }
+
+  addRouteToMap(waypoints: L.LatLng[], numberOfRoute: number): L.Routing.Control {
+    return L.Routing.control({
+      waypoints: waypoints,
       altLineOptions: {
         extendToWaypoints: false,
         missingRouteTolerance: 0,
+        styles: [
+          {color: 'blue', opacity: 0.5}
+        ],
       },
+      showAlternatives: true,
+      useZoomParameter: false,
+      fitSelectedRoutes: false,
     }).on('routesfound', (response) => {
-      let route = response.routes[currenRide.numberOfRoute]
-    }).addTo(this.map)
+      console.log(response)
+      let route = response.routes[numberOfRoute]
+    })
+      .addTo(this.map)
+
+    // })
   }
 
   createRouteForSelectedCar(ride: any) {
-    let checkPoints: LatLng[] = []
     let start: Position
     let end: Position
 
+    const showOnMap = (start: Position, end: Position) => {
+      let checkPoints: LatLng[] = []
+      checkPoints.push(L.latLng(start.y, start.x))
+      checkPoints.push(L.latLng(end.y, end.x))
+      this.routeForSelectedCar.push(L.Routing.control({
+        waypoints: checkPoints,
+        altLineOptions: {
+          extendToWaypoints: false,
+          missingRouteTolerance: 0,
+        },
+      }).on('routesfound', (response) => {
+        let route = response.routes[0]
+        console.log("updateCarRoute")
+        console.log(route)
+        // localStorage.setItem("currentRide", JSON.stringify(route))
+        this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe(() => {
+          console.log("STIGAO sam")
+        })
+      }).addTo(this.map))
+    }
     console.log(ride)
     if (ride.driver.car.navigation.secondRide === null) {
       start = ride.driver.car.position
@@ -142,30 +243,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       start = this.rideService.getLastPosition(ride.driver.car.navigation.firstRide.positions)
       end = ride.driver.car.navigation.secondRide.positions[0].position
     }
-    // if (ride.driver.car.navigation.approachSecondRide === null) {
-    //   start = ride.driver.car.position
-    //   end = ride.driver.car.navigation.firstRide.positions[0].position
-    // } else {
-    //   start = this.rideService.getLastPosition(ride.driver.car.navigation.firstRide)
-    //   end = ride.driver.car.navigation.secondRide.positions[0].position
-    // }
-    checkPoints.push(L.latLng(start.y, start.x))
-    checkPoints.push(L.latLng(end.y, end.x))
-    this.routeForSelectedCar = L.Routing.control({
-      waypoints: checkPoints,
-      altLineOptions: {
-        extendToWaypoints: false,
-        missingRouteTolerance: 0,
-      },
-    }).on('routesfound', (response) => {
-      let route = response.routes[0]
-      console.log("updateCarRoute")
-      console.log(route)
-      this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe(() => {
-        console.log("STIGAO sam")
-      })
-    }).addTo(this.map)
-
+    showOnMap(start, end)
   }
 
   private initMap() {
@@ -190,6 +268,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       if (userIsDriver(this.loggedUser)) {
         let car = this.loggedUser.car
         console.log(car)
+        // if (car.driver.driverDailyActivity.isActive) {
         this.carService.getActiveCar(this.loggedUser.email).subscribe((car: ActiveCarResponse) => {
           console.log(car)
           let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
@@ -197,6 +276,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           if (car.currentRide != null)
             this.initDirections(car, marker)
         })
+        // }
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
           let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
@@ -215,27 +295,12 @@ export class MapComponent implements AfterViewInit, OnInit {
     waypoints.push(L.latLng(positionsInTime[0].position.y, positionsInTime[0].position.x))
     waypoints.push(L.latLng(positionsInTime[last].position.y, positionsInTime[last].position.x))
 
-    let plan = L.Routing.plan(waypoints, {
-      createMarker: (i, start, n) => {
-        let marker_icon;
-        if (i == 0) {
-          // This is the first marker, indicating start
-          marker_icon = this.greenIcon
-        } else if (i == n - 1) {
-          //This is the last marker indicating destination
-          marker_icon = this.redIcon
-        }
-        return L.marker(start.latLng, {
-          icon: marker_icon
-        })
-      }
-    })
+
     let route = L.Routing.control({
       waypoints: waypoints,
       routeWhileDragging: false,
       addWaypoints: false,
       fitSelectedRoutes: false,
-      // plan: plan
     }).on('routesfound', (response) => {
       let timeSlots = this.mapService.getTimeSlots(response);   // get time when reaching new location
       this.mapService.saveFoundPositionsOfRide(response.routes[0].coordinates, timeSlots)
@@ -287,14 +352,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   drawSearchedRoute(positions: Place[]) {
-    this.removeRoutingControls(this.searchedRoutes)
-
-    let checkPoints: LatLng[] = []
-    for (let i = 0; i < positions.length; i++) {
-      checkPoints.push(L.latLng(positions[i].position.y, positions[i].position.x))
-    }
-
-    const drawRoutes = () => {
+    const drawRoute = (checkPoints: L.LatLng[], index: number) => {
       let route = L.Routing.control({
         waypoints: checkPoints,
         altLineOptions: {
@@ -304,15 +362,12 @@ export class MapComponent implements AfterViewInit, OnInit {
             {color: 'blue', opacity: 0.5}
           ],
         },
-
-        routeWhileDragging: true,
+        routeWhileDragging: false,
         addWaypoints: false,
         showAlternatives: true,
         useZoomParameter: false,
-
-        // geocoder: L.control.Geocode.nominatim()
-
       }).on('routesfound', (response) => {
+        this.selectedRoute[index] = response.routes
         let route = response.routes[0]
         this.totalTime = route.summary.totalTime
         this.estimationsSearch.time = secondsToDhms(this.totalTime)
@@ -325,22 +380,23 @@ export class MapComponent implements AfterViewInit, OnInit {
           let route = e.route
           console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
           console.log(route)
-          this.selectedRoute = e.route
+          // this.selectedRoute = e.route
+          this.selectedRoute[index] = e.route
         })
         .addTo(this.map)
       this.searchedRoutes.push(route)
-      // }
     }
-    drawRoutes();
-  }
 
-  carIcon = L.icon({
-    iconUrl: "assets/directions_car.png",
-    iconSize: [20, 20],
-    iconAnchor: [12, 41],
-    popupAnchor: [1, -34],
-    shadowSize: [41, 41]
-  });
+    this.removeRoutingControls(this.searchedRoutes)
+
+    let checkPoints: LatLng[] = []
+    for (let i = 1; i < positions.length; i++) {
+      drawRoute([
+        L.latLng(positions[i - 1].position.y, positions[i - 1].position.x),
+        L.latLng(positions[i].position.y, positions[i].position.x)
+      ], i - 1)
+    }
+  }
 
   redIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
@@ -361,9 +417,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   });
 
 
-  ngAfterViewInit()
-    :
-    void {
+  ngAfterViewInit(): void {
   }
 
   calculatePrice() {
@@ -381,11 +435,14 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   optimizeRouteByPrice() {
     console.log(this.searchedRoutes)
-    this.mapService.optimizeRouteByPrice()
+    this.mapService.optimizeRouteByPrice(this.selectedRoute).subscribe((optimizedRide: CurrentRide) => {
+
+    })
   }
 
   optimizeRouteByTime() {
 
   }
+
 
 }

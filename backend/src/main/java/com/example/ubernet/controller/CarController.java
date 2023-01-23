@@ -2,6 +2,7 @@ package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.Car;
+import com.example.ubernet.model.CurrentRide;
 import com.example.ubernet.service.CarService;
 import com.example.ubernet.service.SimpMessagingService;
 import com.example.ubernet.utils.DTOMapper;
@@ -9,7 +10,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -44,15 +44,6 @@ public class CarController {
     @GetMapping("/active-available")
     public ResponseEntity<List<ActiveCarResponse>> getActiveAvailableCars() {
         List<Car> cars = carService.getActiveAvailableCars();
-        if (cars == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(DTOMapper.getListActiveCarResponse(cars));
-    }
-
-    @GetMapping("/active-nonavailable-new-route")
-    public ResponseEntity<List<ActiveCarResponse>> getActiveNonAvailableCarsNewRoute() {
-        List<Car> cars = carService.getActiveNonAvailableCarsNewRoute();
         if (cars == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -129,6 +120,12 @@ public class CarController {
         List<CarResponse> carsResponse = DTOMapper.getListCarResponse(cars);
         this.simpMessagingService.updateVehiclePosition(carsResponse);
         return ResponseEntity.ok(carsResponse);
+    }
+
+    @GetMapping("/currentRide/{email}")
+    public ResponseEntity<NavigationDisplay> findCurrentRideByDriverEmail(@PathVariable String email) {
+        NavigationDisplay navigationDisplay = carService.getNavigationDisplayForDriver(email);
+        return ResponseEntity.ok(navigationDisplay);
     }
 
 }

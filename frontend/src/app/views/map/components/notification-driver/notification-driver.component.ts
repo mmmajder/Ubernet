@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {User} from "../../../../model/User";
 import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
@@ -12,6 +12,7 @@ import {
 } from "../reason-for-ride-cancelation/reason-for-ride-cancellation.component";
 import {Place} from "../../../../model/Position";
 import {RideService} from "../../../../services/ride.service";
+import {Message} from "../../../../model/Message";
 
 @Component({
   selector: 'app-notification-driver',
@@ -21,6 +22,7 @@ import {RideService} from "../../../../services/ride.service";
 export class NotificationDriverComponent implements OnInit {
 
   @Input() loggedUser: User;
+  @Output() updateRouteDisplay = new EventEmitter<void>();
   private stompClient: any;
   notifications: DriverNotification[];
 
@@ -106,16 +108,19 @@ export class NotificationDriverComponent implements OnInit {
     this.rideService.startRide(ride.id).subscribe((ride: RideDetails) => {
       console.log(ride)
       this.notifications = this.notifications.filter(item => item.ride.id !== ride.id)
+      this.updateRouteDisplay.emit()
     })
 
   }
 
   cancelRideTechnicalOrHealthProblem(ride: RideDetails) {
     this.openReasonDialog(ride, true)
+    this.updateRouteDisplay.emit()
   }
 
   cancelRide(ride: RideDetails) {
     this.openReasonDialog(ride, false)
+    this.updateRouteDisplay.emit()
   }
 
   openReasonDialog(ride: RideDetails, shouldSetDriverInactive: boolean) {
@@ -130,6 +135,7 @@ export class NotificationDriverComponent implements OnInit {
   endRide(ride: RideDetails) {
     this.rideService.endRide(ride.id).subscribe((ride) => {
       this.notifications = this.notifications.filter(item => item.ride.id !== ride.id)
+      this.updateRouteDisplay.emit();
     })
   }
 }

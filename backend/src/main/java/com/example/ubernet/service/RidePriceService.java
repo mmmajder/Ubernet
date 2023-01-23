@@ -15,8 +15,10 @@ public class RidePriceService {
 
     public double calculateEstimatedPrice(PriceEstimationDTO priceEstimationDTO) {
         CarType carType = carTypeService.findCarTypeByName(priceEstimationDTO.getCarType());
-        return 120 * priceEstimationDTO.getEstimatedLengthInKm() + carType.getPriceForType();
-
+        return calculatePrice(priceEstimationDTO.getEstimatedLengthInKm(), carType.getPriceForType());
     }
 
+    public double calculatePrice(double lengthInKM, double pricePerCarType) {
+        return 120 * lengthInKM + pricePerCarType;
+    }
 }

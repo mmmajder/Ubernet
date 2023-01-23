@@ -1,4 +1,4 @@
-<mat-card class="destination-input">
+<mat-card class="destination-input" *ngIf="!isActive">
   <mat-stepper labelPosition="bottom" [linear]="true" #stepper>
     <mat-step [stepControl]="firstFormGroup">
       <ng-template matStepLabel>Direction</ng-template>
@@ -37,7 +37,7 @@
         </div>
         <div style="margin-top: 10px;">
           <button mat-raised-button color="primary" style="width: 100%" type="submit">Search</button>
-          <p *ngIf="canOptimize" style="color: var(--dark); margin-top: 10px;">Optimize by <span
+          <p style="color: var(--dark); margin-top: 10px;">Optimize by <span
             style="font-weight: 500; cursor: pointer"
             (click)="optimizePrice()">price</span>
             or

@@ -3,6 +3,8 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {Car} from "../model/Car";
 import {ActiveCarResponse} from "../model/ActiveCarResponse";
+import {CurrentRide} from "../model/CurrentRide";
+import {NavigationDisplay} from "../model/NavigationDisplay";
 
 @Injectable({
   providedIn: 'root'
@@ -27,8 +29,11 @@ export class CarService {
     return this.http.get<ActiveCarResponse>(this.carUrl + "/active-driver/" + driverEmail, CarService.getHttpOptions());
   }
 
+  public findCurrentRideByDriverEmail(email: string): Observable<NavigationDisplay> {
+    return this.http.get<NavigationDisplay>(this.carUrl + "/currentRide/" + email, CarService.getHttpOptions());
+  }
+
   public static getHttpOptions() {
-    console.log(localStorage.getItem('token'))
     return {
       headers: new HttpHeaders({
         'Access-Control-Allow-Origin': '*',

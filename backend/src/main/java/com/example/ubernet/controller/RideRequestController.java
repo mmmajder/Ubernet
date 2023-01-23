@@ -20,4 +20,9 @@ public class RideRequestController {
     public void sendCarsToReservations() {
         rideRequestService.sendCarsToReservations();
     }
+
+    @PutMapping("/return-money")
+    public void returnMoney() {
+        rideRequestService.returnMoneyNotPayedPassedReservations();
+    }
 }
