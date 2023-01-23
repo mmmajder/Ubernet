@@ -14,5 +14,5 @@ public class DriverInconsistencyController {
 
 //    private final DriverInconsistencyService driverInconsistencyService;
 
-    
+
 }
