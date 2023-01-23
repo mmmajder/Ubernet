@@ -7,6 +7,7 @@ import com.example.ubernet.repository.CustomerRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 @Service
@@ -16,6 +17,7 @@ public class RideRequestService {
     private final CustomerRepository customerRepository;
     private final SimpMessagingService simpMessagingService;
 
+    @Transactional
     public void sendCarsToReservations() {
         List<Ride> rides = rideService.getReservedRidesThatShouldStartIn10Minutes();
         for (Ride ride : rides) {

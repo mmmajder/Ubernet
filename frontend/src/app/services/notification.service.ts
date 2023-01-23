@@ -27,8 +27,8 @@ export class NotificationService {
     return this.http.get<boolean>(this.notificationUrl + "/is-opened/" + email, NotificationService.getHttpOptions());
   }
 
-  public openNotificationForCustomer(email: string): Observable<void> {
-    return this.http.put<void>(this.notificationUrl + "/open/" + email, NotificationService.getHttpOptions());
+  public openNotificationForCustomer(email: string): Observable<NotificationDTO[]> {
+    return this.http.put<NotificationDTO[]>(this.notificationUrl + "/open/" + email, NotificationService.getHttpOptions());
   }
 
   public static getHttpOptions() {

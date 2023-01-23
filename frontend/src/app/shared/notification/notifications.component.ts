@@ -1,4 +1,4 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {NotificationDTO} from "../../model/NotificationDTO";
 import {NotificationService} from "../../services/notification.service";
 import {Store} from "@ngxs/store";
@@ -15,7 +15,7 @@ import {SidenavComponent} from "../sidenav/sidenav/sidenav.component";
   styleUrls: ['./notifications.component.css']
 })
 export class NotificationsComponent implements OnInit {
-  notifications: NotificationDTO[];
+  @Input() notifications: NotificationDTO[];
   user: User;
 
   constructor(private dialog: MatDialog, private notificationService: NotificationService, private store: Store) {

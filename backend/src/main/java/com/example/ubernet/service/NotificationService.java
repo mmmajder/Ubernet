@@ -1,15 +1,14 @@
 package com.example.ubernet.service;
 
-import com.example.ubernet.model.Customer;
-import com.example.ubernet.model.Notification;
-import com.example.ubernet.model.Ride;
+import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.NotificationType;
-import com.example.ubernet.repository.CustomerRepository;
 import com.example.ubernet.repository.NotificationRepository;
+import com.example.ubernet.repository.RideRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 @AllArgsConstructor
@@ -17,8 +16,9 @@ import java.util.List;
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-    private final CustomerRepository customerRepository;
+    private final RideRepository rideRepository;
     private final SimpMessagingService simpMessagingService;
+
     public Notification save(Notification notification) {
         return this.notificationRepository.save(notification);
     }
@@ -32,7 +32,7 @@ public class NotificationService {
     }
 
     public boolean areNotificationsSeenForUser(String email) {
-        for (Notification notification: getNotifications(email)) {
+        for (Notification notification : getNotifications(email)) {
             if (!notification.isOpened()) {
                 return false;
             }
@@ -40,13 +40,15 @@ public class NotificationService {
         return true;
     }
 
-    public void openNotificationForCustomer(String email) {
-        for (Notification notification: getNotifications(email)) {
+    public List<Notification> openNotificationForCustomer(String email) {
+        List<Notification> notifications = getNotifications(email);
+        for (Notification notification : notifications) {
             if (!notification.isOpened()) {
                 notification.setOpened(true);
                 save(notification);
             }
         }
+        return notifications;
     }
 
     private Notification notificationFactory(String email, long rideId) {
@@ -107,4 +109,39 @@ public class NotificationService {
             simpMessagingService.notifyCustomersReservationReminder(notification);
         }
     }
+
+    public void createNotificationForCustomersCarReachedDestination(Car car) {
+        Ride nextRide = rideRepository.findRideFromDriverEmail(car.getDriver().getEmail()).get(0);
+        for (Customer customer : nextRide.getCustomers()) {
+            Notification notification = notificationFactory(customer.getEmail(), nextRide.getId());
+            notification.setType(NotificationType.CAR_REACHED_DESTINATION);
+            notification.setText("Car reached start point!");
+            save(notification);
+            simpMessagingService.notifyCustomersCarReachedStartPoint(notification);
+        }
+    }
+
+    public void createNotificationForCustomerTimeUntilRide(Car car) {
+        Navigation navigation = car.getNavigation();
+        if (car.getNavigation().getApproachFirstRide() == null) return;
+        long approachFirstRideTime = calculateTimeUntilRideStarts(navigation.getApproachFirstRide());
+        Ride ride = rideRepository.findRideFromDriverEmail(car.getDriver().getEmail()).get(0);
+        for (Customer customer : ride.getCustomers()) {
+            Notification notification = notificationFactory(customer.getEmail(), ride.getId());
+            notification.setType(NotificationType.CAR_POSITION);
+            notification.setText(String.valueOf(approachFirstRideTime));
+            save(notification);
+            simpMessagingService.notifyCustomersTimeUntilRide(notification);
+        }
+    }
+
+    private long calculateTimeUntilRideStarts(CurrentRide currentRide) {
+        int numberOfPositions = currentRide.getPositions().size();
+        LocalDateTime endTime = currentRide.getStartTime().plusSeconds((long) currentRide.getPositions().get(numberOfPositions - 1).getSecondsPast());
+        if (endTime.isAfter(LocalDateTime.now())) {
+            return LocalDateTime.now().until(endTime, ChronoUnit.SECONDS);
+        }
+        return 0;
+    }
+
 }

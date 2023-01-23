@@ -36,7 +36,7 @@ public class NotificationsController {
     }
 
     @PutMapping("/open/{email}")
-    public void openNotificationForCustomer(@PathVariable String email) {
-        notificationService.openNotificationForCustomer(email);
+    public ResponseEntity<List<Notification>> openNotificationForCustomer(@PathVariable String email) {
+        return ResponseEntity.ok(notificationService.openNotificationForCustomer(email));
     }
 }

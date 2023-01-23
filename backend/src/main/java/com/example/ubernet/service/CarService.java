@@ -1,7 +1,6 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.*;
-import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.DriverNotificationType;
@@ -28,6 +27,7 @@ public class CarService {
     private final RideRepository rideRepository;
     private final DriverNotificationRepository driverNotificationRepository;
     private final DriverRepository driverRepository;
+    private final NotificationService notificationService;
 
     public Car createCar(CreateCarDTO createCarDTO) {
         User user = userService.findByEmail(createCarDTO.getEmail());
@@ -109,7 +109,7 @@ public class CarService {
     public Car getCarByActiveDriverEmail(String driverEmail) {
         Driver driver = (Driver) userService.findByEmail(driverEmail);
         if (!driver.getDriverDailyActivity().getIsActive()) {
-            throw new BadRequestException("Driver is not active.");
+            return null;
         }
         return carRepository.findByDriver(driver);
     }
@@ -210,6 +210,7 @@ public class CarService {
         if (navigation == null) return;
         if (navigation.getApproachFirstRide() != null) {
             removeNonAvailableCarPositions(car, navigation.getApproachFirstRide());
+            notificationService.createNotificationForCustomerTimeUntilRide(car);
         } else if (navigation.getFirstRide() != null && navigation.getFirstRide().getStartTime() != null) {
             removeNonAvailableCarPositions(car, navigation.getFirstRide());
         }
@@ -236,6 +237,7 @@ public class CarService {
                     navigationRepository.save(car.getNavigation());
                     carRepository.save(car);
                     createNotificationForDriverToStartRide(car);
+                    notificationService.createNotificationForCustomersCarReachedDestination(car);
                 } else if (car.getNavigation().getFirstRide().getPositions().size() == 0) {
                     car.getNavigation().setFirstRide(null);
                     navigationRepository.save(car.getNavigation());

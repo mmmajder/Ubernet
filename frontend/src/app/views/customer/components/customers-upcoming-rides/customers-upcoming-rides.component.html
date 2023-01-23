@@ -1,26 +1,26 @@
 <mat-card class="dashboard-card">
-<mat-card-header>Upcoming rides</mat-card-header>
-  <mat-card-content class="scrollable" *ngIf="rides.length > 0">
-    <mat-list>
-      <mat-list-item *ngFor="let ride of rides">
-        <mat-icon mat-list-icon>timer</mat-icon>
-        <div mat-line>
-          <span class="route-name">{{ride.time}}</span>
-          <span class="time-left"> &nbsp;&nbsp; {{ride.timeLeft}} left</span>
-        </div>
-        <div mat-line> {{ride.start}} - {{ride.destination}} </div>
-        <div mat-line *ngIf="ride.friends.length>0">
-          <mat-chip-list style="display: inline-flex" aria-label="Friends" *ngFor="let friend of ride.friends">
-            <mat-chip>
-              <img matChipAvatar [src]="friend.photo"
-                   alt="avatar"/>
-              {{friend.name}}
-            </mat-chip>
-          </mat-chip-list>
-        </div>
-        <mat-divider></mat-divider>
-      </mat-list-item>
-    </mat-list>
+  <mat-card-header>Upcoming rides</mat-card-header>
+  <mat-card-content class="scrollable" *ngIf="display">
+    <!--    <mat-list>-->
+    <mat-list-item>
+      <mat-icon mat-list-icon>timer</mat-icon>
+      <div mat-line>
+        <span class="route-name">{{arriveTime}}</span>
+        <span class="time-left"> &nbsp;&nbsp; {{timeLeft}} minutes left</span>
+      </div>
+      <div mat-line> {{start}} - {{destination}} </div>
+      <div mat-line *ngIf="friends!==undefined && friends.length>0">
+        <mat-chip-list style="display: inline-flex" aria-label="Friends" *ngFor="let friend of friends">
+          <mat-chip>
+            <img matChipAvatar [src]="photo"
+                 alt="avatar"/>
+            {{friend}}
+          </mat-chip>
+        </mat-chip-list>
+      </div>
+      <mat-divider></mat-divider>
+    </mat-list-item>
+    <!--    </mat-list>-->
   </mat-card-content>
   <mat-card-content *ngIf="rides.length == 0" style="text-align: center;">
     <img src="assets/no-reservations.png" style="height: 250px" alt="no-reservations">

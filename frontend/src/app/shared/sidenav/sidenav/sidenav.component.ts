@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from "@angular/material/menu";
 import {Logout} from "../../../store/actions/authentication.actions";
 import {Select, Store} from "@ngxs/store";
@@ -17,6 +17,7 @@ import * as Stomp from "stompjs";
 import {NotificationService} from "../../../services/notification.service";
 import {MapComponent} from "../../../views/map/container/map/map.component";
 import {RideDetails} from "../../../model/RideDetails";
+import {Message} from "../../../model/Message";
 
 @Component({
   selector: 'app-sidenav',
@@ -28,6 +29,8 @@ export class SidenavComponent implements OnInit {
   isActive: boolean = false;
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
   @ViewChild(MapComponent) mapComponent: MapComponent;
+
+  notificationsCustomer: NotificationDTO[]
 
   user: User;
   @Input() currentPage: string = 'dashboard';
@@ -96,8 +99,9 @@ export class SidenavComponent implements OnInit {
     this.stompClient.subscribe("/customer/did-not-appear-" + this.user.email, (message: any) => {
       this.updateNotificationBadge();
     })
-
-
+    this.stompClient.subscribe("/customer/car-start-point-" + this.user.email, (message: any) => {
+      this.updateNotificationBadge();
+    })
     // this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.user.email, (message: any) => {
     //   console.log("poruka")
     //   this.mapComponent.createRouteForSelectedCar(JSON.parse(message.body))
@@ -164,8 +168,9 @@ export class SidenavComponent implements OnInit {
   }
 
   hideBadge() {
-    this.notificationService.openNotificationForCustomer(this.user.email).subscribe(() => {
+    this.notificationService.openNotificationForCustomer(this.user.email).subscribe((res:NotificationDTO[]) => {
       this.notificationBadgeHidden = true
+      this.notificationsCustomer = res.reverse();
     })
   }
 

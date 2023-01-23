@@ -20,12 +20,12 @@ public class RideDenialService {
     private final RideRepository rideRepository;
     private final NavigationRepository navigationRepository;
     private final CarRepository carRepository;
-    private final DriverRepository driverRepository;
     private final RideService rideService;
     private final DriverNotificationRepository driverNotificationRepository;
     private final SimpMessagingService simpMessagingService;
     private final DriverDailyActivityRepository driverDailyActivityRepository;
     private final NotificationService notificationService;
+    private final CustomerRepository customerRepository;
 
     public RideDenial save(RideDenial rideDenial) {
         return this.rideDenialRepository.save(rideDenial);
@@ -39,12 +39,20 @@ public class RideDenialService {
             this.notificationService.createNotificationForCustomersCarTechnicalProblem(ride);
         } else {
             rideDenialFreeDriverFromRide(ride);
+            setCustomersInactive(ride.getCustomers());
             this.notificationService.createNotificationForCustomersDidNotAppear(ride);
         }
         removeDriverNotifications(ride);
 
         //todo notify customers
         return createNewRideDenial(cancelRideRequest, ride);
+    }
+
+    private void setCustomersInactive(List<Customer> customers) {
+        for (Customer customer: customers) {
+            customer.setActive(false);
+            customerRepository.save(customer);
+        }
     }
 
     private void removeDriverNotifications(Ride ride) {

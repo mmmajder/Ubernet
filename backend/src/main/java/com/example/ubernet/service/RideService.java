@@ -75,7 +75,6 @@ public class RideService {
         if (ride.getRideState() == RideState.WAITING) {
             initRide(createRideDTO, ride);
             rideRepository.save(ride);
-            notificationService.createNotificationForCustomerInitRide(ride);
         }
         rideRepository.save(ride);
         ride.setRideRequest(createRideRequest(createRideDTO));
@@ -333,6 +332,7 @@ public class RideService {
             payment.setIsAcceptedPayment(true);
             paymentRepository.save(payment);
             ride.setRideState(getRideStateAllPassangersPayed(ride));
+            ride.setRequestTime(LocalDateTime.now());
             save(ride);
             this.notificationService.createNotificationForCustomersEveryonePayed(ride);
 
@@ -353,6 +353,7 @@ public class RideService {
         rideRepository.save(ride);
         this.simpMessagingService.updateRouteForSelectedCar(ride.getDriver().getEmail(), ride);
         sendNextRideNotificationToDriver(ride);
+        notificationService.createNotificationForCustomerInitRide(ride);
     }
 
     private boolean reservationPassed(LocalDateTime scheduledStart) {

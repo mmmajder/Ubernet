@@ -69,11 +69,18 @@ public class SimpMessagingService {
 
     public void notifyCustomersReservationReminder(Notification notification) {
         this.simpMessagingTemplate.convertAndSend("/customer/reservation-reminder-" + notification.getReceiverEmail(), notification);
+    }
 
+    public void notifyCustomersCarReachedStartPoint(Notification notification) {
+        this.simpMessagingTemplate.convertAndSend("/customer/car-start-point-" + notification.getReceiverEmail(), notification);
     }
 
     public void notifyCustomersDidNotAppear(Notification notification) {
         this.simpMessagingTemplate.convertAndSend("/customer/did-not-appear-" + notification.getReceiverEmail(), notification);
 
+    }
+
+    public void notifyCustomersTimeUntilRide(Notification notification) {
+        this.simpMessagingTemplate.convertAndSend("/customer/time-until-ride-" + notification.getReceiverEmail(), notification);
     }
 }

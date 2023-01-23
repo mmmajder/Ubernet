@@ -270,11 +270,12 @@ export class MapComponent implements AfterViewInit, OnInit {
         console.log(car)
         // if (car.driver.driverDailyActivity.isActive) {
         this.carService.getActiveCar(this.loggedUser.email).subscribe((car: ActiveCarResponse) => {
-          console.log(car)
-          let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
-          this.pins.push(marker)
-          if (car.currentRide != null)
-            this.initDirections(car, marker)
+          if (car !== null) {
+            let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+            this.pins.push(marker)
+            if (car.currentRide !== null)
+              this.initDirections(car, marker)
+          }
         })
         // }
       } else {
@@ -378,12 +379,12 @@ export class MapComponent implements AfterViewInit, OnInit {
       })
         .on('routeselected', (e) => {
           let route = e.route
-          console.log("IIIIIIIIIIIIIIIIIIIIIIIIIIIIII")
-          console.log(route)
           // this.selectedRoute = e.route
           this.selectedRoute[index] = e.route
         })
         .addTo(this.map)
+
+      // route._selectedRoute = route._routes[1]
       this.searchedRoutes.push(route)
     }
 

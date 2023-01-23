@@ -1,4 +1,4 @@
-<mat-card class="destination-input">
+<mat-card class="destination-input" *ngIf="notifications.length!=0">
   <mat-list *ngFor="let notification of notifications" id="{{notification.id}}"
             class="notification-item">
     <div *ngIf="notification.driverNotificationType==='APPROACH'">
