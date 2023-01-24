@@ -19,6 +19,7 @@ public class NotificationService {
     private final NotificationRepository notificationRepository;
     private final CustomerRepository customerRepository;
     private final SimpMessagingService simpMessagingService;
+
     public Notification save(Notification notification) {
         return this.notificationRepository.save(notification);
     }
@@ -32,7 +33,7 @@ public class NotificationService {
     }
 
     public boolean areNotificationsSeenForUser(String email) {
-        for (Notification notification: getNotifications(email)) {
+        for (Notification notification : getNotifications(email)) {
             if (!notification.isOpened()) {
                 return false;
             }
@@ -41,7 +42,7 @@ public class NotificationService {
     }
 
     public void openNotificationForCustomer(String email) {
-        for (Notification notification: getNotifications(email)) {
+        for (Notification notification : getNotifications(email)) {
             if (!notification.isOpened()) {
                 notification.setOpened(true);
                 save(notification);

@@ -160,13 +160,13 @@ values (1, 1),
 insert into ride (actual_end, actual_start, deleted, request_time, scheduled_start, driver_email, payment_id,
                   route_id, ride_state, is_reservation)
 values ('2023-01-11 12:00', '2023-01-11 11:00', false, '2023-01-11 10:00', '2023-01-11 11:00', 'driver@gmail.com', 1,
-        1, 5, false),
+        1, 4, false),
        ('2023-01-11 12:00', '2023-01-11 11:00', false, '2023-01-11 10:00', '2023-01-11 11:00', 'driver@gmail.com', 1,
-        1, 5, false),
+        1, 4, false),
        ('2023-01-12 12:00', '2023-01-12 11:00', false, '2023-01-12 10:00', '2023-01-12 11:00', 'driver@gmail.com', 1,
-        1, 5, false),
+        1, 4, false),
        ('2023-01-13 12:00', '2023-01-13 11:00', false, '2023-01-13 10:00', '2023-01-13 11:00', 'driver@gmail.com', 1,
-        1, 5, false);
+        1, 4, false);
 
 -- update payment
 -- set ride_id=1
@@ -182,7 +182,6 @@ values (1, 'customer@gmail.com'),
        (3, 'petar@gmail.com'),
        (4, 'petar@gmail.com'),
        (4, 'customer@gmail.com');
-
 
 insert into review (comment, rating, customer_email)
 values ('Bravo majstore', 4, 'customer@gmail.com'),

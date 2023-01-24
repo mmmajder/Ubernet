@@ -19,14 +19,38 @@ import java.util.List;
 public class ReportsService {
 
     private final RideRepository rideRepository;
+    private final DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     public ReportResponse getDriverReport(ReportRequest reportRequest) {
-        DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
-        LocalDateTime start = LocalDate.parse(reportRequest.getStartDate(), format).atStartOfDay();
-        LocalDateTime end = LocalDate.parse(reportRequest.getEndDate(), format).atTime(LocalTime.MAX);
+        LocalDateTime start = getStartOfTheDay(reportRequest.getStartDate());
+        LocalDateTime end = getEndOfTheDay(reportRequest.getEndDate());
         List<Ride> rides = rideRepository.findRideByDriverEmailAndDateRange(reportRequest.getEmail(), start, end);
-        List<LocalDate> dateRange = getDatesInRange(start, end);
+        return buildReportResponse(rides, getDatesInRange(start, end));
+    }
 
+    public ReportResponse getCustomerReport(ReportRequest reportRequest) {
+        LocalDateTime start = getStartOfTheDay(reportRequest.getStartDate());
+        LocalDateTime end = getEndOfTheDay(reportRequest.getEndDate());
+        List<Ride> rides = rideRepository.findRideByCustomersEmailAndDateRange(reportRequest.getEmail(), start, end);
+        return buildReportResponse(rides, getDatesInRange(start, end));
+    }
+
+    public ReportResponse getAdminReport(ReportRequest reportRequest) {
+        LocalDateTime start = getStartOfTheDay(reportRequest.getStartDate());
+        LocalDateTime end = getEndOfTheDay(reportRequest.getEndDate());
+        List<Ride> rides = rideRepository.findRideByDateRange(start, end);
+        return buildReportResponse(rides, getDatesInRange(start, end));
+    }
+
+    private LocalDateTime getStartOfTheDay(String date) {
+        return LocalDate.parse(date, format).atStartOfDay();
+    }
+
+    private LocalDateTime getEndOfTheDay(String date) {
+        return LocalDate.parse(date, format).atTime(LocalTime.MAX);
+    }
+
+    private ReportResponse buildReportResponse(List<Ride> rides, List<LocalDate> dateRange) {
         return ReportResponse.builder()
                 .numberOfRides(calculateNumberOfRides(rides, dateRange))
                 .numberOfKm(calculateNumberOfKm(rides, dateRange))
@@ -44,6 +68,8 @@ public class ReportsService {
     }
 
     private Double calculateAverageMoney(List<Ride> rides) {
+        if (rides.size() == 0)
+            return 0.0;
         return calculateTotalSum(rides) / rides.size();
     }
 
@@ -96,13 +122,5 @@ public class ReportsService {
             money.add(getRidesForDate(rides, date).size());
         }
         return money;
-    }
-
-    public ReportResponse getCustomerReport(ReportRequest reportRequest) {
-        return new ReportResponse();
-    }
-
-    public ReportResponse getAdminReport(ReportRequest reportRequest) {
-        return new ReportResponse();
     }
 }

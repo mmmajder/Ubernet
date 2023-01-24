@@ -53,14 +53,27 @@ export class AnalyticsContainerComponent implements OnInit {
         'startDate': this.formatDate(this.startDate),
         'endDate': this.formatDate(this.endDate)
       };
-      this.reportService.generateReportForDriver(reportRequest).subscribe({
-        next: value => this.updateCharts(value),
-        error: err => console.log("Error occured.")
-      });
+      if (this.userRole == UserRole.DRIVER) {
+        this.reportService.generateReportForDriver(reportRequest).subscribe({
+          next: value => this.updateCharts(value),
+          error: err => console.log("Error occured.")
+        });
+      } else if (this.userRole == UserRole.CUSTOMER) {
+        this.reportService.generateReportForCustomer(reportRequest).subscribe({
+          next: value => this.updateCharts(value),
+          error: err => console.log("Error occured.")
+        });
+      } else {
+        this.reportService.generateReportForAdmin(reportRequest).subscribe({
+          next: value => this.updateCharts(value),
+          error: err => console.log("Error occured.")
+        });
+      }
     }
   }
 
   updateCharts(report: ReportResponse) {
+    console.log(report)
     this.averageSpent = report.averageMoneyPerDay;
     this.totalSpent = report.totalSum;
 
