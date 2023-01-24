@@ -3,7 +3,7 @@ import {MatMenuTrigger} from "@angular/material/menu";
 import {Logout} from "../../../store/actions/authentication.actions";
 import {Select, Store} from "@ngxs/store";
 import {Router} from "@angular/router";
-import {Customer, User} from "../../../model/User";
+import {User} from "../../../model/User";
 import {CustomersService} from "../../../services/customers.service";
 import {ImageService} from "../../../services/image.service";
 import {PaymentComponent} from "../../../views/customer/components/payment/payment.component";
@@ -11,12 +11,10 @@ import {MatDialog} from "@angular/material/dialog";
 import {Observable, Subscription} from "rxjs";
 import {TokensState} from "../../../store/states/tokens.state";
 import {SetTokens} from "../../../store/actions/tokens.action";
-import {NotificationDTO} from "../../../model/NotificationDTO";
 import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import {NotificationService} from "../../../services/notification.service";
 import {MapComponent} from "../../../views/map/container/map/map.component";
-import {RideDetails} from "../../../model/RideDetails";
 
 @Component({
   selector: 'app-sidenav',
@@ -24,25 +22,21 @@ import {RideDetails} from "../../../model/RideDetails";
   styleUrls: ['./sidenav.component.css']
 })
 export class SidenavComponent implements OnInit {
-
-  isActive: boolean = false;
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
   @ViewChild(MapComponent) mapComponent: MapComponent;
+  @Input() currentPage: string = 'dashboard';
+  @Select(TokensState.value) numberOfTokens$!: Observable<number>;
 
   user: User;
-  @Input() currentPage: string = 'dashboard';
-
-  @Input()
-
-  @Select(TokensState.value) numberOfTokens$!: Observable<number>
+  isActive: boolean = false;
   numberOfTokens!: number;
   private valueSubscription: Subscription;
-
   public profilePictureSrc: string;
   private hasRequestedProfilePicture: boolean = false;
   public static _this: any;
   notificationBadgeHidden: boolean;
-
+  private stompClient: any;
+  driverActive: any;
 
   constructor(public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService, private notificationService: NotificationService) {
     this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
@@ -64,8 +58,6 @@ export class SidenavComponent implements OnInit {
   ngOnInit(): void {
     this.initializeWebSocketConnection();
   }
-
-  private stompClient: any;
 
   initializeWebSocketConnection() {
     let ws = new SockJS('http://localhost:8000/socket');
@@ -106,7 +98,6 @@ export class SidenavComponent implements OnInit {
     // })
 
   }
-
 
   ngDoCheck(): void {
     if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture) {
@@ -156,7 +147,7 @@ export class SidenavComponent implements OnInit {
   }
 
   addTokens() {
-    const dialogRef = this.dialog.open(PaymentComponent, {
+    this.dialog.open(PaymentComponent, {
       data: {
         "user": this.user
       }
@@ -170,7 +161,6 @@ export class SidenavComponent implements OnInit {
   }
 
   updateNotificationBadge() {
-    this.notificationBadgeHidden = false
+    this.notificationBadgeHidden = false;
   }
-
 }

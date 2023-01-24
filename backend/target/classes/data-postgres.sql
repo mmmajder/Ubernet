@@ -131,10 +131,10 @@ insert into payment_customers (payment_id, customers_id)
 values (1, 1),
        (1, 2);
 
-insert into route (deleted, price, time)
-values (false, 500, 1200),
-       (false, 500, 1200),
-       (false, 500, 1200);
+insert into route (deleted, price, time, km)
+values (false, 500, 1200, 5),
+       (false, 500, 1200, 5),
+       (false, 500, 1200, 5);
 
 insert into place(name, position_id)
 values ('Stajaliste na keju, Novi Sad', 7),
@@ -159,13 +159,13 @@ values (1, 1),
 
 insert into ride (actual_end, actual_start, deleted, request_time, scheduled_start, driver_email, payment_id,
                   route_id, ride_state, is_reservation)
-values ('2022-10-27 12:00', '2022-10-27 11:00', false, '2022-10-27 10:00', '2031-10-27 11:00', 'driver@gmail.com', 1,
+values ('2023-01-11 12:00', '2023-01-11 11:00', false, '2023-01-11 10:00', '2023-01-11 11:00', 'driver@gmail.com', 1,
         1, 5, false),
-       ('2022-10-30 12:00', '2022-10-30 11:00', false, '2022-10-30 10:00', '2031-10-30 11:00', 'driver@gmail.com', 1,
+       ('2023-01-11 12:00', '2023-01-11 11:00', false, '2023-01-11 10:00', '2023-01-11 11:00', 'driver@gmail.com', 1,
         1, 5, false),
-       ('2022-10-30 12:00', '2022-10-30 11:00', false, '2022-10-30 10:00', '2031-10-30 11:00', 'driver@gmail.com', 1,
+       ('2023-01-12 12:00', '2023-01-12 11:00', false, '2023-01-12 10:00', '2023-01-12 11:00', 'driver@gmail.com', 1,
         1, 5, false),
-       ('2022-10-30 12:00', '2022-10-30 11:00', false, '2022-10-30 10:00', '2031-10-30 11:00', 'driver@gmail.com', 1,
+       ('2023-01-13 12:00', '2023-01-13 11:00', false, '2023-01-13 10:00', '2023-01-13 11:00', 'driver@gmail.com', 1,
         1, 5, false);
 
 -- update payment

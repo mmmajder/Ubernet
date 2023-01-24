@@ -1,4 +1,4 @@
-<mat-card>
+<mat-card style="padding: 30px; border-radius: 20px">
   <mat-card-title>Sign up</mat-card-title>
   <mat-card-subtitle>Please enter your data</mat-card-subtitle>
   <mat-card-content>
@@ -79,5 +79,6 @@
       </mat-form-field>
     </p>
     <button mat-raised-button color="primary" style="width: 100%; margin-top: -20px;" (click)="registerNewUser()">Create an account</button>
+    <a mat-button style="width: 100%" (click)="switchToLoginForm()">Login <i class="material-icons">arrow_forward</i></a>
   </mat-card-content>
 </mat-card>
