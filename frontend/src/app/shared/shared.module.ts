@@ -26,10 +26,11 @@ import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
-import { RideDetailsDialogComponent } from './ride-details-dialog/ride-details-dialog.component';
+import {RideDetailsDialogComponent} from './ride-details-dialog/ride-details-dialog.component';
 import {MatChipsModule} from "@angular/material/chips";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {NotificationsComponent} from "./notification/notifications.component";
+import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
   declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
@@ -53,6 +54,7 @@ import {NotificationsComponent} from "./notification/notifications.component";
     MatSortModule,
     MatChipsModule,
     MatExpansionModule,
+    MatSlideToggleModule,
   ],
   exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })

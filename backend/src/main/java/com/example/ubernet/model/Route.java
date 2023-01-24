@@ -3,7 +3,6 @@ package com.example.ubernet.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Value;
 
 import javax.persistence.*;
 import java.util.List;
@@ -21,6 +20,7 @@ public class Route {
     private long id;
 
     private Double time;
+    private Double km;
     private Double price;
     @OneToMany
     private List<Place> checkPoints;
@@ -28,6 +28,7 @@ public class Route {
 
     @OneToMany
     private List<NumberOfRoute> numberOfRoute;
+
     public String stationList() {
         return checkPoints.stream().map(Place::getName)
                 .collect(Collectors.joining(" -> "));

@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs";
-import {Car} from "../model/Car";
-import {ActiveCarResponse} from "../model/ActiveCarResponse";
-import {NotificationDTO} from "../model/NotificationDTO";
 import {DriverNotification} from "../model/DriverNotification";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,7 +15,7 @@ export class DriverNotificationService {
   }
 
   public getCurrent(customerEmail: string): Observable<DriverNotification[]> {
-    return this.http.get<DriverNotification[]>(this.notificationUrl + "/" + customerEmail, DriverNotificationService.getHttpOptions());
+    return this.http.get<DriverNotification[]>(this.notificationUrl + "/" + customerEmail, AuthService.getHttpOptions());
   }
 
   // public getNotificationById(id: number): Observable<NotificationDTO> {
@@ -31,15 +29,6 @@ export class DriverNotificationService {
   // public openNotificationForCustomer(email: string): Observable<void> {
   //   return this.http.put<void>(this.notificationUrl + "/open/" + email, NotificationService.getHttpOptions());
   // }
-
-  public static getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': localStorage.getItem('token') || 'authkey',
-      })
-    };
-  }
 
 
 }

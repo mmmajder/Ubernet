@@ -4,12 +4,14 @@
     <inspection_tool class="HtmlUnknownAttribute" enabled="true" level="WARNING" enabled_by_default="true">
       <option name="myValues">
         <value>
-          <list size="5">
+          <list size="7">
             <item index="0" class="java.lang.String" itemvalue="user" />
             <item index="1" class="java.lang.String" itemvalue="mattextprefix" />
             <item index="2" class="java.lang.String" itemvalue="mattextsuffix" />
             <item index="3" class="java.lang.String" itemvalue="cdkfocusinitial" />
             <item index="4" class="java.lang.String" itemvalue="matlistitemtitle" />
+            <item index="5" class="java.lang.String" itemvalue="matlistitemicon" />
+            <item index="6" class="java.lang.String" itemvalue="maticonsuffix" />
           </list>
         </value>
       </option>

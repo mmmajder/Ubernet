@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {Login, Register} from "../../../../store/actions/authentication.actions";
 import {Store} from "@ngxs/store";
@@ -11,6 +11,8 @@ import {UserRole} from "../../../../model/UserRole";
   styleUrls: ['./registration.component.css']
 })
 export class RegistrationComponent implements OnInit {
+  @Output() switchForm = new EventEmitter();
+
   email: string = "";
   phoneNumber: string = "";
   password: string = "";
@@ -58,5 +60,9 @@ export class RegistrationComponent implements OnInit {
         panelClass: ['snack-bar']
       })
     });
+  }
+
+  switchToLoginForm() {
+    this.switchForm.emit();
   }
 }

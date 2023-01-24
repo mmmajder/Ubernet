@@ -205,6 +205,7 @@ public class RideService {
         route.setPrice(createRideDTO.getTotalDistance() / 1000 * 120 + carTypeService.findCarTypeByName(createRideDTO.getCarType()).getPriceForType());
         route.setTime(createRideDTO.getTotalTime());
         route.setNumberOfRoute(getNumbersOfRoute(createRideDTO.getNumberOfRoute()));
+        route.setKm(createRideDTO.getTotalDistance() / 1000);
         List<Place> places = new ArrayList<>();
         for (PlaceDTO placeDTO : createRideDTO.getRoute()) {
             Position position = new Position(placeDTO.getPosition().getX(), placeDTO.getPosition().getY());
@@ -320,7 +321,8 @@ public class RideService {
     public void acceptSplitFare(String url) {
         CustomerPayment customerPayment = customerPaymentRepository.findByUrl(url);
         if (customerPayment == null) throw new BadRequestException("Url is incorrect");
-        if (customerPayment.getCustomer().isActive()) throw new BadRequestException("Customer can only have one ride at the time.");
+        if (customerPayment.getCustomer().isActive())
+            throw new BadRequestException("Customer can only have one ride at the time.");
         if (customerPayment.isPayed()) throw new BadRequestException("Payment has already been accepted");
         Ride ride = rideRepository.getRideByCustomerPaymentURL(url);
         if (ride.isReservation() && reservationPassed(ride.getScheduledStart())) {

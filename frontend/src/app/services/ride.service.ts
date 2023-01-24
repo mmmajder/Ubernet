@@ -1,16 +1,13 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {RideCreate} from "../model/RideCreate";
-import {Ride} from "../model/Ride";
 import {PositionInTime} from "../model/PositionInTime";
 import {Position} from "../model/Position";
 import {RideDetails} from "../model/RideDetails";
 import {RideDTO} from "../model/RideDTO";
-import {RideDenial} from "../model/RideDenial";
-import {CurrentRide} from "../model/CurrentRide";
-import {NavigationDisplay} from "../model/NavigationDisplay";
 import {RouteDTO} from "../model/RouteDTO";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -24,46 +21,34 @@ export class RideService {
   }
 
   public createRideRequest(ride: RideCreate): Observable<RideDetails> {
-    return this.http.post<RideDetails>(this.rideUrl + "/create", ride, RideService.getHttpOptions());
+    return this.http.post<RideDetails>(this.rideUrl + "/create", ride, AuthService.getHttpOptions());
   }
 
   public createRouteForSelectedCar(ride: RideCreate, carId: number): Observable<void> {
-    return this.http.post<void>(this.rideUrl + "/update-car-route/" + carId, ride, RideService.getHttpOptions());
+    return this.http.post<void>(this.rideUrl + "/update-car-route/" + carId, ride, AuthService.getHttpOptions());
   }
 
   public acceptRequestSplitFare(url: string): Observable<any> {
-    return this.http.put<any>(this.rideUrl + "/accept-request-split-fare/" + url, RideService.getHttpOptions());
+    return this.http.put<any>(this.rideUrl + "/accept-request-split-fare/" + url, AuthService.getHttpOptions());
   }
 
   public getById(id: number): Observable<RideDTO> {
-    return this.http.get<RideDTO>(this.rideUrl + "/" + id, RideService.getHttpOptions());
+    return this.http.get<RideDTO>(this.rideUrl + "/" + id, AuthService.getHttpOptions());
   }
 
   public startRide(id: number): Observable<RideDetails> {
-    return this.http.put<RideDetails>(this.rideUrl + "/start-ride/" + id, RideService.getHttpOptions());
+    return this.http.put<RideDetails>(this.rideUrl + "/start-ride/" + id, AuthService.getHttpOptions());
   }
 
   public endRide(id: number): Observable<RideDetails> {
-    return this.http.put<RideDetails>(this.rideUrl + "/end-ride/" + id, RideService.getHttpOptions());
+    return this.http.put<RideDetails>(this.rideUrl + "/end-ride/" + id, AuthService.getHttpOptions());
   }
 
   findScheduledRouteForClient(email: string): Observable<RouteDTO> {
-    return this.http.get<RouteDTO>(this.rideUrl + "/find-scheduled-route-client/" + email, RideService.getHttpOptions());
+    return this.http.get<RouteDTO>(this.rideUrl + "/find-scheduled-route-client/" + email, AuthService.getHttpOptions());
   }
 
   public getLastPosition(positionsInTime: PositionInTime[]): Position {
     return positionsInTime[positionsInTime.length - 1].position
   }
-
-  public static getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': localStorage.getItem('token') || 'authkey',
-      })
-    };
-  }
-
-
-
 }

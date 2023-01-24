@@ -5,6 +5,8 @@ import {RidesHistoryService} from "../../services/rides-history.service";
 import {ImageService} from "../../services/image.service";
 import {SimpleUser} from "../../model/User";
 import {RideReview} from "../../model/Review";
+import {PositionInTime} from "../../model/PositionInTime";
+import {Place} from "../../model/Position";
 
 @Component({
   selector: 'app-ride-details-dialog',
@@ -12,9 +14,10 @@ import {RideReview} from "../../model/Review";
   styleUrls: ['./ride-details-dialog.component.css']
 })
 export class RideDetailsDialogComponent implements OnInit {
+  @Input() id: number;
+
   private map: L.Map;
   ride: RideDetails = new RideDetails();
-  @Input() id: number;
   profilePictures: Map<string, string> = new Map<string, string>();
   driverReviews: Map<string, RideReview> = new Map<string, RideReview>();
   carReviews: Map<string, RideReview> = new Map<string, RideReview>();
@@ -29,15 +32,9 @@ export class RideDetailsDialogComponent implements OnInit {
       this.loadProfilePictures(this.ride.customers);
       this.loadProfilePictures([this.ride.driver]);
       this.loadReviews(data);
-      console.log("RIDE: ", this.ride)
+      console.log("RIDE: ", this.ride);
+      this.initMap()
     });
-
-    this.map = L.map('map').setView([45.267136, 19.833549], 11);
-    let mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
-    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
-      attribution: 'Leaflet &copy; ' + mapLink + ', contribution',
-      maxZoom: 18
-    }).addTo(this.map);
   }
 
   loadProfilePictures(customers: SimpleUser[]) {
@@ -51,6 +48,21 @@ export class RideDetailsDialogComponent implements OnInit {
           }
         });
     }
+  }
+
+  drawCheckpointsOnMap() {
+    let waypoints: L.LatLng[] = [];
+    console.log(this.ride)
+    this.ride.checkPoints.forEach((place: Place) => {
+      waypoints.push(L.latLng(place.position.y, place.position.x));
+    });
+
+    L.Routing.control({
+      waypoints: waypoints,
+      routeWhileDragging: false,
+      addWaypoints: false,
+    }).on('routesfound', () => {
+    }).addTo(this.map);
   }
 
   loadReviews(ride: RideDetails) {
@@ -72,5 +84,16 @@ export class RideDetailsDialogComponent implements OnInit {
 
   toggleReviews(email: string) {
     this.showReviews.set(email, !this.showReviews.get(email));
+  }
+
+  private initMap() {
+    this.map = L.map('map').setView([45.267136, 19.833549], 11);
+    let mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
+    L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
+      attribution: 'Leaflet &copy; ' + mapLink + ', contribution',
+      maxZoom: 18
+    }).addTo(this.map);
+    this.drawCheckpointsOnMap();
+
   }
 }
