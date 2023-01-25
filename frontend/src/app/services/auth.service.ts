@@ -20,7 +20,7 @@ export class AuthService {
   }
 
   public login(user: LoginCredentials): Observable<LoginResponseDto> {
-    let body = {
+    const body = {
       "email": user.email,
       "password": user.password
     }
@@ -28,7 +28,7 @@ export class AuthService {
   }
 
   public register(user: RegisterCredentials): Observable<string> {
-    let body = {
+    const body = {
       "email": user.email,
       "password": user.password,
       "name": user.name,
@@ -45,7 +45,7 @@ export class AuthService {
   }
 
   public loginSocial(user: LoginSocialCredentials): Observable<LoginResponseDto> {
-    let body = {
+    const body = {
       "email": user.email,
       "authToken": user.authToken,
       "firstName": user.firstName,

@@ -7,6 +7,6 @@ export class ReservedRideItem {
 }
 
 export class FriendDto {
-  name: string = '';
-  photo: string = '../assets/default-profile-picture.jpg'
+  name = '';
+  photo = '../assets/default-profile-picture.jpg'
 }

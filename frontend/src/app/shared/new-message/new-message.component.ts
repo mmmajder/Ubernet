@@ -1,8 +1,6 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {WebsocketService} from "../../services/websocket.service";
 import {Message} from "../../model/Message";
-import {MatTooltipModule} from '@angular/material/tooltip';
-import {Chat} from "../../model/Chat";
 import {dateTimeNowToString} from "../../services/utils.service";
 
 @Component({
@@ -16,7 +14,7 @@ export class NewMessageComponent implements OnInit {
   @Input() messages: Message[];
   @Input() clientEmail:string;
   @Output() onNewMessageSent = new EventEmitter<Message>();
-  messageText: string = "";
+  messageText = "";
 
   constructor(private webSocketService: WebsocketService) {
   }
@@ -26,7 +24,7 @@ export class NewMessageComponent implements OnInit {
 
   public sendMessage(): void {
     if (this.messageText.trim() !== ""){
-      let message:Message = this.createMessage();
+      const message:Message = this.createMessage();
       this.webSocketService.sendMessage(message);
       this.messages.push(message);
       this.onNewMessageSent.emit(message);

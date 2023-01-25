@@ -2,7 +2,7 @@ import {SimpleUser} from "./User";
 
 export class ChangesRequestDTO {
   driver: SimpleUser;
-  type: string = '';
+  type = '';
 }
 
 export class ChangesRequest {

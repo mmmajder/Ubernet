@@ -1,6 +1,6 @@
 import {Component, Input, ViewChild} from '@angular/core';
 import {RidesHistoryService} from "../../services/rides-history.service";
-import {Ride, RidesDataSource} from "../../model/Ride";
+import {RidesDataSource} from "../../model/Ride";
 import {MatPaginator} from "@angular/material/paginator";
 import {MatSort} from "@angular/material/sort";
 import {merge, tap} from "rxjs";
@@ -48,7 +48,7 @@ export class RidesHistoryComponent {
       this.paginator.pageSize);
   }
 
-  detailsAboutRide(id: number, ride: Ride) {
+  detailsAboutRide(id: number) {
     const dialogRef = this.dialog.open(RideDetailsDialogComponent, {
       height: '600px',
       width: '1000px',

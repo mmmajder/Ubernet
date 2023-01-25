@@ -22,7 +22,7 @@ export class PaymentService {
     this.creditCardUrl = 'http://localhost:8000/creditCard';
   }
 
-  public putCreditCardData(email: String, creditCard: CreditCard){
+  public putCreditCardData(email: string, creditCard: CreditCard){
     return this.http.put<Object>(this.creditCardUrl + "/add/" + email, creditCard, AuthService.getHttpOptions());
   }
 

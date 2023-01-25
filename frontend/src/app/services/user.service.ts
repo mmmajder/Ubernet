@@ -24,7 +24,7 @@ export class UserService {
   }
 
   public updateCustomerData(customer: Customer): Observable<UserDTO> {
-    let body = new UserDTO(customer.name, customer.surname, customer.phoneNumber, customer.city);
+    const body = new UserDTO(customer.name, customer.surname, customer.phoneNumber, customer.city);
     return this.http.put<UserDTO>(this.userUrl + "/profile?email=" + customer.email, body, AuthService.getHttpOptions());
   }
 

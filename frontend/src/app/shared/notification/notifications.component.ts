@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {NotificationDTO} from "../../model/NotificationDTO";
 import {NotificationService} from "../../services/notification.service";
 import {Store} from "@ngxs/store";
@@ -7,7 +7,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   RideSplitFareDialogComponent
 } from "../../views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component";
-import {SidenavComponent} from "../sidenav/sidenav/sidenav.component";
 
 @Component({
   selector: 'app-notifications',
@@ -36,7 +35,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   notificationClicked(event: any) {
-    let notificationId = event.target.attributes.id.value
+    const notificationId = event.target.attributes.id.value
     this.notificationService.getNotificationById(notificationId).subscribe((clickedNotification) => {
       console.log(clickedNotification)
       if (clickedNotification.type === "SPLIT_FARE") {

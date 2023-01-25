@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -22,7 +21,7 @@ export class ImageService {
 
   public postProfileImage(email: string, file: any) {
     // TODO get rid of 'any'
-    let formData = new FormData();
+    const formData = new FormData();
     formData.append("file", file);
 
     return this.http.post<Object>(this.imageUrl + "/" + email, formData, this.httpOptions); // do not change for AuthService.getHttpOptions() because of 'Content-Type' header
