@@ -45,6 +45,7 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 
     @Query(value = "SELECT ride FROM Ride ride WHERE ride.rideState=com.example.ubernet.model.enums.RideState.TRAVELLING")
     List<Ride> findCurrentRides();
+
     @Query(value = "SELECT ride FROM Ride ride WHERE ride.driver.email=:driverEmail AND ride.rideState=com.example.ubernet.model.enums.RideState.FINISHED AND (ride.actualStart BETWEEN :startOfTheDay AND :endOfTheDay)")
     List<Ride> findRideByDriverEmailAndDateRange(String driverEmail, LocalDateTime startOfTheDay, LocalDateTime endOfTheDay);
 
