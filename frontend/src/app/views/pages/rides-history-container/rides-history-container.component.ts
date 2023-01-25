@@ -14,10 +14,10 @@ import {CustomersService} from "../../../services/customers.service";
 export class RidesHistoryContainerComponent {
   @ViewChild('child') ridesHistoryComponent: RidesHistoryComponent;
 
-  userRole: string = "";
-  loggedUserEmail: string = "";
-  driverEmail: string = "";
-  customerEmail: string = "";
+  userRole = "";
+  loggedUserEmail = "";
+  driverEmail = "";
+  customerEmail = "";
   driversEmails: string[];
   customersEmails: string[];
 

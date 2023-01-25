@@ -43,7 +43,7 @@ export class CustomersComponent implements OnInit {
   }
 
   openCustomersProfileDialog(element: SimpleUser) {
-    let dialogRef = this.customersProfile.open(CustomersProfileDialogComponent, {panelClass: 'no-padding-card'});
+    const dialogRef = this.customersProfile.open(CustomersProfileDialogComponent, {panelClass: 'no-padding-card'});
     dialogRef.componentInstance.userEmail = element.email;
   }
 

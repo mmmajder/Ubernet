@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FavoriteRoute} from "../../../../../model/FavoriteRoute";
 
 @Component({
@@ -6,7 +6,7 @@ import {FavoriteRoute} from "../../../../../model/FavoriteRoute";
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.css']
 })
-export class FavoritesComponent implements OnInit {
+export class FavoritesComponent {
   favorites: FavoriteRoute[] = [{
       "name": "Kuća-poso",
       "start": "Danila Kiša 12",
@@ -37,11 +37,5 @@ export class FavoritesComponent implements OnInit {
       "start": "Bulevar Evrope 56",
       "destination": "Danila Kiša 12"
     }];
-
-  constructor() {
-  }
-
-  ngOnInit(): void {
-  }
 
 }

@@ -1,8 +1,7 @@
 <mat-card class="destination-input" *ngIf="!isActive">
-  <mat-stepper labelPosition="bottom" [linear]="true" #stepper>
+  <mat-stepper labelPosition="bottom" [linear]="true">
     <mat-step [stepControl]="firstFormGroup">
       <ng-template matStepLabel>Direction</ng-template>
-      <!--      <mat-card-header>-->
       <div>
         <span style="font-weight: 500; font-size: 16px; margin-top: 30px">Direction</span>
         <div class="header-right">
@@ -12,7 +11,6 @@
           </button>
         </div>
       </div>
-      <!--      </mat-card-header>-->
       <form [formGroup]="destinationsForm" (ngSubmit)="showEstimates()">
         <div
           style="overflow-y:scroll; max-height: 300px; margin-top: 20px; margin-bottom: -10px; margin-right: -20px; position: relative"
@@ -128,27 +126,27 @@
       <div style="overflow-y:scroll; max-height: 300px; margin-bottom: 10px">
         <div>
           <span><h3>Directions:</h3></span>
-<!--          <mat-list role="list">-->
-<!--            <mat-list-item role="listitem" *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i">-->
-<!--              {{destination.value}}-->
-<!--&lt;!&ndash;              <span>{{destination.value}}</span>&ndash;&gt;-->
-<!--            </mat-list-item>-->
-<!--          </mat-list>-->
-          <div appearance="outline"
-               *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i"
-               style="width: 100%">{{i + 1}} {{destination.value}}
+          <!--          <mat-list role="list">-->
+          <!--            <mat-list-item role="listitem" *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i">-->
+          <!--              {{destination.value}}-->
+          <!--&lt;!&ndash;              <span>{{destination.value}}</span>&ndash;&gt;-->
+          <!--            </mat-list-item>-->
+          <!--          </mat-list>-->
+          <div
+            *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i"
+            style="width: 100%">{{i + 1}} {{destination.value}}
           </div>
         </div>
-        <div *ngIf="friends.length!=0">
+        <div *ngIf="friends.length!==0">
           <span>Friends:</span>
-          <div appearance="outline" *ngFor="let friend of friends; let i=index" [ngSwitch]="i"
+          <div *ngFor="let friend of friends; let i=index" [ngSwitch]="i"
                style="width: 100%">{{i + 1}} {{friends[i].friendEmail}}
           </div>
         </div>
         <div style="margin-top: 10px">Notes:</div>
         <span>Car type is: {{carType.value}}. </span>
-        <span *ngIf="hasChild==true">Children seat is required. </span>
-        <span *ngIf="hasPet==true">Pet transport is required.</span>
+        <span *ngIf="hasChild">Children seat is required. </span>
+        <span *ngIf="hasPet">Pet transport is required.</span>
         <div style="margin-top: 10px">
           <span>When:</span>
           <mat-radio-group [(ngModel)]="typeOfRequest" aria-label="Select an option">
@@ -157,7 +155,7 @@
           </mat-radio-group>
           <div *ngIf="typeOfRequest==='reserve'" class="default-time-example">
             <input aria-label="default time" [ngxTimepicker]="defaultValue" [(ngModel)]="timeOfRide" readonly>
-              <ngx-material-timepicker #defaultValue></ngx-material-timepicker>
+            <ngx-material-timepicker #defaultValue></ngx-material-timepicker>
           </div>
         </div>
       </div>
@@ -173,9 +171,9 @@
   <div
     style="margin-top: auto; width: 100%; max-height: 150px; bottom: 0; padding-right: 40px; position: absolute; margin-bottom: 20px">
     <hr>
-    <p *ngIf="estimations.time==undefined && estimations.price==undefined">Please enter all necessary data so that we
+    <p *ngIf="estimations.time===undefined && estimations.price===undefined">Please enter all necessary data so that we
       can estimate price and time of your ride</p>
-    <p *ngIf="estimations.time!=undefined"> Estimated time: {{estimations.time}}</p>
-    <p *ngIf="estimations.price!=undefined"> Estimated price: {{estimations.price}}</p>
+    <p *ngIf="estimations.time!==undefined"> Estimated time: {{estimations.time}}</p>
+    <p *ngIf="estimations.price!==undefined"> Estimated price: {{estimations.price}}</p>
   </div>
 </mat-card>

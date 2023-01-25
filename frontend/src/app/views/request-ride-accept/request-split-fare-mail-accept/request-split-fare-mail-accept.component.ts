@@ -15,7 +15,7 @@ export class RequestSplitFareMailAcceptComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    let url = this.route.snapshot.paramMap.get('acceptRideUrl')!;
+    const url = this.route.snapshot.paramMap.get('acceptRideUrl')!;
     this.rideService.acceptRequestSplitFare(url).subscribe({
       next: () => {
         this.response = "Successfully accepted payment"
@@ -25,5 +25,5 @@ export class RequestSplitFareMailAcceptComponent implements OnInit {
         this.response = resp.error
       }
     })
-  };
+  }
 }

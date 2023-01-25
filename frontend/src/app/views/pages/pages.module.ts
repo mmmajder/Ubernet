@@ -17,10 +17,10 @@ import {DashboardContainerComponent} from "./dashboard-container/dashboard-conta
 import {AdminModule} from "../admin/admin.module";
 import {CustomerModule} from "../customer/customer.module";
 import {DriverModule} from "../driver/driver.module";
-import { ProfileContainerComponent } from './profile-container/profile-container.component';
-import { RidesHistoryContainerComponent } from './rides-history-container/rides-history-container.component';
+import {ProfileContainerComponent} from './profile-container/profile-container.component';
+import {RidesHistoryContainerComponent} from './rides-history-container/rides-history-container.component';
 import {MatSelectModule} from "@angular/material/select";
-import { AnalyticsContainerComponent } from './analytics-container/analytics-container.component';
+import {AnalyticsContainerComponent} from './analytics-container/analytics-container.component';
 import {MatDatepickerModule} from "@angular/material/datepicker";
 import {MatNativeDateModule} from "@angular/material/core";
 

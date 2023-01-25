@@ -13,11 +13,11 @@ import {User} from "../../../../model/User";
   styleUrls: ['./admin-comments.component.css']
 })
 export class AdminCommentsComponent implements OnInit {
-  commentSectionVisible: boolean = false;
+  commentSectionVisible = false;
   commentFormControl = new FormControl('', [Validators.required]);
   comments: Comment[] = [];
-  content: string = "";
-  blocked: boolean = false;
+  content = "";
+  blocked = false;
   adminEmail: string;
   @Input() userEmail: string;
 

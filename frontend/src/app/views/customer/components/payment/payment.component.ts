@@ -22,7 +22,6 @@ export class PaymentComponent implements OnInit {
   user: User;
 
   customerService: CustomersService;
-  //
   tokenState$: Observable<TokensState>;
 
   constructor(@Inject(MAT_DIALOG_DATA) public data: any, private store:Store, private dialogRef: MatDialogRef<PaymentComponent>, customerService:CustomersService) {
@@ -41,7 +40,7 @@ export class PaymentComponent implements OnInit {
     this.payPalConfig = {
       currency: 'USD',
       clientId: 'sb',
-      createOrderOnClient: (data) => <ICreateOrderRequest>{
+      createOrderOnClient: () => <ICreateOrderRequest>{
         intent: 'CAPTURE',
         payer: {
           email_address: 'sb-qq2m924846107@personal.example.com',

@@ -1,45 +1,41 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {AuthService} from "../../../../services/auth.service";
-import {GoogleLoginProvider, SocialAuthService, FacebookLoginProvider} from 'angularx-social-login';
 import {Router} from '@angular/router';
-import {UserService} from "../../../../services/user.service";
 import {Login, LoginSocial} from "../../../../store/actions/authentication.actions";
 import {Store} from '@ngxs/store';
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthService} from "@abacritt/angularx-social-login";
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   @Output() switchForm = new EventEmitter();
 
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   passwordFormControl = new FormControl('', [Validators.required]);
 
-  hide: boolean = true;
+  hide = true;
 
-  email: string = "";
-  password: string = "";
+  email = "";
+  password = "";
 
-  constructor(private _snackBar: MatSnackBar, private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService, private userService: UserService) {
-  }
-
-  ngOnInit(): void {
+  constructor(private _snackBar: MatSnackBar, private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService) {
   }
 
   facebookSignin() {
-    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then((res) => {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(() => {
       this.loginSocial();
     })
   }
 
   loginWithGoogle(): void {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(() => {
-        this.loginSocial();
-      })
+      this.loginSocial();
+    })
   }
 
   private loginSocial() {
@@ -89,6 +85,4 @@ export class LoginComponent implements OnInit {
       })
     });
   }
-
-
 }

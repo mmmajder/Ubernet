@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormGroup} from "@angular/forms";
 
 @Component({
@@ -6,23 +6,18 @@ import {FormGroup} from "@angular/forms";
   templateUrl: './rate-dialog.component.html',
   styleUrls: ['./rate-dialog.component.css']
 })
-export class RateDialogComponent implements OnInit {
+export class RateDialogComponent {
   driverRatingForm!: FormGroup;
   carRatingForm!: FormGroup;
 
-  driverRating: number = 5;
-  carRating: number = 5;
-
-  constructor() { }
-
-  ngOnInit(): void {
-  }
+  driverRating = 5;
+  carRating = 5;
 
   rateCar() {
-
+    // TODO
   }
 
   rateDriver() {
-
+    // TODO
   }
 }

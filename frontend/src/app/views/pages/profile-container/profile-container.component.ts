@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {CurrentlyLogged} from "../../../store/actions/loggedUser.actions";
 import {User} from "../../../model/User";
 import {Store} from "@ngxs/store";
 import {Router} from "@angular/router";

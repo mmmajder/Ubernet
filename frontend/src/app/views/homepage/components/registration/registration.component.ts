@@ -1,6 +1,6 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Output} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
-import {Login, Register} from "../../../../store/actions/authentication.actions";
+import {Register} from "../../../../store/actions/authentication.actions";
 import {Store} from "@ngxs/store";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {UserRole} from "../../../../model/UserRole";
@@ -10,19 +10,19 @@ import {UserRole} from "../../../../model/UserRole";
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent implements OnInit {
+export class RegistrationComponent {
   @Output() switchForm = new EventEmitter();
 
-  email: string = "";
-  phoneNumber: string = "";
-  password: string = "";
-  password2: string = "";
-  name: string = "";
-  lastName: string = "";
-  city: string = "";
+  email = "";
+  phoneNumber = "";
+  password = "";
+  password2 = "";
+  name = "";
+  lastName = "";
+  city = "";
 
-  hide: boolean = true;
-  hide2: boolean = true;
+  hide = true;
+  hide2 = true;
 
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   phoneFormControl = new FormControl('', [Validators.required]);
@@ -35,9 +35,6 @@ export class RegistrationComponent implements OnInit {
   constructor(private _snackBar: MatSnackBar, private store: Store) {
   }
 
-  ngOnInit(): void {
-  }
-
   registerNewUser() {
     this.store.dispatch(new Register({
       "email": this.email,
@@ -48,7 +45,7 @@ export class RegistrationComponent implements OnInit {
       "city": this.city,
       "userRole": UserRole.CUSTOMER
     })).subscribe({
-      next: (value) => {
+      next: () => {
         this._snackBar.open("We sent you registration link", '', {
           duration: 3000,
           panelClass: ['snack-bar']

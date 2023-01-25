@@ -4,7 +4,6 @@ import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import {DriverNotification} from "../../../../model/DriverNotification";
 import {DriverNotificationService} from "../../../../services/driver-notification.service";
-import {RouteDTO} from "../../../../model/RouteDTO";
 import {MatDialog} from "@angular/material/dialog";
 import {RideDetails} from "../../../../model/RideDetails";
 import {
@@ -12,7 +11,6 @@ import {
 } from "../reason-for-ride-cancelation/reason-for-ride-cancellation.component";
 import {Place} from "../../../../model/Position";
 import {RideService} from "../../../../services/ride.service";
-import {Message} from "../../../../model/Message";
 
 @Component({
   selector: 'app-notification-driver',
@@ -36,7 +34,7 @@ export class NotificationDriverComponent implements OnInit {
   }
 
   initializeWebSocketConnection() {
-    let ws = new SockJS('http://localhost:8000/socket');
+    const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
     this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
@@ -46,11 +44,11 @@ export class NotificationDriverComponent implements OnInit {
 
   openDriverNotificationSocket() {
     this.stompClient.subscribe("/notify-driver/new-ride-" + this.loggedUser.email, (message: any) => {
-      let notification: DriverNotification = JSON.parse(message.body)
+      const notification: DriverNotification = JSON.parse(message.body)
       this.notifications.push(notification)
     })
     this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: any) => {
-      let notification: DriverNotification = JSON.parse(message.body)
+      const notification: DriverNotification = JSON.parse(message.body)
       this.notifications.push(notification)
     })
 

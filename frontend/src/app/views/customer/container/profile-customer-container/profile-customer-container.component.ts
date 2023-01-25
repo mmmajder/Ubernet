@@ -6,8 +6,4 @@ import {Component} from '@angular/core';
   styleUrls: ['./profile-customer-container.component.css']
 })
 export class ProfileCustomerContainerComponent {
-
-  constructor() {
-  }
-
 }

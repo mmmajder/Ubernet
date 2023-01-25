@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component} from '@angular/core';
 import {FormBuilder, FormControl, Validators} from "@angular/forms";
 import {map, Observable} from "rxjs";
 import {BreakpointObserver} from "@angular/cdk/layout";
@@ -9,7 +9,7 @@ import {StepperOrientation} from "@angular/cdk/stepper";
   templateUrl: './register-new-driver-dialog.component.html',
   styleUrls: ['./register-new-driver-dialog.component.css']
 })
-export class RegisterNewDriverDialogComponent implements OnInit {
+export class RegisterNewDriverDialogComponent {
 
   emailFormControl = new FormControl('', [Validators.required, Validators.email]);
   phoneFormControl = new FormControl('', [Validators.required]);
@@ -36,24 +36,20 @@ export class RegisterNewDriverDialogComponent implements OnInit {
   });
   stepperOrientation: Observable<StepperOrientation>;
 
-  email: string = "";
-  phoneNumber: string = "";
-  password: string = "";
-  password2: string = "";
-  name: string = "";
-  lastName: string = "";
-  city: string = "";
+  email = "";
+  phoneNumber = "";
+  password = "";
+  password2 = "";
+  name = "";
+  lastName = "";
+  city = "";
 
-  hide: boolean = true;
-  hide2: boolean = true;
+  hide = true;
+  hide2 = true;
 
   constructor(private _formBuilder: FormBuilder, breakpointObserver: BreakpointObserver) {
     this.stepperOrientation = breakpointObserver
       .observe('(min-width: 800px)')
       .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
   }
-
-  ngOnInit(): void {
-  }
-
 }

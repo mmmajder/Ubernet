@@ -43,7 +43,7 @@ export class DriversComponent implements OnInit {
   }
 
   registerNewDriver() {
-    let dialogRef = this.registerNewDriverDialog.open(RegisterNewDriverDialogComponent);
+    this.registerNewDriverDialog.open(RegisterNewDriverDialogComponent);
   }
 
   blockDriver(element: DriverListItem) {
@@ -51,12 +51,12 @@ export class DriversComponent implements OnInit {
   }
 
   openDriversProfileDialog(element: DriverListItem) {
-    let dialogRef = this.driversProfile.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
+    const dialogRef = this.driversProfile.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
     dialogRef.componentInstance.userEmail = element.email;
   }
 
   private usersToDriverListItems(users: Driver[]): DriverListItem[] {
-    let driverList: DriverListItem[] = [];
+    const driverList: DriverListItem[] = [];
     for (let i = 0; i < users.length; i++) {
       driverList.push(new DriverListItem(users[i].email, users[i].name + ' ' + users[i].surname, users[i].isWorking));
       this.imageService.getProfileImage(users[i].email)

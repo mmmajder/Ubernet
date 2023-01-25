@@ -105,13 +105,13 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   reinitializeDirectionsForDrivers() {
-    for (let [key, value] of this.directionRoutes) {
+    for (const [key, value] of this.directionRoutes) {
       this.map.removeControl(value)
     }
   }
 
   initializeWebSocketConnection() {
-    let ws = new SockJS('http://localhost:8000/socket');
+    const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
     this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
@@ -133,12 +133,12 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.initRouteDriver()
     })
     this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: any) => {
-      let rideDriverNotificationDTO: RideDriverNotificationDTO = JSON.parse(message.body)
+      const rideDriverNotificationDTO: RideDriverNotificationDTO = JSON.parse(message.body)
       this.notificationDriverComponent.updateNotificationStartRide(rideDriverNotificationDTO.driverNotification);
       this.initRouteDriver()
     })
     this.stompClient.subscribe("/notify-driver/end-ride-" + this.loggedUser.email, (message: any) => {
-      let endRideNotification: DriverNotification = JSON.parse(message.body)
+      const endRideNotification: DriverNotification = JSON.parse(message.body)
       this.notificationDriverComponent.updateNotificationEndRide(endRideNotification);
       this.initRouteDriver()
     })
@@ -151,17 +151,17 @@ export class MapComponent implements AfterViewInit, OnInit {
   createRouteForDriver(navigationDisplay: NavigationDisplay) {
     console.log(navigationDisplay)
     if (navigationDisplay.firstApproach != null) {
-      let start = navigationDisplay.firstApproach.positions[0].position
-      let end = navigationDisplay.firstApproach.positions[navigationDisplay.firstApproach.positions.length - 1].position
+      const start = navigationDisplay.firstApproach.positions[0].position
+      const end = navigationDisplay.firstApproach.positions[navigationDisplay.firstApproach.positions.length - 1].position
       this.routeForSelectedCar.push(this.addRouteToMap([L.latLng(start.y, start.x), L.latLng(end.y, end.x)], 0))
     }
     if (navigationDisplay.secondApproach != null) {
-      let start = navigationDisplay.secondApproach.positions[0].position
-      let end = navigationDisplay.secondApproach.positions[navigationDisplay.secondApproach.positions.length - 1].position
+      const start = navigationDisplay.secondApproach.positions[0].position
+      const end = navigationDisplay.secondApproach.positions[navigationDisplay.secondApproach.positions.length - 1].position
       this.routeForSelectedCar.push(this.addRouteToMap([L.latLng(start.y, start.x), L.latLng(end.y, end.x)], 0))
     }
     if (navigationDisplay.firstRide != null) {
-      let checkPoints = navigationDisplay.firstRide.checkPoints;
+      const checkPoints = navigationDisplay.firstRide.checkPoints;
       checkPoints.forEach((place, index: number) => {
         if (index != 0) {
           this.routeForSelectedCar.push(this.addRouteToMap([L.latLng(checkPoints[index - 1].position.y, checkPoints[index - 1].position.x), L.latLng(place.position.y, place.position.x)], navigationDisplay.firstRide.numberOfRoute[index - 1].number))
@@ -169,7 +169,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       })
     }
     if (navigationDisplay.secondRide != null) {
-      let checkPoints = navigationDisplay.secondRide.checkPoints;
+      const checkPoints = navigationDisplay.secondRide.checkPoints;
       checkPoints.forEach((place, index: number) => {
         if (index != 0) {
           this.routeForSelectedCar.push(this.addRouteToMap([L.latLng(checkPoints[index - 1].position.y, checkPoints[index - 1].position.x), L.latLng(place.position.y, place.position.x)], navigationDisplay.secondRide.numberOfRoute[index - 1].number))
@@ -180,7 +180,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   createRouteForCustomer(route: RouteDTO) {
     if (route != null) {
-      let checkPoints = route.checkPoints;
+      const checkPoints = route.checkPoints;
       checkPoints.forEach((place, index: number) => {
         if (index != 0) {
           this.routeCustomer.push(this.addRouteToMap([L.latLng(checkPoints[index - 1].position.y, checkPoints[index - 1].position.x), L.latLng(place.position.y, place.position.x)], route.numberOfRoute[index - 1].number))
@@ -204,7 +204,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       fitSelectedRoutes: false,
     }).on('routesfound', (response) => {
       console.log(response)
-      let route = response.routes[numberOfRoute]
+      const route = response.routes[numberOfRoute]
     })
       .addTo(this.map)
 
@@ -216,7 +216,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     let end: Position
 
     const showOnMap = (start: Position, end: Position) => {
-      let checkPoints: LatLng[] = []
+      const checkPoints: LatLng[] = []
       checkPoints.push(L.latLng(start.y, start.x))
       checkPoints.push(L.latLng(end.y, end.x))
       this.routeForSelectedCar.push(L.Routing.control({
@@ -226,7 +226,7 @@ export class MapComponent implements AfterViewInit, OnInit {
           missingRouteTolerance: 0,
         },
       }).on('routesfound', (response) => {
-        let route = response.routes[0]
+        const route = response.routes[0]
         console.log("updateCarRoute")
         console.log(route)
         // localStorage.setItem("currentRide", JSON.stringify(route))
@@ -248,7 +248,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   private initMap() {
     this.map = L.map('map').setView([45.267136, 19.833549], 11);
-    let mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
+    const mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: 'Leaflet &copy; ' + mapLink + ', contribution',
       maxZoom: 18
@@ -256,22 +256,21 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   removePins() {
-    if (this.pins != [])
+    if (this.pins.length != 0)
       this.pins.forEach((marker: Marker) => {
         this.map.removeLayer(marker)
       })
   }
 
-
   initPins() {
     this.mapService.getActiveCars().subscribe((activeCars) => {
       if (userIsDriver(this.loggedUser)) {
-        let car = this.loggedUser.car
+        const car = this.loggedUser.car
         console.log(car)
         // if (car.driver.driverDailyActivity.isActive) {
         this.carService.getActiveCar(this.loggedUser.email).subscribe((car: ActiveCarResponse) => {
           if (car !== null) {
-            let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
             this.pins.push(marker)
             if (car.currentRide !== null)
               this.initDirections(car, marker)
@@ -280,7 +279,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         // }
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
-          let marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+          const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
           this.pins.push(marker);
         })
       }
@@ -289,30 +288,30 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   initDirections = (car: ActiveCarResponse, marker: Marker<any>) => {
-    let waypoints = []
+    const waypoints = []
     console.log(car)
-    let positionsInTime: PositionInTime[] = car.currentRide.positions
-    let last = positionsInTime.length - 1
+    const positionsInTime: PositionInTime[] = car.currentRide.positions
+    const last = positionsInTime.length - 1
     waypoints.push(L.latLng(positionsInTime[0].position.y, positionsInTime[0].position.x))
     waypoints.push(L.latLng(positionsInTime[last].position.y, positionsInTime[last].position.x))
 
 
-    let route = L.Routing.control({
+    const route = L.Routing.control({
       waypoints: waypoints,
       routeWhileDragging: false,
       addWaypoints: false,
       fitSelectedRoutes: false,
     }).on('routesfound', (response) => {
-      let timeSlots = this.mapService.getTimeSlots(response);   // get time when reaching new location
+      const timeSlots = this.mapService.getTimeSlots(response);   // get time when reaching new location
       this.mapService.saveFoundPositionsOfRide(response.routes[0].coordinates, timeSlots)
       while (timeSlots.length < response.routes[0].coordinates.length) {
         timeSlots.push(timeSlots[timeSlots.length - 1])
       }
     }).addTo(this.map)
     route.on('add', (e) => {
-      var waypoints = route.getWaypoints();
-      var markers = e.target._markers;
-      for (var i = 0; i < markers.length; i++) {
+      const waypoints = route.getWaypoints();
+      const markers = e.target._markers;
+      for (let i = 0; i < markers.length; i++) {
         if (i === 0) {
           markers[i].setIcon(this.redIcon);
         } else if (i === markers.length - 1) {
@@ -354,7 +353,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   drawSearchedRoute(positions: Place[]) {
     const drawRoute = (checkPoints: L.LatLng[], index: number) => {
-      let route = L.Routing.control({
+      const route = L.Routing.control({
         waypoints: checkPoints,
         altLineOptions: {
           extendToWaypoints: false,
@@ -369,7 +368,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         useZoomParameter: false,
       }).on('routesfound', (response) => {
         this.selectedRoute[index] = response.routes
-        let route = response.routes[0]
+        const route = response.routes[0]
         this.totalTime = route.summary.totalTime
         this.estimationsSearch.time = secondsToDhms(this.totalTime)
         this.estimationsSearch.lengthInKm = route.summary.totalDistance / 1000
@@ -378,7 +377,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         }
       })
         .on('routeselected', (e) => {
-          let route = e.route
+          const route = e.route
           // this.selectedRoute = e.route
           this.selectedRoute[index] = e.route
         })
@@ -390,7 +389,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
     this.removeRoutingControls(this.searchedRoutes)
 
-    let checkPoints: LatLng[] = []
+    const checkPoints: LatLng[] = []
     for (let i = 1; i < positions.length; i++) {
       drawRoute([
         L.latLng(positions[i - 1].position.y, positions[i - 1].position.x),

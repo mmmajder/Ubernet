@@ -35,7 +35,7 @@ export class CustomerRatingsDashboardComponent implements OnInit {
   }
 
   openRatingsDialog(ride: RideToRate) {
-    let dialogRef = this.ratingDialog.open(RateDialogComponent);
+    const dialogRef = this.ratingDialog.open(RateDialogComponent);
     // dialogRef.afterClosed().subscribe(res => {
     //   if (res !== undefined)
     //     this.createRestaurant(res.data)
