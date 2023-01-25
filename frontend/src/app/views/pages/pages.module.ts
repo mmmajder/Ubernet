@@ -20,13 +20,16 @@ import {DriverModule} from "../driver/driver.module";
 import { ProfileContainerComponent } from './profile-container/profile-container.component';
 import { RidesHistoryContainerComponent } from './rides-history-container/rides-history-container.component';
 import {MatSelectModule} from "@angular/material/select";
-import {AppModule} from "../../app.module";
+import { AnalyticsContainerComponent } from './analytics-container/analytics-container.component';
+import {MatDatepickerModule} from "@angular/material/datepicker";
+import {MatNativeDateModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
     DashboardContainerComponent,
     ProfileContainerComponent,
-    RidesHistoryContainerComponent
+    RidesHistoryContainerComponent,
+    AnalyticsContainerComponent
   ],
   imports: [
     MatToolbarModule,
@@ -47,7 +50,9 @@ import {AppModule} from "../../app.module";
     AdminModule,
     CustomerModule,
     DriverModule,
-    MatSelectModule
+    MatSelectModule,
+    MatDatepickerModule,
+    MatNativeDateModule
   ],
   exports: [
     DashboardContainerComponent

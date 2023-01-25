@@ -1,7 +1,8 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {NotificationDTO} from "../model/NotificationDTO";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,29 +15,18 @@ export class NotificationService {
   }
 
   public getNotifications(customerEmail: string): Observable<NotificationDTO[]> {
-    return this.http.get<NotificationDTO[]>(this.notificationUrl + "/" + customerEmail, NotificationService.getHttpOptions());
+    return this.http.get<NotificationDTO[]>(this.notificationUrl + "/" + customerEmail, AuthService.getHttpOptions());
   }
 
   public getNotificationById(id: number): Observable<NotificationDTO> {
-    return this.http.get<NotificationDTO>(this.notificationUrl + "/by-id/" + id, NotificationService.getHttpOptions());
+    return this.http.get<NotificationDTO>(this.notificationUrl + "/by-id/" + id, AuthService.getHttpOptions());
   }
 
   public areNotificationSeen(email: string): Observable<boolean> {
-    return this.http.get<boolean>(this.notificationUrl + "/is-opened/" + email, NotificationService.getHttpOptions());
+    return this.http.get<boolean>(this.notificationUrl + "/is-opened/" + email, AuthService.getHttpOptions());
   }
 
   public openNotificationForCustomer(email: string): Observable<NotificationDTO[]> {
-    return this.http.put<NotificationDTO[]>(this.notificationUrl + "/open/" + email, NotificationService.getHttpOptions());
+    return this.http.put<NotificationDTO[]>(this.notificationUrl + "/open/" + email, AuthService.getHttpOptions());
   }
-
-  public static getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': localStorage.getItem('token') || 'authkey',
-      })
-    };
-  }
-
-
 }

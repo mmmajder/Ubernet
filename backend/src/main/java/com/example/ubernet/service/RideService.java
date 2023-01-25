@@ -208,6 +208,7 @@ public class RideService {
         route.setPrice(createRideDTO.getTotalDistance() / 1000 * 120 + carTypeService.findCarTypeByName(createRideDTO.getCarType()).getPriceForType());
         route.setTime(createRideDTO.getTotalTime());
         route.setNumberOfRoute(getNumbersOfRoute(createRideDTO.getNumberOfRoute()));
+        route.setKm(createRideDTO.getTotalDistance() / 1000);
         List<Place> places = new ArrayList<>();
         for (PlaceDTO placeDTO : createRideDTO.getRoute()) {
             Position position = new Position(placeDTO.getPosition().getX(), placeDTO.getPosition().getY());

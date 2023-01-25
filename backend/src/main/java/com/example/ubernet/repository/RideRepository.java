@@ -1,7 +1,6 @@
 package com.example.ubernet.repository;
 
 import com.example.ubernet.model.Ride;
-import com.google.api.client.util.DateTime;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,7 +8,6 @@ import org.springframework.data.jpa.repository.Query;
 
 import java.time.LocalDateTime;
 import java.util.List;
-
 
 public interface RideRepository extends JpaRepository<Ride, Long> {
 
@@ -21,7 +19,7 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 
     Page<Ride> findAll(Pageable pageable);
 
-    @Query(value = "SELECT ride FROM Ride ride INNER JOIN ride.payment p INNER JOIN  p.customers c where c.url=:url")
+    @Query(value = "SELECT ride FROM Ride ride INNER JOIN ride.payment p INNER JOIN p.customers c where c.url=:url")
     Ride getRideByCustomerPaymentURL(String url);
 
     @Query(value = "SELECT ride FROM Ride ride WHERE ride.driver.car.id=:carId AND ride.rideState=com.example.ubernet.model.enums.RideState.WAITING")
@@ -47,4 +45,12 @@ public interface RideRepository extends JpaRepository<Ride, Long> {
 
     @Query(value = "SELECT ride FROM Ride ride WHERE ride.rideState=com.example.ubernet.model.enums.RideState.TRAVELLING")
     List<Ride> findCurrentRides();
+    @Query(value = "SELECT ride FROM Ride ride WHERE ride.driver.email=:driverEmail AND ride.rideState=com.example.ubernet.model.enums.RideState.FINISHED AND (ride.actualStart BETWEEN :startOfTheDay AND :endOfTheDay)")
+    List<Ride> findRideByDriverEmailAndDateRange(String driverEmail, LocalDateTime startOfTheDay, LocalDateTime endOfTheDay);
+
+    @Query(value = "SELECT ride FROM Ride ride WHERE (ride.actualStart BETWEEN :startOfTheDay AND :endOfTheDay) AND ride.rideState=com.example.ubernet.model.enums.RideState.FINISHED ")
+    List<Ride> findRideByDateRange(LocalDateTime startOfTheDay, LocalDateTime endOfTheDay);
+
+    @Query(value = "SELECT ride FROM Ride ride JOIN ride.customers c WHERE c.email=:customerEmail AND (ride.actualStart BETWEEN :startOfTheDay AND :endOfTheDay) AND ride.rideState=com.example.ubernet.model.enums.RideState.FINISHED ")
+    List<Ride> findRideByCustomersEmailAndDateRange(String customerEmail, LocalDateTime startOfTheDay, LocalDateTime endOfTheDay);
 }

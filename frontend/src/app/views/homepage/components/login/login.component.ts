@@ -81,7 +81,11 @@ export class LoginComponent implements OnInit {
       next: (value) => {
         localStorage.setItem('token', "Bearer " + value.auth.token.accessToken);
         this.authService.getCurrentlyLoggedUser();
-        this.router.navigate(['/dashboard']);
+        if (value.auth.userRole==="DRIVER"){
+          this.router.navigate(["/map"])
+        } else {
+          this.router.navigate(['/dashboard']);
+        }
       },
       error: () => this._snackBar.open("Wrong email or password.", '', {
         duration: 3000,
