@@ -8,6 +8,9 @@ import {
   RideSplitFareDialogComponent
 } from "../../views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component";
 import {SidenavComponent} from "../sidenav/sidenav/sidenav.component";
+import {
+  ReportDriverDialogComponent
+} from "../../views/customer/components/report-driver-dialog/report-driver-dialog.component";
 
 @Component({
   selector: 'app-notifications',
@@ -41,6 +44,8 @@ export class NotificationsComponent implements OnInit {
       console.log(clickedNotification)
       if (clickedNotification.type === "SPLIT_FARE") {
         this.dialog.open(RideSplitFareDialogComponent, {data: clickedNotification});
+      } else if (clickedNotification.type === "DRIVER_INCONSISTENCY") {
+        this.dialog.open(ReportDriverDialogComponent, {data: clickedNotification});
       }
     })
   }

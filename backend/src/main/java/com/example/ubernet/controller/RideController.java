@@ -1,6 +1,7 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.CreateRideDTO;
+import com.example.ubernet.dto.LeafletRouteDTO;
 import com.example.ubernet.model.CurrentRide;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.Route;
@@ -29,7 +30,7 @@ public class RideController {
         if (ride == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        if (ride.getRideState()== RideState.WAITING) {
+        if (ride.getRideState() == RideState.WAITING) {
             this.simpMessagingService.updateRouteForSelectedCar(ride.getDriver().getEmail(), ride);
         }
         rideService.notifyCustomers(ride.getCustomers(), ride.getId());
@@ -69,6 +70,4 @@ public class RideController {
         CurrentRide customersRide = rideService.findCurrentRouteForClient(email);
         return ResponseEntity.ok(customersRide);
     }
-
-
 }

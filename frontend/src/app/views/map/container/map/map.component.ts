@@ -47,7 +47,6 @@ export class MapComponent implements AfterViewInit, OnInit {
   optimizedRoute: LeafletRoute[]
   private stompClient: any;
 
-
   @ViewChild(NotificationDriverComponent) notificationDriverComponent: NotificationDriverComponent;
   @ViewChild(SidenavComponent) sideNavComponent: SidenavComponent;
 

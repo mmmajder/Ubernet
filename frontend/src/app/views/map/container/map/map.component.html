@@ -17,7 +17,8 @@
                                   (setSelectedRouteOptimized)="setSelectedRouteOptimized()"
                                   [estimations]="estimationsSearch"
                                   [selectedRoute]="selectedRoute"
-                                  [loggedUser]="loggedUser">
+                                  [loggedUser]="loggedUser"
+                                  [allAlternatives]="allRoutesSearch">
   </app-search-directions-customer>
   <app-notification-driver *ngSwitchCase="userRoles.DRIVER" [loggedUser]="loggedUser"
                            (updateRouteDisplay)="initRouteDriver()"

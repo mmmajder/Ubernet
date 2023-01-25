@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from "@angular/material/menu";
 import {Logout} from "../../../store/actions/authentication.actions";
 import {Select, Store} from "@ngxs/store";
@@ -16,8 +16,6 @@ import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import {NotificationService} from "../../../services/notification.service";
 import {MapComponent} from "../../../views/map/container/map/map.component";
-import {RideDetails} from "../../../model/RideDetails";
-import {Message} from "../../../model/Message";
 
 @Component({
   selector: 'app-sidenav',
@@ -87,30 +85,28 @@ export class SidenavComponent implements OnInit {
       let money: number = JSON.parse(message.body)
       this.store.dispatch([new SetTokens(money)])
     })
-    this.stompClient.subscribe("/customer/everyone-payed-" + this.user.email, (message: any) => {
+    this.stompClient.subscribe("/customer/everyone-payed-" + this.user.email, () => {
       this.updateNotificationBadge();
     })
-    this.stompClient.subscribe("/customer/technical-problem-" + this.user.email, (message: any) => {
+    this.stompClient.subscribe("/customer/technical-problem-" + this.user.email, () => {
       this.updateNotificationBadge();
     })
-    this.stompClient.subscribe("/customer/reservation-reminder-" + this.user.email, (message: any) => {
+    this.stompClient.subscribe("/customer/reservation-reminder-" + this.user.email, () => {
       this.updateNotificationBadge();
     })
-    this.stompClient.subscribe("/customer/did-not-appear-" + this.user.email, (message: any) => {
+    this.stompClient.subscribe("/customer/did-not-appear-" + this.user.email, () => {
       this.updateNotificationBadge();
     })
-    this.stompClient.subscribe("/customer/car-start-point-" + this.user.email, (message: any) => {
+    this.stompClient.subscribe("/customer/car-start-point-" + this.user.email, () => {
       this.updateNotificationBadge();
     })
-    // this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.user.email, (message: any) => {
-    //   console.log("poruka")
-    //   this.mapComponent.createRouteForSelectedCar(JSON.parse(message.body))
-    //   console.log(message)
-    //   // this.sideNav.notify(JSON.parse(message.body).customers)
-    // })
-
+    this.stompClient.subscribe("/customer/car-start-point-" + this.user.email, () => {
+      this.updateNotificationBadge();
+    })
+    this.stompClient.subscribe("/customer/driver-inconsistency-" + this.user.email, () => {
+      this.updateNotificationBadge();
+    })
   }
-
 
   ngDoCheck(): void {
     if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture) {
@@ -160,7 +156,7 @@ export class SidenavComponent implements OnInit {
   }
 
   addTokens() {
-    const dialogRef = this.dialog.open(PaymentComponent, {
+    this.dialog.open(PaymentComponent, {
       data: {
         "user": this.user
       }

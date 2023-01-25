@@ -17,6 +17,7 @@ import {RideDetails} from "../../../../model/RideDetails";
 import {Store} from "@ngxs/store";
 import {LeafletRoute} from "../../../../model/LeafletRoute";
 import {CustomersService} from "../../../../services/customers.service";
+import {RideAlternativeService} from "../../../../services/ride-alternative.service";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -28,6 +29,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   @Input() estimations: MapSearchEstimations
   @Input() selectedRoute: LeafletRoute[]
   @Input() loggedUser: User
+  @Input() allAlternatives: LeafletRoute[][];
   @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
@@ -48,7 +50,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   typeOfRequest: string;
   isActive: boolean;
 
-  constructor(private customerService: CustomersService, private store: Store, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+  constructor(private rideAlternativeService:RideAlternativeService, private customerService: CustomersService, private store: Store, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = []
     this.typeOfRequest = "now"
     this.hasChild = false;
@@ -205,7 +207,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.optimize = "time"
   }
 
-  getRoute() {
+  mergeRoutePaths() {
     let mergedRoute = new RideCreate();
     this.selectedRoute.forEach((partOfRoute: LeafletRoute, index: number) => {
       if (index != 0) {
@@ -242,7 +244,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     let payment = new PaymentDTO();
     payment.customerThatPayed = this.loggedUser.email
     payment.totalPrice = +this.estimations.price
-    let route = this.getRoute()
+    let route = this.mergeRoutePaths()
     let ride = this.createRide(route, payment)
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
@@ -255,6 +257,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
           duration: 3000,
           panelClass: ['snack-bar']
         })
+        this.createRideAlternatives(res.id)
       },
       error: (res: any) => {
         this._snackBar.open(res.error, '', {
@@ -263,6 +266,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         })
       }
     })
+  }
+
+  createRideAlternatives(rideId:number) {
+    this.rideAlternativeService.createRideAlternatives(rideId, this.allAlternatives).subscribe(()=>{})
   }
 
   removeFriend(i: number) {

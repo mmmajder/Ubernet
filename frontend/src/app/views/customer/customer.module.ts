@@ -36,6 +36,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {RateDialogComponent} from './components/rate-dialog/rate-dialog.component';
 import {NgxPayPalModule} from "ngx-paypal";
 import {PaymentComponent} from "./components/payment/payment.component";
+import { ReportDriverDialogComponent } from './components/report-driver-dialog/report-driver-dialog.component';
 
 @NgModule({
   declarations: [
@@ -47,6 +48,7 @@ import {PaymentComponent} from "./components/payment/payment.component";
     CustomerRatingsDashboardComponent,
     RateDialogComponent,
     PaymentComponent,
+    ReportDriverDialogComponent,
   ],
   imports: [
     MatToolbarModule,

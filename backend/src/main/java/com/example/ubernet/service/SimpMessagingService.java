@@ -83,4 +83,8 @@ public class SimpMessagingService {
     public void notifyCustomersTimeUntilRide(Notification notification) {
         this.simpMessagingTemplate.convertAndSend("/customer/time-until-ride-" + notification.getReceiverEmail(), notification);
     }
+
+    public void notifyCustomersDriverInconsistency(Notification notification) {
+        this.simpMessagingTemplate.convertAndSend("/customer/driver-inconsistency-" + notification.getReceiverEmail(), notification);
+    }
 }

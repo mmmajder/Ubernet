@@ -8,6 +8,7 @@ import {RideDetails} from "../model/RideDetails";
 import {RideDTO} from "../model/RideDTO";
 import {RouteDTO} from "../model/RouteDTO";
 import {CurrentRide} from "../model/CurrentRide";
+import {LeafletRoute} from "../model/LeafletRoute";
 
 @Injectable({
   providedIn: 'root'
@@ -52,6 +53,8 @@ export class RideService {
     return positionsInTime[positionsInTime.length - 1].position
   }
 
+
+
   public static getHttpOptions() {
     return {
       headers: new HttpHeaders({
@@ -60,7 +63,5 @@ export class RideService {
       })
     };
   }
-
-
 
 }

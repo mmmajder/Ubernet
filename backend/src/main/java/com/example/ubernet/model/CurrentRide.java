@@ -29,6 +29,6 @@ public class CurrentRide {
     private boolean isFreeRide;
     private boolean shouldGetRouteToClient;
 
-    @OneToMany
-    private List<NumberOfRoute> numberOfRoute;
+//    @OneToMany
+//    private List<NumberOfRoute> numberOfRoute;
 }

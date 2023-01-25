@@ -144,4 +144,11 @@ public class NotificationService {
         return 0;
     }
 
+    public void notifyCustomerForDriverInconsistency(Customer customer, Ride ride) {
+        Notification notification = notificationFactory(customer.getEmail(), ride.getId());
+        notification.setType(NotificationType.DRIVER_INCONSISTENCY);
+        notification.setText("Driver is heading in wrong direction. Click to report!");
+        save(notification);
+        simpMessagingService.notifyCustomersDriverInconsistency(notification);
+    }
 }

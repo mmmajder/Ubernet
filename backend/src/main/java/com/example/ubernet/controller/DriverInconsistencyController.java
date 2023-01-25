@@ -19,13 +19,13 @@ public class DriverInconsistencyController {
 
     private final DriverInconsistencyService driverInconsistencyService;
 
-    @PutMapping("/{customerEmail}")
-    public ResponseEntity<DriverInconsistency> getAllNotificationsByUser(@PathVariable String customerEmail, @RequestBody Ride ride) {
-        DriverInconsistency driverInconsistency = driverInconsistencyService.createDriverInconsistency(customerEmail, ride);
+    @PostMapping("/{customerEmail}")
+    public ResponseEntity<DriverInconsistency> createDriverInconsistencyComplaint(@PathVariable String customerEmail, @RequestBody Long rideId) {
+        DriverInconsistency driverInconsistency = driverInconsistencyService.createDriverInconsistencyComplaint(customerEmail, rideId);
         return ResponseEntity.ok(driverInconsistency);
     }
 
-    @GetMapping("/get-reportable")
+    @PutMapping("/check-inconsistency")
     public ResponseEntity<List<Ride>> getReportable() {
         List<Ride> reportableRides = driverInconsistencyService.getReportableRides();
         return ResponseEntity.ok(reportableRides);

@@ -151,7 +151,7 @@ public class CarService {
                 new NumberOfRoute(0);
             }
         };
-        currentRide.setNumberOfRoute(numberOfRoutes);
+//        currentRide.setNumberOfRoute(numberOfRoutes);
         currentRide.setShouldGetRouteToClient(false);
         currentRide.setStartTime(LocalDateTime.now());
         currentRideService.save(currentRide);

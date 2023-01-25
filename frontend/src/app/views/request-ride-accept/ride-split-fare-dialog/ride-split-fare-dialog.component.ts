@@ -37,8 +37,6 @@ export class RideSplitFareDialogComponent implements OnInit {
     })
     console.log(this.notification)
     this.rideService.getById(this.notification.rideId).subscribe((ride) => {
-      console.log("ride")
-      console.log(ride)
       this.ride = ride;
       this.path = this.printCheckpoints(ride.route.checkPoints)
       let sender = ride.customers[0]
@@ -58,10 +56,7 @@ export class RideSplitFareDialogComponent implements OnInit {
   }
 
   accept() {
-    console.log(this.ride)
     this.ride.payment.customers.forEach((customerPayment) => {
-      console.log(customerPayment)
-      console.log(this.loggedUser)
       if (customerPayment.customer.email === this.loggedUser.email) {
         this.rideService.acceptRequestSplitFare(customerPayment.url).subscribe({
           next: () => {
