@@ -21,18 +21,10 @@ import {MatDialogModule} from "@angular/material/dialog";
 import {NotificationsService} from "./services/notifications.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
-import {
-  GoogleLoginProvider,
-  SocialAuthServiceConfig,
-  SocialLoginModule,
-  FacebookLoginProvider
-} from "angularx-social-login";
 import {NotFoundPageComponent} from './views/404/not-found-page/not-found-page.component';
 import {DriverModule} from "./views/driver/driver.module";
 import {CustomerModule} from "./views/customer/customer.module";
 import {AdminModule} from "./views/admin/admin.module";
-import {PopupService} from "./services/popup.service";
-import {UnauthenticatedModule} from "./views/unauthenticated/unauthenticated.module";
 import {MapModule} from "./views/map/map.module";
 import {NgxsModule} from '@ngxs/store';
 import {AuthState} from "./store/states/auth.state";
@@ -44,8 +36,13 @@ import {CustomersState} from "./store/states/customers.state";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSelectModule} from "@angular/material/select";
 import {TokensState} from "./store/states/tokens.state";
-import { RequestSplitFareMailAcceptComponent } from './views/request-ride-accept/request-split-fare-mail-accept/request-split-fare-mail-accept.component';
-import { RideSplitFareDialogComponent } from './views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component';
+import {
+  RequestSplitFareMailAcceptComponent
+} from './views/request-ride-accept/request-split-fare-mail-accept/request-split-fare-mail-accept.component';
+import {
+  RideSplitFareDialogComponent
+} from './views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component';
+import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig} from "@abacritt/angularx-social-login";
 
 @NgModule({
   declarations: [
@@ -76,12 +73,10 @@ import { RideSplitFareDialogComponent } from './views/request-ride-accept/ride-s
     MatSortModule,
     MatDialogModule,
     HomepageModule,
-    SocialLoginModule,
     BrowserAnimationsModule,
     DriverModule,
     CustomerModule,
     AdminModule,
-    UnauthenticatedModule,
     MapModule,
     PagesModule,
     NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState, TokensState]),
@@ -90,8 +85,7 @@ import { RideSplitFareDialogComponent } from './views/request-ride-accept/ride-s
     MatProgressSpinnerModule,
     MatSelectModule,
   ],
-  exports: [
-  ],
+  exports: [],
   providers: [
     {
       provide: 'SocialAuthServiceConfig',
@@ -109,18 +103,18 @@ import { RideSplitFareDialogComponent } from './views/request-ride-accept/ride-s
             provider: new GoogleLoginProvider(
               '263337550240-ilitbfe2sqc3v0vlc61tiuu5bb3no8f6.apps.googleusercontent.com',
               {
-                scope: 'profile email',
-                plugin_name: 'login' //you can use any name here
+                // scope: 'profile email',
+                // plugin_name: 'login' //you can use any name here
               }
             )
           }
         ],
         onError: (err) => {
-          console.error();
+          console.error(err);
         }
       } as SocialAuthServiceConfig,
     },
-    AuthService, NotificationsService, PopupService],
+    AuthService, NotificationsService],
   bootstrap: [AppComponent]
 })
 
