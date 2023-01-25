@@ -22,7 +22,9 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -50,6 +52,7 @@ public class RideService {
     private final NumberOfRouteRepository numberOfRouteRepository;
     private final CustomerRepository customersRepository;
 
+    @Transactional
     public Ride findById(Long id) {
         return rideRepository.findById(id).orElse(null);
     }
@@ -92,7 +95,7 @@ public class RideService {
     }
 
     private void initRide(CreateRideDTO createRideDTO, Ride ride) {
-        Car car = getCarForRide(createRideDTO.getCoordinates().get(0), createRideDTO.isHasPet(), createRideDTO.isHasChild());
+        Car car = getCarForRide(createRideDTO.getCoordinates().get(0), createRideDTO.isHasPet(), createRideDTO.isHasChild(), createRideDTO.getCarType());
         ride.setDriver(car.getDriver());
         CurrentRide currentRide = createCurrentRide(createRideDTO);
         addNavigation(car, currentRide);
@@ -228,10 +231,11 @@ public class RideService {
     }
 
 
-    private Car getCarForRide(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild) {
-        Car car = carService.getClosestFreeCar(firstPositionOfRide, hasPet, hasChild);
+    private Car getCarForRide(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild, String carTypeName) {
+        CarType carType = carTypeService.findCarTypeByName(carTypeName);
+        Car car = carService.getClosestFreeCar(firstPositionOfRide, hasPet, hasChild, carType);
         if (car == null) {
-            car = carService.getClosestCarWhenAllAreNotAvailable(firstPositionOfRide, hasPet, hasChild);
+            car = carService.getClosestCarWhenAllAreNotAvailable(firstPositionOfRide, hasPet, hasChild, carType);
             if (car == null)
                 throw new NotFoundException("All cars are not free");
         }
@@ -293,7 +297,7 @@ public class RideService {
         return distanceSlots;
     }
 
-
+    @Transactional
     public void updateCarRoute(Long carId, CreateRideDTO createRideDTO) {
         Car car = carService.findById(carId);
         if (car == null) {
@@ -317,10 +321,12 @@ public class RideService {
         navigationRepository.save(car.getNavigation());
     }
 
+    @Transactional
     public void acceptSplitFare(String url) {
         CustomerPayment customerPayment = customerPaymentRepository.findByUrl(url);
         if (customerPayment == null) throw new BadRequestException("Url is incorrect");
-        if (customerPayment.getCustomer().isActive()) throw new BadRequestException("Customer can only have one ride at the time.");
+        if (customerPayment.getCustomer().isActive())
+            throw new BadRequestException("Customer can only have one ride at the time.");
         if (customerPayment.isPayed()) throw new BadRequestException("Payment has already been accepted");
         Ride ride = rideRepository.getRideByCustomerPaymentURL(url);
         if (ride.isReservation() && reservationPassed(ride.getScheduledStart())) {
@@ -337,17 +343,15 @@ public class RideService {
             this.notificationService.createNotificationForCustomersEveryonePayed(ride);
 
             if (ride.getRideState() == RideState.WAITING) {
-                //todo inicjalizuj voznju
                 setRidePositions(ride);
             }
-            //todo notify every one
         }
     }
 
 
     public void setRidePositions(Ride ride) {
         RideRequest rideRequest = ride.getRideRequest();
-        Car car = getCarForRide(DTOMapper.positionToLatLng(rideRequest.getCurrentRide().getPositions().get(0).getPosition()), rideRequest.isHasPet(), rideRequest.isHasChild());
+        Car car = getCarForRide(DTOMapper.positionToLatLng(rideRequest.getCurrentRide().getPositions().get(0).getPosition()), rideRequest.isHasPet(), rideRequest.isHasChild(), rideRequest.getCarType());
         ride.setDriver(car.getDriver());
         addNavigation(car, rideRequest.getCurrentRide());
         rideRepository.save(ride);
@@ -411,6 +415,11 @@ public class RideService {
         return res;
     }
 
+    public List<Ride> getRidesWithAcceptedReservation() {
+        return this.rideRepository.getAcceptedReservationsThatCarDidNotComeYet();
+    }
+
+    @Transactional
     public Ride startRide(Long rideId) {
         Ride ride = findById(rideId);
         ride.setRideState(RideState.TRAVELLING);
@@ -434,7 +443,7 @@ public class RideService {
             }
         }
     }
-
+    @Transactional
     public Ride endRide(Long rideId) {
         Ride ride = findById(rideId);
         if (ride == null) throw new BadRequestException("Ride does not exist");
@@ -473,11 +482,12 @@ public class RideService {
         return rides;
     }
 
-    public Route findCurrentRouteForClient(String email) {
+    @Transactional
+    public CurrentRide findCurrentRouteForClient(String email) {
         Customer customer = customerService.findByEmail(email);
         if (customer == null) throw new BadRequestException("Customer with this email does not exist");
         Ride activeRide = rideRepository.findActiveRideForCustomer(email);
         if (activeRide == null) return null;
-        return activeRide.getRoute();
+        return activeRide.getRideRequest().getCurrentRide();
     }
 }

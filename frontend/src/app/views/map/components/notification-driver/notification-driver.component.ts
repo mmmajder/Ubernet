@@ -4,7 +4,6 @@ import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import {DriverNotification} from "../../../../model/DriverNotification";
 import {DriverNotificationService} from "../../../../services/driver-notification.service";
-import {RouteDTO} from "../../../../model/RouteDTO";
 import {MatDialog} from "@angular/material/dialog";
 import {RideDetails} from "../../../../model/RideDetails";
 import {
@@ -12,7 +11,6 @@ import {
 } from "../reason-for-ride-cancelation/reason-for-ride-cancellation.component";
 import {Place} from "../../../../model/Position";
 import {RideService} from "../../../../services/ride.service";
-import {Message} from "../../../../model/Message";
 
 @Component({
   selector: 'app-notification-driver',
@@ -53,18 +51,6 @@ export class NotificationDriverComponent implements OnInit {
       let notification: DriverNotification = JSON.parse(message.body)
       this.notifications.push(notification)
     })
-
-    // this.stompClient.subscribe("/map-updates/update-route-for-selected-car", (message: any) => {
-    //   this.createRouteForSelectedCar(JSON.parse(message.body))
-    //   console.log(message)
-    //   // this.sideNav.notify(JSON.parse(message.body).customers)
-    // })
-    // this.stompClient.subscribe("/notify/split-fare-" + this.loggedUser.email, (message: any) => {
-    //   console.log(message)
-    //   console.log("Stigao sam na drugu stranu")
-    //   this.sideNav.notify(JSON.parse(message.body))
-    // })
-
   }
 
   private initDriverNotifications() {
@@ -82,9 +68,6 @@ export class NotificationDriverComponent implements OnInit {
   public updateNotificationStartRide(notification: DriverNotification) {
     if (this.notifications.filter(e => e.id === notification.id).length === 0)
       this.notifications.push(notification)
-    // console.log(ride)
-    // console.log(this.notifications)
-    // this.notifications = this.notifications.filter(notification => notification.ride.id !== ride.id)
   }
 
   updateNotificationEndRide(endRideNotification: DriverNotification) {
@@ -106,7 +89,6 @@ export class NotificationDriverComponent implements OnInit {
 
   startRide(ride: RideDetails) {
     this.rideService.startRide(ride.id).subscribe((ride: RideDetails) => {
-      console.log(ride)
       this.notifications = this.notifications.filter(item => item.ride.id !== ride.id)
       this.updateRouteDisplay.emit()
     })

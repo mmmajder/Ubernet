@@ -1,12 +1,8 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.CancelRideRequest;
-import com.example.ubernet.dto.CreateRideDTO;
-import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.RideDenial;
-import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.service.RideDenialService;
-import com.example.ubernet.service.RideRequestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;

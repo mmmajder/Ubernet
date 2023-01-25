@@ -1,14 +1,9 @@
 package com.example.ubernet.controller;
 
-import com.example.ubernet.dto.CarResponse;
-import com.example.ubernet.dto.CreateRideDTO;
-import com.example.ubernet.dto.SetNewFreeRideDTO;
-import com.example.ubernet.model.Car;
+import com.example.ubernet.dto.LeafletRouteDTO;
 import com.example.ubernet.model.CurrentRide;
 import com.example.ubernet.service.CurrentRideService;
-import com.example.ubernet.utils.DTOMapper;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -25,8 +20,14 @@ public class MapController {
     private final CurrentRideService currentRideService;
 
     @PutMapping("/optimize-by-price")
-    public ResponseEntity<CurrentRide> optimizeByPrice(@Valid @RequestBody List<CreateRideDTO> createRideDTOs) {
-        CurrentRide currentRide = currentRideService.optimizeByPrice(createRideDTOs);
-        return ResponseEntity.ok(currentRide);
+    public ResponseEntity<List<LeafletRouteDTO>> optimizeByPrice(@Valid @RequestBody List<List<LeafletRouteDTO>> createRideDTOs) {
+        List<LeafletRouteDTO> shortestRoute = currentRideService.optimizeByPrice(createRideDTOs);
+        return ResponseEntity.ok(shortestRoute);
+    }
+
+    @PutMapping("/optimize-by-time")
+    public ResponseEntity<List<LeafletRouteDTO>> optimizeByTime(@Valid @RequestBody List<List<LeafletRouteDTO>> createRideDTOs) {
+        List<LeafletRouteDTO> shortestRoute = currentRideService.optimizeByTime(createRideDTOs);
+        return ResponseEntity.ok(shortestRoute);
     }
 }

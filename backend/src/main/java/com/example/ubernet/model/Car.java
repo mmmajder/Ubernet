@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Version;
+
 
 @Entity
 @NoArgsConstructor
@@ -39,6 +40,9 @@ public class Car {
     private Boolean allowsPet;
     private String plates;
     private String name;
+
+    @Version
+    private int version;
 
     @Override
     public String toString() {

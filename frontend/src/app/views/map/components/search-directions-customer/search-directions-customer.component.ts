@@ -32,8 +32,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
   @Output() optimizeByTime = new EventEmitter()
+  @Output() setSelectedRouteOptimized = new EventEmitter();
   carTypes: string[];
-  canOptimize: boolean;
+  optimize: string;
   friends: ({ friendEmail: string })[];
   hasPet: boolean;
   hasChild: boolean;
@@ -53,7 +54,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.hasChild = false;
     this.hasPet = false;
     this.timeOfRide = new Date().toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
-    this.canOptimize = false
+    this.optimize = ""
   }
 
   get destinations() {
@@ -101,7 +102,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   addNewDestination() {
     this.destinations.push(new FormControl("", Validators.required))
-    console.log(this.destinations)
   }
 
   removeDestination(number: number) {
@@ -112,7 +112,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.destinations.controls.forEach((destination) => {
       destination.setValue(null)
     })
-    console.log(this.destinations.value)
   }
 
   async showEstimates() {
@@ -134,7 +133,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         panelClass: ['snack-bar']
       })
     }
-    this.canOptimize = true;
 
     function validInput(destinations: any[]) {
       let isValid = true
@@ -177,7 +175,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
             this.positions[i] = null
           } else {
             let position = new Position()
-            console.log(response)
             position.x = Object.values(response)[0].lon
             position.y = Object.values(response)[0].lat
             this.positions[i] = {
@@ -193,26 +190,19 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     });
   }
 
-
-  setDestination(text: string, i: number) {
-  }
-
-  changeCarType(event: string) {
-    console.log(event)
+  changeCarType() {
     this.getSelectedCarType.emit(this.carType.value)
   }
 
 
   optimizePrice() {
     this.optimizeByPrice.emit()
+    this.optimize = "price"
   }
 
   optimizeTime() {
     this.optimizeByTime.emit()
-  }
-
-  reserveRide() {
-
+    this.optimize = "time"
   }
 
   getRoute() {
@@ -230,13 +220,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     return mergedRoute;
   }
 
-  requestRide() {
-    let payment = new PaymentDTO();
-    payment.customerThatPayed = this.loggedUser.email
-    payment.totalPrice = +this.estimations.price
-    let route = this.getRoute()
+  createRide(route: RideCreate, payment: PaymentDTO): RideCreate {
     let ride = new RideCreate()
-    console.log(route)
     ride.coordinates = route.coordinates
     ride.instructions = route.instructions
     ride.carType = this.carType.value
@@ -250,10 +235,18 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     ride.payment = payment
     ride.passengers = [this.loggedUser.email]
     ride.reservation = this.typeOfRequest === "reserve"
+    return ride
+  }
+
+  requestRide() {
+    let payment = new PaymentDTO();
+    payment.customerThatPayed = this.loggedUser.email
+    payment.totalPrice = +this.estimations.price
+    let route = this.getRoute()
+    let ride = this.createRide(route, payment)
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })
-    console.log(ride)
 
     this.rideService.createRideRequest(ride).subscribe({
       next: (res: RideDetails) => {
@@ -264,15 +257,12 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         })
       },
       error: (res: any) => {
-        console.log(res)
         this._snackBar.open(res.error, '', {
           duration: 3000,
           panelClass: ['snack-bar']
         })
       }
     })
-
-
   }
 
   removeFriend(i: number) {
@@ -287,5 +277,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     }
     this.friends.push({friendEmail: this.newFriend.value})
     this.newFriend.reset()
+  }
+
+  selectOptimizedValue() {
+    this.setSelectedRouteOptimized.emit()
   }
 }

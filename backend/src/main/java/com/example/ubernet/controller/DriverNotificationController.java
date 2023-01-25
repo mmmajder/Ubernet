@@ -1,7 +1,6 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.model.DriverNotification;
-import com.example.ubernet.model.Notification;
 import com.example.ubernet.service.DriverNotificationService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;

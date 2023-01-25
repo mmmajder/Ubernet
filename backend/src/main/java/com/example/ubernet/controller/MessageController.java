@@ -1,10 +1,8 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.MessageDTO;
-import com.example.ubernet.dto.MessageResponse;
 import com.example.ubernet.model.Chat;
 import com.example.ubernet.model.Message;
-import com.example.ubernet.model.StringResponse;
 import com.example.ubernet.service.MessageService;
 import com.example.ubernet.service.UserService;
 import org.springframework.http.HttpStatus;

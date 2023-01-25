@@ -2,15 +2,12 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {RideCreate} from "../model/RideCreate";
-import {Ride} from "../model/Ride";
 import {PositionInTime} from "../model/PositionInTime";
 import {Position} from "../model/Position";
 import {RideDetails} from "../model/RideDetails";
 import {RideDTO} from "../model/RideDTO";
-import {RideDenial} from "../model/RideDenial";
-import {CurrentRide} from "../model/CurrentRide";
-import {NavigationDisplay} from "../model/NavigationDisplay";
 import {RouteDTO} from "../model/RouteDTO";
+import {CurrentRide} from "../model/CurrentRide";
 
 @Injectable({
   providedIn: 'root'
@@ -47,8 +44,8 @@ export class RideService {
     return this.http.put<RideDetails>(this.rideUrl + "/end-ride/" + id, RideService.getHttpOptions());
   }
 
-  findScheduledRouteForClient(email: string): Observable<RouteDTO> {
-    return this.http.get<RouteDTO>(this.rideUrl + "/find-scheduled-route-client/" + email, RideService.getHttpOptions());
+  findScheduledRouteForClient(email: string): Observable<CurrentRide> {
+    return this.http.get<CurrentRide>(this.rideUrl + "/find-scheduled-route-navigation-client/" + email, RideService.getHttpOptions());
   }
 
   public getLastPosition(positionsInTime: PositionInTime[]): Position {

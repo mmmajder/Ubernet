@@ -8,6 +8,7 @@ import {Place} from "../../../model/Position";
 import {RideDTO} from "../../../model/RideDTO";
 import {Store} from "@ngxs/store";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {DecrementTokens} from "../../../store/actions/tokens.action";
 
 @Component({
   selector: 'app-ride-split-fare-dialog',
@@ -64,6 +65,7 @@ export class RideSplitFareDialogComponent implements OnInit {
       if (customerPayment.customer.email === this.loggedUser.email) {
         this.rideService.acceptRequestSplitFare(customerPayment.url).subscribe({
           next: () => {
+            this.store.dispatch([new DecrementTokens(customerPayment.pricePerCustomer)])
             this._snackBar.open("Successfully accepted split fare request!", '', {
               duration: 3000,
               panelClass: ['snack-bar']

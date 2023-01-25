@@ -59,10 +59,10 @@ values (false),
        (false),
        (false);
 
-insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name, navigation_id)
-values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1),
-       (false, true, 2, 3, false, false, 'NS-GLAMOC1', 'Audi', 2),
-       (false, true, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3);
+insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name, navigation_id, version)
+values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1, 0),
+       (false, true, 1, 3, false, false, 'NS-GLAMOC1', 'Audi', 2, 0),
+       (false, true, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3, 0);
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,

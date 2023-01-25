@@ -1,6 +1,7 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.CreateRideDTO;
+import com.example.ubernet.model.CurrentRide;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.Route;
 import com.example.ubernet.model.enums.RideState;
@@ -63,10 +64,10 @@ public class RideController {
         return ResponseEntity.ok(ride);
     }
 
-    @GetMapping("/find-scheduled-route-client/{email}")
-    public ResponseEntity<Route> findScheduledRouteForClient(@PathVariable String email) {
-        Route route = rideService.findCurrentRouteForClient(email);
-        return ResponseEntity.ok(route);
+    @GetMapping("/find-scheduled-route-navigation-client/{email}")
+    public ResponseEntity<CurrentRide> findScheduledRouteForClient(@PathVariable String email) {
+        CurrentRide customersRide = rideService.findCurrentRouteForClient(email);
+        return ResponseEntity.ok(customersRide);
     }
 
 

@@ -25,4 +25,9 @@ public class RideRequestController {
     public void returnMoney() {
         rideRequestService.returnMoneyNotPayedPassedReservations();
     }
+
+    @PutMapping("/notify-time-until-reservation")
+    public void notifyTimeUntilReservation() {
+        rideRequestService.notifyTimeUntilReservation();
+    }
 }

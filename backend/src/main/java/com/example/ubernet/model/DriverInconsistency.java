@@ -5,6 +5,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.util.List;
 
 @Data
 @Entity
@@ -19,6 +20,9 @@ public class DriverInconsistency {
 
     @OneToOne
     private Ride ride;
+
+    @OneToMany
+    private List<Customer> customers;
 
     private Boolean deleted = false;
 }

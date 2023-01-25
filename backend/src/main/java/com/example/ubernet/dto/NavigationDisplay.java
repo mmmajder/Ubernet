@@ -13,7 +13,7 @@ import lombok.NoArgsConstructor;
 @Data
 public class NavigationDisplay {
     private CurrentRide firstApproach;
-    private Route firstRide;
+    private CurrentRide firstRide;
     private CurrentRide secondApproach;
-    private Route secondRide;
+    private CurrentRide secondRide;
 }

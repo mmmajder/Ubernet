@@ -31,9 +31,12 @@ export class MapService {
     return this.http.get<ActiveCarResponse[]>(this.carUrl + "/active", this.httpOptions);
   }
 
-  public optimizeRouteByPrice(selectedRoute: LeafletRoute[]): Observable<CurrentRide> {
-    console.log(selectedRoute)
-    return this.http.put<CurrentRide>(this.mapUrl + "/optimize-by-price", selectedRoute, this.httpOptions);
+  public optimizeRouteByPrice(selectedRoute: LeafletRoute[][]): Observable<LeafletRoute[]> {
+    return this.http.put<LeafletRoute[]>(this.mapUrl + "/optimize-by-price", selectedRoute, this.httpOptions);
+  }
+
+  public optimizeRouteByTime(selectedRoute: LeafletRoute[][]): Observable<LeafletRoute[]> {
+    return this.http.put<LeafletRoute[]>(this.mapUrl + "/optimize-by-time", selectedRoute, this.httpOptions);
   }
 
   public saveFoundPositionsOfRide(coordinates: Coordinate[], timeSlots: number[]) {
@@ -102,6 +105,7 @@ export class MapService {
     var url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + address
     return this.http.get(url);
   }
+
 
 
 }

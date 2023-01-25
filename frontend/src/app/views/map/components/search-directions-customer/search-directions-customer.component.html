@@ -45,6 +45,10 @@
           </p>
         </div>
         <div>
+          <button mat-raised-button color="primary" style="width: 100%" *ngIf="optimize=='price'" (click)="selectOptimizedValue()">Select optimized by price</button>
+          <button mat-raised-button color="primary" style="width: 100%" *ngIf="optimize=='time'" (click)="selectOptimizedValue()">Select optimized by time</button>
+        </div>
+        <div>
           <button mat-button matStepperNext
                   style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Next
           </button>
@@ -58,7 +62,7 @@
       <mat-form-field appearance="outline" style="width: 100%; padding-right:20px; padding-top: 10px"
                       [formGroup]="carTypeFormGroup">
         <mat-label>Choose car type</mat-label>
-        <mat-select formControlName="carType" (ngModelChange)="changeCarType($event)">
+        <mat-select formControlName="carType" (ngModelChange)="changeCarType()">
           <mat-option *ngFor="let type of carTypes" [value]="type">{{type}}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -101,8 +105,8 @@
         <div *ngFor="let friend of friends; let i=index">
           <mat-form-field appearance="outline" style="width: 100%;">
             <mat-label>Friend email</mat-label>
-            <input matInput [name]="'friend' + i" [ngModel]="friends[i].friendEmail"
-                   (ngModelChange)="setDestination($event, i)">
+            <input matInput [name]="'friend' + i" [ngModel]="friends[i].friendEmail">
+<!--                   (ngModelChange)="setDestination($event, i)">-->
             <button mat-icon-button matSuffix (click)="removeFriend(i)">
               <mat-icon>
                 person_remove

@@ -3,7 +3,7 @@ import {RouteDTO} from "./RouteDTO";
 
 export class NavigationDisplay {
   firstApproach: CurrentRide;
-  firstRide: RouteDTO;
+  firstRide: CurrentRide;
   secondApproach: CurrentRide;
-  secondRide: RouteDTO;
+  secondRide: CurrentRide;
 }

@@ -16,11 +16,6 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   toValue: string;
   carType: string;
   carTypes: string[];
-
-  // @Input()
-  // estimatedTime: string;
-  // @Input()
-  // estimatedPrice: string
   @Input() estimations: MapSearchEstimations
   @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();

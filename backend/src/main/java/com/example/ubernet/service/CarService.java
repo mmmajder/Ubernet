@@ -9,12 +9,14 @@ import com.example.ubernet.utils.MapUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
 @Service
+@Transactional
 public class CarService {
     private final CarRepository carRepository;
     private final UserService userService;
@@ -84,6 +86,7 @@ public class CarService {
         return activeAvailableCarResponse;
     }
 
+    @Transactional(readOnly = false)
     public List<Car> getActiveCars() {
         return carRepository.findActiveCars();
     }
@@ -293,21 +296,16 @@ public class CarService {
         return cars;
     }
 
-    public Car getClosestFreeCar(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild) {
-        List<Car> activeAvailableCars = getActiveAvailableCars();
-        return getClosestCar(firstPositionOfRide, activeAvailableCars, hasPet, hasChild);
+    public Car getClosestFreeCar(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild, CarType carType) {
+        List<Car> fittingAvailableCars = getActiveAvailableCars();
+        return getClosestCar(firstPositionOfRide, fittingAvailableCars, hasPet, hasChild, carType);
     }
 
-    private Car getClosestCar(LatLngDTO latLngDTO, List<Car> cars, boolean hasPet, boolean hasChild) {
+    private Car getClosestCar(LatLngDTO latLngDTO, List<Car> cars, boolean hasPet, boolean hasChild, CarType carType) {
         Car closestCar = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Car car : cars) {
-            if (hasPet && !car.getAllowsPet()) {
-                continue;
-            }
-            if (hasChild && !car.getAllowsBaby()) {
-                continue;
-            }
+            if (carDoesNotSatisfyOrder(car, hasPet, hasChild, carType)) continue;
             double distance = MapUtils.calculateDistance(car.getPosition().getX(), car.getPosition().getY(), latLngDTO.getLng(), latLngDTO.getLat()); // switch
             if (distance < minDistance) {
                 closestCar = car;
@@ -317,21 +315,22 @@ public class CarService {
         return closestCar;
     }
 
-    public Car getClosestCarWhenAllAreNotAvailable(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild) {
-        List<Car> activeNotReservedCars = carRepository.getActiveNotAvailableNotReservedCars();
-        return getClosestCarAllNotAvailable(firstPositionOfRide, activeNotReservedCars, hasPet, hasChild);
+    private boolean carDoesNotSatisfyOrder(Car car, boolean hasPet, boolean hasChild, CarType carType) {
+        if (hasPet && !car.getAllowsPet()) return true;
+        if (hasChild && !car.getAllowsBaby()) return true;
+        return !car.getCarType().getName().equals(carType.getName());
     }
 
-    private Car getClosestCarAllNotAvailable(LatLngDTO latLngDTO, List<Car> cars, boolean hasPet, boolean hasChild) {
+    public Car getClosestCarWhenAllAreNotAvailable(LatLngDTO firstPositionOfRide, boolean hasPet, boolean hasChild, CarType carType) {
+        List<Car> activeNotReservedCars = carRepository.getActiveNotAvailableNotReservedCars();
+        return getClosestCarAllNotAvailable(firstPositionOfRide, activeNotReservedCars, hasPet, hasChild, carType);
+    }
+
+    private Car getClosestCarAllNotAvailable(LatLngDTO latLngDTO, List<Car> cars, boolean hasPet, boolean hasChild, CarType carType) {
         Car closestCar = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Car car : cars) {
-            if (hasPet && !car.getAllowsPet()) {
-                continue;
-            }
-            if (hasChild && !car.getAllowsBaby()) {
-                continue;
-            }
+            if (carDoesNotSatisfyOrder(car, hasPet, hasChild, carType)) continue;
             int numberOfPositionsFirstRide = car.getNavigation().getFirstRide().getPositions().size();
             double lastPositionFirstRideX = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide - 1).getPosition().getX();
             double lastPositionFirstRideY = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide - 1).getPosition().getY();
@@ -354,17 +353,17 @@ public class CarService {
             navigationDisplay.setFirstApproach(navigation.getApproachFirstRide());
         }
         if (navigation.getFirstRide() != null && !navigation.getFirstRide().isFreeRide()) {
-            List<Ride> rides = rideRepository.findRideFromDriverEmail(driver.getEmail());
-            Route route = rides.get(0).getRoute();
-            navigationDisplay.setFirstRide(route);
+//            List<Ride> rides = rideRepository.findRideFromDriverEmail(driver.getEmail());
+//            Route route = rides.get(0).getRoute();
+            navigationDisplay.setFirstRide(navigation.getFirstRide());
         }
         if (navigation.getApproachSecondRide() != null) {
             navigationDisplay.setSecondApproach(navigation.getApproachSecondRide());
         }
         if (navigation.getSecondRide() != null) {
-            List<Ride> rides = rideRepository.findRideFromDriverEmail(driver.getEmail());
-            Route route = rides.get(1).getRoute();
-            navigationDisplay.setSecondRide(route);
+//            List<Ride> rides = rideRepository.findRideFromDriverEmail(driver.getEmail());
+//            Route route = rides.get(1).getRoute();
+            navigationDisplay.setSecondRide(navigation.getSecondRide());
         }
         return navigationDisplay;
     }

@@ -100,7 +100,7 @@ public class NotificationService {
         }
     }
 
-    public void createNotificationForCustomersReservationReminder(Ride ride, double minutes) {
+    public void createNotificationForCustomersReservationReminder(Ride ride, long minutes) {
         for (Customer customer : ride.getCustomers()) {
             Notification notification = notificationFactory(customer.getEmail(), ride.getId());
             notification.setType(NotificationType.REMINDER);

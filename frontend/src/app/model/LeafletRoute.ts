@@ -1,8 +1,9 @@
 import {LatLngDTO} from "./LatLngDTO";
 import {InstructionDTO} from "./InstructionDTO";
+import * as L from 'leaflet';
 
 export class LeafletRoute {
-  coordinates: LatLngDTO[]
+  coordinates: L.LatLng[]
   instructions: InstructionDTO[]
   name: string
   routesIndex: number
