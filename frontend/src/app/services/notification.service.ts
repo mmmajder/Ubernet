@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
-import {Car} from "../model/Car";
-import {ActiveCarResponse} from "../model/ActiveCarResponse";
 import {NotificationDTO} from "../model/NotificationDTO";
 
 @Injectable({

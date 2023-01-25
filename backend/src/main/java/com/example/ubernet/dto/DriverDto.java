@@ -1,5 +1,6 @@
 package com.example.ubernet.dto;
 
+import com.example.ubernet.model.DriverDailyActivity;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -18,4 +19,5 @@ public class DriverDto {
     private String phoneNumber;
     public boolean isWorking;
     private boolean blocked;
+    private DriverDailyActivity driverDailyActivity;
 }

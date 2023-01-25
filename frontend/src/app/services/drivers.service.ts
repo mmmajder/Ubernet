@@ -23,4 +23,16 @@ export class DriversService {
     return this.http.get<string[]>(this.driverUrl + "/getDriversEmails", AuthService.getHttpOptions());
   }
 
+  getDriver(email: string): Observable<Driver> {
+    return this.http.get<Driver>(this.driverUrl + "/" + email, AuthService.getHttpOptions());
+  }
+
+  toggleActivity(email: string): Observable<void> {
+    return this.http.put<void>(this.driverUrl + "/toggle-activity/" + email, AuthService.getHttpOptions());
+  }
+
+  getNumberOfActiveHoursInLast24h(email: string): Observable<number> {
+    return this.http.get<number>(this.driverUrl + "/active-hours/" + email, AuthService.getHttpOptions());
+
+  }
 }

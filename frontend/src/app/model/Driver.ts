@@ -8,7 +8,6 @@ export class Driver {
   phoneNumber!: string;
   role!: string;
   isWorking: boolean;
-  driverDailyActivity!: DriverDailyActivity;
 
   constructor(name: string, surname: string, email: string, phoneNumber: string, city: string, isWorking: boolean) {
     this.name = name;

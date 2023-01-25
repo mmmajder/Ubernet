@@ -30,10 +30,16 @@ insert into user_auth_roles(user_auth_id, roles_id)
 values (1, 1),
        (1, 4);
 
-insert into driver_daily_activity (deleted, is_active, last_time_set_active, total_duration)
-values (false, true, '2022-10-24 00:00', 0),
-       (false, true, '2022-10-24 00:00', 0),
-       (false, true, '2022-10-24 00:00', 0);
+insert into driver_activity_period(end_of_period, start_of_period)
+values ('2023-01-25 15:58', '2023-01-25 08:00');
+
+insert into driver_daily_activity (deleted, is_active, last_period_start)
+values (false, false, null),
+       (false, false, null),
+       (false, false, null);
+
+insert into driver_daily_activity_periods_in_last24h (driver_daily_activity_id, periods_in_last24h_id)
+values (1, 1);
 
 insert into car_type (deleted, name, price_for_type)
 values (false, 'Cabrio', 200),
@@ -60,9 +66,9 @@ values (false),
        (false);
 
 insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name, navigation_id, version)
-values (false, true, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1, 0),
-       (false, true, 1, 3, false, false, 'NS-GLAMOC1', 'Audi', 2, 0),
-       (false, true, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3, 0);
+values (false, false, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1, 0),
+       (false, false, 1, 3, false, false, 'NS-GLAMOC1', 'Audi', 2, 0),
+       (false, false, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3, 0);
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,

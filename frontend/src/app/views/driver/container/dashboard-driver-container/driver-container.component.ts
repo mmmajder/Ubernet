@@ -1,4 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
+import {Store} from "@ngxs/store";
+import {User} from "../../../../model/User";
 
 @Component({
   selector: 'app-driver-container',
@@ -6,10 +8,17 @@ import { Component, OnInit } from '@angular/core';
   styleUrls: ['./driver-container.component.css']
 })
 export class DriverContainerComponent implements OnInit {
+  loggedUser: User;
 
-  constructor() { }
+  constructor(private store: Store) {
+  }
 
   ngOnInit(): void {
+    this.store.select(state => state.loggedUser).subscribe({
+      next: (user) => {
+        this.loggedUser = user;
+      }
+    })
   }
 
 }

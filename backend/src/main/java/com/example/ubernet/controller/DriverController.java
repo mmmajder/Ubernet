@@ -40,11 +40,18 @@ public class DriverController {
         return ResponseEntity.ok(DTOMapper.getDriverResponse(driver));
     }
 
-    @PutMapping("/logout-driver/{email}")
-    public ResponseEntity<String> logoutDriver(@PathVariable String email) {
-        if (driverService.logoutDriver(email)) {
-            return new ResponseEntity<>("Successfully logged out", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("There was a problem logging out", HttpStatus.CONFLICT);
+    @PutMapping("/deactivate-too-much-active")
+    public void deactivateTooMuchActiveDrivers() {
+        driverService.deactivateTooMuchActiveDrivers();
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<DriverDto> getDriver(@PathVariable String email) {
+        return ResponseEntity.ok(driverService.getDriverByEmail(email));
+    }
+
+    @GetMapping("/active-hours/{email}")
+    public long getNumberOfActiveHoursInLast24h(@PathVariable String email) {
+        return driverService.getNumberOfActiveHoursInLast24h(email);
     }
 }

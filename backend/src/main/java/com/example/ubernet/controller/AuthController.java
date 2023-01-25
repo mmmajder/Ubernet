@@ -39,7 +39,6 @@ public class AuthController {
     @PostMapping("/login-social")
     public ResponseEntity<LoginResponseDTO> loginSocial(
             @Valid @RequestBody LoginSocialDTO loginSocialDTO) {
-
         LoginResponseDTO loginResponseDTO = authentificationService.loginSocial(loginSocialDTO);
         if (loginResponseDTO == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
@@ -47,9 +46,9 @@ public class AuthController {
         return ResponseEntity.ok(loginResponseDTO);
     }
 
-    @PostMapping("/logout")
-    public void logout(@Valid @RequestBody UserTokenState userTokenState) {
-        // TODO
+    @PostMapping("/logout/{email}")
+    public void logout(@PathVariable String email) {
+        authentificationService.logoutUser(email);
     }
 
 

@@ -60,7 +60,7 @@ export class AuthService {
   }
 
   public logout(token: UserTokenState | ""): Observable<Object> {
-    return this.http.post(this.authUrl + '/logout', token, AuthService.getHttpOptions());
+    return this.http.post(this.authUrl + '/logout', AuthService.getHttpOptions());
   }
 
   public getCurrentlyLoggedUser(): Observable<User> {

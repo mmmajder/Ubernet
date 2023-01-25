@@ -268,9 +268,6 @@ public class RideService {
 
     private List<Double> calculateTimeSlots(List<Integer> distanceSlots, List<InstructionDTO> instructionDTOList) {
         List<Double> timeSlots = new ArrayList<>();
-        System.out.println(distanceSlots.size());
-        System.out.println(instructionDTOList.size());
-        System.out.println("--------");//change
         for (int i = 0; i < distanceSlots.size(); i++) {
             if (instructionDTOList.size()<=i) break;
             double time = instructionDTOList.get(i).getTime() / distanceSlots.get(i);
@@ -314,7 +311,6 @@ public class RideService {
         approach.setFreeRide(false);
         List<NumberOfRoute> numbersOfRoute = new ArrayList<>();
         numbersOfRoute.add(numberOfRouteRepository.save(new NumberOfRoute(0)));
-//        approach.setNumberOfRoute(numbersOfRoute);
         if (car.getNavigation().getSecondRide() == null) {
             approach.setStartTime(LocalDateTime.now());
             car.getNavigation().setApproachFirstRide(approach);

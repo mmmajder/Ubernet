@@ -87,4 +87,12 @@ public class SimpMessagingService {
     public void notifyCustomersDriverInconsistency(Notification notification) {
         this.simpMessagingTemplate.convertAndSend("/customer/driver-inconsistency-" + notification.getReceiverEmail(), notification);
     }
+
+    public void endShiftDriverNotification(DriverNotification driverNotification, String email) {
+        this.simpMessagingTemplate.convertAndSend("/driver/end-shift-" + email, driverNotification);
+    }
+
+    public void sendNumberOfWorkingSecondsToDriver(long numberOfActiveSeconds, String email) {
+        this.simpMessagingTemplate.convertAndSend("/driver/active-seconds-" + email, numberOfActiveSeconds);
+    }
 }

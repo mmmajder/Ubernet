@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.example.ubernet.dto.*;
+import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.utils.DTOMapper;
@@ -98,6 +99,9 @@ public class AuthentificationService {
         }
         SecurityContextHolder.getContext().setAuthentication(authentication);
         User user = (User) authentication.getPrincipal();
+        if (user.getRole().equals(UserRole.DRIVER)) {
+            driverService.loginDriver(user.getEmail());
+        }
         if (!isUserEnabled(user)) return null;
         return createAccessToken(user);
     }
@@ -184,5 +188,11 @@ public class AuthentificationService {
         return true;
     }
 
-
+    public void logoutUser(String email) {
+        User user = userService.findByEmail(email);
+        if (user == null) throw new BadRequestException("User with this email does not exist");
+        if (user.getRole().equals(UserRole.DRIVER)) {
+            driverService.logoutDriver(user.getEmail());
+        }
+    }
 }

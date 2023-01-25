@@ -146,7 +146,10 @@ export class SidenavComponent implements OnInit {
 
   logout() {
     this.store.dispatch(new Logout()).subscribe({
-      next: () => this.router.navigate(['/']),
+      next: () => {
+        localStorage.clear();
+        this.router.navigate(['/'])
+      },
       error: () => alert("Error occurred")
     });
   }
