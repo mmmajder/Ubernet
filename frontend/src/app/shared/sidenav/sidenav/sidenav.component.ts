@@ -16,6 +16,9 @@ import * as Stomp from "stompjs";
 import {NotificationService} from "../../../services/notification.service";
 import {MapComponent} from "../../../views/map/container/map/map.component";
 import {NotificationDTO} from "../../../model/NotificationDTO";
+import {DriversService} from "../../../services/drivers.service";
+import {secondsToHm} from "../../../services/utils.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-sidenav',
@@ -39,13 +42,17 @@ export class SidenavComponent implements OnInit {
   public static _this: any;
   notificationBadgeHidden: boolean;
   private stompClient: any;
-  driverActive: any;
+  driverActive: boolean;
+  workingHours: string = "0 minutes";
 
-  constructor(public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService, private notificationService: NotificationService) {
+  constructor(private _snackBar: MatSnackBar, private driverService: DriversService, public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService, private notificationService: NotificationService) {
     this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
       this.numberOfTokens = value;
     });
+    SidenavComponent._this = this;
+  }
 
+  ngOnInit(): void {
     this.store.select(state => state.loggedUser).subscribe({
       next: (user) => {
         this.user = user;
@@ -53,13 +60,19 @@ export class SidenavComponent implements OnInit {
         this.notificationService.areNotificationSeen(this.user.email).subscribe((res: boolean) => {
           this.notificationBadgeHidden = res;
         })
+        this.initializeWebSocketConnection();
+        console.log(this.user)
+        if (this.user.role === "DRIVER") {
+          this.driverService.getDriver(this.user.email).subscribe((driver) => {
+            this.driverActive = driver.isWorking
+          })
+          this.driverService.getNumberOfActiveHoursInLast24h(this.user.email).subscribe((seconds: number) => {
+            console.log(seconds)
+            this.workingHours = secondsToHm(seconds)
+          })
+        }
       }
     })
-    SidenavComponent._this = this;
-  }
-
-  ngOnInit(): void {
-    this.initializeWebSocketConnection();
   }
 
   initializeWebSocketConnection() {
@@ -99,6 +112,10 @@ export class SidenavComponent implements OnInit {
     })
     this.stompClient.subscribe("/customer/driver-inconsistency-" + this.user.email, () => {
       this.updateNotificationBadge();
+    })
+    this.stompClient.subscribe("/driver/active-seconds-" + this.user.email, (message: any) => {
+      let seconds: number = JSON.parse(message.body)
+      this.workingHours = secondsToHm(seconds);
     })
   }
 
@@ -169,5 +186,20 @@ export class SidenavComponent implements OnInit {
 
   updateNotificationBadge() {
     this.notificationBadgeHidden = false;
+  }
+
+  toggleDriverActivity() {
+    this.driverService.toggleActivity(this.user.email, this.driverActive).subscribe({
+      next: () => {
+      },
+      error: (resp) => {
+        console.log(resp)
+        this.driverActive = !this.driverActive
+        this._snackBar.open(resp.error, '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        })
+      }
+    })
   }
 }

@@ -31,7 +31,7 @@ values (1, 1),
        (1, 4);
 
 insert into driver_activity_period(end_of_period, start_of_period)
-values ('2023-01-25 15:58', '2023-01-25 08:00');
+values ('2023-01-26 15:58', '2023-01-26 08:00');
 
 insert into driver_daily_activity (deleted, is_active, last_period_start)
 values (false, false, null),

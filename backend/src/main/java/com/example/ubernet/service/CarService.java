@@ -30,6 +30,7 @@ public class CarService {
     private final DriverNotificationRepository driverNotificationRepository;
     private final DriverRepository driverRepository;
     private final NotificationService notificationService;
+    private final DriverService driverService;
 
     public Car createCar(CreateCarDTO createCarDTO) {
         User user = userService.findByEmail(createCarDTO.getEmail());
@@ -306,6 +307,7 @@ public class CarService {
         double minDistance = Double.POSITIVE_INFINITY;
         for (Car car : cars) {
             if (carDoesNotSatisfyOrder(car, hasPet, hasChild, carType)) continue;
+            if (driverService.driverIsLoggedForMoreThan8HoursInLast24Hours(car.getDriver())) continue;
             double distance = MapUtils.calculateDistance(car.getPosition().getX(), car.getPosition().getY(), latLngDTO.getLng(), latLngDTO.getLat()); // switch
             if (distance < minDistance) {
                 closestCar = car;
@@ -331,6 +333,7 @@ public class CarService {
         double minDistance = Double.POSITIVE_INFINITY;
         for (Car car : cars) {
             if (carDoesNotSatisfyOrder(car, hasPet, hasChild, carType)) continue;
+            if (driverService.driverIsLoggedForMoreThan8HoursInLast24Hours(car.getDriver())) continue;
             int numberOfPositionsFirstRide = car.getNavigation().getFirstRide().getPositions().size();
             double lastPositionFirstRideX = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide - 1).getPosition().getX();
             double lastPositionFirstRideY = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide - 1).getPosition().getY();

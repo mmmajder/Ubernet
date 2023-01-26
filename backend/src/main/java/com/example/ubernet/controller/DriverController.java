@@ -32,17 +32,17 @@ public class DriverController {
     }
 
     @PutMapping("/toggle-activity/{email}")
-    public ResponseEntity<DriverResponse> toggleActivity(@PathVariable String email) {
-        Driver driver = driverService.toggleActivity(email);
+    public ResponseEntity<DriverResponse> toggleActivity(@PathVariable String email, @RequestBody boolean driverActive) {
+        Driver driver = driverService.toggleActivity(email, driverActive);
         if (driver == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(DTOMapper.getDriverResponse(driver));
     }
 
-    @PutMapping("/deactivate-too-much-active")
-    public void deactivateTooMuchActiveDrivers() {
-        driverService.deactivateTooMuchActiveDrivers();
+    @PutMapping("/update-driver-activity")
+    public void updateDriverActivity() {
+        driverService.updateDriverActivity();
     }
 
     @GetMapping("/{email}")

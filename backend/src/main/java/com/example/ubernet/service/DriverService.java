@@ -3,8 +3,10 @@ package com.example.ubernet.service;
 import com.example.ubernet.dto.DriverDto;
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.model.*;
+import com.example.ubernet.repository.CarRepository;
 import com.example.ubernet.repository.DriverRepository;
 import com.example.ubernet.repository.DriverActivityPeriodRepository;
+import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.EntityMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,19 +23,15 @@ public class DriverService {
     private final DriverRepository driverRepository;
     private final DriverDailyActivityService driverDailyActivityService;
     private final UserService userService;
-    private final CarService carService;
+    private final CarRepository carRepository;
     private final DriverActivityPeriodRepository intervalRepository;
     private final DriverNotificationService driverNotificationService;
 
-    public Driver toggleActivity(String email) {
+    public Driver toggleActivity(String email, boolean activate) {
         Driver driver = (Driver) userService.findByEmail(email);
         if (driver == null) throw new BadRequestException("Driver with this email does not exist");
-        if (driver.getDriverDailyActivity().getIsActive()) deactivateDriver(driver);
-        else activateDriver(driver);
-//        driver.getDriverDailyActivity().setIsActive(!driver.getDriverDailyActivity().getIsActive());
-//        driverDailyActivityService.save(driver.getDriverDailyActivity());
-        //TODO setPosition()
-//        driverRepository.save(driver);
+        if (activate) activateDriver(driver);
+        else deactivateDriver(driver);
         return driver;
     }
 
@@ -53,6 +51,8 @@ public class DriverService {
     }
 
     public void deactivateDriver(Driver driver) {
+        if (!driver.getCar().getIsAvailable())
+            throw new BadRequestException("You are unable to set inactive during the active ride");
         DriverDailyActivity driverDailyActivity = driver.getDriverDailyActivity();
         driverDailyActivity.setIsActive(false);
         driverDailyActivity.setPeriodsInLast24h(updatePeriodsInLast24h(driverDailyActivity));
@@ -65,7 +65,7 @@ public class DriverService {
         deactivateDriver(driver);
         Car car = driver.getCar();
         car.setIsAvailable(false);
-        carService.save(car);
+        carRepository.save(car);
     }
 
     private List<DriverActivityPeriod> updatePeriodsInLast24h(DriverDailyActivity driverDailyActivity) {
@@ -101,18 +101,14 @@ public class DriverService {
         Driver driver = findByEmail(email);
         Car car = driver.getCar();
         car.setIsAvailable(true);
-        carService.save(car);
+        carRepository.save(car);
         activateDriver(driver);
     }
 
-    public void deactivateTooMuchActiveDrivers() {
+    public void updateDriverActivity() {
         List<Driver> activeDrivers = driverRepository.getActiveDrivers();
         for (Driver driver : activeDrivers) {
             updateIntervals(driver.getDriverDailyActivity());
-            if (driverIsLoggedForMoreThan8HoursInLast24Hours(driver)) {
-                deactivateDriver(driver);
-                driverNotificationService.createNotificationForDriverThatIsActiveTooMuch(driver.getEmail());
-            }
         }
     }
 
@@ -131,39 +127,32 @@ public class DriverService {
         driverDailyActivityService.save(driverDailyActivity);
     }
 
-    private boolean driverIsLoggedForMoreThan8HoursInLast24Hours(Driver driver) {
+    public boolean driverIsLoggedForMoreThan8HoursInLast24Hours(Driver driver) {
         DriverDailyActivity driverDailyActivity = driver.getDriverDailyActivity();
         long numberOfActiveSeconds = getNumberOfActiveHoursInLast24h(driverDailyActivity.getPeriodsInLast24h(), driverDailyActivity.getLastPeriodStart());
         driverNotificationService.sendNumberOfWorkingSecondsToDriver(numberOfActiveSeconds, driver.getEmail());
         return numberOfActiveSeconds > 8 * 60 * 60; // h * m * s
     }
 
-    public long getNumberOfActiveHoursInLast24h(List<DriverActivityPeriod> intervals, LocalDateTime lastPeriodStart) {
-        long totalDurationInSeconds = 0;
-        for (DriverActivityPeriod interval : intervals) {
-            totalDurationInSeconds += interval.getStartOfPeriod().until(interval.getEndOfPeriod(), ChronoUnit.SECONDS);
-        }
-        totalDurationInSeconds += lastPeriodStart.until(LocalDateTime.now(), ChronoUnit.SECONDS);
-        return totalDurationInSeconds;
-    }
-
     public DriverDto getDriverByEmail(String email) {
         Driver driver = findByEmail(email);
-        return DriverDto.builder()
-                .email(driver.getEmail())
-                .name(driver.getName())
-                .surname(driver.getSurname())
-                .city(driver.getCity())
-                .phoneNumber(driver.getPhoneNumber())
-                .isWorking(driver.getDriverDailyActivity().getIsActive())
-                .blocked(driver.getBlocked())
-                .build();
+        return DTOMapper.getDriverDTO(driver);
     }
 
     public long getNumberOfActiveHoursInLast24h(String email) {
         Driver driver = findByEmail(email);
-        if (driver==null) throw new BadRequestException("Driver with this email does not exist");
+        if (driver == null) throw new BadRequestException("Driver with this email does not exist");
         DriverDailyActivity driverDailyActivity = driver.getDriverDailyActivity();
         return getNumberOfActiveHoursInLast24h(driverDailyActivity.getPeriodsInLast24h(), driverDailyActivity.getLastPeriodStart());
+    }
+
+    private long getNumberOfActiveHoursInLast24h(List<DriverActivityPeriod> intervals, LocalDateTime lastPeriodStart) {
+        long totalDurationInSeconds = 0;
+        for (DriverActivityPeriod interval : intervals) {
+            totalDurationInSeconds += interval.getStartOfPeriod().until(interval.getEndOfPeriod(), ChronoUnit.SECONDS);
+        }
+        if (lastPeriodStart != null)
+            totalDurationInSeconds += lastPeriodStart.until(LocalDateTime.now(), ChronoUnit.SECONDS);
+        return totalDurationInSeconds;
     }
 }

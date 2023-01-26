@@ -18,9 +18,7 @@ public interface CarRepository extends JpaRepository<Car, Long> {
     @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
     List<Car> findActiveAvailableCars();
 
-//    @Lock(LockModeType.PESSIMISTIC_WRITE)
     @Query(value = "SELECT car FROM Car car WHERE car.driver.driverDailyActivity.isActive=true")
-//    @QueryHints({@QueryHint(name = "javax.persistence.lock.timeout", value ="0")})
     List<Car> findActiveCars();
 
     @Lock(LockModeType.PESSIMISTIC_WRITE)

@@ -27,8 +27,8 @@ export class DriversService {
     return this.http.get<Driver>(this.driverUrl + "/" + email, AuthService.getHttpOptions());
   }
 
-  toggleActivity(email: string): Observable<void> {
-    return this.http.put<void>(this.driverUrl + "/toggle-activity/" + email, AuthService.getHttpOptions());
+  toggleActivity(email: string, driverActive: boolean): Observable<void> {
+    return this.http.put<void>(this.driverUrl + "/toggle-activity/" + email, driverActive, AuthService.getHttpOptions());
   }
 
   getNumberOfActiveHoursInLast24h(email: string): Observable<number> {

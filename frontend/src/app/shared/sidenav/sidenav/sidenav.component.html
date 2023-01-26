@@ -13,11 +13,13 @@
   <button *ngIf="user.role==='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>help</mat-icon>
   </button>
+  <p *ngIf="user.role==='DRIVER'" class="name">You have been working for <b>{{workingHours}}</b> in last 24h.</p>
   <mat-slide-toggle
     *ngIf="user.role==='DRIVER'"
     color="primary"
-    [checked]="driverActive">
-    Uključi aktivnost
+    style="margin-bottom: 5px; margin-left: 10px"
+    [(ngModel)]="driverActive" (click)="toggleDriverActivity()">
+    <p *ngIf="user.role==='DRIVER'" class="name" style="margin-top: 20px">Activity</p>
   </mat-slide-toggle>
   <img [src]="profilePictureSrc" class="avatar" style="margin-left: 20px; margin-right: 10px;" alt="avatar"/>
   <p class="name" (click)="navigate('/profile')">{{user.name}} {{user.surname}}</p>

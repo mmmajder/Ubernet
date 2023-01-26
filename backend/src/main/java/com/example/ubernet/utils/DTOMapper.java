@@ -157,4 +157,17 @@ public class DTOMapper {
         }
         return numberOfRouteList;
     }
+
+    public static DriverDto getDriverDTO(Driver driver) {
+        DriverDto driverDto = new DriverDto();
+        driverDto.setDriverDailyActivity(driver.getDriverDailyActivity());
+        driverDto.setCity(driver.getCity());
+        driverDto.setEmail(driver.getEmail());
+        driverDto.setName(driver.getName());
+        driverDto.setSurname(driver.getSurname());
+        driverDto.setPhoneNumber(driver.getPhoneNumber());
+        driverDto.setWorking(driver.getDriverDailyActivity().getIsActive());
+        driverDto.setBlocked(driver.getBlocked());
+        return driverDto;
+    }
 }

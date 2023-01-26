@@ -1,68 +1,69 @@
-from random import random
-from turtledemo.planet_and_moon import G
+from random import randrange
 
-from locust import HttpUser, task, between, run_single_user
+import requests
+from locust import HttpUser, task, between
 
-import osmnx as ox
-import networkx as nx
+taxi_stops = [
+    (45.238548, 19.848225),  # Stajaliste na keju
+    (45.243097, 19.836284),  # Stajaliste kod limanske pijace
+    (45.256863, 19.844129),  # Stajaliste kod trifkovicevog trga
+    (45.255055, 19.810161),  # Stajaliste na telepu
+    (45.246540, 19.849282)  # Stajaliste kod velike menze
+]
 
 
-class MyTaskSet(HttpUser):
-    # host = "http://localhost:8000"
-    def createNewLocation(self):
-        center = [45.26713, 19.833549]
-        x = center[0] + (random() - 0.5) / 10
-        y = center[1] + (random() - 0.5) / 10
-        print([x, y])
+class EveryMinute(HttpUser):
+    @task
+    def notify_future_reservation(self):
+        self.client.put("/ride-request/notify-time-until-reservation")
+
+    # @task
+    # def check_if_driver_is_active_more_than_8_hours(self):
+    #     self.client.put("/driver/deactivate-too-much-active")
+
+    wait_time = between(5, 5)
+
+
+class Reserve(HttpUser):
+    @task
+    def reserve(self):
+        self.client.put("/ride-request/send-cars-to-reservations")
 
     @task
-    def getCurrentState(self):
-        activeAvailableCars = self.client.get("/car/active-available")
-        for car in activeAvailableCars.json():
-            if not car["currentRide"]:
-                # while True:
-                print(car["currentPosition"])
-                position = car["currentPosition"]["y"], car["currentPosition"]["x"]
-                graph = ox.graph_from_point(position, dist=1000, network_type='drive', simplify=False)
-                graph = ox.add_edge_speeds(graph)
-                graph = ox.add_edge_travel_times(graph)
-                orig_node = ox.nearest_nodes(graph,
-                                             car["currentPosition"]["x"],
-                                             car["currentPosition"]["y"])
-                print(orig_node)
+    def return_money_to_passed_reservations_that_did_not_pay_everyone(self):
+        self.client.put("/ride-request/return-money")
 
-                destx = car["currentPosition"]["x"] + (random() - 0.5) / 200
-                desty = car["currentPosition"]["y"] + (random() - 0.5) / 200
-                print(destx)
-                print(desty)
-                dest_node = ox.nearest_nodes(graph, destx, desty)
-                print(dest_node)
+    wait_time = between(10, 10)
 
-                shortest_route = nx.shortest_path(graph,
-                                                  orig_node,
-                                                  dest_node,
-                                                  weight='time')
 
-                print(shortest_route)
+class Movement(HttpUser):
 
-                print("Conversion")
-                points = []
-                for node in shortest_route:
-                    print(graph.nodes[node])
-                    latitude = graph.nodes[node]['x']
-                    longitude = graph.nodes[node]['y']
-                    points.append({'latitude': latitude, 'longitude': longitude})
-                print(points)
+    @task
+    def get_current_state(self):
+        response = self.client.get("/car/active-available")
+        print("Response status code:", response.status_code)
+        for car in response.json():
+            if car["firstRide"] is None or (len(car["firstRide"]["positions"]) == 0 and car["secondRide"] is None):
+                random_taxi_stop = taxi_stops[randrange(0, len(taxi_stops))]
+                response = requests.get(
+                    f'https://routing.openstreetmap.de/routed-car/route/v1/driving/{car["currentPosition"]["x"]},{car["currentPosition"]["y"]};{random_taxi_stop[1]},{random_taxi_stop[0]}?geometries=geojson&overview=false&alternatives=true&steps=true')
+                coordinates = []
 
-                print(shortest_route)
-                for i in range(len(shortest_route) - 1):
-                    node1 = shortest_route[i]
-                    node2 = shortest_route[i + 1]
-                    edge = graph[node1][node2]  # get the edge connecting the two nodes
-                    print("edge")
-                    print(edge)
-                    points[i]['time'] = edge[0]['length'] / 50
+                for step in response.json()['routes'][0]['legs'][0]['steps']:
+                    for coord in step['geometry']['coordinates']:
+                        coordinates.append(coord)
+                # print(coordinates)
+                print(len(coordinates))
+                print("---------------------------------------------------")
+                request = {"carId": car["carId"], "positions": coordinates}
 
-                print(points)
+                self.client.put("/car/new-free-ride", json=request)
+            else:
+                print(car["carId"])
 
-    wait_time = between(0.5, 10)
+        self.client.put("/car/new-position")
+        self.client.put("/driver-inconsistency/check-inconsistency")
+    wait_time = between(2, 2)
+
+
+
