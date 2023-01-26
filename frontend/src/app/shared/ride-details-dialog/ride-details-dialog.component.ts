@@ -33,7 +33,7 @@ export class RideDetailsDialogComponent implements OnInit {
       next: (resp) => {
         if (resp.loggedUser.role == "CUSTOMER") {
           this.customerEmail = resp.loggedUser.email;
-          this.isRouteFavorite();
+          this.isRouteFavorite(resp.loggedUser.email);
         }
       }
     });
@@ -45,7 +45,6 @@ export class RideDetailsDialogComponent implements OnInit {
       this.loadProfilePictures(this.ride.customers);
       this.loadProfilePictures([this.ride.driver]);
       this.loadReviews(data);
-      this.isRouteFavorite();
       console.log("RIDE: ", this.ride);
       this.initMap();
     });
@@ -111,21 +110,30 @@ export class RideDetailsDialogComponent implements OnInit {
   }
 
   addToFavorites() {
-    this.routeService.addToFavoriteRoutes(this.customerEmail, this.ride.id).subscribe({
-      next: () => this._snackBar.open("Successfully added to favorite routes!"),
+    this.routeService.addToFavoriteRoutes(this.customerEmail, this.id).subscribe({
+      next: () => this._snackBar.open("Successfully added to favorite routes!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      }),
       error: err => console.log(err)
     })
   }
 
   removeFromFavorites() {
-    this.routeService.removeFromFavoriteRoutes(this.customerEmail, this.ride.id).subscribe({
-      next: () => this._snackBar.open("Successfully removed from favorite routes!"),
+    this.routeService.removeFromFavoriteRoutes(this.customerEmail, this.id).subscribe({
+      next: () => this._snackBar.open("Successfully removed from favorite routes!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      }),
       error: err => console.log(err)
     })
   }
 
-  isRouteFavorite() {
-    this.routeService.isRouteFavorite(this.customerEmail, this.ride.id).subscribe({
+  isRouteFavorite(customerEmail: string) {
+    console.log("IS ROUTE FAVORITE")
+    console.log(customerEmail)
+    console.log(this.id)
+    this.routeService.isRouteFavorite(customerEmail, this.id).subscribe({
       next: (value: boolean) => this.isFavorite = value,
       error: err => console.log(err)
     })

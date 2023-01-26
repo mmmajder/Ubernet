@@ -1,5 +1,6 @@
 package com.example.ubernet.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -19,6 +20,7 @@ public class Customer extends User {
     private String paymentCredentials;
     private double numberOfTokens;
     private boolean isActive;
+    @JsonIgnore
     @OneToMany
     private List<Ride> favoriteRoutes;
 }

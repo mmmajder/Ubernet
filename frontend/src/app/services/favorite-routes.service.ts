@@ -21,7 +21,7 @@ export class FavoriteRoutesService {
 
   public isRouteFavorite(customerEmail: string, rideId: number): Observable<boolean> {
     let body = new FavoriteRouteRequest(customerEmail, rideId);
-    return this.http.post<boolean>(this.favoriteRoutesUrl + "ifRouteFavorite", body, AuthService.getHttpOptions());
+    return this.http.post<boolean>(this.favoriteRoutesUrl + "isRouteFavorite", body, AuthService.getHttpOptions());
   }
 
   public addToFavoriteRoutes(customerEmail: string, rideId: number): Observable<void> {

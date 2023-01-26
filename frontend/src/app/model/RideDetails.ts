@@ -9,7 +9,7 @@ export class RideDetails {
   route: RouteDTO;
   checkPoints: Place[];
   totalPrice: number;
-  driver: Driver
+  driver: Driver = new Driver();
   customers: SimpleUser[] = [];
   scheduledStart: string;
   actualStart: string;

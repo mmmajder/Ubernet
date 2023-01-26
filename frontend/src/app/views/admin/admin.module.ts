@@ -13,7 +13,7 @@ import {CommonModule} from "@angular/common";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
-import {AdminContainerComponent} from "./container/admin-container/admin-container.component";
+import {UsersContainerComponent} from "./container/users-container/users-container.component";
 import {ChatContainerComponent} from './container/chat-container/chat-container.component';
 import {ListOfChatsComponent} from './components/list-of-chats/list-of-chats.component';
 import {AdminChatComponent} from './components/admin-chat/admin-chat.component';
@@ -38,7 +38,7 @@ import {
 
 @NgModule({
   declarations: [
-    AdminContainerComponent,
+    UsersContainerComponent,
     ChatContainerComponent,
     ListOfChatsComponent,
     AdminChatComponent,
@@ -75,7 +75,7 @@ import {
     MatStepperModule
   ],
   exports: [
-    AdminContainerComponent,
+    UsersContainerComponent,
     AdminProfileContainerComponent,
   ]
 })

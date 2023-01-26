@@ -14,13 +14,14 @@ import {
   RequestSplitFareMailAcceptComponent
 } from "./views/request-ride-accept/request-split-fare-mail-accept/request-split-fare-mail-accept.component";
 import {AnalyticsContainerComponent} from "./views/pages/analytics-container/analytics-container.component";
+import {UsersContainerComponent} from "./views/admin/container/users-container/users-container.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
   {path: 'dashboard', component: DashboardContainerComponent},
   {path: 'map', component: MapComponent},
   {path: 'chat', component: ChatContainerComponent},
-  {path: 'admin/drivers', component: DriversComponent},
+  {path: 'users', component: UsersContainerComponent},
   {path: 'profile', component: ProfileContainerComponent},
   {path: 'rides', component: RidesHistoryContainerComponent},
   {path: 'analytics', component: AnalyticsContainerComponent},
