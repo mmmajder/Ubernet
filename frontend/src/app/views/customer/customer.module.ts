@@ -35,6 +35,7 @@ import {MatTooltipModule} from "@angular/material/tooltip";
 import {RateDialogComponent} from './components/rate-dialog/rate-dialog.component';
 import {NgxPayPalModule} from "ngx-paypal";
 import {PaymentComponent} from "./components/payment/payment.component";
+import {MatLineModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -47,28 +48,29 @@ import {PaymentComponent} from "./components/payment/payment.component";
     RateDialogComponent,
     PaymentComponent,
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-    MatListModule,
-    MatTabsModule,
-    MatChipsModule,
-    MatTooltipModule,
-    NgxPayPalModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatListModule,
+        MatTabsModule,
+        MatChipsModule,
+        MatTooltipModule,
+        NgxPayPalModule,
+        MatLineModule,
+    ],
   exports: [
     DashboardCustomerContainerComponent,
     ProfileDataComponent,

@@ -1,6 +1,5 @@
 package com.example.ubernet.controller;
 
-import com.example.ubernet.dto.SetNewFreeRideDTO;
 import com.example.ubernet.dto.SimpleUser;
 import com.example.ubernet.dto.TokensDTO;
 import com.example.ubernet.model.Customer;
@@ -44,5 +43,4 @@ public class CustomerController {
     public Customer getCustomerByEmail(@PathVariable String email) {
         return customerService.findByEmail(email);
     }
-
 }

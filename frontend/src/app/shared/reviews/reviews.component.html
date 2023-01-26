@@ -3,9 +3,9 @@
     <mat-list-item *ngFor="let review of reviews">
       <img class="avatar" style="margin-right: 10px" [src]='profilePictures.get(review.reviewer.email)' alt="avatar"/>
       <div>
-        <div mat-line> {{review.reviewer.name}} {{review.reviewer.surname}} {{review.rating}}<mat-icon>star</mat-icon></div>
-        <div mat-line style="font-size: 13px"> {{review.comment}} </div>
-        <div mat-line style="font-size: 13px"> {{review.date}} </div>
+        <div matListItemLine> {{review.reviewer.name}} {{review.reviewer.surname}} {{review.rating}}<mat-icon>star</mat-icon></div>
+        <div matListItemLine style="font-size: 13px"> {{review.comment}} </div>
+        <div matListItemLine style="font-size: 13px"> {{review.date}} </div>
       </div>
       <mat-divider></mat-divider>
     </mat-list-item>

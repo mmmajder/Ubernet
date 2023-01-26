@@ -29,8 +29,12 @@ public class Route {
     @OneToMany
     private List<NumberOfRoute> numberOfRoute;
 
-    public String stationList() {
+    public String stationListConcatenated() {
         return checkPoints.stream().map(Place::getName)
                 .collect(Collectors.joining(" -> "));
+    }
+
+    public List<String> stationList() {
+        return checkPoints.stream().map(Place::getName).collect(Collectors.toList());
     }
 }

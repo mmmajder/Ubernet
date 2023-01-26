@@ -205,3 +205,6 @@ values ('customer@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac
 insert into driver_notification(driver_notification_type, is_finished, ride_id)
 values (0, true, 1),
        (1, true, 1);
+
+insert into customer_favorite_routes(customer_email, favorite_routes_id)
+values ('customer@gmail.com', 1);

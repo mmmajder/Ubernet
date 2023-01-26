@@ -2,9 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {ReservedRideItem} from "../../../../model/ReservedRideItem";
 import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
-import {SetTokens} from "../../../../store/actions/tokens.action";
 import {CurrentlyLogged} from "../../../../store/actions/loggedUser.actions";
-import {UserRole} from "../../../../model/UserRole";
 import {Store} from "@ngxs/store";
 import {Customer, User} from "../../../../model/User";
 import {Router} from "@angular/router";
@@ -18,47 +16,30 @@ import {RideDTO} from "../../../../model/RideDTO";
   styleUrls: ['./customers-upcoming-rides.component.css']
 })
 export class CustomersUpcomingRidesComponent implements OnInit {
-  rides: ReservedRideItem[] = [{
-    'time': '15:10h',
-    'timeLeft': '15min',
-    'start': 'Bulevar Kralja Petra 5',
-    'destination': 'Trzni centar Promenada',
-    'friends': [
-      {
-        'name': 'Pera',
-        'photo': '../../assets/default-profile-picture.jpg'
-      },
-      {
-        'name': 'Pera',
-        'photo': '../../assets/default-profile-picture.jpg'
-      }]
-  }];
-  loggedUser: User
-  timeLeft: number
+  loggedUser: User;
+  timeLeft: number;
   arriveTime: string;
-  start: string
-  destination: string
-  friends: string[]
-  display: boolean
-  photo: string
+  start: string;
+  destination: string;
+  friends: string[];
+  display: boolean;
+  photo: string;
+  private stompClient: any;
 
   constructor(private store: Store, private router: Router, private rideService: RideService) {
-    this.display = false
-    this.photo = '../../assets/default-profile-picture.jpg'
+    this.display = false;
+    this.photo = '../../assets/default-profile-picture.jpg';
   }
 
   ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
         this.loggedUser = resp.loggedUser;
-        this.initializeWebSocketConnection()
+        this.initializeWebSocketConnection();
       },
       error: () => this.router.navigate(['/'])
     });
-
   }
-
-  private stompClient: any;
 
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
