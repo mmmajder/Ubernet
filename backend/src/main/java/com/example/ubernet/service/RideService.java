@@ -63,7 +63,8 @@ public class RideService {
     @Transactional
     public Ride createRide(CreateRideDTO createRideDTO) {
         Customer customer = customerService.findByEmail(createRideDTO.getPassengers().get(0));
-        if (customer.isActive()) throw new BadRequestException("Active customer can not request another ride");
+        if (customer.isActive()) throw new BadRequestException("Active customer can not request another ride!");
+        if (customer.getBlocked()) throw new BadRequestException("You are blocked by admin and can not request ride!");
         Ride ride = new Ride();
         ride.setRideState(getRideStateCreateRide(createRideDTO.isReservation(), createRideDTO.getPassengers().size()));
         ride.setRoute(getRouteCreateRide(createRideDTO));
@@ -146,7 +147,11 @@ public class RideService {
     }
 
     private List<Customer> getCustomersCreateRide(List<String> passengers) {
-        return customerService.getCustomersByEmails(passengers);
+        List<Customer> customers = customerService.getCustomersByEmails(passengers);
+        for (Customer customer : customers) {
+            if (customer.getBlocked()) throw new BadRequestException("Some of you friends are blocked and you can not request ride for them!");
+        }
+        return customers;
     }
 
     private Payment getPaymentCreateRide(CreateRideDTO createRideDTO) {

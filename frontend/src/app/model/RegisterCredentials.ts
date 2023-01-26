@@ -3,9 +3,8 @@ import {UserRole} from "./UserRole";
 export class RegisterCredentials {
   email!: string;
   name!: string;
-  lastName!: string;
+  surname!: string;
   password!: string;
   phoneNumber!: string;
   city!: string;
-  userRole: UserRole
 }

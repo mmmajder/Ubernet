@@ -27,7 +27,6 @@ import javax.mail.MessagingException;
 @Service
 public class AuthentificationService {
     private final UserService userService;
-    private final AdminService adminService;
     private final TokenUtils tokenUtils;
     private final UserAuthService userAuthService;
     private final PasswordEncoder passwordEncoder;
@@ -36,59 +35,45 @@ public class AuthentificationService {
     private final CustomerService customerService;
     private final DriverService driverService;
 
-    public User addUser(CreateUserDTO createUserDTO) throws MessagingException {
-        if (userService.findByEmail(createUserDTO.getEmail()) != null) {
-            return null;
-        }
-        User user = saveUser(createUserDTO);
-        if (user.getRole() == UserRole.CUSTOMER) {
-            emailService.sendRegistrationAsync(user);
-        }
-        return user;
+    public void addCustomer(CreateUserDTO createUserDTO) throws MessagingException {
+        if (userService.findByEmail(createUserDTO.getEmail()) != null)
+            throw new BadRequestException("User with this email already exist");
+        Customer customer = customerService.createCustomer(createUserDTO);
+        emailService.sendRegistrationAsync(customer);
     }
 
-    private User saveUser(CreateUserDTO createUserDTO) {
-        User user = DTOMapper.getUser(createUserDTO);
-        user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
-        user.setBlocked(false);
-        user.setUserAuth(getUserAuth(user));
-        switch (createUserDTO.getUserRole()) {
-            case CUSTOMER -> customerService.createCustomer((Customer) user);
-            case ADMIN -> adminService.save(user);
-            case DRIVER -> driverService.save(user);
-        }
-        return user;
-    }
+//    private User saveUser(CreateUserDTO createUserDTO) {
+//        User user = DTOMapper.getUser(createUserDTO);
+//        user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
+//        user.setBlocked(false);
+//        user.setUserAuth(getUserAuth(user));
+//        switch (createUserDTO.getUserRole()) {
+//            case CUSTOMER -> customerService.createCustomer((Customer) user);
+//            case DRIVER -> driverService.save(user);
+//        }
+//        return user;
+//    }
 
-    private UserAuth getUserAuth(User user) {
-        UserAuth userAuth = new UserAuth();
-        String randomCode = RandomString.make(64);
-        userAuth.setVerificationCode(randomCode);
-        userAuth.setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
-        userAuth.setRoles(getRoles(user));
-        userAuth.setIsEnabled(setIsUserEnabledRegistration(user));
-        userAuthService.save(userAuth);
-        return userAuth;
-    }
+
 
     private boolean setIsUserEnabledRegistration(User user) {
         return user.getRole() != UserRole.CUSTOMER;
     }
 
-    private List<Role> getRoles(User user) {
-        List<Role> roles = new ArrayList<>();
-        UserRole userRole = user.getRole();
-        roles.add(userService.findRolesByUserType("ROLE_USER"));
-
-        if (userRole == UserRole.ADMIN) {
-            roles.add(userService.findRolesByUserType("ROLE_ADMIN"));
-        } else if (userRole == UserRole.DRIVER) {
-            roles.add(userService.findRolesByUserType("ROLE_DRIVER"));
-        } else {
-            roles.add(userService.findRolesByUserType("ROLE_CUSTOMER"));
-        }
-        return roles;
-    }
+//    private List<Role> getRoles(User user) {
+//        List<Role> roles = new ArrayList<>();
+//        UserRole userRole = user.getRole();
+//        roles.add(userService.findRolesByUserType("ROLE_USER"));
+//
+//        if (userRole == UserRole.ADMIN) {
+//            roles.add(userService.findRolesByUserType("ROLE_ADMIN"));
+//        } else if (userRole == UserRole.DRIVER) {
+//            roles.add(userService.findRolesByUserType("ROLE_DRIVER"));
+//        } else {
+//            roles.add(userService.findRolesByUserType("ROLE_CUSTOMER"));
+//        }
+//        return roles;
+//    }
 
     public LoginResponseDTO login(JwtAuthenticationRequest authenticationRequest) {
         Authentication authentication;
@@ -162,11 +147,7 @@ public class AuthentificationService {
 
     public User verify(String verificationCode) {
         User user = userService.findByVerificationCode(verificationCode);
-
-        if (user == null || user.isEnabled()) {
-            return null;
-        }
-
+        if (user == null) throw new BadRequestException("Wrong verification code!");
         user.getUserAuth().setVerificationCode(null);
         user.getUserAuth().setIsEnabled(true);
         userAuthService.save(user.getUserAuth());
@@ -188,7 +169,8 @@ public class AuthentificationService {
         return true;
     }
 
-    public void logoutUser(String email) {
+    public void logoutUser(String token) {
+        String email = tokenUtils.getUsernameFromToken(token);
         User user = userService.findByEmail(email);
         if (user == null) throw new BadRequestException("User with this email does not exist");
         if (user.getRole().equals(UserRole.DRIVER)) {

@@ -244,13 +244,13 @@ export class MapComponent implements AfterViewInit, OnInit {
       if (userIsDriver(this.loggedUser)) {
         this.carService.getActiveCar(this.loggedUser.email).subscribe((car: ActiveCarResponse) => {
           if (car !== null) {
-            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
             this.pins.push(marker)
           }
         })
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
-          const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map);
+          const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
           this.pins.push(marker);
         })
       }

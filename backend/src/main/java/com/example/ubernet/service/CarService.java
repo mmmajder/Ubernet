@@ -82,7 +82,6 @@ public class CarService {
         ActiveCarResponse activeAvailableCarResponse = new ActiveCarResponse();
         activeAvailableCarResponse.setCarId(car.getId());
         activeAvailableCarResponse.setDriverEmail(car.getDriver().getEmail());
-//        activeAvailableCarResponse.setCurrentRide(car.getCurrentRide());
         activeAvailableCarResponse.setCurrentPosition(car.getPosition());
         return activeAvailableCarResponse;
     }
@@ -306,8 +305,7 @@ public class CarService {
         Car closestCar = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Car car : cars) {
-            if (carDoesNotSatisfyOrder(car, hasPet, hasChild, carType)) continue;
-            if (driverService.driverIsLoggedForMoreThan8HoursInLast24Hours(car.getDriver())) continue;
+            if (checkIfCarIsNotAppropriate(hasPet, hasChild, carType, car)) continue;
             double distance = MapUtils.calculateDistance(car.getPosition().getX(), car.getPosition().getY(), latLngDTO.getLng(), latLngDTO.getLat()); // switch
             if (distance < minDistance) {
                 closestCar = car;
@@ -332,8 +330,7 @@ public class CarService {
         Car closestCar = null;
         double minDistance = Double.POSITIVE_INFINITY;
         for (Car car : cars) {
-            if (carDoesNotSatisfyOrder(car, hasPet, hasChild, carType)) continue;
-            if (driverService.driverIsLoggedForMoreThan8HoursInLast24Hours(car.getDriver())) continue;
+            if (checkIfCarIsNotAppropriate(hasPet, hasChild, carType, car)) continue;
             int numberOfPositionsFirstRide = car.getNavigation().getFirstRide().getPositions().size();
             double lastPositionFirstRideX = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide - 1).getPosition().getX();
             double lastPositionFirstRideY = car.getNavigation().getFirstRide().getPositions().get(numberOfPositionsFirstRide - 1).getPosition().getY();
@@ -344,6 +341,12 @@ public class CarService {
             }
         }
         return closestCar;
+    }
+
+    private boolean checkIfCarIsNotAppropriate(boolean hasPet, boolean hasChild, CarType carType, Car car) {
+        if (carDoesNotSatisfyOrder(car, hasPet, hasChild, carType)) return true;
+        if (driverService.driverIsLoggedForMoreThan8HoursInLast24Hours(car.getDriver())) return true;
+        return car.getDriver().getBlocked();
     }
 
 

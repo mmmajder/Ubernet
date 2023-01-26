@@ -27,21 +27,12 @@ export class AuthService {
     return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, AuthService.getHttpOptions());
   }
 
-  public register(user: RegisterCredentials): Observable<string> {
-    const body = {
-      "email": user.email,
-      "password": user.password,
-      "name": user.name,
-      "surname": user.lastName,
-      "phoneNumber": user.phoneNumber,
-      "city": user.city,
-      "userRole": user.userRole
-    }
-    return this.http.post<string>(this.authUrl + '/register', body, AuthService.getHttpOptions());
+  public register(customer: RegisterCredentials): Observable<string> {
+    return this.http.post<string>(this.authUrl + '/register', customer, AuthService.getHttpOptions());
   }
 
-  public verify(credentials: VerifyCredentials): Observable<string> {
-    return this.http.get<string>(this.authUrl + `/verify/${credentials.verificationCode}`, AuthService.getHttpOptions());
+  public verify(credentials: string): Observable<string> {
+    return this.http.get<string>(this.authUrl + `/verify/` + credentials, AuthService.getHttpOptions());
   }
 
   public loginSocial(user: LoginSocialCredentials): Observable<LoginResponseDto> {
@@ -59,8 +50,8 @@ export class AuthService {
     return this.http.post<LoginResponseDto>(this.authUrl + '/login-social', body, AuthService.getHttpOptions());
   }
 
-  public logout(token: UserTokenState | ""): Observable<Object> {
-    return this.http.post(this.authUrl + '/logout', AuthService.getHttpOptions());
+  public logout(token: UserTokenState): Observable<Object> {
+    return this.http.post(this.authUrl + '/logout/' + token.accessToken, AuthService.getHttpOptions());
   }
 
   public getCurrentlyLoggedUser(): Observable<User> {

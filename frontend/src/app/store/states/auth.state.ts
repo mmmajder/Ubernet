@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {Action, Selector, State, StateContext} from "@ngxs/store";
-import {Login, LoginSocial, Logout, Register, Verify} from "../actions/authentication.actions";
+import {Login, LoginSocial, Logout} from "../actions/authentication.actions";
 import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../../model/LoginResponseDto";
@@ -39,22 +39,6 @@ export class AuthState {
           token: result.token,
           userRole: result.userRole
         });
-      })
-    );
-  }
-
-  @Action(Register)
-  register(ctx: StateContext<string>, action: Register) {
-    return this.authService.register(action.payload).pipe(
-      tap(() => {
-      })
-    );
-  }
-
-  @Action(Verify)
-  verify(ctx: StateContext<string>, action: Verify) {
-    return this.authService.verify(action.payload).pipe(
-      tap(() => {
       })
     );
   }

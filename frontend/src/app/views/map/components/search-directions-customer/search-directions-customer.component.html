@@ -43,8 +43,12 @@
           </p>
         </div>
         <div>
-          <button mat-raised-button color="primary" style="width: 100%" *ngIf="optimize=='price'" (click)="selectOptimizedValue()">Select optimized by price</button>
-          <button mat-raised-button color="primary" style="width: 100%" *ngIf="optimize=='time'" (click)="selectOptimizedValue()">Select optimized by time</button>
+          <button mat-raised-button color="primary" style="width: 100%" *ngIf="optimize=='price'"
+                  (click)="selectOptimizedValue()">Select optimized by price
+          </button>
+          <button mat-raised-button color="primary" style="width: 100%" *ngIf="optimize=='time'"
+                  (click)="selectOptimizedValue()">Select optimized by time
+          </button>
         </div>
         <div>
           <button mat-button matStepperNext
@@ -94,8 +98,9 @@
               <input matInput type="email" formControlName="newFriend">
             </mat-form-field>
           <button mat-stroked-button
-                  style="flex: 1; margin-left: 10px; height: 50px; align-self: center; margin-top: -20px">
-          <mat-icon (click)="addFriend()">person_add_alt_1</mat-icon>
+                  style="flex: 1; margin-left: 10px; height: 50px; align-self: center; margin-top: -20px"
+                  (click)="addFriend()">
+          <mat-icon>person_add_alt_1</mat-icon>
         </button>
       </span>
       <div
@@ -104,7 +109,7 @@
           <mat-form-field appearance="outline" style="width: 100%;">
             <mat-label>Friend email</mat-label>
             <input matInput [name]="'friend' + i" [ngModel]="friends[i].friendEmail">
-<!--                   (ngModelChange)="setDestination($event, i)">-->
+            <!--                   (ngModelChange)="setDestination($event, i)">-->
             <button mat-icon-button matSuffix (click)="removeFriend(i)">
               <mat-icon>
                 person_remove

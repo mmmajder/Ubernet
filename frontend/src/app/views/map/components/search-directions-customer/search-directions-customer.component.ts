@@ -279,6 +279,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   addFriend() {
+    console.log("AA")
+    console.log(this.newFriend)
     if (this.newFriend.invalid) {
       return
     }

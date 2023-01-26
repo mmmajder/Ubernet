@@ -1,8 +1,8 @@
 import {Component, EventEmitter, Output} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
-import {Register} from "../../../../store/actions/authentication.actions";
-import {Store} from "@ngxs/store";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AuthService} from "../../../../services/auth.service";
+import {RegisterCredentials} from "../../../../model/RegisterCredentials";
 import {UserRole} from "../../../../model/UserRole";
 
 @Component({
@@ -32,19 +32,19 @@ export class RegistrationComponent {
   passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
   password2FormControl = new FormControl('', [Validators.required]);
 
-  constructor(private _snackBar: MatSnackBar, private store: Store) {
+  constructor(private _snackBar: MatSnackBar, private authService: AuthService) {
   }
 
   registerNewUser() {
-    this.store.dispatch(new Register({
+    const requestBody: RegisterCredentials = {
       "email": this.email,
       "password": this.password,
       "name": this.name,
-      "lastName": this.lastName,
+      "surname": this.lastName,
       "phoneNumber": this.phoneNumber,
       "city": this.city,
-      "userRole": UserRole.CUSTOMER
-    })).subscribe({
+    }
+    this.authService.register(requestBody).subscribe({
       next: () => {
         this._snackBar.open("We sent you registration link", '', {
           duration: 3000,
@@ -52,10 +52,13 @@ export class RegistrationComponent {
         })
 
       },
-      error: () => this._snackBar.open("Wrong email or password.", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      })
+      error: (message) => {
+        console.log(message)
+        this._snackBar.open(message.error, '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        })
+      }
     });
   }
 

@@ -14,7 +14,6 @@ import lombok.EqualsAndHashCode;
 @AllArgsConstructor
 @NoArgsConstructor
 public class Customer extends User {
-    private String paymentCredentials; //- pogledati kako se pravilno radi
     private double numberOfTokens;
     private boolean isActive;
 }

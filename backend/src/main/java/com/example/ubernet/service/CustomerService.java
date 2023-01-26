@@ -1,5 +1,6 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.dto.CreateUserDTO;
 import com.example.ubernet.dto.LoginSocialDTO;
 import com.example.ubernet.dto.SimpleUser;
 import com.example.ubernet.exception.BadRequestException;
@@ -12,6 +13,8 @@ import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.CustomerRepository;
 import com.example.ubernet.utils.EntityMapper;
 import lombok.AllArgsConstructor;
+import net.bytebuddy.utility.RandomString;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import org.springframework.transaction.annotation.Transactional;
@@ -28,6 +31,7 @@ public class CustomerService {
     private final CustomerRepository customerRepository;
     private final UserService userService;
     private final UserAuthService userAuthService;
+    private final PasswordEncoder passwordEncoder;
 
     public Customer save(User user) {
         return customerRepository.save(EntityMapper.mapToCustomer(user));
@@ -74,9 +78,38 @@ public class CustomerService {
         return simpleUsers;
     }
 
-    public void createCustomer(Customer user) {
-        user.setNumberOfTokens(0);
-        save(user);
+    public Customer createCustomer(CreateUserDTO createUserDTO) {
+        Customer customer = new Customer();
+        customer.setEmail(createUserDTO.getEmail());
+        customer.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
+        customer.setName(createUserDTO.getName());
+        customer.setSurname(createUserDTO.getSurname());
+        customer.setCity(createUserDTO.getCity());
+        customer.setPhoneNumber(createUserDTO.getPhoneNumber());
+        customer.setDeleted(false);
+        customer.setUserAuth(createCustomerAuth());
+        customer.setRole(UserRole.CUSTOMER);
+        customer.setBlocked(false);
+        customer.setNumberOfTokens(0);
+        customer.setActive(false);
+        customer.setRole(UserRole.CUSTOMER);
+        customer.setNumberOfTokens(0);
+        return save(customer);
+    }
+
+    private UserAuth createCustomerAuth() {
+        UserAuth userAuth = new UserAuth();
+        String randomCode = RandomString.make(64);
+        userAuth.setVerificationCode(randomCode);
+        userAuth.setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
+        userAuth.setRoles(getCustomerRoles());
+        userAuth.setIsEnabled(false);
+        userAuthService.save(userAuth);
+        return userAuth;
+    }
+
+    private List<Role> getCustomerRoles() {
+        return List.of(userService.findRolesByUserType("ROLE_USER"), userService.findRolesByUserType("ROLE_CUSTOMER"));
     }
 
     public ArrayList<String> getCustomersEmails() {

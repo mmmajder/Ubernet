@@ -4,7 +4,6 @@ import com.example.ubernet.dto.*;
 import com.example.ubernet.model.StringResponse;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.AuthentificationService;
-import com.example.ubernet.service.EmailService;
 import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.DTOMapper;
 import lombok.AllArgsConstructor;
@@ -46,27 +45,20 @@ public class AuthController {
         return ResponseEntity.ok(loginResponseDTO);
     }
 
-    @PostMapping("/logout/{email}")
-    public void logout(@PathVariable String email) {
-        authentificationService.logoutUser(email);
+    @PostMapping("/logout/{token}")
+    public void logout(@PathVariable String token) {
+        authentificationService.logoutUser(token);
     }
 
 
     @PostMapping("/register")
-    public ResponseEntity<String> addUser(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
-        User user = authentificationService.addUser(userDTO);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.CONFLICT);
-        }
-        return new ResponseEntity<>("Sent verification email", HttpStatus.CREATED);
+    public void addCustomer(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
+        authentificationService.addCustomer(userDTO);
     }
 
     @GetMapping("/verify/{code}")
     public ResponseEntity<UserResponse> verifyUser(@PathVariable String code) {
         User user = authentificationService.verify(code);
-        if (user == null) {
-            return new ResponseEntity<>(HttpStatus.EXPECTATION_FAILED);
-        }
         UserResponse dto = DTOMapper.getUserResponse(user);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
@@ -80,12 +72,11 @@ public class AuthController {
     }
 
     @PutMapping("/changePassword/{email}")
-    public ResponseEntity<String> changePassword(@PathVariable String email, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
+    public ResponseEntity<StringResponse> changePassword(@PathVariable String email, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
         if (authentificationService.changePassword(email, changePasswordDTO)) {
             StringResponse r = new StringResponse("Successfully changed password");
             return new ResponseEntity(r, HttpStatus.OK);
         }
-
         StringResponse r = new StringResponse("There was a problem in changing password");
         return new ResponseEntity(r, HttpStatus.CONFLICT);
     }
