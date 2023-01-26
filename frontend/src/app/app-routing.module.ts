@@ -4,9 +4,7 @@ import {HomepageContainerComponent} from "./views/homepage/container/homepage-co
 import {NotFoundPageComponent} from "./views/404/not-found-page/not-found-page.component";
 import {ChatContainerComponent} from "./views/admin/container/chat-container/chat-container.component";
 import {MapComponent} from "./views/map/container/map/map.component";
-import {DriversComponent} from "./views/admin/components/drivers/drivers.component";
 import {AuthGuard} from "./auth.guard";
-import {DashboardContainerComponent} from "./views/pages/dashboard-container/dashboard-container.component";
 import {ProfileContainerComponent} from "./views/pages/profile-container/profile-container.component";
 import {VerifyRegistrationComponent} from "./views/verify/verify-registration/verify-registration.component";
 import {RidesHistoryContainerComponent} from "./views/pages/rides-history-container/rides-history-container.component";
@@ -15,10 +13,13 @@ import {
 } from "./views/request-ride-accept/request-split-fare-mail-accept/request-split-fare-mail-accept.component";
 import {AnalyticsContainerComponent} from "./views/pages/analytics-container/analytics-container.component";
 import {UsersContainerComponent} from "./views/admin/container/users-container/users-container.component";
+import {
+  DashboardCustomerContainerComponent
+} from "./views/customer/container/dashboard-customer-container/dashboard-customer-container.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
-  {path: 'dashboard', component: DashboardContainerComponent},
+  {path: 'dashboard', component: DashboardCustomerContainerComponent},
   {path: 'map', component: MapComponent},
   {path: 'chat', component: ChatContainerComponent},
   {path: 'users', component: UsersContainerComponent},

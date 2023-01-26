@@ -159,13 +159,13 @@ values (1, 1),
 
 insert into ride (actual_end, actual_start, deleted, request_time, scheduled_start, driver_email, payment_id,
                   route_id, ride_state, is_reservation)
-values ('2023-01-11 12:00', '2023-01-11 11:00', false, '2023-01-11 10:00', '2023-01-11 11:00', 'driver@gmail.com', 1,
-        1, 4, false),
-       ('2023-01-11 12:00', '2023-01-11 11:00', false, '2023-01-11 10:00', '2023-01-11 11:00', 'driver@gmail.com', 1,
+values ('2023-01-26 12:00', '2023-01-26 11:00', false, '2023-01-26 10:00', '2023-01-26 11:00', 'driver@gmail.com', 1,
         1, 4, false),
        ('2023-01-12 12:00', '2023-01-12 11:00', false, '2023-01-12 10:00', '2023-01-12 11:00', 'driver@gmail.com', 1,
         1, 4, false),
        ('2023-01-13 12:00', '2023-01-13 11:00', false, '2023-01-13 10:00', '2023-01-13 11:00', 'driver@gmail.com', 1,
+        1, 4, false),
+       ('2023-01-25 12:00', '2023-01-25 11:00', false, '2023-01-25 10:00', '2023-01-25 11:00', 'driver@gmail.com', 1,
         1, 4, false);
 
 -- update payment

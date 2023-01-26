@@ -1,6 +1,6 @@
 export class RideToRate {
-  start = 'start';
-  destination = 'destination';
-  time = '';
-  timeToRate = '';
+  route: string;
+  rideId: number;
+  rideDate: number;
+  daysLeftToRate: number;
 }

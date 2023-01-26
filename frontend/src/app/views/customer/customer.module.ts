@@ -23,7 +23,6 @@ import {
   ProfileCustomerContainerComponent
 } from './container/profile-customer-container/profile-customer-container.component';
 import {MatTabsModule} from "@angular/material/tabs";
-import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
 import {
   CustomersUpcomingRidesComponent
 } from './components/customers-upcoming-rides/customers-upcoming-rides.component';
@@ -42,7 +41,6 @@ import {MatLineModule} from "@angular/material/core";
     DashboardCustomerContainerComponent,
     FavoritesComponent,
     ProfileCustomerContainerComponent,
-    CreditCardComponent,
     CustomersUpcomingRidesComponent,
     CustomerRatingsDashboardComponent,
     RateDialogComponent,

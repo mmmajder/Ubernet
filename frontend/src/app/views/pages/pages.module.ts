@@ -13,7 +13,6 @@ import {CommonModule} from "@angular/common";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
-import {DashboardContainerComponent} from "./dashboard-container/dashboard-container.component";
 import {AdminModule} from "../admin/admin.module";
 import {CustomerModule} from "../customer/customer.module";
 import {DriverModule} from "../driver/driver.module";
@@ -26,7 +25,6 @@ import {MatNativeDateModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
-    DashboardContainerComponent,
     ProfileContainerComponent,
     RidesHistoryContainerComponent,
     AnalyticsContainerComponent
@@ -54,9 +52,7 @@ import {MatNativeDateModule} from "@angular/material/core";
     MatDatepickerModule,
     MatNativeDateModule
   ],
-  exports: [
-    DashboardContainerComponent
-  ],
+  exports: [],
   bootstrap: []
 })
 export class PagesModule {

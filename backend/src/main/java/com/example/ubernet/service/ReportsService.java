@@ -9,17 +9,17 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.ubernet.utils.TimeUtils.getEndOfTheDay;
+import static com.example.ubernet.utils.TimeUtils.getStartOfTheDay;
 
 @Service
 @AllArgsConstructor
 public class ReportsService {
 
     private final RideRepository rideRepository;
-    private final DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     public ReportResponse getDriverReport(ReportRequest reportRequest) {
         LocalDateTime start = getStartOfTheDay(reportRequest.getStartDate());
@@ -40,14 +40,6 @@ public class ReportsService {
         LocalDateTime end = getEndOfTheDay(reportRequest.getEndDate());
         List<Ride> rides = rideRepository.findRideByDateRange(start, end);
         return buildReportResponse(rides, getDatesInRange(start, end));
-    }
-
-    private LocalDateTime getStartOfTheDay(String date) {
-        return LocalDate.parse(date, format).atStartOfDay();
-    }
-
-    private LocalDateTime getEndOfTheDay(String date) {
-        return LocalDate.parse(date, format).atTime(LocalTime.MAX);
     }
 
     private ReportResponse buildReportResponse(List<Ride> rides, List<LocalDate> dateRange) {

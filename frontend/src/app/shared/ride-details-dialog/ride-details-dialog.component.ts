@@ -111,31 +111,43 @@ export class RideDetailsDialogComponent implements OnInit {
 
   addToFavorites() {
     this.routeService.addToFavoriteRoutes(this.customerEmail, this.id).subscribe({
-      next: () => this._snackBar.open("Successfully added to favorite routes!", '', {
+      next: () => {
+        this._snackBar.open("Successfully added to favorite routes!", '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        });
+        this.isFavorite = true;
+      },
+      error: () => this._snackBar.open("Something went wrong!", '', {
         duration: 3000,
         panelClass: ['snack-bar']
-      }),
-      error: err => console.log(err)
+      })
     })
   }
 
   removeFromFavorites() {
     this.routeService.removeFromFavoriteRoutes(this.customerEmail, this.id).subscribe({
-      next: () => this._snackBar.open("Successfully removed from favorite routes!", '', {
+      next: () => {
+        this._snackBar.open("Successfully removed from favorite routes!", '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        });
+        this.isFavorite = false;
+      },
+      error: () => this._snackBar.open("Something went wrong!", '', {
         duration: 3000,
         panelClass: ['snack-bar']
-      }),
-      error: err => console.log(err)
+      })
     })
   }
 
   isRouteFavorite(customerEmail: string) {
-    console.log("IS ROUTE FAVORITE")
-    console.log(customerEmail)
-    console.log(this.id)
     this.routeService.isRouteFavorite(customerEmail, this.id).subscribe({
       next: (value: boolean) => this.isFavorite = value,
-      error: err => console.log(err)
+      error: () => this._snackBar.open("Something went wrong!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
     })
   }
 }

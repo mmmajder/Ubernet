@@ -2,9 +2,13 @@ package com.example.ubernet.utils;
 
 import com.example.ubernet.exception.BadRequestException;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 
 public class TimeUtils {
+    private static final DateTimeFormatter format = DateTimeFormatter.ofPattern("MM/dd/yyyy");
 
     public static LocalDateTime getDateTimeForReservationMaxFiveHoursMin15MinutesAdvance(String time) {
         LocalDateTime now = LocalDateTime.now();
@@ -34,5 +38,13 @@ public class TimeUtils {
             selectedTime = selectedTime.plusDays(1);
         }
         return selectedTime;
+    }
+
+    public static LocalDateTime getStartOfTheDay(String date) {
+        return LocalDate.parse(date, format).atStartOfDay();
+    }
+
+    public static LocalDateTime getEndOfTheDay(String date) {
+        return LocalDate.parse(date, format).atTime(LocalTime.MAX);
     }
 }
