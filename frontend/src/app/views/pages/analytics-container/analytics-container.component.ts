@@ -15,15 +15,15 @@ Chart.register(...registerables);
   templateUrl: './analytics-container.component.html',
   styleUrls: ['./analytics-container.component.css']
 })
-export class AnalyticsContainerComponent implements OnInit {
+export class AnalyticsContainerComponent {
   chart1: Chart;
   chart2: Chart;
   chart3: Chart;
   userRole: UserRole;
   userEmail: string;
 
-  averageSpent: number = 0;
-  totalSpent: number = 0;
+  averageSpent = 0;
+  totalSpent = 0;
 
   startDate: Date;
   endDate: Date;
@@ -43,12 +43,9 @@ export class AnalyticsContainerComponent implements OnInit {
     });
   }
 
-  ngOnInit(): void {
-  }
-
   getData() {
     if (this.startDate && this.endDate) {
-      let reportRequest: ReportRequest = {
+      const reportRequest: ReportRequest = {
         'email': this.userEmail,
         'startDate': this.formatDate(this.startDate),
         'endDate': this.formatDate(this.endDate)
@@ -131,14 +128,10 @@ export class AnalyticsContainerComponent implements OnInit {
   }
 
   getLabels(startDate: Date, endDate: Date): string[] {
-    let arr = [];
+    const arr = [];
     for (let dt = new Date(startDate); dt <= new Date(endDate); dt.setDate(dt.getDate() + 1)) {
       arr.push(new Date(dt).toDateString());
     }
     return arr;
-  }
-
-  addEvent(type: string, event: MatDatepickerInputEvent<Date>) {
-    this.getData();
   }
 }

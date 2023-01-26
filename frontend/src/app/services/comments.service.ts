@@ -21,7 +21,7 @@ export class CommentsService {
   }
 
   public addComments(userEmail: string, adminEmail: string, content: string): Observable<Object> {
-    let body = {
+    const body = {
       'userEmail': userEmail,
       'adminEmail': adminEmail,
       'content': content

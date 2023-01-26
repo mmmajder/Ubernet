@@ -34,7 +34,7 @@ export class NotificationDriverComponent implements OnInit {
   }
 
   initializeWebSocketConnection() {
-    let ws = new SockJS('http://localhost:8000/socket');
+    const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
     this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
@@ -44,11 +44,11 @@ export class NotificationDriverComponent implements OnInit {
 
   openDriverNotificationSocket() {
     this.stompClient.subscribe("/notify-driver/new-ride-" + this.loggedUser.email, (message: any) => {
-      let notification: DriverNotification = JSON.parse(message.body)
+      const notification: DriverNotification = JSON.parse(message.body)
       this.notifications.push(notification)
     })
     this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: any) => {
-      let notification: DriverNotification = JSON.parse(message.body)
+      const notification: DriverNotification = JSON.parse(message.body)
       this.notifications.push(notification)
     })
   }

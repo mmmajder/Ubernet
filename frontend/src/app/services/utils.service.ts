@@ -1,23 +1,20 @@
 export function secondsToDhms(seconds: number) {
   seconds = Number(seconds);
-  let d = Math.floor(seconds / (3600 * 24));
-  let h = Math.floor(seconds % (3600 * 24) / 3600);
-  let m = Math.floor(seconds % 3600 / 60);
-  let s = Math.floor(seconds % 60);
+  const d = Math.floor(seconds / (3600 * 24));
+  const h = Math.floor(seconds % (3600 * 24) / 3600);
+  const m = Math.floor(seconds % 3600 / 60);
+  const s = Math.floor(seconds % 60);
 
-  let dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
-  let hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-  let mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
-  let sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
+  const dDisplay = d > 0 ? d + (d == 1 ? " day, " : " days, ") : "";
+  const hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+  const mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+  const sDisplay = s > 0 ? s + (s == 1 ? " second" : " seconds") : "";
   return dDisplay + hDisplay + mDisplay + sDisplay;
 }
 
-export function dateTimeNowToString(): string {
-  function pad2(n: number) {
-    return n < 10 ? '0' + n : n
-  }
-
-  let date = new Date();
+export function dateTimeNowToString(): string{
+  function pad2(n:number) { return n < 10 ? '0' + n : n }
+  const date = new Date();
   return pad2(date.getDate()) + "." + pad2(date.getMonth() + 1) + "." + date.getFullYear().toString() + ". " + pad2(date.getHours()) + ":" + pad2(date.getMinutes());
 }
 

@@ -1,4 +1,3 @@
-import {PaymentDTO} from "./PaymentDTO";
 import {Customer, UserDTO} from "./User";
 import {RouteDTO} from "./RouteDTO";
 import {Payment} from "./Payment";
@@ -9,11 +8,5 @@ export class RideDTO {
   route!: RouteDTO;
   payment!: Payment;
   driver!: UserDTO;
-  // scheduledStart: ;
-  // actualStart;
-  // actualEnd;
-  // reservationTime;
   customers!: Customer[];
-  // carReviews;
-  //  driverReviews;
 }

@@ -1,20 +1,16 @@
 import {Injectable} from '@angular/core';
 
-var SockJS = require('sockjs-client');
-var Stomp = require('stompjs');
+const SockJS = require('sockjs-client');
+const Stomp = require('stompjs');
 
 @Injectable({
   providedIn: 'root'
 })
 export class NotificationsService {
   stompClient: any;
-
   activityId: any;
   text: any;
-  messages: Array<String> = new Array<String>();
-
-  constructor() {
-  }
+  messages: Array<string> = new Array<string>();
 
   send() {
     this.stompClient.send('/app/hello/' + this.activityId, {}, JSON.stringify({'name': this.text}));

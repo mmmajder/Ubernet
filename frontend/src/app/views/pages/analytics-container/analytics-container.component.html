@@ -9,10 +9,10 @@
       <mat-date-range-input
         [formGroup]="campaignOne"
         [rangePicker]="campaignOnePicker">
-        <input (dateInput)="addEvent('input', $event)" (dateChange)="addEvent('change', $event)" matStartDate
+        <input (dateInput)="getData()" (dateChange)="getData()" matStartDate
                [(ngModel)]="startDate" placeholder="Start date"
                formControlName="start">
-        <input (dateInput)="addEvent('input', $event)" (dateChange)="addEvent('change', $event)" matEndDate
+        <input (dateInput)="getData()" (dateChange)="getData()" matEndDate
                [(ngModel)]="endDate" placeholder="End date" formControlName="end">
       </mat-date-range-input>
       <mat-hint>Date format: MM/DD/YYYY</mat-hint>

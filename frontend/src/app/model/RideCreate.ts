@@ -9,10 +9,10 @@ export class RideCreate {
   carType: string
   hasPet: boolean
   hasChild: boolean
-  passengers: String[]
-  totalDistance: number = 0
-  totalTime: number = 0
-  reservationTime: String;
+  passengers: string[]
+  totalDistance = 0
+  totalTime = 0
+  reservationTime: string;
   route: (Place | null)[];
   numberOfRoute: number[] = [];
   payment: PaymentDTO;

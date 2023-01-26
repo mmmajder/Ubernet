@@ -4,10 +4,8 @@ import {
   OnInit,
   Output,
   EventEmitter,
-  SimpleChanges,
   IterableDiffer, IterableDiffers
 } from '@angular/core';
-import {Message} from "../../../../model/Message";
 import {Chat} from "../../../../model/Chat";
 import {ImageService} from "../../../../services/image.service";
 
@@ -20,7 +18,7 @@ export class ListOfChatsComponent implements OnInit {
   @Input() chats: Chat[];
   @Output() onChatSelection = new EventEmitter<Chat>();
   iterableDiffer: IterableDiffer<Chat>;
-  profilePictures:  any; // {'email':'image_src'}
+  profilePictures: any; // {'email':'image_src'}
   hasRequestedProfilePictures: any; // {'email': true}
 
   constructor(private imageService: ImageService, private iterableDiffers: IterableDiffers) {
@@ -41,16 +39,16 @@ export class ListOfChatsComponent implements OnInit {
     this.getProfileImages(this.chats);
   }
 
-  public getProfileImages(chats:Chat[]): void{
-    for (let c of chats){
-      if (!this.hasRequestedProfilePictures.hasOwnProperty(c.clientEmail) && !this.profilePictures.hasOwnProperty(c.clientEmail)){
+  public getProfileImages(chats: Chat[]): void {
+    for (const c of chats) {
+      if (!this.hasRequestedProfilePictures.hasOwnProperty(c.clientEmail) && !this.profilePictures.hasOwnProperty(c.clientEmail)) {
         this.hasRequestedProfilePictures[c.clientEmail] = true;
         this.imageService.getProfileImage(c.clientEmail)
           .subscribe((encodedImage: any) => {
             if (encodedImage === null)
               this.profilePictures[c.clientEmail] = "assets/taxi.jpg";
             else
-              this.profilePictures[c.clientEmail] =  `data:image/jpeg;base64,${encodedImage.data}`;
+              this.profilePictures[c.clientEmail] = `data:image/jpeg;base64,${encodedImage.data}`;
           });
       }
     }
@@ -58,8 +56,8 @@ export class ListOfChatsComponent implements OnInit {
 
   selectChat(email: string) {
     // console.log("selectChat")
-    for (let c of this.chats){
-      if (c.clientEmail === email){
+    for (const c of this.chats) {
+      if (c.clientEmail === email) {
         this.onChatSelection.emit(c);
         console.log("emit(chat) for " + email)
       }

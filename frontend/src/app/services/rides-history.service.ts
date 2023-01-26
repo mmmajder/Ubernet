@@ -24,7 +24,7 @@ export class RidesHistoryService {
   }
 
   public getRides(driverEmail = '', customerEmail = '', sortKind = 'start', sortOrder = 'desc', pageNumber = 0, pageSize = 10): Observable<Page> {
-    let body = {
+    const body = {
       'sortKind': sortKind,
       'sortOrder': sortOrder,
       'driverEmail': driverEmail,

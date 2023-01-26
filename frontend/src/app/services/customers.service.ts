@@ -23,12 +23,12 @@ export class CustomersService {
     return this.http.get<number>(this.customerUrl + "/get-number-of-tokens/" + email, AuthService.getHttpOptions());
   }
 
-  public getById(email: String): Observable<Customer> {
+  public getById(email: string): Observable<Customer> {
     return this.http.get<Customer>(this.customerUrl + "/" + email, AuthService.getHttpOptions());
   }
 
   public addTokens(email: string, tokens: number): Observable<number> {
-    let amount = {
+    const amount = {
       "tokens": tokens
     }
     return this.http.put<number>(this.customerUrl + "/add-tokens/" + email, amount, AuthService.getHttpOptions());

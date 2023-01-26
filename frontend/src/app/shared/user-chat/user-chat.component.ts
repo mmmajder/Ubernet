@@ -1,10 +1,8 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {MessageService} from "../../services/message.service";
 import {WebsocketService} from "../../services/websocket.service";
 import {AuthService} from "../../services/auth.service";
 import {Message} from "../../model/Message";
-import {Observable} from "rxjs";
-import {Chat} from "../../model/Chat";
 
 @Component({
   selector: 'app-user-chat',
@@ -12,18 +10,19 @@ import {Chat} from "../../model/Chat";
   styleUrls: ['./user-chat.component.css']
 })
 export class UserChatComponent implements OnInit {
-  messagesWithAdmin:Message[] = [];
+  messagesWithAdmin: Message[] = [];
 
   loggedUser: any = null;
 
-  constructor(private messageService: MessageService, private webSocketService: WebsocketService, private authService:AuthService) { }
+  constructor(private messageService: MessageService, private webSocketService: WebsocketService, private authService: AuthService) {
+  }
 
   ngOnInit(): void {
     console.log("init user chat")
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
       this.loggedUser = data;
 
-      if (this.loggedUser.role !== "ADMIN"){
+      if (this.loggedUser.role !== "ADMIN") {
         this.webSocketService.openWebSocket(data.email, false, this.onNewMessageFromWebSocket.bind(this));
         this.loadMessages();
       }
@@ -40,7 +39,7 @@ export class UserChatComponent implements OnInit {
 
   private loadMessages(): void {
     this.messageService.getMessagesForClientEmail(this.loggedUser.email).subscribe(data => {
-      for (let m of data){
+      for (const m of data) {
         this.messagesWithAdmin.push(m);
       }
     });

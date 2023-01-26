@@ -1,4 +1,4 @@
-import {Component, Input, OnInit, ViewChild} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {NotificationDTO} from "../../model/NotificationDTO";
 import {NotificationService} from "../../services/notification.service";
 import {Store} from "@ngxs/store";
@@ -39,7 +39,7 @@ export class NotificationsComponent implements OnInit {
   }
 
   notificationClicked(event: any) {
-    let notificationId = event.target.attributes.id.value
+    const notificationId = event.target.attributes.id.value
     this.notificationService.getNotificationById(notificationId).subscribe((clickedNotification) => {
       console.log(clickedNotification)
       if (clickedNotification.type === "SPLIT_FARE") {

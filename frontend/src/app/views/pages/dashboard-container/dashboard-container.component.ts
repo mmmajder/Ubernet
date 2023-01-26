@@ -9,7 +9,7 @@ import {Router} from "@angular/router";
   styleUrls: ['./dashboard-container.component.css']
 })
 export class DashboardContainerComponent implements OnInit {
-  public userRole: string = "";
+  public userRole = "";
 
   constructor(private store: Store, private router: Router) {
   }

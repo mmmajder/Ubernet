@@ -26,6 +26,6 @@ export class DriversState {
       .pipe(tap((drivers: Driver[]) =>
         ctx.setState(drivers)
       ));
-  };
+  }
 
 }

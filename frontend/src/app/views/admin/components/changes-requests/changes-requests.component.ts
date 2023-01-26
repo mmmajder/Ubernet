@@ -1,6 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ImageService} from "../../../../services/image.service";
-import {SimpleUser} from "../../../../model/User";
 import {ChangesRequestDTO} from "../../../../model/ChangesRequest";
 
 @Component({
@@ -8,14 +7,11 @@ import {ChangesRequestDTO} from "../../../../model/ChangesRequest";
   templateUrl: './changes-requests.component.html',
   styleUrls: ['./changes-requests.component.css']
 })
-export class ChangesRequestsComponent implements OnInit {
+export class ChangesRequestsComponent {
   changesRequests: ChangesRequestDTO[];
   profilePictures: Map<string, string> = new Map<string, string>();
 
   constructor(private imageService: ImageService) {
-  }
-
-  ngOnInit(): void {
   }
 
   private loadProfileImages() {

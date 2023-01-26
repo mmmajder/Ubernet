@@ -10,19 +10,19 @@
       </div>
       <div mat-line> {{start}} - {{destination}} </div>
       <div mat-line *ngIf="friends!==undefined && friends.length>0">
-        <mat-chip-list style="display: inline-flex" aria-label="Friends" *ngFor="let friend of friends">
+        <mat-chip-listbox style="display: inline-flex" aria-label="Friends" *ngFor="let friend of friends">
           <mat-chip>
             <img matChipAvatar [src]="photo"
                  alt="avatar"/>
             {{friend}}
           </mat-chip>
-        </mat-chip-list>
+        </mat-chip-listbox>
       </div>
       <mat-divider></mat-divider>
     </mat-list-item>
     <!--    </mat-list>-->
   </mat-card-content>
-  <mat-card-content *ngIf="rides.length == 0" style="text-align: center;">
+  <mat-card-content *ngIf="rides.length === 0" style="text-align: center;">
     <img src="assets/no-reservations.png" style="height: 250px" alt="no-reservations">
   </mat-card-content>
 </mat-card>

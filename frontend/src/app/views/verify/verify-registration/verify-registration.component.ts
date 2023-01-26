@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ActivatedRoute} from '@angular/router';
-import {Login, Verify} from "../../../store/actions/authentication.actions";
+import {Verify} from "../../../store/actions/authentication.actions";
 import {Store} from "@ngxs/store";
 import {MatSnackBar} from "@angular/material/snack-bar";
 

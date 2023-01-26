@@ -10,21 +10,21 @@ import {PaymentService} from "../../../../../services/payment.service";
   styleUrls: ['./credit-card.component.css']
 })
 export class CreditCardComponent implements OnInit {
-  creditCardNumber: string = "";
-  expirationDate: string = "";
-  CVV: string = "";
+  creditCardNumber = "";
+  expirationDate = "";
+  CVV = "";
   creditCardNumberFormControl = new FormControl("", [Validators.minLength(16), Validators.maxLength(16)]);
 
-  onlyNumPattern: RegExp = /^[0-9]$/;
-  onlyNumPatternReplace: RegExp = /[^0-9]/g;
+  onlyNumPattern = /^[0-9]$/;
+  onlyNumPatternReplace = /[^0-9]/g;
 
-  mmYyPattern: RegExp = /^[0-9\/]$/;
-  mmYyPatternReplace: RegExp = /[^0-9\/]/g;
+  mmYyPattern = /^[0-9/]$/;
+  mmYyPatternReplace = /[^0-9/]/g;
 
   loggedUser: any = null;
   existingCreditCard: CreditCard | null = null;
 
-  isButtonDisabled: boolean = true;
+  isButtonDisabled = true;
 
   constructor(private paymentService: PaymentService, private authService: AuthService) {}
 
@@ -80,7 +80,7 @@ export class CreditCardComponent implements OnInit {
 
     if (/([0-9]){2}\/([0-9]){2}/.test(this.expirationDate)) // mm/yy 10/36
     {
-      let expDateParts = this.expirationDate.split('/');
+      const expDateParts = this.expirationDate.split('/');
       console.log(+expDateParts[0] > 0 && +expDateParts[0] <= 12); // mm/yy 10/36
       return +expDateParts[0] > 0 && +expDateParts[0] <= 12 // mm/yy, months can go from 01 to 12
     }
@@ -93,7 +93,7 @@ export class CreditCardComponent implements OnInit {
   }
 
   public sendCardDataToServer() {
-    let creditCard: CreditCard = new CreditCard(this.creditCardNumber, this.expirationDate, this.CVV);
+    const creditCard: CreditCard = new CreditCard(this.creditCardNumber, this.expirationDate, this.CVV);
     if (this.testCardData())
       console.log(creditCard);
       this.paymentService.putCreditCardData(this.loggedUser.email, creditCard)
@@ -110,7 +110,7 @@ export class CreditCardComponent implements OnInit {
   public disableButtonIfNoChangeIsMade(){
     let isCardDataSameAsExistingCard;
     this.isButtonDisabled = false;
-    let isCardDataFilledCorrectly = this.testCardData();
+    const isCardDataFilledCorrectly = this.testCardData();
 
     if (this.existingCreditCard === null)
       this.isButtonDisabled = !isCardDataFilledCorrectly;
@@ -118,9 +118,6 @@ export class CreditCardComponent implements OnInit {
       isCardDataSameAsExistingCard =  this.creditCardNumber === this.existingCreditCard.cardNumber &&
                                       this.expirationDate === this.existingCreditCard.expirationDate &&
                                       this.CVV === this.existingCreditCard.cvv;
-      if (isCardDataSameAsExistingCard || !isCardDataFilledCorrectly)
-        this.isButtonDisabled = true;
-      else
-        this.isButtonDisabled = false;
+      this.isButtonDisabled = isCardDataSameAsExistingCard || !isCardDataFilledCorrectly;
   }
 }

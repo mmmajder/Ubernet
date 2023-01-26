@@ -20,5 +20,4 @@ export class DriverContainerComponent implements OnInit {
       }
     })
   }
-
 }

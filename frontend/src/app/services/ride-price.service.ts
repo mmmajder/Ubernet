@@ -14,7 +14,7 @@ export class RidePayService {
   }
 
   public calculatePrice(estimatedLengthInKm: number, carType: string): Observable<number> {
-    let body = {
+    const body = {
       "estimatedLengthInKm": estimatedLengthInKm,
       "carType": carType
     }

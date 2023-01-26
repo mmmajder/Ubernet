@@ -10,9 +10,9 @@ import {PasswordChangeInfo} from "../../../model/PasswordChangeInfo";
   styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordComponent implements OnInit {
-  hideCurrentPassword: boolean = true;
-  hideNewPassword: boolean = true;
-  hideReEnteredNewPassword: boolean = true;
+  hideCurrentPassword = true;
+  hideNewPassword = true;
+  hideReEnteredNewPassword = true;
 
   currentPassword: any = "";
   newPassword: any = "";
@@ -41,7 +41,7 @@ export class ChangePasswordComponent implements OnInit {
       return
     }
 
-    let passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
+    const passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
     console.log(passwordChangeInfo);
     this.userService.changePassword(this.loggedUser.email, passwordChangeInfo)
       .subscribe((data) => {

@@ -1,2 +1,4 @@
 frontend\.angular
 backend\target
+frontend/node_modules
+frontend/.angular

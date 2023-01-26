@@ -46,7 +46,7 @@ export class AuthState {
   @Action(Register)
   register(ctx: StateContext<string>, action: Register) {
     return this.authService.register(action.payload).pipe(
-      tap((result: string) => {
+      tap(() => {
       })
     );
   }
@@ -54,7 +54,7 @@ export class AuthState {
   @Action(Verify)
   verify(ctx: StateContext<string>, action: Verify) {
     return this.authService.verify(action.payload).pipe(
-      tap((result: string) => {
+      tap(() => {
       })
     );
   }

@@ -82,10 +82,10 @@ export class CarSettingsComponent implements OnInit {
 
   findIndexOfCarType(): number{
     this.indexOfCarType = 0;
-    let index: number = 0;
+    let index = 0;
 
     if (this.car && this.carTypes){
-      for (let type of this.carTypes){
+      for (const type of this.carTypes){
         if (type.name === this.car.carType.name){
           this.indexOfCarType = index;
 

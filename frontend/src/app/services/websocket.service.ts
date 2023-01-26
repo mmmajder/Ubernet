@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {Message} from "../model/Message";
-import {from, Observable, of, tap} from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -8,10 +7,9 @@ import {from, Observable, of, tap} from "rxjs";
 export class WebsocketService {
 
   webSocket: WebSocket;
-  // message:Observable<Message>;
   email:string;
   isAdmin:boolean;
-  isWebSocketOpen:boolean = false;
+  isWebSocketOpen = false;
 
 
   private readonly chatWSUrl: string;
@@ -37,7 +35,7 @@ export class WebsocketService {
       }
 
       this.webSocket.onmessage = (event) => {
-        let message:Message = JSON.parse(event.data);
+        const message:Message = JSON.parse(event.data);
         console.log(message.content);
 
         onNewMessage(message);

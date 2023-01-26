@@ -46,7 +46,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   carTypeFormGroup: any;
   secondFormGroup: FormGroup;
   friendsFormGroup: FormGroup;
-  timeOfRide: String
+  timeOfRide: string
   typeOfRequest: string;
   isActive: boolean;
 
@@ -72,7 +72,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.customerService.getById(this.loggedUser.email).subscribe((customer:Customer) => {
+    this.customerService.getById(this.loggedUser.email).subscribe((customer: Customer) => {
       this.isActive = customer.isActive
     })
 
@@ -157,7 +157,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     }
 
     function castToPlace(positions: (Place | null)[]) {
-      let retPositions: Place[] = []
+      const retPositions: Place[] = []
       positions.forEach((position) => {
         if (position != null) {
           retPositions.push(position)
@@ -170,13 +170,13 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   calculatePositionsSearch() {
     return new Promise(resolve => {
       for (let i = 0; i < this.destinations.value.length; i++) {
-        let destination = this.destinations.value[i]
+        const destination = this.destinations.value[i]
         this.mapService.findAddress(destination).subscribe((response: Object) => {
-          let positions: PositionDTO[] = Object.values(response)
+          const positions: PositionDTO[] = Object.values(response)
           if (positions.length == 0) {
             this.positions[i] = null
           } else {
-            let position = new Position()
+            const position = new Position()
             position.x = Object.values(response)[0].lon
             position.y = Object.values(response)[0].lat
             this.positions[i] = {
@@ -208,7 +208,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   mergeRoutePaths() {
-    let mergedRoute = new RideCreate();
+    const mergedRoute = new RideCreate();
     this.selectedRoute.forEach((partOfRoute: LeafletRoute, index: number) => {
       if (index != 0) {
         partOfRoute.coordinates.shift()
@@ -223,7 +223,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   createRide(route: RideCreate, payment: PaymentDTO): RideCreate {
-    let ride = new RideCreate()
+    const ride = new RideCreate()
     ride.coordinates = route.coordinates
     ride.instructions = route.instructions
     ride.carType = this.carType.value

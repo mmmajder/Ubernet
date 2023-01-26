@@ -47,11 +47,11 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
 
   calculatePositionsSearch() {
     return new Promise(resolve => {
-      let destinations = [this.fromValue, this.toValue]
+      const destinations = [this.fromValue, this.toValue]
       for (let i = 0; i < destinations.length; i++) {
-        let destination = destinations[i]
+        const destination = destinations[i]
         this.mapService.findAddress(destination).subscribe((response) => {
-          let position = new Position()
+          const position = new Position()
           position.x = Object.values(response)[0].lon
           position.y = Object.values(response)[0].lat
           this.positions[i] = {

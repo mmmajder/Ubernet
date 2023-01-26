@@ -23,7 +23,6 @@ import {
   ProfileCustomerContainerComponent
 } from './container/profile-customer-container/profile-customer-container.component';
 import {MatTabsModule} from "@angular/material/tabs";
-import {UnauthenticatedModule} from "../unauthenticated/unauthenticated.module";
 import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
 import {
   CustomersUpcomingRidesComponent
@@ -70,15 +69,14 @@ import { ReportDriverDialogComponent } from './components/report-driver-dialog/r
     MatTabsModule,
     MatChipsModule,
     MatTooltipModule,
-    NgxPayPalModule
+    NgxPayPalModule,
   ],
-    exports: [
-        DashboardCustomerContainerComponent,
-        ProfileDataComponent,
-        UnauthenticatedModule,
-        ProfileCustomerContainerComponent,
-        PaymentComponent,
-    ],
+  exports: [
+    DashboardCustomerContainerComponent,
+    ProfileDataComponent,
+    ProfileCustomerContainerComponent,
+    PaymentComponent,
+  ],
 })
 export class CustomerModule {
 }

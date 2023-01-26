@@ -51,7 +51,7 @@ export class RideDetailsDialogComponent implements OnInit {
   }
 
   drawCheckpointsOnMap() {
-    let waypoints: L.LatLng[] = [];
+    const waypoints: L.LatLng[] = [];
     console.log(this.ride)
     this.ride.checkPoints.forEach((place: Place) => {
       waypoints.push(L.latLng(place.position.y, place.position.x));
@@ -66,14 +66,14 @@ export class RideDetailsDialogComponent implements OnInit {
   }
 
   loadReviews(ride: RideDetails) {
-    for (let review of ride.driverReviews) {
+    for (const review of ride.driverReviews) {
       console.log(review);
       this.driverReviews.set(review.customer.email, review);
     }
-    for (let review of ride.carReviews) {
+    for (const review of ride.carReviews) {
       this.carReviews.set(review.customer.email, review);
     }
-    for (let customer of ride.customers) {
+    for (const customer of ride.customers) {
       this.showReviews.set(customer.email, false);
     }
   }
@@ -88,7 +88,7 @@ export class RideDetailsDialogComponent implements OnInit {
 
   private initMap() {
     this.map = L.map('map').setView([45.267136, 19.833549], 11);
-    let mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
+    const mapLink = "<a href='http://openstreetmap.org'>OpenStreetMap</a>";
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {
       attribution: 'Leaflet &copy; ' + mapLink + ', contribution',
       maxZoom: 18

@@ -2,8 +2,7 @@ import {Component, Inject, OnInit} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {NotificationDTO} from "../../../model/NotificationDTO";
 import {RideService} from "../../../services/ride.service";
-import {Customer, User} from "../../../model/User";
-import {CustomersService} from "../../../services/customers.service";
+import {User} from "../../../model/User";
 import {Place} from "../../../model/Position";
 import {RideDTO} from "../../../model/RideDTO";
 import {Store} from "@ngxs/store";
@@ -25,7 +24,7 @@ export class RideSplitFareDialogComponent implements OnInit {
   ride: RideDTO;
   loggedUser: User;
 
-  constructor(private _snackBar: MatSnackBar, private store: Store, @Inject(MAT_DIALOG_DATA) public data: NotificationDTO, private rideService: RideService, private customerService: CustomersService) {
+  constructor(private _snackBar: MatSnackBar, private store: Store, @Inject(MAT_DIALOG_DATA) public data: NotificationDTO, private rideService: RideService) {
     this.notification = data;
   }
 
@@ -39,7 +38,7 @@ export class RideSplitFareDialogComponent implements OnInit {
     this.rideService.getById(this.notification.rideId).subscribe((ride) => {
       this.ride = ride;
       this.path = this.printCheckpoints(ride.route.checkPoints)
-      let sender = ride.customers[0]
+      const sender = ride.customers[0]
       this.price = ride.payment.totalPrice
       this.name = sender.name
       this.surname = sender.surname

@@ -10,11 +10,7 @@ export class MessageComponent implements OnInit {
   @Input() message: Message;
   @Input() isUserAdmin:boolean;
   isSentByTheUser:boolean; // depending upon if the message was sent or received the message will be rendered on right or left side of the chat
-  hideTime: boolean = true;
-
-  constructor() {
-
-  }
+  hideTime = true;
 
   ngOnInit(): void {
     // console.log("ispisuje se nova poruka")

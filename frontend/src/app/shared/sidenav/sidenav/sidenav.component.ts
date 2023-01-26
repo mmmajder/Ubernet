@@ -25,17 +25,17 @@ import {NotificationDTO} from "../../../model/NotificationDTO";
 export class SidenavComponent implements OnInit {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
   @ViewChild(MapComponent) mapComponent: MapComponent;
-  @Input() currentPage: string = 'dashboard';
+  @Input() currentPage = 'dashboard';
   @Select(TokensState.value) numberOfTokens$!: Observable<number>;
 
   notificationsCustomer: NotificationDTO[];
 
   user: User;
-  isActive: boolean = false;
+  isActive = false;
   numberOfTokens!: number;
   private valueSubscription: Subscription;
   public profilePictureSrc: string;
-  private hasRequestedProfilePicture: boolean = false;
+  private hasRequestedProfilePicture = false;
   public static _this: any;
   notificationBadgeHidden: boolean;
   private stompClient: any;
@@ -63,7 +63,7 @@ export class SidenavComponent implements OnInit {
   }
 
   initializeWebSocketConnection() {
-    let ws = new SockJS('http://localhost:8000/socket');
+    const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
     this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
@@ -76,7 +76,7 @@ export class SidenavComponent implements OnInit {
       this.updateNotificationBadge()
     })
     this.stompClient.subscribe("/customer/payback-" + this.user.email, (message: any) => {
-      let money: number = JSON.parse(message.body)
+      const money: number = JSON.parse(message.body)
       this.store.dispatch([new SetTokens(money)])
     })
     this.stompClient.subscribe("/customer/everyone-payed-" + this.user.email, () => {
@@ -161,7 +161,7 @@ export class SidenavComponent implements OnInit {
   }
 
   hideBadge() {
-    this.notificationService.openNotificationForCustomer(this.user.email).subscribe((res:NotificationDTO[]) => {
+    this.notificationService.openNotificationForCustomer(this.user.email).subscribe((res: NotificationDTO[]) => {
       this.notificationBadgeHidden = true
       this.notificationsCustomer = res.reverse();
     })

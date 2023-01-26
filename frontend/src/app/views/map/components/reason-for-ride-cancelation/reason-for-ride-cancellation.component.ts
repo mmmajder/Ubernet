@@ -1,4 +1,4 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {RideDetails} from "../../../../model/RideDetails";
 import {CancelRideRequest} from "../../../../model/CancelRideRequest";
@@ -10,7 +10,7 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   templateUrl: './reason-for-ride-cancellation.component.html',
   styleUrls: ['./reason-for-ride-cancellation.component.css']
 })
-export class ReasonForRideCancellationComponent implements OnInit {
+export class ReasonForRideCancellationComponent {
 
   ride: RideDetails;
   shouldSetDriverInactive: boolean;
@@ -21,11 +21,8 @@ export class ReasonForRideCancellationComponent implements OnInit {
     this.shouldSetDriverInactive = data.shouldSetDriverInactive;
   }
 
-  ngOnInit(): void {
-  }
-
   cancelRide() {
-    let cancelRideRequest = new CancelRideRequest();
+    const cancelRideRequest = new CancelRideRequest();
     cancelRideRequest.reason = this.reason;
     cancelRideRequest.shouldSetDriverInactive = this.shouldSetDriverInactive;
     this.rideDenialService.createRideDenial(cancelRideRequest, this.ride.id).subscribe({

@@ -13,19 +13,19 @@ import {SidenavComponent} from "../../sidenav/sidenav/sidenav.component";
   styleUrls: ['./profile-data.component.css']
 })
 export class ProfileDataComponent implements OnInit {
-  email: string = "";
-  phoneNumber: string = "";
-  name: string = "";
-  lastName: string = "";
-  city: string = "";
-  role: string = "CUSTOMER";
+  email = "";
+  phoneNumber = "";
+  name = "";
+  lastName = "";
+  city = "";
+  role = "CUSTOMER";
 
   phoneFormControl = new FormControl('', [Validators.required]);
   nameFormControl = new FormControl('', [Validators.required]);
   lastNameFormControl = new FormControl('', [Validators.required]);
   cityFormControl = new FormControl('', [Validators.required]);
 
-  hasSelectedFile: boolean = false;
+  hasSelectedFile = false;
   selectedImage: any = null;
   profileImageSrc: string;
   @ViewChild('fileUploader') fileUploader: ElementRef;
@@ -53,7 +53,7 @@ export class ProfileDataComponent implements OnInit {
   }
 
   updateCustomer() {
-    let user = new Customer(this.name, this.lastName, this.email, this.phoneNumber, this.city);
+    const user = new Customer(this.name, this.lastName, this.email, this.phoneNumber, this.city);
     this.store.dispatch(new UpdateCustomerData(user)).subscribe({
       next: () => this._snackBar.open("Data updated successfully.", '', {
         duration: 3000,
