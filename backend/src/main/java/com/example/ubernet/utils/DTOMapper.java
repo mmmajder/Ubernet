@@ -7,18 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DTOMapper {
-    public static User getUser(CreateUserDTO userDTO) {
-        User user = new User();
-        user.setName(userDTO.getName());
-        user.setCity(userDTO.getCity());
-        user.setEmail(userDTO.getEmail());
-        user.setSurname(userDTO.getSurname());
-        user.setPhoneNumber(userDTO.getPhoneNumber());
-        user.setPassword(userDTO.getPassword());
-        user.setRole(userDTO.getUserRole());
-        return user;
-    }
-
     public static UserVerificationResponseDTO getUserVerificationResponseDTO(User user) {
         UserVerificationResponseDTO userVerificationResponseDTO = new UserVerificationResponseDTO();
         userVerificationResponseDTO.setCity(user.getCity());
@@ -146,16 +134,6 @@ public class DTOMapper {
         latLngDTO.setLat(position.getX());
         latLngDTO.setLng(position.getY());
         return latLngDTO;
-    }
-
-    public static List<NumberOfRoute> getNumbersOfRoute(List<Integer> numbersOfRoute) {
-        List<NumberOfRoute> numberOfRouteList = new ArrayList<>();
-        for (int number: numbersOfRoute) {
-            NumberOfRoute numberOfRoute = new NumberOfRoute();
-            numberOfRoute.setNumber(number);
-            numberOfRouteList.add(numberOfRoute);
-        }
-        return numberOfRouteList;
     }
 
     public static DriverDto getDriverDTO(Driver driver) {

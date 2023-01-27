@@ -51,7 +51,6 @@ public class CarService {
         car.setIsAvailable(false);
         user.setCar(car);
         car.setDriver((Driver) userService.findByEmail(user.getEmail()));
-//        car.setPosition(null);
         save(car);
         userService.save(user);
         return car;
@@ -86,14 +85,9 @@ public class CarService {
         return activeAvailableCarResponse;
     }
 
-    @Transactional(readOnly = false)
+    @Transactional
     public List<Car> getActiveCars() {
         return carRepository.findActiveCars();
-    }
-
-    public ActiveCarResponse reachedDestination(Long carId) {
-        Car car = findById(carId);
-        return getActiveAvailableCar(car);
     }
 
     public ActiveCarResponse getPosition(Long carId) {
@@ -146,12 +140,6 @@ public class CarService {
         currentRide.setDeleted(false);
         currentRide.setPositions(createPositionsWithEmptyTime(positions));
         currentRide.setFreeRide(true);
-        ArrayList<NumberOfRoute> numberOfRoutes = new ArrayList<NumberOfRoute>() {
-            {
-                new NumberOfRoute(0);
-            }
-        };
-//        currentRide.setNumberOfRoute(numberOfRoutes);
         currentRide.setShouldGetRouteToClient(false);
         currentRide.setStartTime(LocalDateTime.now());
         currentRideService.save(currentRide);
@@ -169,25 +157,24 @@ public class CarService {
         return positionInTimeList;
     }
 
-    public Car setNewPositionAvailableCar(Long carId) {
+    public void setNewPositionAvailableCar(Long carId) {
         Car car = findById(carId);
         if (car == null) throw new NotFoundException("Car with this id does not exist");
         Navigation navigation = car.getNavigation();
-        if (navigation == null) return null;
+        if (navigation == null) return;
         if (navigation.getFirstRide() == null) {
             throw new NotFoundException("Current ride does not exist");
         }
         if (navigation.getFirstRide().getPositions().size() == 0) {
-            return null;
+            return;
         }
         navigation.getFirstRide().getPositions().remove(0);
         currentRideService.save(navigation.getFirstRide());
         if (car.getNavigation().getFirstRide().getPositions().size() == 0) {
-            return null;
+            return;
         }
         car.setPosition(car.getNavigation().getFirstRide().getPositions().get(0).getPosition());
         save(car);
-        return save(car);
     }
 
     public List<Car> setNewPositions() {
@@ -261,8 +248,6 @@ public class CarService {
                 }
             } else {
                 currentRideService.save(currentRide);
-//                car.setPosition(car.getCurrentRide().getPositions().get(0).getPosition());
-//                save(car);
                 return;
             }
         }
@@ -359,16 +344,12 @@ public class CarService {
             navigationDisplay.setFirstApproach(navigation.getApproachFirstRide());
         }
         if (navigation.getFirstRide() != null && !navigation.getFirstRide().isFreeRide()) {
-//            List<Ride> rides = rideRepository.findRideFromDriverEmail(driver.getEmail());
-//            Route route = rides.get(0).getRoute();
             navigationDisplay.setFirstRide(navigation.getFirstRide());
         }
         if (navigation.getApproachSecondRide() != null) {
             navigationDisplay.setSecondApproach(navigation.getApproachSecondRide());
         }
         if (navigation.getSecondRide() != null) {
-//            List<Ride> rides = rideRepository.findRideFromDriverEmail(driver.getEmail());
-//            Route route = rides.get(1).getRoute();
             navigationDisplay.setSecondRide(navigation.getSecondRide());
         }
         return navigationDisplay;

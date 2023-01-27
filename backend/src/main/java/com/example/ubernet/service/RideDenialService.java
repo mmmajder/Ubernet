@@ -43,8 +43,6 @@ public class RideDenialService {
             this.notificationService.createNotificationForCustomersDidNotAppear(ride);
         }
         removeDriverNotifications(ride);
-
-        //todo notify customers
         return createNewRideDenial(cancelRideRequest, ride);
     }
 
@@ -90,8 +88,6 @@ public class RideDenialService {
             navigationRepository.save(navigation);
             car.setIsAvailable(true);
             carRepository.save(car);
-        } else {
-            // todo set second ride
         }
     }
 

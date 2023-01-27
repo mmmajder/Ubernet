@@ -7,6 +7,7 @@ import {User} from "../model/User";
 import {LoginSocialCredentials} from "../model/LoginSocialCredentials";
 import {RegisterCredentials} from "../model/RegisterCredentials";
 import {VerifyCredentials} from "../model/VerifyCredentials";
+import {SetPasswordDTO} from "../model/SetPasswordDTO";
 
 @Injectable({
   providedIn: 'root'
@@ -31,8 +32,8 @@ export class AuthService {
     return this.http.post<string>(this.authUrl + '/register', customer, AuthService.getHttpOptions());
   }
 
-  public verify(credentials: string): Observable<string> {
-    return this.http.get<string>(this.authUrl + `/verify/` + credentials, AuthService.getHttpOptions());
+  public verify(credentials: string): Observable<void> {
+    return this.http.get<void>(this.authUrl + `/verify/` + credentials, AuthService.getHttpOptions());
   }
 
   public loginSocial(user: LoginSocialCredentials): Observable<LoginResponseDto> {
@@ -58,6 +59,14 @@ export class AuthService {
     return this.http.get<User>(this.authUrl + '/currently-logged-user', AuthService.getHttpOptions());
   }
 
+  public forgotPassword(email: string): Observable<void> {
+    return this.http.put<void>(this.authUrl + '/reset-password/' + email, AuthService.getHttpOptions());
+  }
+
+  public setPassword(resetPasswordCode: string, setPasswordDTO: SetPasswordDTO): Observable<void> {
+    return this.http.put<void>(this.authUrl + '/set-password/' + resetPasswordCode, setPasswordDTO, AuthService.getHttpOptions());
+  }
+
   public static getHttpOptions() {
     return {
       headers: new HttpHeaders({
@@ -67,4 +76,7 @@ export class AuthService {
       })
     };
   }
+
+
+
 }

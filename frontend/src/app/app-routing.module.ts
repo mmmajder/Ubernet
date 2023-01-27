@@ -5,7 +5,6 @@ import {NotFoundPageComponent} from "./views/404/not-found-page/not-found-page.c
 import {ChatContainerComponent} from "./views/admin/container/chat-container/chat-container.component";
 import {MapComponent} from "./views/map/container/map/map.component";
 import {DriversComponent} from "./views/admin/components/drivers/drivers.component";
-import {AuthGuard} from "./auth.guard";
 import {DashboardContainerComponent} from "./views/pages/dashboard-container/dashboard-container.component";
 import {ProfileContainerComponent} from "./views/pages/profile-container/profile-container.component";
 import {VerifyRegistrationComponent} from "./views/verify/verify-registration/verify-registration.component";
@@ -14,6 +13,7 @@ import {
   RequestSplitFareMailAcceptComponent
 } from "./views/request-ride-accept/request-split-fare-mail-accept/request-split-fare-mail-accept.component";
 import {AnalyticsContainerComponent} from "./views/pages/analytics-container/analytics-container.component";
+import {ResetPasswordComponent} from "./views/customer/components/reset-password/reset-password.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
@@ -25,6 +25,7 @@ const routes: Routes = [
   {path: 'rides', component: RidesHistoryContainerComponent},
   {path: 'analytics', component: AnalyticsContainerComponent},
   {path: 'verify/:verificationCode', component: VerifyRegistrationComponent},
+  {path: 'reset-password/:resetPasswordCode', component: ResetPasswordComponent},
   {path: 'request-ride/:acceptRideUrl', component: RequestSplitFareMailAcceptComponent},
   {path: '**', component: NotFoundPageComponent},
   // {canActivate: [AuthGuard]}

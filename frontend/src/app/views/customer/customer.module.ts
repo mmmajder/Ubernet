@@ -36,6 +36,7 @@ import {RateDialogComponent} from './components/rate-dialog/rate-dialog.componen
 import {NgxPayPalModule} from "ngx-paypal";
 import {PaymentComponent} from "./components/payment/payment.component";
 import { ReportDriverDialogComponent } from './components/report-driver-dialog/report-driver-dialog.component';
+import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
 
 @NgModule({
   declarations: [
@@ -48,6 +49,7 @@ import { ReportDriverDialogComponent } from './components/report-driver-dialog/r
     RateDialogComponent,
     PaymentComponent,
     ReportDriverDialogComponent,
+    ResetPasswordComponent
   ],
   imports: [
     MatToolbarModule,
@@ -76,6 +78,7 @@ import { ReportDriverDialogComponent } from './components/report-driver-dialog/r
     ProfileDataComponent,
     ProfileCustomerContainerComponent,
     PaymentComponent,
+    ResetPasswordComponent
   ],
 })
 export class CustomerModule {

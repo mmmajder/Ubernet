@@ -47,8 +47,8 @@ public class EmailService {
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         helper.setTo("ubernet-test@outlook.com");
         helper.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
-        String content = EmailContentUtils.getVerificationContent();
-        String verifyURL = "http://localhost:4200/verify/" + user.getUserAuth().getVerificationCode();
+        String content = EmailContentUtils.getResetPasswordContent();
+        String verifyURL = "http://localhost:4200/reset-password/" + user.getUserAuth().getResetPasswordCode();
         content = content.replace("[[URL]]", verifyURL);
         helper.setText(content, true);
         javaMailSender.send(message);

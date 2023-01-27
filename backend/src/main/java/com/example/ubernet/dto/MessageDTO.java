@@ -23,13 +23,11 @@ public class MessageDTO {
     @NotEmpty
     private String content;
     private String time;
-//    private LocalDateTime time;
 
     public MessageDTO(Message message){
         this.clientEmail = message.getClientEmail();
         this.adminEmail = message.getAdminEmail();
         this.isSentByAdmin = message.isSentByAdmin();
         this.content = message.getContent();
-//        this.time = message.getTime();
     }
 }

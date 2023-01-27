@@ -123,4 +123,8 @@ public class UserService implements UserDetailsService {
         userRepository.save(user);
         return block;
     }
+
+    public User findByResetPasswordCode(String token) {
+        return userRepository.findByResetPasswordCode(token);
+    }
 }

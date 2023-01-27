@@ -19,9 +19,7 @@ import javax.mail.MessagingException;
 import javax.transaction.Transactional;
 
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 import java.util.stream.Collectors;
@@ -47,7 +45,6 @@ public class RideService {
     private final NavigationRepository navigationRepository;
     private final DriverNotificationRepository driverNotificationRepository;
     private final RideRequestRepository rideRequestRepository;
-    private final NumberOfRouteRepository numberOfRouteRepository;
     private final CustomerRepository customersRepository;
     private final RideAlternativesRepository rideAlternativesRepository;
 
@@ -87,7 +84,6 @@ public class RideService {
 
     private RideRequest createRideRequest(CreateRideDTO createRideDTO) {
         RideRequest rideRequest = new RideRequest();
-//        rideRequest.setCurrentRide(createCurrentRide(createRideDTO));
         rideRequest.setCurrentRide(createCurrentRide(createRideDTO.getCoordinates(), createRideDTO.getInstructions()));
         rideRequest.setCarType(createRideDTO.getCarType());
         rideRequest.setHasChild(createRideDTO.isHasChild());
@@ -118,19 +114,11 @@ public class RideService {
         CurrentRide currentRide = new CurrentRide();
         currentRide.setPositions(createRidePositions(coordinates, instructions));
         currentRide.setShouldGetRouteToClient(true);
-//        currentRide.setNumberOfRoute(getNumbersOfRoute(createRideDTO.getNumberOfRoute()));
         currentRide.setFreeRide(false);
         return currentRideService.save(currentRide);
     }
 
-    private List<NumberOfRoute> getNumbersOfRoute(List<Integer> numbers) {
-        List<NumberOfRoute> list = DTOMapper.getNumbersOfRoute(numbers);
-        numberOfRouteRepository.saveAll(list);
-        return list;
-    }
-
     private void addNavigation(Car car, CurrentRide currentRide) {
-//        private void setCurrentOfFutureRide(CreateRideDTO createRideDTO, Car car) {
         Navigation navigation = car.getNavigation();
         if (navigation == null) {
             navigation = new Navigation();
@@ -212,7 +200,6 @@ public class RideService {
         route.setDeleted(false);
         route.setPrice(createRideDTO.getTotalDistance() / 1000 * 120 + carTypeService.findCarTypeByName(createRideDTO.getCarType()).getPriceForType());
         route.setTime(createRideDTO.getTotalTime());
-        route.setNumberOfRoute(getNumbersOfRoute(createRideDTO.getNumberOfRoute()));
         route.setKm(createRideDTO.getTotalDistance() / 1000);
         List<Place> places = new ArrayList<>();
         for (PlaceDTO placeDTO : createRideDTO.getRoute()) {
@@ -315,8 +302,6 @@ public class RideService {
         approach.setPositions(positionsInTime);
         approach.setShouldGetRouteToClient(false);
         approach.setFreeRide(false);
-        List<NumberOfRoute> numbersOfRoute = new ArrayList<>();
-        numbersOfRoute.add(numberOfRouteRepository.save(new NumberOfRoute(0)));
         if (car.getNavigation().getSecondRide() == null) {
             approach.setStartTime(LocalDateTime.now());
             car.getNavigation().setApproachFirstRide(approach);

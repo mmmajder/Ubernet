@@ -50,7 +50,6 @@ export class RegistrationComponent {
           duration: 3000,
           panelClass: ['snack-bar']
         })
-
       },
       error: (message) => {
         console.log(message)

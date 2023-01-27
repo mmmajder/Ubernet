@@ -1,14 +1,11 @@
 package com.example.ubernet.service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.List;
 
 import com.example.ubernet.dto.*;
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
-import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.TokenUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -125,14 +122,28 @@ public class AuthentificationService {
         if (!validatePasswordChange(user, changePasswordDTO))
             return false;
 
-        user.setPassword(passwordEncoder.encode(changePasswordDTO.getNewPassword()));
+        saveNewPassword(user, changePasswordDTO.getNewPassword());
+
+        return true;
+    }
+
+    public boolean setPassword(String token, SetPasswordDTO setPasswordDTO) {
+        User user = userService.findByResetPasswordCode(token);
+        if (user == null) return false;
+        if (!setPasswordDTO.getNewPassword().equals(setPasswordDTO.getReEnteredNewPassword())) return false;
+        saveNewPassword(user, setPasswordDTO.getNewPassword());
+        return true;
+    }
+
+    private void saveNewPassword(User user, String setPasswordDTO) {
+        user.setPassword(passwordEncoder.encode(setPasswordDTO));
         if (!user.isEnabled()) {
             user.getUserAuth().setIsEnabled(true);
+            user.getUserAuth().setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
+            user.getUserAuth().setResetPasswordCode(null);
             userAuthService.save(user.getUserAuth());
         }
         userService.save(user);
-
-        return true;
     }
 
     private boolean validatePasswordChange(User user, ChangePasswordDTO changePasswordDTO) {
@@ -163,6 +174,8 @@ public class AuthentificationService {
         user.setPassword("");
         user.getUserAuth().setIsEnabled(false);
         user.getUserAuth().setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
+        String randomCode = RandomString.make(64);
+        user.getUserAuth().setResetPasswordCode(randomCode);
         userAuthService.save(user.getUserAuth());
         userService.save(user);
         emailService.sendEmailResetAsync(user);
@@ -177,4 +190,6 @@ public class AuthentificationService {
             driverService.logoutDriver(user.getEmail());
         }
     }
+
+
 }

@@ -26,10 +26,6 @@ public class Car {
     @OneToOne
     private Navigation navigation;
 
-//    @OneToOne
-//    private CurrentRide currentRide;
-//    @OneToOne
-//    private CurrentRide futureRide;
     @OneToOne
     private CarType carType;
     private Boolean isAvailable;

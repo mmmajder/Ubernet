@@ -57,18 +57,26 @@ public class AuthController {
     }
 
     @GetMapping("/verify/{code}")
-    public ResponseEntity<UserResponse> verifyUser(@PathVariable String code) {
+    public ResponseEntity<UserVerificationResponseDTO> verifyUser(@PathVariable String code) {
         User user = authentificationService.verify(code);
-        UserResponse dto = DTOMapper.getUserResponse(user);
+        UserVerificationResponseDTO dto = DTOMapper.getUserVerificationResponseDTO(user);
         return new ResponseEntity<>(dto, HttpStatus.OK);
     }
 
     @PutMapping("/reset-password/{email}")
-    public ResponseEntity<String> resetPassword(@PathVariable String email) throws MessagingException {
+    public ResponseEntity<Boolean> resetPassword(@PathVariable String email) throws MessagingException {
         if (authentificationService.resetPassword(email)) {
-            return new ResponseEntity<>("Successfully reset password", HttpStatus.OK);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         }
-        return new ResponseEntity<>("There was a problem in resetting password", HttpStatus.CONFLICT);
+        return new ResponseEntity<>(false, HttpStatus.CONFLICT);
+    }
+
+    @PutMapping("/set-password/{token}")
+    public ResponseEntity<Boolean> setPassword(@PathVariable String token, @Valid @RequestBody  SetPasswordDTO setPasswordDTO) {
+        if (authentificationService.setPassword(token, setPasswordDTO)) {
+            return new ResponseEntity<>(true, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(false, HttpStatus.CONFLICT);
     }
 
     @PutMapping("/changePassword/{email}")

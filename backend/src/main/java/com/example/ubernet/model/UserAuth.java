@@ -19,6 +19,7 @@ public class UserAuth {
     private long id;
 
     private String verificationCode;
+    private String resetPasswordCode;
     private Boolean isEnabled;
     private Timestamp lastPasswordSet;
     private Boolean deleted = false;

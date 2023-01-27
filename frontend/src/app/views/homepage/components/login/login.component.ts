@@ -77,7 +77,7 @@ export class LoginComponent {
       next: (value) => {
         localStorage.setItem('token', "Bearer " + value.auth.token.accessToken);
         this.authService.getCurrentlyLoggedUser();
-        if (value.auth.userRole==="DRIVER"){
+        if (value.auth.userRole === "DRIVER") {
           this.router.navigate(["/map"])
         } else {
           this.router.navigate(['/dashboard']);
@@ -88,5 +88,29 @@ export class LoginComponent {
         panelClass: ['snack-bar']
       })
     });
+  }
+
+  forgotPassword() {
+    if (this.email != "" && !this.emailFormControl.invalid)
+      this.authService.forgotPassword(this.email).subscribe({
+        next: (resp) => {
+          this._snackBar.open("Successful reset password! Check you email to set new!", '', {
+            duration: 3000,
+            panelClass: ['snack-bar']
+          })
+        },
+        error: (resp) => {
+          this._snackBar.open("Please enter valid email!", '', {
+            duration: 3000,
+            panelClass: ['snack-bar']
+          })
+        }
+      })
+    else {
+      this._snackBar.open("Please enter valid email!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
+    }
   }
 }

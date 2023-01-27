@@ -23,7 +23,7 @@ public class CarController {
     private final CarService carService;
     private final SimpMessagingService simpMessagingService;
 
-    @PostMapping("/create-car")
+    @PostMapping("/create-car")     //check
     public ResponseEntity<CarResponse> createCar(@Valid @RequestBody CreateCarDTO createCarDTO) {
         Car car = carService.createCar(createCarDTO);
         if (car == null) {
@@ -50,14 +50,14 @@ public class CarController {
         return ResponseEntity.ok(DTOMapper.getListActiveCarResponse(cars));
     }
 
-    @PutMapping("/position")
-    public ResponseEntity<ActiveCarResponse> reachedDestination(@RequestBody Long carId) {
-        ActiveCarResponse car = carService.reachedDestination(carId);
-        if (car == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return ResponseEntity.ok(car);
-    }
+//    @PutMapping("/position")
+//    public ResponseEntity<ActiveCarResponse> reachedDestination(@RequestBody Long carId) {
+//        ActiveCarResponse car = carService.reachedDestination(carId);
+//        if (car == null) {
+//            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+//        }
+//        return ResponseEntity.ok(car);
+//    }
 
     @GetMapping("/{carId}")
     public ResponseEntity<ActiveCarResponse> getCarById(@PathVariable Long carId) {
