@@ -37,6 +37,7 @@ import {NgxPayPalModule} from "ngx-paypal";
 import {PaymentComponent} from "./components/payment/payment.component";
 import { ReportDriverDialogComponent } from './components/report-driver-dialog/report-driver-dialog.component';
 import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
+import {MatLineModule} from "@angular/material/core";
 
 @NgModule({
   declarations: [
@@ -51,28 +52,29 @@ import {ResetPasswordComponent} from "./components/reset-password/reset-password
     ReportDriverDialogComponent,
     ResetPasswordComponent
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-    MatListModule,
-    MatTabsModule,
-    MatChipsModule,
-    MatTooltipModule,
-    NgxPayPalModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatListModule,
+        MatTabsModule,
+        MatChipsModule,
+        MatTooltipModule,
+        NgxPayPalModule,
+        MatLineModule,
+    ],
   exports: [
     DashboardCustomerContainerComponent,
     ProfileDataComponent,

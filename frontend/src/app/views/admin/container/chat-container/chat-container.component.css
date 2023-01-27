@@ -1,0 +1,4 @@
+.chat-scrollable {
+  overflow-y: scroll;
+  min-height: 350px;
+}

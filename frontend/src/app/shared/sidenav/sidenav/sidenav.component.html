@@ -37,6 +37,13 @@
       </a>
       <span class="tooltip">Dashboard</span>
     </li>
+    <li *ngIf="user.role === 'ADMIN'">
+      <a (click)="navigate('/users')" [ngClass]="{ 'currentPage': currentPage === 'users' }">
+        <mat-icon>groups</mat-icon>
+        <span class="links_name">Users</span>
+      </a>
+      <span class="tooltip">Users</span>
+    </li>
     <li>
       <a (click)="navigate('/map')" [ngClass]="{ 'currentPage': currentPage === 'map' }">
         <mat-icon>location_pin</mat-icon>
@@ -87,7 +94,5 @@
 </mat-menu>
 <mat-menu #notificationMenu="matMenu">
   <app-notifications [notifications]="notificationsCustomer"></app-notifications>
-<!--  <button mat-menu-item>Item 1</button>-->
-<!--  <button mat-menu-item>Item 2</button>-->
 </mat-menu>
 

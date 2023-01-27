@@ -146,4 +146,11 @@ public class CustomerService {
         if (customer.getNumberOfTokens() < avgPrice)
             throw new BadRequestException("You do not have enough money to pay for ride");
     }
+
+    public void addToFavoriteRoutes(String rideId) {
+
+    }
+
+    public void removeFromFavoriteRoutes(String rideId) {
+    }
 }

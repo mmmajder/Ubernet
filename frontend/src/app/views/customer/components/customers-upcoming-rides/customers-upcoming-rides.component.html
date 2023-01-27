@@ -1,10 +1,9 @@
 <mat-card class="dashboard-card">
   <mat-card-header>Upcoming rides</mat-card-header>
   <mat-card-content class="scrollable" *ngIf="display">
-    <!--    <mat-list>-->
     <mat-list-item>
-      <mat-icon mat-list-icon>timer</mat-icon>
-      <div mat-line>
+      <mat-icon matListItemIcon>timer</mat-icon>
+      <div matListItemLine>
         <span class="route-name">{{arriveTime}}</span>
         <span class="time-left"> &nbsp;&nbsp; {{timeLeft}} minutes left</span>
       </div>
@@ -20,9 +19,8 @@
       </div>
       <mat-divider></mat-divider>
     </mat-list-item>
-    <!--    </mat-list>-->
   </mat-card-content>
-  <mat-card-content *ngIf="rides.length === 0" style="text-align: center;">
+  <mat-card-content *ngIf="!display" style="text-align: center">
     <img src="assets/no-reservations.png" style="height: 250px" alt="no-reservations">
   </mat-card-content>
 </mat-card>

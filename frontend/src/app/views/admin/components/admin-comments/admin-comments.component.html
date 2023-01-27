@@ -2,11 +2,11 @@
   <div *ngIf="comments.length > 0" class="scrollable" style="max-height: 300px; margin-top: -20px">
     <mat-list>
       <mat-list-item *ngFor="let comment of comments">
-        <div mat-line>
+        <div matListItemLine>
           <span style="font-size: 14px; font-weight: 500"> {{comment.adminEmail}} </span>&nbsp;&nbsp;&nbsp;
           <span style="font-size: 12px; color: var(--gray); font-weight: 400"> {{formatTime(comment.time)}} </span>
         </div>
-        <div mat-line> {{comment.content}} </div>
+        <div matListItemLine> {{comment.content}} </div>
         <mat-divider></mat-divider>
       </mat-list-item>
     </mat-list>

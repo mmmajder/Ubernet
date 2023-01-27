@@ -8,7 +8,7 @@ import {dateTimeNowToString} from "../../services/utils.service";
   templateUrl: './new-message.component.html',
   styleUrls: ['./new-message.component.css']
 })
-export class NewMessageComponent implements OnInit {
+export class NewMessageComponent {
 
   @Input() loggedUser: any;
   @Input() messages: Message[];
@@ -17,9 +17,6 @@ export class NewMessageComponent implements OnInit {
   messageText = "";
 
   constructor(private webSocketService: WebsocketService) {
-  }
-
-  ngOnInit(): void {
   }
 
   public sendMessage(): void {

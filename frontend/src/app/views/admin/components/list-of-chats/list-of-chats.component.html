@@ -3,8 +3,8 @@
     <mat-list-item *ngFor="let chat of chats" (click)="selectChat(chat.clientEmail)">
       <img class="avatar" style="margin-right: 10px" [src]="profilePictures[chat.clientEmail]" alt="avatar"/>
       <div>
-        <div mat-line> {{chat.clientFullname}} </div>
-        <div mat-line style="font-size: 13px"> {{chat.mostRecentMessage.content}} </div>
+        <div matListItemLine> {{chat.clientFullname}} </div>
+        <div matListItemLine style="font-size: 13px"> {{chat.mostRecentMessage.content}} </div>
       </div>
       <mat-divider></mat-divider>
     </mat-list-item>

@@ -114,3 +114,14 @@ button:focus,
 mat-form-field {
   outline: none;
 }
+
+/*.dashboard-card-header {*/
+/*  margin-top: 5px;*/
+/*  font-size: 15px;*/
+/*  font-weight: 500;*/
+/*  color: var(--dark-gray);*/
+/*}*/
+
+/*mat-card {*/
+/*  padding: 10px !important;*/
+/*}*/

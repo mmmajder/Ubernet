@@ -18,7 +18,7 @@ import {ImageService} from "../../../../services/image.service";
 })
 export class DriversComponent implements OnInit {
 
-  displayedColumns: string[] = ['activity', 'profilePicture', 'name', 'email'];
+  displayedColumns: string[] = ['profilePicture', 'name', 'email'];
   driversList: MatTableDataSource<DriverListItem> = new MatTableDataSource<DriverListItem>();
   drivers: Driver[];
   profilePictures: Map<string, string> = new Map<string, string>();
@@ -32,9 +32,6 @@ export class DriversComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.driversList = this.driverService.getDrivers().subscribe();
-    // this.drivers = this.store.selectSnapshot(DriversState.drivers);
-
     this.store.dispatch(new Drivers()).subscribe((resp) => {
       console.log(resp);
       this.drivers = resp.drivers;
@@ -58,7 +55,7 @@ export class DriversComponent implements OnInit {
   private usersToDriverListItems(users: Driver[]): DriverListItem[] {
     const driverList: DriverListItem[] = [];
     for (let i = 0; i < users.length; i++) {
-      driverList.push(new DriverListItem(users[i].email, users[i].name + ' ' + users[i].surname, users[i].isWorking));
+      driverList.push(new DriverListItem(users[i].email, users[i].name + ' ' + users[i].surname));
       this.imageService.getProfileImage(users[i].email)
         .subscribe((encodedImage: any) => {
           if (encodedImage === null)

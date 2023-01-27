@@ -55,18 +55,30 @@ export class LoginComponent {
         "photoUrl": value.photoUrl,
         "provider": value.provider,
       })).subscribe({
-        next: (newValue) => {
-          console.log("NEXT")
-          console.log(newValue.auth.token.accessToken)
-          localStorage.setItem('token', "Bearer " + newValue.auth.token.accessToken);
-          this.router.navigate(['/dashboard']);
-        },
+        next: (value) => this.postLogin(value.auth.token.accessToken),
         error: () => this._snackBar.open("Wrong email or password.", '', {
           duration: 3000,
           panelClass: ['snack-bar']
         })
       });
     })
+  }
+
+  postLogin(accessToken: string) {
+    localStorage.setItem('token', "Bearer " + accessToken);
+    this.authService.getCurrentlyLoggedUser().subscribe({
+      next: (user) => {
+        if (user.role === "CUSTOMER")
+          this.router.navigate(['/dashboard']).then(() => {
+          });
+        else if (user.role === "DRIVER")
+          this.router.navigate(['/map']).then(() => {
+          });
+        else if (user.role === "ADMIN")
+          this.router.navigate(['/analytics']).then(() => {
+          });
+      }
+    });
   }
 
   switchToRegisterForm() {
@@ -78,15 +90,7 @@ export class LoginComponent {
       "email": this.email,
       "password": this.password
     })).subscribe({
-      next: (value) => {
-        localStorage.setItem('token', "Bearer " + value.auth.token.accessToken);
-        this.authService.getCurrentlyLoggedUser();
-        if (value.auth.userRole === "DRIVER") {
-          this.router.navigate(["/map"])
-        } else {
-          this.router.navigate(['/dashboard']);
-        }
-      },
+      next: (value) => this.postLogin(value.auth.token.accessToken),
       error: () => this._snackBar.open("Wrong email or password.", '', {
         duration: 3000,
         panelClass: ['snack-bar']

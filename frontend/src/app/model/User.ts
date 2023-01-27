@@ -10,19 +10,19 @@ export class User {
   blocked!: boolean;
 }
 
-export function userIsDriver(user: User):user is Driver {
+export function userIsDriver(user: User): user is Driver {
   return user.role === "DRIVER"
 }
 
-export class Driver implements User{
+export class Driver implements User {
   blocked: boolean;
   city: string;
-  email: string;
+  email: string = "";
   name: string;
   phoneNumber: string;
   role: string;
   surname: string;
-  car: Car
+  car: Car;
 }
 
 export class Customer {

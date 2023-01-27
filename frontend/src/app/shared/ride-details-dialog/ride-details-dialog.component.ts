@@ -5,8 +5,11 @@ import {RidesHistoryService} from "../../services/rides-history.service";
 import {ImageService} from "../../services/image.service";
 import {SimpleUser} from "../../model/User";
 import {RideReview} from "../../model/Review";
-import {PositionInTime} from "../../model/PositionInTime";
 import {Place} from "../../model/Position";
+import {FavoriteRoutesService} from "../../services/favorite-routes.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {CurrentlyLogged} from "../../store/actions/loggedUser.actions";
+import {Store} from "@ngxs/store";
 
 @Component({
   selector: 'app-ride-details-dialog',
@@ -15,6 +18,8 @@ import {Place} from "../../model/Position";
 })
 export class RideDetailsDialogComponent implements OnInit {
   @Input() id: number;
+  public customerEmail: string = "";
+  public isFavorite: boolean = false;
 
   private map: L.Map;
   ride: RideDetails = new RideDetails();
@@ -23,7 +28,15 @@ export class RideDetailsDialogComponent implements OnInit {
   carReviews: Map<string, RideReview> = new Map<string, RideReview>();
   showReviews: Map<string, boolean> = new Map<string, boolean>();
 
-  constructor(private rideService: RidesHistoryService, private imageService: ImageService) {
+  constructor(private rideService: RidesHistoryService, private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService, private routeService: FavoriteRoutesService) {
+    this.store.dispatch(new CurrentlyLogged()).subscribe({
+      next: (resp) => {
+        if (resp.loggedUser.role == "CUSTOMER") {
+          this.customerEmail = resp.loggedUser.email;
+          this.isRouteFavorite(resp.loggedUser.email);
+        }
+      }
+    });
   }
 
   ngOnInit(): void {
@@ -33,7 +46,7 @@ export class RideDetailsDialogComponent implements OnInit {
       this.loadProfilePictures([this.ride.driver]);
       this.loadReviews(data);
       console.log("RIDE: ", this.ride);
-      this.initMap()
+      this.initMap();
     });
   }
 
@@ -94,6 +107,35 @@ export class RideDetailsDialogComponent implements OnInit {
       maxZoom: 18
     }).addTo(this.map);
     this.drawCheckpointsOnMap();
+  }
 
+  addToFavorites() {
+    this.routeService.addToFavoriteRoutes(this.customerEmail, this.id).subscribe({
+      next: () => this._snackBar.open("Successfully added to favorite routes!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      }),
+      error: err => console.log(err)
+    })
+  }
+
+  removeFromFavorites() {
+    this.routeService.removeFromFavoriteRoutes(this.customerEmail, this.id).subscribe({
+      next: () => this._snackBar.open("Successfully removed from favorite routes!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      }),
+      error: err => console.log(err)
+    })
+  }
+
+  isRouteFavorite(customerEmail: string) {
+    console.log("IS ROUTE FAVORITE")
+    console.log(customerEmail)
+    console.log(this.id)
+    this.routeService.isRouteFavorite(customerEmail, this.id).subscribe({
+      next: (value: boolean) => this.isFavorite = value,
+      error: err => console.log(err)
+    })
   }
 }

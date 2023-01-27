@@ -51,7 +51,7 @@ export class RidesHistoryComponent {
   detailsAboutRide(id: number) {
     const dialogRef = this.dialog.open(RideDetailsDialogComponent, {
       height: '600px',
-      width: '1000px',
+      width: '1000px'
     });
     dialogRef.componentInstance.id = id;
   }
