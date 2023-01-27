@@ -24,8 +24,7 @@ export class RideDetailsDialogComponent implements OnInit {
   private map: L.Map;
   ride: RideDetails = new RideDetails();
   profilePictures: Map<string, string> = new Map<string, string>();
-  driverReviews: Map<string, RideReview> = new Map<string, RideReview>();
-  carReviews: Map<string, RideReview> = new Map<string, RideReview>();
+  reviews: Map<string, RideReview> = new Map<string, RideReview>();
   showReviews: Map<string, boolean> = new Map<string, boolean>();
 
   constructor(private rideService: RidesHistoryService, private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService, private routeService: FavoriteRoutesService) {
@@ -79,12 +78,8 @@ export class RideDetailsDialogComponent implements OnInit {
   }
 
   loadReviews(ride: RideDetails) {
-    for (const review of ride.driverReviews) {
-      console.log(review);
-      this.driverReviews.set(review.customer.email, review);
-    }
-    for (const review of ride.carReviews) {
-      this.carReviews.set(review.customer.email, review);
+    for (const review of ride.reviews) {
+      this.reviews.set(review.customer.email, review);
     }
     for (const customer of ride.customers) {
       this.showReviews.set(customer.email, false);
@@ -92,7 +87,7 @@ export class RideDetailsDialogComponent implements OnInit {
   }
 
   hasReviews(email: string) {
-    return this.driverReviews.has(email) || this.carReviews.has(email);
+    return this.reviews.has(email);
   }
 
   toggleReviews(email: string) {

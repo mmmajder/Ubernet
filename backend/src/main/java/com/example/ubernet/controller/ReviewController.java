@@ -11,7 +11,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
-import java.util.Set;
 
 @AllArgsConstructor
 @RestController
@@ -19,40 +18,13 @@ import java.util.Set;
 public class ReviewController {
     private final ReviewService reviewService;
 
-    @PostMapping("/review-car")
-    public ResponseEntity<HttpStatus> reviewCar(@RequestBody CreateReviewDTO createReviewDTO) {
-        ReviewResponse reviewResponse = reviewService.createCarReview(createReviewDTO);
+    @PostMapping("")
+    public ResponseEntity<HttpStatus> review(@RequestBody CreateReviewDTO createReviewDTO) {
+        ReviewResponse reviewResponse = reviewService.createRideReview(createReviewDTO);
         if (reviewResponse == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @PostMapping("/review-driver")
-    public ResponseEntity<HttpStatus> reviewDriver(@RequestBody CreateReviewDTO createReviewDTO) {
-        ReviewResponse reviewResponse = reviewService.createDriverReview(createReviewDTO);
-        if (reviewResponse == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    @GetMapping("/carReviews/{rideId}")
-    public ResponseEntity<Set<ReviewResponse>> getCarReviews(@PathVariable Long rideId) {
-        Set<ReviewResponse> reviewResponse = reviewService.getCarReviews(rideId);
-        if (reviewResponse == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(reviewResponse, HttpStatus.OK);
-    }
-
-    @GetMapping("/driverReviews/{rideId}")
-    public ResponseEntity<Set<ReviewResponse>> getDriverReviews(@PathVariable Long rideId) {
-        Set<ReviewResponse> reviewResponse = reviewService.getDriverReviews(rideId);
-        if (reviewResponse == null) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
-        }
-        return new ResponseEntity<>(reviewResponse, HttpStatus.OK);
     }
 
     @GetMapping("/getRidesToRate/{customerEmail}")

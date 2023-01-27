@@ -43,11 +43,14 @@ import {
   RideSplitFareDialogComponent
 } from './views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component';
 import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig} from "@abacritt/angularx-social-login";
+import {NotAuthorizedPageComponent} from "./views/403/not-authorized-page/not-authorized-page.component";
+import {CanActivateAuthGuard} from "./services/CanActivateAuthGuard";
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundPageComponent,
+    NotAuthorizedPageComponent,
     VerifyRegistrationComponent,
     RequestSplitFareMailAcceptComponent,
     RideSplitFareDialogComponent,
@@ -114,7 +117,7 @@ import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig} fro
         }
       } as SocialAuthServiceConfig,
     },
-    AuthService, NotificationsService],
+    AuthService, NotificationsService, CanActivateAuthGuard],
   bootstrap: [AppComponent]
 })
 

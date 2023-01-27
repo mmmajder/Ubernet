@@ -87,8 +87,7 @@ public class RideHistoryService {
                 .reservationTime(timeToString(ride.getRequestTime()))
                 .checkPoints(ride.getRoute().getCheckPoints())
                 .totalPrice(ride.getPayment().getTotalPrice())
-                .carReviews(ride.getCarReviews())
-                .driverReviews(ride.getDriverReviews())
+                .reviews(ride.getReviews())
                 .build();
     }
 

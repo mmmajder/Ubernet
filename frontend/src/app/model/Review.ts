@@ -9,14 +9,16 @@ export class Review {
 
 export class CreateReview {
   comment: string;
-  rating: number;
+  carRating: number;
+  driverRating: number;
   rideId: number;
   clientEmail: string;
 
-  constructor(comment: string, clientEmail: string, rating: number, rideId: number) {
+  constructor(comment: string, clientEmail: string, carRating: number, driverRating: number, rideId: number) {
     this.comment = comment;
     this.clientEmail = clientEmail;
-    this.rating = rating;
+    this.carRating = carRating;
+    this.driverRating = driverRating;
     this.rideId = rideId;
   }
 }
@@ -24,7 +26,8 @@ export class CreateReview {
 export class RideReview {
   id: number;
   customer: SimpleUser;
-  rating: number;
+  carRating: number;
+  driverRating: number;
   comment: string;
 }
 

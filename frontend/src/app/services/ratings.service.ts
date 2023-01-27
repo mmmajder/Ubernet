@@ -21,11 +21,7 @@ export class RatingsService {
     return this.http.get<RideToRate[]>(this.ratingsUrl + "getRidesToRate/" + customerEmail, AuthService.getHttpOptions());
   }
 
-  public rateCar(createReview: CreateReview): Observable<boolean> {
-    return this.http.post<boolean>(this.ratingsUrl + "review-car", createReview, AuthService.getHttpOptions());
-  }
-
-  public rateDriver(createReview: CreateReview): Observable<void> {
-    return this.http.post<void>(this.ratingsUrl + "review-driver", createReview, AuthService.getHttpOptions());
+  public rateRide(createReview: CreateReview): Observable<boolean> {
+    return this.http.post<boolean>(this.ratingsUrl, createReview, AuthService.getHttpOptions());
   }
 }

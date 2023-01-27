@@ -37,9 +37,7 @@ public class Ride {
     @ManyToMany
     private List<Customer> customers;
     @OneToMany
-    private Set<Review> carReviews;
-    @OneToMany
-    private Set<Review> driverReviews;
+    private Set<Review> reviews;
     private boolean isReservation;
 
     private Boolean deleted = false;

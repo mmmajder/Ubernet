@@ -26,7 +26,12 @@ export class CustomerRatingsDashboardComponent {
   }
 
   openRatingsDialog(ride: RideToRate) {
-    const dialogRef = this.dialog.open(RateDialogComponent);
+    const dialogRef = this.dialog.open(RateDialogComponent, {
+      height: '350px',
+      width: '500px'
+    });
+    dialogRef.componentInstance.rideId = ride.rideId;
+    dialogRef.componentInstance.customerEmail = this.customerEmail;
   }
 
   private loadRidesToRate() {

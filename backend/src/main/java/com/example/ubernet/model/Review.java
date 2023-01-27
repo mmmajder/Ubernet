@@ -17,6 +17,7 @@ public class Review {
     private Long id;
     @ManyToOne
     private Customer customer;
-    private int rating;
+    private int carRating;
+    private int driverRating;
     private String comment;
 }

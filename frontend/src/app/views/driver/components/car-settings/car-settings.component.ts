@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {FormControl, Validators} from "@angular/forms";
 import {CarTypeGetResponse} from "../../../../model/CarTypeGetResponse";
 import {CarTypeService} from "../../../../services/car-type.service";
@@ -34,7 +34,8 @@ export class CarSettingsComponent implements OnInit {
 
   indexOfCarType: number;
 
-  constructor(private carTypeService: CarTypeService, private authService: AuthService, private carService: CarService) { }
+  constructor(private carTypeService: CarTypeService, private authService: AuthService, private carService: CarService) {
+  }
 
   ngOnInit(): void {
     this.isButtonDisabled = true;
@@ -56,16 +57,14 @@ export class CarSettingsComponent implements OnInit {
   }
 
   validateInputs(): boolean {
-    if (this.name == "" || this.plates == "" || this.selectedCarType == undefined)
-    {
+    if (this.name == "" || this.plates == "" || this.selectedCarType == undefined) {
       this.isButtonDisabled = true;
       return false;
     }
 
     if (this.car != undefined)
       if (this.name == this.car.name && this.plates == this.car.plates && this.selectedCarType == this.car.carType
-        && this.allowsBaby == this.car.allowsBaby && this.allowsPet == this.car.allowsPet)
-      {
+        && this.allowsBaby == this.car.allowsBaby && this.allowsPet == this.car.allowsPet) {
         this.isButtonDisabled = true;
         return false;
       }
@@ -75,18 +74,18 @@ export class CarSettingsComponent implements OnInit {
   }
 
   fillCarTypeInfo(): void {
-    if (this.carTypes){
+    if (this.carTypes) {
       this.selectedCarType = this.carTypes[this.indexOfCarType];
     }
   }
 
-  findIndexOfCarType(): number{
+  findIndexOfCarType(): number {
     this.indexOfCarType = 0;
     let index = 0;
 
-    if (this.car && this.carTypes){
-      for (const type of this.carTypes){
-        if (type.name === this.car.carType.name){
+    if (this.car && this.carTypes) {
+      for (const type of this.carTypes) {
+        if (type.name === this.car.carType.name) {
           this.indexOfCarType = index;
 
           return this.indexOfCarType;
@@ -98,11 +97,9 @@ export class CarSettingsComponent implements OnInit {
     return this.indexOfCarType;
   }
 
-  fillCarInfo(carData: Car): void{
-    // filss all info except car type
+  fillCarInfo(carData: Car): void {
     this.car = carData;
-
-    if (this.car != null){
+    if (this.car != null) {
       this.name = this.car.name;
       this.plates = this.car.plates;
       this.allowsBaby = this.car.allowsBaby;
@@ -111,7 +108,7 @@ export class CarSettingsComponent implements OnInit {
   }
 
   saveChanges() {
-    if (!this.validateInputs() || this.car == undefined || this.loggedUser == undefined){
+    if (!this.validateInputs() || this.car == undefined || this.loggedUser == undefined) {
       //TODO throw adequate error | driver has to have a car assigned already because admin creates it
       return;
     }
