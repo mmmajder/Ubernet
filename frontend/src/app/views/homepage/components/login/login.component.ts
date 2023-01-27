@@ -26,14 +26,17 @@ export class LoginComponent {
   constructor(private _snackBar: MatSnackBar, private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService) {
   }
 
-  facebookSignin() {
-    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then(() => {
+  facebookSignIn() {
+    this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then((res) => {
+      console.log(res)
+      localStorage.setItem('token', "Bearer " + res.authToken);
       this.loginSocial();
     })
   }
 
   loginWithGoogle(): void {
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(() => {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then((res) => {
+      console.log(res)
       this.loginSocial();
     })
   }
@@ -53,8 +56,9 @@ export class LoginComponent {
         "provider": value.provider,
       })).subscribe({
         next: (newValue) => {
+          console.log("NEXT")
+          console.log(newValue.auth.token.accessToken)
           localStorage.setItem('token', "Bearer " + newValue.auth.token.accessToken);
-          this.authService.getCurrentlyLoggedUser();
           this.router.navigate(['/dashboard']);
         },
         error: () => this._snackBar.open("Wrong email or password.", '', {

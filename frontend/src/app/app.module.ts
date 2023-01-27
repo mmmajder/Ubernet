@@ -80,8 +80,6 @@ import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig} fro
     MapModule,
     PagesModule,
     NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState, TokensState]),
-    // NgxsReduxDevtoolsPluginModule.forRoot(),
-    // NgxsLoggerPluginModule.forRoot(),
     MatProgressSpinnerModule,
     MatSelectModule,
   ],

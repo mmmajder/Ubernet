@@ -47,6 +47,8 @@ export class AuthState {
   loginSocial(ctx: StateContext<LoginResponseDto>, action: LoginSocial) {
     return this.authService.loginSocial(action.payload).pipe(
       tap((result: LoginResponseDto) => {
+        console.log("STATE")
+        console.log(result.token)
         ctx.patchState({
           token: result.token,
           userRole: result.userRole
