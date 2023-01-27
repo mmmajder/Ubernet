@@ -4,7 +4,6 @@ import {ActivatedRoute} from '@angular/router';
 import {Store} from "@ngxs/store";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {FormControl, Validators} from "@angular/forms";
-import {PasswordChangeInfo} from "../../../../model/PasswordChangeInfo";
 import {AuthService} from "../../../../services/auth.service";
 import {SetPasswordDTO} from "../../../../model/SetPasswordDTO";
 

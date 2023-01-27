@@ -39,39 +39,6 @@ public class AuthentificationService {
         emailService.sendRegistrationAsync(customer);
     }
 
-//    private User saveUser(CreateUserDTO createUserDTO) {
-//        User user = DTOMapper.getUser(createUserDTO);
-//        user.setPassword(passwordEncoder.encode(createUserDTO.getPassword()));
-//        user.setBlocked(false);
-//        user.setUserAuth(getUserAuth(user));
-//        switch (createUserDTO.getUserRole()) {
-//            case CUSTOMER -> customerService.createCustomer((Customer) user);
-//            case DRIVER -> driverService.save(user);
-//        }
-//        return user;
-//    }
-
-
-
-    private boolean setIsUserEnabledRegistration(User user) {
-        return user.getRole() != UserRole.CUSTOMER;
-    }
-
-//    private List<Role> getRoles(User user) {
-//        List<Role> roles = new ArrayList<>();
-//        UserRole userRole = user.getRole();
-//        roles.add(userService.findRolesByUserType("ROLE_USER"));
-//
-//        if (userRole == UserRole.ADMIN) {
-//            roles.add(userService.findRolesByUserType("ROLE_ADMIN"));
-//        } else if (userRole == UserRole.DRIVER) {
-//            roles.add(userService.findRolesByUserType("ROLE_DRIVER"));
-//        } else {
-//            roles.add(userService.findRolesByUserType("ROLE_CUSTOMER"));
-//        }
-//        return roles;
-//    }
-
     public LoginResponseDTO login(JwtAuthenticationRequest authenticationRequest) {
         Authentication authentication;
         try {
@@ -98,9 +65,10 @@ public class AuthentificationService {
     }
 
     private LoginResponseDTO saveAuthInContext(User user) {
-        var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+//        var authentication = new UsernamePasswordAuthenticationToken(user, null, user.getAuthorities());
+        var authentication = new UsernamePasswordAuthenticationToken(user.getEmail(), "");
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        String token = tokenUtils.generateToken((User) authentication.getPrincipal());
+        String token = tokenUtils.generateToken(userService.findByEmail((String) authentication.getPrincipal()));
         long expiresIn = tokenUtils.getExpiredIn();
         return new LoginResponseDTO(new UserTokenState(token, expiresIn), user.getRole());
     }

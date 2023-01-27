@@ -66,19 +66,22 @@ export class LoginComponent {
 
   postLogin(accessToken: string) {
     localStorage.setItem('token', "Bearer " + accessToken);
-    this.authService.getCurrentlyLoggedUser().subscribe({
-      next: (user) => {
-        if (user.role === "CUSTOMER")
-          this.router.navigate(['/dashboard']).then(() => {
-          });
-        else if (user.role === "DRIVER")
-          this.router.navigate(['/map']).then(() => {
-          });
-        else if (user.role === "ADMIN")
-          this.router.navigate(['/analytics']).then(() => {
-          });
-      }
-    });
+    setTimeout(() => {
+        this.authService.getCurrentlyLoggedUser().subscribe({
+          next: (user) => {
+            if (user.role === "CUSTOMER")
+              this.router.navigate(['/dashboard']).then(() => {
+              });
+            else if (user.role === "DRIVER")
+              this.router.navigate(['/map']).then(() => {
+              });
+            else if (user.role === "ADMIN")
+              this.router.navigate(['/analytics']).then(() => {
+              });
+          }
+        });
+      },
+      3000);
   }
 
   switchToRegisterForm() {

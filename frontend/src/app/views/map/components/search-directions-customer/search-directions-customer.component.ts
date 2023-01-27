@@ -18,6 +18,7 @@ import {Store} from "@ngxs/store";
 import {LeafletRoute} from "../../../../model/LeafletRoute";
 import {CustomersService} from "../../../../services/customers.service";
 import {RideAlternativeService} from "../../../../services/ride-alternative.service";
+import {RideDTO} from "../../../../model/RideDTO";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -30,6 +31,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   @Input() selectedRoute: LeafletRoute[]
   @Input() loggedUser: User
   @Input() allAlternatives: LeafletRoute[][];
+  @Input() favoriteRide: RideDTO;
   @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
@@ -50,7 +52,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   typeOfRequest: string;
   isActive: boolean;
 
-  constructor(private rideAlternativeService:RideAlternativeService, private customerService: CustomersService, private store: Store, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
+  constructor(private rideAlternativeService: RideAlternativeService, private customerService: CustomersService, private store: Store, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = []
     this.typeOfRequest = "now"
     this.hasChild = false;
@@ -75,7 +77,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.customerService.getById(this.loggedUser.email).subscribe((customer: Customer) => {
       this.isActive = customer.isActive
     })
-
     this.carTypeService.getCarTypes().subscribe({
       next: (carTypeGetResponse) => {
         this.carTypes = []
@@ -99,7 +100,22 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.friendsFormGroup = new FormGroup({
       newFriend: new FormControl("", [Validators.required, Validators.email])
     })
+    if (this.favoriteRide !== undefined) {
+      this.initFavRoute();
+    }
+  }
 
+  initFavRoute() {
+    this.positions = this.favoriteRide.route.checkPoints
+    for (let i = 0; i < this.favoriteRide.route.checkPoints.length; i++) {
+      let checkpoint = this.favoriteRide.route.checkPoints[i];
+      if (i < 2)
+        this.destinations.controls[i].setValue(checkpoint.name)
+      else {
+        this.destinations.push(new FormControl(checkpoint.name, Validators.required))
+      }
+    }
+    this.showEstimates().then(res => {})
   }
 
   addNewDestination() {
@@ -117,6 +133,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   async showEstimates() {
+    console.log(this.destinations.controls)
     if (!validInput(this.destinations.controls)) {
       this._snackBar.open("Please enter all existing locations!", '', {
         duration: 3000,
@@ -268,8 +285,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     })
   }
 
-  createRideAlternatives(rideId:number) {
-    this.rideAlternativeService.createRideAlternatives(rideId, this.allAlternatives).subscribe(()=>{})
+  createRideAlternatives(rideId: number) {
+    this.rideAlternativeService.createRideAlternatives(rideId, this.allAlternatives).subscribe(() => {
+    })
   }
 
   removeFriend(i: number) {

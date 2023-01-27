@@ -19,6 +19,7 @@ const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
   {path: 'dashboard', component: DashboardContainerComponent},
   {path: 'map', component: MapComponent},
+  {path: 'map/:rideId', component: MapComponent},
   {path: 'chat', component: ChatContainerComponent},
   {path: 'users', component: UsersContainerComponent},
   {path: 'profile', component: ProfileContainerComponent},

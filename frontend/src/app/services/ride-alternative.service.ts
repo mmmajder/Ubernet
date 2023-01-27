@@ -4,6 +4,7 @@ import {Observable} from "rxjs";
 import {CancelRideRequest} from "../model/CancelRideRequest";
 import {RideDenial} from "../model/RideDenial";
 import {LeafletRoute} from "../model/LeafletRoute";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -17,15 +18,6 @@ export class RideAlternativeService {
   }
 
   createRideAlternatives(rideId: number, allAlternatives: LeafletRoute[][]):Observable<void> {
-    return this.http.post<void>(this.rideAlternativeUrl + "/" + rideId, allAlternatives, RideAlternativeService.getHttpOptions());
-  }
-
-  public static getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': localStorage.getItem('token') || 'authkey',
-      })
-    };
+    return this.http.post<void>(this.rideAlternativeUrl + "/" + rideId, allAlternatives, AuthService.getHttpOptions());
   }
 }

@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {DriverInconsistency} from "../model/DriverInconsistency";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -14,17 +15,6 @@ export class DriverInconsistencyService {
   }
 
   public create(customerEmail: string, rideId: number): Observable<DriverInconsistency> {
-    return this.http.post<DriverInconsistency>(this.driverInconsistencyUrl + "/" + customerEmail, rideId, DriverInconsistencyService.getHttpOptions());
+    return this.http.post<DriverInconsistency>(this.driverInconsistencyUrl + "/" + customerEmail, rideId, AuthService.getHttpOptions());
   }
-
-  public static getHttpOptions() {
-    return {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': localStorage.getItem('token') || 'authkey',
-      })
-    };
-  }
-
-
 }

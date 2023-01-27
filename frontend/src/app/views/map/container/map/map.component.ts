@@ -14,6 +14,7 @@ import * as Stomp from 'stompjs';
 import {RideService} from "../../../../services/ride.service";
 import {User, userIsDriver} from "../../../../model/User";
 import {CurrentlyLogged} from "../../../../store/actions/loggedUser.actions";
+import {ActivatedRoute} from '@angular/router';
 import {Router} from "@angular/router";
 import {Store} from "@ngxs/store";
 import {CarService} from "../../../../services/car.service";
@@ -25,6 +26,7 @@ import {LeafletRoute} from "../../../../model/LeafletRoute";
 import {NavigationDisplay} from "../../../../model/NavigationDisplay";
 import {CurrentRide} from "../../../../model/CurrentRide";
 import {PositionInTime} from "../../../../model/PositionInTime";
+import {RideDTO} from "../../../../model/RideDTO";
 
 @Component({
   selector: 'app-map',
@@ -46,11 +48,12 @@ export class MapComponent implements AfterViewInit, OnInit {
   routeForCustomer: (L.Polyline | L.Marker)[]
   optimizedRoute: LeafletRoute[]
   private stompClient: any;
+  favoriteRide: RideDTO;
 
   @ViewChild(NotificationDriverComponent) notificationDriverComponent: NotificationDriverComponent;
   @ViewChild(SidenavComponent) sideNavComponent: SidenavComponent;
 
-  constructor(private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
+  constructor(private route: ActivatedRoute, private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
     this.searchedRoutes = [];
     this.estimationsSearch = new MapSearchEstimations();
     this.pins = []
@@ -61,7 +64,17 @@ export class MapComponent implements AfterViewInit, OnInit {
     this.optimizedRoute = []
   }
 
+  initializeFavoriteRoute(rideId: string) {
+    this.rideService.getById(Number(rideId)).subscribe((ride) => {
+      this.favoriteRide = ride;
+    })
+  }
+
   ngOnInit(): void {
+    let rideId = this.route.snapshot.paramMap.get('rideId');
+    if (rideId !== null) {
+      this.initializeFavoriteRoute(rideId as string);
+    }
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
         this.loggedUser = resp.loggedUser;

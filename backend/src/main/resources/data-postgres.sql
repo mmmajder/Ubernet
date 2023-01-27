@@ -143,13 +143,13 @@ values (false, 500, 1200, 5),
        (false, 500, 1200, 5);
 
 insert into place(name, position_id)
-values ('Stajaliste na keju, Novi Sad', 7),
-       ('Stajaliste kod limanske pijace, Novi Sad', 8),
-       ('Stajaliste kod trifkovicevog trga, Novi Sad', 9),
-       ('Stajaliste na telepu, Novi Sad', 10),
-       ('Stajaliste kod velike menze, Novi Sad', 11),
-       ('Stajaliste na keju, Novi Sad', 7),
-       ('Stajaliste kod limanske pijace, Novi Sad', 8);
+values ('Kej žrtava racije, Novi Sad', 7),
+       ('Limanska pijaca, Novi Sad', 8),
+       ('Trifkovicev trg, Novi Sad', 9),
+       ('Telepu, Novi Sad', 10),
+       ('Velika menza, Novi Sad', 11),
+       ('Kej žrtava racije, Novi Sad', 7),
+       ('Limanska pijaca, Novi Sad', 8);
 
 insert into route_check_points(route_id, check_points_id)
 values (1, 1),

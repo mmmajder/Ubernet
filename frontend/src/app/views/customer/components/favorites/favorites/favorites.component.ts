@@ -3,6 +3,7 @@ import {FavoriteRouteItem} from "../../../../../model/FavoriteRoute";
 import {FavoriteRoutesService} from "../../../../../services/favorite-routes.service";
 import {CurrentlyLogged} from "../../../../../store/actions/loggedUser.actions";
 import {Store} from "@ngxs/store";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-favorites',
@@ -13,7 +14,7 @@ export class FavoritesComponent {
   customerEmail: string;
   favorites: FavoriteRouteItem[] = [];
 
-  constructor(private service: FavoriteRoutesService, private store: Store) {
+  constructor(private router: Router, private service: FavoriteRoutesService, private store: Store) {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
         if (resp.loggedUser.role == "CUSTOMER") {
@@ -47,6 +48,6 @@ export class FavoritesComponent {
   }
 
   orderRide(rideId: number) {
-    // TODO
+    this.router.navigate(["/map", rideId])
   }
 }
