@@ -1,11 +1,14 @@
 package com.example.ubernet.service;
 
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.example.ubernet.dto.*;
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
+import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.TokenUtils;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -160,4 +163,43 @@ public class AuthentificationService {
     }
 
 
+    public Driver addDriver(CreateDriverDTO userDTO) {
+        if (userService.findByEmail(userDTO.getEmail()) != null) {
+            return null;
+        }
+        User user = DTOMapper.getUser(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setBlocked(false);
+        return driverService.saveDriver(userDTO, getUserAuth(user));
+    }
+
+    private UserAuth getUserAuth(User user) {
+        UserAuth userAuth = new UserAuth();
+        String randomCode = RandomString.make(64);
+        userAuth.setVerificationCode(randomCode);
+        userAuth.setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
+        userAuth.setRoles(getRoles(user));
+        userAuth.setIsEnabled(setIsUserEnabledRegistration(user));
+        userAuthService.save(userAuth);
+        return userAuth;
+    }
+
+    private List<Role> getRoles(User user) {
+        List<Role> roles = new ArrayList<>();
+        UserRole userRole = user.getRole();
+        roles.add(userService.findRolesByUserType("ROLE_USER"));
+
+        if (userRole == UserRole.ADMIN) {
+            roles.add(userService.findRolesByUserType("ROLE_ADMIN"));
+        } else if (userRole == UserRole.DRIVER) {
+            roles.add(userService.findRolesByUserType("ROLE_DRIVER"));
+        } else {
+            roles.add(userService.findRolesByUserType("ROLE_CUSTOMER"));
+        }
+        return roles;
+    }
+
+    private boolean setIsUserEnabledRegistration(User user) {
+        return user.getRole() != UserRole.CUSTOMER;
+    }
 }

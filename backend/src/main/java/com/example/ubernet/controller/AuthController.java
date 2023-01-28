@@ -1,6 +1,7 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.*;
+import com.example.ubernet.model.Driver;
 import com.example.ubernet.model.StringResponse;
 import com.example.ubernet.model.User;
 import com.example.ubernet.service.AuthentificationService;
@@ -50,10 +51,18 @@ public class AuthController {
         authentificationService.logoutUser(token);
     }
 
-
     @PostMapping("/register")
     public void addCustomer(@Valid @RequestBody CreateUserDTO userDTO) throws MessagingException {
         authentificationService.addCustomer(userDTO);
+    }
+
+    @PostMapping("/registerDriver")
+    public ResponseEntity<String> registerDriver(@Valid @RequestBody CreateDriverDTO userDTO) {
+        Driver driver = authentificationService.addDriver(userDTO);
+        if (driver == null) {
+            return new ResponseEntity<>(HttpStatus.CONFLICT);
+        }
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     @GetMapping("/verify/{code}")
@@ -83,10 +92,10 @@ public class AuthController {
     public ResponseEntity<StringResponse> changePassword(@PathVariable String email, @Valid @RequestBody ChangePasswordDTO changePasswordDTO) {
         if (authentificationService.changePassword(email, changePasswordDTO)) {
             StringResponse r = new StringResponse("Successfully changed password");
-            return new ResponseEntity(r, HttpStatus.OK);
+            return new ResponseEntity<>(r, HttpStatus.OK);
         }
         StringResponse r = new StringResponse("There was a problem in changing password");
-        return new ResponseEntity(r, HttpStatus.CONFLICT);
+        return new ResponseEntity<>(r, HttpStatus.CONFLICT);
     }
 
     @GetMapping("/currently-logged-user")
