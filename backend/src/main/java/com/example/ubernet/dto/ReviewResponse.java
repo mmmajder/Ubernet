@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ReviewResponse {
     private String comment;
-    private int rating;
+    private int carRating;
+    private int driverRating;
     private Customer customer;
 }

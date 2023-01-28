@@ -4,14 +4,27 @@
   <mat-card-content class="scrollable" *ngIf="rides.length > 0">
     <mat-list>
       <mat-list-item *ngFor="let ride of rides">
-        <mat-icon matListItemIcon style="color: var(--yellow); cursor: pointer" (click)="openRatingsDialog(ride)"
-                  [matTooltip]="'Rate this ride'" [matTooltipPosition]="'below'">star
+        <mat-icon matListItemIcon style="color: var(--yellow); cursor: pointer"
+                  [matTooltip]="'See actions'" [matTooltipPosition]="'below'"
+                  [matMenuTriggerFor]="menu">directions_car
         </mat-icon>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openRatingsDialog(ride)">
+            <mat-icon style="color: var(--yellow); cursor: pointer">
+              star
+            </mat-icon>
+            Rate this ride
+          </button>
+          <button mat-menu-item (click)="openRideDetails(ride.rideId)">
+            <mat-icon>article</mat-icon>
+            See details about ride
+          </button>
+        </mat-menu>
         <div matListItemLine>
-          <span class="route-name">{{ride.time}}</span>
-          <span class="time-left"> &nbsp;&nbsp;{{ride.timeToRate}} left to rate</span>
+          <span class="route-name">{{ride.rideDate}}</span>
+          <span class="time-left"> &nbsp;&nbsp;{{ride.daysLeftToRate}} left to rate</span>
         </div>
-        <div matListItemLine><span class="start-end">{{ride.start}} - {{ride.destination}}</span></div>
+        <div matListItemLine><span class="start-end">{{ride.route}}</span></div>
         <mat-divider></mat-divider>
       </mat-list-item>
     </mat-list>

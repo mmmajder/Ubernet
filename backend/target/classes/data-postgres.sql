@@ -165,13 +165,13 @@ values (1, 1),
 
 insert into ride (actual_end, actual_start, deleted, request_time, scheduled_start, driver_email, payment_id,
                   route_id, ride_state, is_reservation)
-values ('2023-01-11 12:00', '2023-01-11 11:00', false, '2023-01-11 10:00', '2023-01-11 11:00', 'driver@gmail.com', 1,
-        1, 4, false),
-       ('2023-01-11 12:00', '2023-01-11 11:00', false, '2023-01-11 10:00', '2023-01-11 11:00', 'driver@gmail.com', 1,
+values ('2023-01-26 12:00', '2023-01-26 11:00', false, '2023-01-26 10:00', '2023-01-26 11:00', 'driver@gmail.com', 1,
         1, 4, false),
        ('2023-01-12 12:00', '2023-01-12 11:00', false, '2023-01-12 10:00', '2023-01-12 11:00', 'driver@gmail.com', 1,
         1, 4, false),
        ('2023-01-13 12:00', '2023-01-13 11:00', false, '2023-01-13 10:00', '2023-01-13 11:00', 'driver@gmail.com', 1,
+        1, 4, false),
+       ('2023-01-25 12:00', '2023-01-25 11:00', false, '2023-01-25 10:00', '2023-01-25 11:00', 'driver@gmail.com', 1,
         1, 4, false);
 
 -- update payment
@@ -189,15 +189,13 @@ values (1, 'customer@gmail.com'),
        (4, 'petar@gmail.com'),
        (4, 'customer@gmail.com');
 
-insert into review (comment, rating, customer_email)
-values ('Bravo majstore', 4, 'customer@gmail.com'),
-       ('Bravo majstoreee', 5, 'customer@gmail.com');
+insert into review (comment, car_rating, driver_rating, customer_email)
+values ('Bravo majstore', 4, 5, 'customer@gmail.com'),
+       ('Bravo majstoreee', 5, 3, 'petar@gmail.com');
 
-insert into ride_driver_reviews (ride_id, driver_reviews_id)
-values (1, 1);
-
-insert into ride_car_reviews (ride_id, car_reviews_id)
-values (1, 1);
+insert into ride_reviews (ride_id, reviews_id)
+values (1, 1),
+       (2, 2);
 
 insert into comment(user_email, admin_email, time, content)
 values ('customer@gmail.com', 'admin@gmail.com', '2022-10-27 12:00', 'Ovaj vozac je mnogo hot'),

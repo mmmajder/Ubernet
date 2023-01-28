@@ -57,8 +57,7 @@ public class RideHistoryService {
         for (Ride r : page.getContent()) {
             simpleRides.add(RideHistorySimpleResponse.builder()
                     .id(r.getId())
-                    .route("Zeleznicka stanica - Nis - Telep - Lidl Liman 4")
-//                    .route(r.getRoute().stationList())
+                    .route(r.getRoute().stationListConcatenated())
                     .start(timeToString(r.getActualStart()))
                     .end(timeToString(r.getActualEnd()))
                     .price(r.getPayment().getTotalPrice())
@@ -88,8 +87,7 @@ public class RideHistoryService {
                 .reservationTime(timeToString(ride.getRequestTime()))
                 .checkPoints(ride.getRoute().getCheckPoints())
                 .totalPrice(ride.getPayment().getTotalPrice())
-                .carReviews(ride.getCarReviews())
-                .driverReviews(ride.getDriverReviews())
+                .reviews(ride.getReviews())
                 .build();
     }
 

@@ -12,26 +12,29 @@
     <span class="padding-details"><b>Total cost:</b> {{ride.totalPrice}}</span>
   </p>
   <div class="row">
-    <div class="col-md-6">
+    <div class="col-md-7">
 
       <h4 style="color: var(--gray); margin-top: 10px; margin-bottom: -10px">
-        <mat-icon *ngIf="customerEmail !== '' && isFavorite" style="color: var(--yellow); cursor: pointer"
-                  [matTooltip]="'Remove route from favorites'"
-                  [matTooltipPosition]="'below'" (click)="removeFromFavorites()">
-          favorite
-        </mat-icon>
-        <mat-icon *ngIf="customerEmail !== '' && !isFavorite" style="color: var(--gray); cursor: pointer"
-                  [matTooltip]="'Add route to favorites'"
-                  [matTooltipPosition]="'below'" (click)="addToFavorites()">
-          favorite
-        </mat-icon>
         Route
+        <span style="float: right">
+          <mat-icon *ngIf="customerEmail !== '' && isFavorite"
+                    style="color: var(--yellow); cursor: pointer"
+                    [matTooltip]="'Remove route from favorites'"
+                    [matTooltipPosition]="'below'" (click)="removeFromFavorites()">
+            favorite
+          </mat-icon>
+          <mat-icon *ngIf="customerEmail !== '' && !isFavorite" style="color: var(--gray); cursor: pointer"
+                    [matTooltip]="'Add route to favorites'"
+                    [matTooltipPosition]="'below'" (click)="addToFavorites()">
+            favorite
+          </mat-icon>
+        </span>
       </h4>
-      <mat-list>
-        <mat-list-item *ngFor="let station of ride.checkPoints; let i = index">
-          <div matListItemTitle>{{i + 1}}. {{station.name}}</div>
-        </mat-list-item>
-      </mat-list>
+      <div style="margin-top: 15px">
+        <p *ngFor="let station of ride.checkPoints; let i = index" style="font-size: 14px; color: var(--dark-gray)">
+          <b>{{i + 1}}.</b> {{station.name}}
+        </p>
+      </div>
 
       <hr style="width: 100%">
 
@@ -44,25 +47,22 @@
               <span style="color: gray">{{customer.email}}</span>
             </div>
             <button *ngIf="hasReviews(customer.email)" (click)="toggleReviews(customer.email)" mat-icon-button
-                    color="primary" style="margin-left: auto">
+                    color="primary" style="margin-left: auto" [matTooltip]="'See review'">
               <mat-icon>reviews</mat-icon>
             </button>
           </div>
 
           <div *ngIf="showReviews.get(customer.email)">
             <div class="review-background">
-              <p class="review-star">{{driverReviews.get(customer.email)?.rating}}
-                <mat-icon>star</mat-icon>
+              <p class="review-star"><b>{{reviews.get(customer.email)?.carRating}}</b>
+                <mat-icon style="color: var(--yellow);">star</mat-icon>
+                for car
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <b>{{reviews.get(customer.email)?.driverRating}}</b>
+                <mat-icon style="color: var(--yellow);">star</mat-icon>
                 for driver
               </p>
-              <p class="review-comment">{{driverReviews.get(customer.email)?.comment}}</p>
-            </div>
-            <div class="review-background">
-              <p class="review-star">{{driverReviews.get(customer.email)?.rating}}
-                <mat-icon>star</mat-icon>
-                for car
-              </p>
-              <p class="review-comment">{{carReviews.get(customer.email)?.comment}}</p>
+              <p class="review-comment">{{reviews.get(customer.email)?.comment}}</p>
             </div>
           </div>
         </div>
@@ -75,16 +75,12 @@
           <div> {{ride.driver.name}} {{ride.driver.surname}}
             <span style="color: gray">{{ride.driver.email}}</span>
           </div>
-          <button *ngIf="hasReviews(ride.driver.email)" (click)="toggleReviews(ride.driver.email)" mat-icon-button
-                  color="primary" style="margin-left: auto">
-            <mat-icon>reviews</mat-icon>
-          </button>
         </div>
       </div>
     </div>
 
-    <div class="col-md-6">
-      <div class="map-container" style="max-height: 300px">
+    <div class="col-md-5">
+      <div class="map-container" style="max-height: 350px">
         <div class="map-frame">
           <div id="map">
           </div>

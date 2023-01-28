@@ -4,6 +4,7 @@ import {FavoriteRoutesService} from "../../../../../services/favorite-routes.ser
 import {CurrentlyLogged} from "../../../../../store/actions/loggedUser.actions";
 import {Store} from "@ngxs/store";
 import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-favorites',
@@ -14,7 +15,7 @@ export class FavoritesComponent {
   customerEmail: string;
   favorites: FavoriteRouteItem[] = [];
 
-  constructor(private router: Router, private service: FavoriteRoutesService, private store: Store) {
+  constructor(private router: Router, private service: FavoriteRoutesService, private _snackBar: MatSnackBar, private store: Store) {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
         if (resp.loggedUser.role == "CUSTOMER") {
@@ -35,7 +36,10 @@ export class FavoritesComponent {
   removeFromFavorites(rideId: number) {
     this.service.removeFromFavoriteRoutes(this.customerEmail, rideId).subscribe({
       next: () => this.removeRide(rideId),
-      error: err => console.log(err)
+      error: () => this._snackBar.open("Something went wrong!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
     })
   }
 

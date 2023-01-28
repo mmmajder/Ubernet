@@ -24,6 +24,5 @@ public class RideDetails {
     private String actualStart;
     private String actualEnd;
     private String reservationTime;
-    private Set<Review> carReviews;
-    private Set<Review> driverReviews;
+    private Set<Review> reviews;
 }

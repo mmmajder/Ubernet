@@ -15,7 +15,6 @@ export class RideDetails {
   actualStart: string;
   actualEnd: string;
   reservationTime: string;
-  carReviews: RideReview[];
-  driverReviews: RideReview[];
+  reviews: RideReview[];
   payment: Payment
 }

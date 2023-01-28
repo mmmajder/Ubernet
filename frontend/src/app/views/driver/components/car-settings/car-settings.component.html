@@ -16,13 +16,19 @@
     </mat-form-field>
     <mat-form-field appearance="outline" floatLabel="always">
       <mat-label>Car type</mat-label>
-      <select matNativeControl [(ngModel)]="selectedCarType" [formControl]="carTypeFormControl" (change)="validateInputs()">
-        <option *ngFor="let carType of carTypes" [ngValue]="carType">{{carType.name}}</option>
-      </select>
+      <mat-select [(ngModel)]="selectedCarType" [formControl]="carTypeFormControl" (change)="validateInputs()">
+        <mat-option *ngFor="let carType of carTypes">{{carType.name}}</mat-option>
+      </mat-select>
     </mat-form-field>
-    <mat-checkbox color="primary" (change)="allowsBaby = !allowsBaby; validateInputs()" [checked]="allowsBaby" [indeterminate]="false">Allows babies</mat-checkbox>
+    <mat-checkbox color="primary" (change)="allowsBaby = !allowsBaby; validateInputs()" [checked]="allowsBaby"
+                  [indeterminate]="false">Allows babies
+    </mat-checkbox>
     &nbsp;&nbsp;
-    <mat-checkbox color="primary" (change)="allowsPet = !allowsPet; validateInputs()" [checked]="allowsPet" [indeterminate]="false">Allows pets</mat-checkbox>
-    <button mat-raised-button color="primary" style="width: 100%" (click)="saveChanges()" [disabled]="isButtonDisabled">Save changes</button>
+    <mat-checkbox color="primary" (change)="allowsPet = !allowsPet; validateInputs()" [checked]="allowsPet"
+                  [indeterminate]="false">Allows pets
+    </mat-checkbox>
+    <button mat-raised-button color="primary" style="width: 100%" (click)="saveChanges()" [disabled]="isButtonDisabled">
+      Save changes
+    </button>
   </mat-card-content>
 </mat-card>

@@ -20,34 +20,36 @@ import {CustomerModule} from "../customer/customer.module";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {CarSettingsComponent} from './components/car-settings/car-settings.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
     ProfileDriverContainerComponent,
     CarSettingsComponent
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-    MatTabsModule,
-    MatListModule,
-    CustomerModule,
-    MatSlideToggleModule,
-    MatCheckboxModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatTabsModule,
+        MatListModule,
+        CustomerModule,
+        MatSlideToggleModule,
+        MatCheckboxModule,
+        MatSelectModule,
+    ],
   exports: [
     ProfileDriverContainerComponent
   ]

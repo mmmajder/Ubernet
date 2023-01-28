@@ -1,28 +1,28 @@
-<mat-tab-group>
-  <mat-tab label="Rate driver">
-    <div [formGroup]="driverRatingForm">
-      <app-star-rating [rating]=driverRating></app-star-rating>
-      <mat-form-field appearance="outline" style="width: 100%">
-        <mat-label>Comment</mat-label>
-        <textarea matInput></textarea>
-      </mat-form-field>
-      <div style="float: right">
-        <button mat-button mat-dialog-close="">Cancel</button>
-        <button mat-button color="primary" mat-dialog-close="" (click)="rateDriver()">Submit rating</button>
-      </div>
-    </div>
-  </mat-tab>
-  <mat-tab label="Rate car">
-    <div [formGroup]="carRatingForm">
-      <app-star-rating [rating]=carRating></app-star-rating>
-      <mat-form-field appearance="outline" style="width: 100%">
-        <mat-label>Comment</mat-label>
-        <textarea matInput></textarea>
-      </mat-form-field>
-      <div style="float: right">
-        <button mat-button mat-dialog-close="">Cancel</button>
-        <button mat-button color="primary" mat-dialog-close="" (click)="rateCar()">Submit rating</button>
-      </div>
-    </div>
-  </mat-tab>
-</mat-tab-group>
+<div style="padding: 20px">
+  <p>Rate driver</p>
+  <div class="rate">
+    <mat-icon class="star" [matTooltip]="'1/5'" [ngClass]="{ 'active': driverRating > 0 }" (click)="driverRating = 1">star</mat-icon>
+    <mat-icon class="star" [matTooltip]="'2/5'" [ngClass]="{ 'active': driverRating > 1 }" (click)="driverRating = 2">star</mat-icon>
+    <mat-icon class="star" [matTooltip]="'3/5'" [ngClass]="{ 'active': driverRating > 2 }" (click)="driverRating = 3">star</mat-icon>
+    <mat-icon class="star" [matTooltip]="'4/5'" [ngClass]="{ 'active': driverRating > 3 }" (click)="driverRating = 4">star</mat-icon>
+    <mat-icon class="star" [matTooltip]="'5/5'" [ngClass]="{ 'active': driverRating > 4 }" (click)="driverRating = 5">star</mat-icon>
+  </div>
+
+  <p>Rate car</p>
+  <div class="rate">
+    <mat-icon class="star" [matTooltip]="'1/5'" [ngClass]="{ 'active': carRating > 0 }" (click)="carRating = 1">star</mat-icon>
+    <mat-icon class="star" [matTooltip]="'2/5'" [ngClass]="{ 'active': carRating > 1 }" (click)="carRating = 2">star</mat-icon>
+    <mat-icon class="star" [matTooltip]="'3/5'" [ngClass]="{ 'active': carRating > 2 }" (click)="carRating = 3">star</mat-icon>
+    <mat-icon class="star" [matTooltip]="'4/5'" [ngClass]="{ 'active': carRating > 3 }" (click)="carRating = 4">star</mat-icon>
+    <mat-icon class="star" [matTooltip]="'5/5'" [ngClass]="{ 'active': carRating > 4 }" (click)="carRating = 5">star</mat-icon>
+  </div>
+
+  <mat-form-field appearance="outline" style="width: 100%">
+    <mat-label>Comment</mat-label>
+    <textarea matInput [(ngModel)]="comment"></textarea>
+  </mat-form-field>
+  <div style="float: right">
+    <button mat-button mat-dialog-close="">Cancel</button>
+    <button mat-button color="primary" mat-dialog-close="" (click)="rate()">Submit rating</button>
+  </div>
+</div>

@@ -3,10 +3,10 @@ import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-not-found-page',
-  templateUrl: './not-found-page.component.html',
-  styleUrls: ['./not-found-page.component.css']
+  templateUrl: './not-authorized-page.component.html',
+  styleUrls: ['./not-authorized-page.component.css']
 })
-export class NotFoundPageComponent {
+export class NotAuthorizedPageComponent {
 
   constructor(private router: Router) {
   }

@@ -17,6 +17,17 @@ public class DTOMapper {
         userVerificationResponseDTO.setName(user.getName());
         return userVerificationResponseDTO;
     }
+    public static User getUser(CreateUserDTO userDTO) {
+        User user = new User();
+        user.setName(userDTO.getName());
+        user.setCity(userDTO.getCity());
+        user.setEmail(userDTO.getEmail());
+        user.setSurname(userDTO.getSurname());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setPassword(userDTO.getPassword());
+        user.setRole(userDTO.getUserRole());
+        return user;
+    }
 
     public static UserEditDTO getUserEditDTO(User user) {
         UserEditDTO userEditDTO = new UserEditDTO();
@@ -65,7 +76,8 @@ public class DTOMapper {
     public static ReviewResponse getReviewResponse(Review review) {
         ReviewResponse reviewResponse = new ReviewResponse();
         reviewResponse.setComment(review.getComment());
-        reviewResponse.setRating(review.getRating());
+        reviewResponse.setCarRating(review.getCarRating());
+        reviewResponse.setDriverRating(review.getDriverRating());
         reviewResponse.setCustomer(review.getCustomer());
         return reviewResponse;
     }
