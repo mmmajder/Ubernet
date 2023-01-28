@@ -19,7 +19,6 @@ import {ChangePasswordComponent} from "./profile-edit/change-password/change-pas
 import {MatCardModule} from "@angular/material/card";
 import {StarRatingComponent} from './star-rating/star-rating.component';
 import {UserProfileComponent} from './user-profile/user-profile.component';
-import {ActivityLogComponent} from "./activity-log/activity-log.component";
 import {ReviewsComponent} from './reviews/reviews.component';
 import {RidesHistoryComponent} from "./rides-history/rides-history.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
@@ -33,7 +32,7 @@ import {NotificationsComponent} from "./notification/notifications.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 
 @NgModule({
-  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
+  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -56,7 +55,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     MatExpansionModule,
     MatSlideToggleModule,
   ],
-  exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
+  exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {
 }

@@ -16,7 +16,7 @@ import {UsersContainerComponent} from "./views/admin/container/users-container/u
 import {
   DashboardCustomerContainerComponent
 } from "./views/customer/container/dashboard-customer-container/dashboard-customer-container.component";
-import {CanActivateAuthGuard} from "./services/CanActivateAuthGuard";
+import {CanActivateAuthGuard} from "./model/CanActivateAuthGuard";
 import {NotAuthorizedPageComponent} from "./views/403/not-authorized-page/not-authorized-page.component";
 
 const routes: Routes = [

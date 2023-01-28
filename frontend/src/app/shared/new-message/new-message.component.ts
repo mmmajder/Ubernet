@@ -1,7 +1,8 @@
-import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {WebsocketService} from "../../services/websocket.service";
 import {Message} from "../../model/Message";
 import {dateTimeNowToString} from "../../services/utils.service";
+import {User} from "../../model/User";
 
 @Component({
   selector: 'app-new-message',
@@ -10,7 +11,7 @@ import {dateTimeNowToString} from "../../services/utils.service";
 })
 export class NewMessageComponent {
 
-  @Input() loggedUser: any;
+  @Input() loggedUser: User;
   @Input() messages: Message[];
   @Input() clientEmail:string;
   @Output() onNewMessageSent = new EventEmitter<Message>();

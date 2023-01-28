@@ -1,5 +1,4 @@
 import {CarTypeGetResponse} from "./CarTypeGetResponse";
-import {CurrentRide} from "./CurrentRide";
 import {Position} from "./Position";
 import {Navigation} from "./Navigation";
 import {Driver} from "./Driver";

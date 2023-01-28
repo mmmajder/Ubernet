@@ -3,6 +3,7 @@ import {MessageService} from "../../services/message.service";
 import {WebsocketService} from "../../services/websocket.service";
 import {AuthService} from "../../services/auth.service";
 import {Message} from "../../model/Message";
+import {User} from "../../model/User";
 
 @Component({
   selector: 'app-user-chat',
@@ -11,8 +12,7 @@ import {Message} from "../../model/Message";
 })
 export class UserChatComponent implements OnInit {
   messagesWithAdmin: Message[] = [];
-
-  loggedUser: any = null;
+  loggedUser: User;
 
   constructor(private messageService: MessageService, private webSocketService: WebsocketService, private authService: AuthService) {
   }

@@ -31,11 +31,11 @@ function addZero(n: number): string {
 }
 
 export function secondsToHm(d: number) {
-  let h = Math.floor(d / 3600);
-  let m = Math.floor(d % 3600 / 60);
-  let s = Math.floor(d % 3600 % 60);
+  const h = Math.floor(d / 3600);
+  const m = Math.floor(d % 3600 / 60);
+  const s = Math.floor(d % 3600 % 60);
 
-  let hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
-  let mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
+  const hDisplay = h > 0 ? h + (h == 1 ? " hour, " : " hours, ") : "";
+  const mDisplay = m > 0 ? m + (m == 1 ? " minute, " : " minutes, ") : "";
   return hDisplay + mDisplay;
 }

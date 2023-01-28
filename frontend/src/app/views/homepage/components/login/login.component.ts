@@ -70,14 +70,11 @@ export class LoginComponent {
         this.authService.getCurrentlyLoggedUser().subscribe({
           next: (user) => {
             if (user.role === "CUSTOMER")
-              this.router.navigate(['/dashboard']).then(() => {
-              });
+              this.router.navigate(['/dashboard']);
             else if (user.role === "DRIVER")
-              this.router.navigate(['/map']).then(() => {
-              });
+              this.router.navigate(['/map']);
             else if (user.role === "ADMIN")
-              this.router.navigate(['/analytics']).then(() => {
-              });
+              this.router.navigate(['/analytics']);
           }
         });
       },

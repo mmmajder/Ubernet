@@ -1,11 +1,4 @@
-import {
-  Component,
-  Input,
-  OnInit,
-  Output,
-  EventEmitter,
-  IterableDiffer, IterableDiffers
-} from '@angular/core';
+import {Component, Input, OnInit, Output, EventEmitter, IterableDiffer} from '@angular/core';
 import {Chat} from "../../../../model/Chat";
 import {ImageService} from "../../../../services/image.service";
 
@@ -16,12 +9,12 @@ import {ImageService} from "../../../../services/image.service";
 })
 export class ListOfChatsComponent implements OnInit {
   @Input() chats: Chat[];
-  @Output() onChatSelection = new EventEmitter<Chat>();
+  @Output() chatEventEmitter = new EventEmitter<Chat>();
   iterableDiffer: IterableDiffer<Chat>;
   profilePictures: any; // {'email':'image_src'}
   hasRequestedProfilePictures: any; // {'email': true}
 
-  constructor(private imageService: ImageService, private iterableDiffers: IterableDiffers) {
+  constructor(private imageService: ImageService) {
     // this.iterableDiffer = this.iterableDiffers.find(this.chats).create();
   }
 
@@ -55,10 +48,9 @@ export class ListOfChatsComponent implements OnInit {
   }
 
   selectChat(email: string) {
-    // console.log("selectChat")
     for (const c of this.chats) {
       if (c.clientEmail === email) {
-        this.onChatSelection.emit(c);
+        this.chatEventEmitter.emit(c);
         console.log("emit(chat) for " + email)
       }
     }

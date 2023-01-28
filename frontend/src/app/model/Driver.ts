@@ -1,5 +1,3 @@
-import {DriverDailyActivity} from "./DriverDailyActivity";
-
 export class Driver {
   email!: string;
   name!: string;

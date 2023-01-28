@@ -1,8 +1,6 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs";
-import {CancelRideRequest} from "../model/CancelRideRequest";
-import {RideDenial} from "../model/RideDenial";
 import {LeafletRoute} from "../model/LeafletRoute";
 import {AuthService} from "./auth.service";
 
@@ -17,7 +15,7 @@ export class RideAlternativeService {
     this.rideAlternativeUrl = 'http://localhost:8000/ride-alternatives';
   }
 
-  createRideAlternatives(rideId: number, allAlternatives: LeafletRoute[][]):Observable<void> {
+  createRideAlternatives(rideId: number, allAlternatives: LeafletRoute[][]): Observable<void> {
     return this.http.post<void>(this.rideAlternativeUrl + "/" + rideId, allAlternatives, AuthService.getHttpOptions());
   }
 }

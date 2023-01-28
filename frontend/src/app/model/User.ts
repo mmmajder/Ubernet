@@ -17,7 +17,7 @@ export function userIsDriver(user: User): user is Driver {
 export class Driver implements User {
   blocked: boolean;
   city: string;
-  email: string = "";
+  email = "";
   name: string;
   phoneNumber: string;
   role: string;

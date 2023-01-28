@@ -1,4 +1,3 @@
-import {Position} from "./Position";
 import {PositionInTime} from "./PositionInTime";
 
 export class CurrentRide {

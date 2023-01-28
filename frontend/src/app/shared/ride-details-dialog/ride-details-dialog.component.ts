@@ -18,8 +18,8 @@ import {Store} from "@ngxs/store";
 })
 export class RideDetailsDialogComponent implements OnInit {
   @Input() id: number;
-  public customerEmail: string = "";
-  public isFavorite: boolean = false;
+  public customerEmail = "";
+  public isFavorite = false;
 
   private map: L.Map;
   ride: RideDetails = new RideDetails();

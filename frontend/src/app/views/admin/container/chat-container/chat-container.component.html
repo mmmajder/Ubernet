@@ -9,7 +9,7 @@
           <input matInput class="example-right-align">
           <span matPrefix><mat-icon>search</mat-icon></span>
         </mat-form-field>
-        <app-list-of-chats [chats]="chats" (onChatSelection)="openSelectedChat($event)"></app-list-of-chats>
+        <app-list-of-chats [chats]="chats" (chatEventEmitter)="openSelectedChat($event)"></app-list-of-chats>
       </mat-card>
     </div>
     <div class="col-md-8">

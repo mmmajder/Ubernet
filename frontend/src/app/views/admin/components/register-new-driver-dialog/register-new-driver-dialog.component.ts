@@ -22,29 +22,29 @@ export class RegisterNewDriverDialogComponent {
     carNameFormCtr: ['', Validators.required],
   });
 
-  email: string = "";
-  phoneNumber: string = "";
-  password: string = "";
-  password2: string = "";
-  name: string = "";
-  lastName: string = "";
-  city: string = "";
+  email = "";
+  phoneNumber = "";
+  password = "";
+  password2 = "";
+  name = "";
+  lastName = "";
+  city = "";
 
-  hide: boolean = true;
-  hide2: boolean = true;
-  allowsBaby: boolean = false;
-  allowsPet: boolean = false;
-  canRegister: boolean = false;
-  selectedCarType: string = "";
+  hide = true;
+  hide2 = true;
+  allowsBaby = false;
+  allowsPet = false;
+  canRegister = false;
+  selectedCarType = "";
   carTypes: string[] = [];
   plates: string;
-  indexOfCarType: number = 0;
-  carName: string = "";
+  indexOfCarType = 0;
+  carName = "";
 
   constructor(private _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private authService: AuthService, private carTypeService: CarTypeService) {
     this.carTypeService.getCarTypes()
       .subscribe(types => {
-        for(let type of types)
+        for(const type of types)
           this.carTypes.push(type.name);
         this.selectedCarType = this.carTypes[0];
       });

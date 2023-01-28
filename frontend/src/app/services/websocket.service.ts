@@ -7,8 +7,8 @@ import {Message} from "../model/Message";
 export class WebsocketService {
 
   webSocket: WebSocket;
-  email:string;
-  isAdmin:boolean;
+  email: string;
+  isAdmin: boolean;
   isWebSocketOpen = false;
 
 
@@ -18,8 +18,8 @@ export class WebsocketService {
     this.chatWSUrl = 'ws://localhost:8000/chatWebSocket/';
   }
 
-  public openWebSocket(email:string, isAdmin:boolean, onNewMessage:Function){
-    if (!this.isWebSocketOpen){
+  public openWebSocket(email: string, isAdmin: boolean, onNewMessage: Function) {
+    if (!this.isWebSocketOpen) {
       this.isWebSocketOpen = true;
       this.email = email;
       this.isAdmin = isAdmin;
@@ -31,11 +31,11 @@ export class WebsocketService {
       this.webSocket = new WebSocket(this.chatWSUrl + email);
 
       this.webSocket.onopen = (event) => {
-        console.log("Open "  + email, event)
+        console.log("Open " + email, event)
       }
 
       this.webSocket.onmessage = (event) => {
-        const message:Message = JSON.parse(event.data);
+        const message: Message = JSON.parse(event.data);
         console.log(message.content);
 
         onNewMessage(message);
@@ -43,16 +43,16 @@ export class WebsocketService {
       }
 
       this.webSocket.onclose = (event) => {
-        console.log("Close "  + email, event)
+        console.log("Close " + email, event)
       }
       // }
-    //
+      //
     }
 
   }
 
-  public sendMessage(message:any){
-    if (this.isWebSocketOpen){
+  public sendMessage(message: any) {
+    if (this.isWebSocketOpen) {
       this.webSocket.send(JSON.stringify(message));
     }
     // if (this.webSocket !== null && this.webSocket !== undefined){
@@ -60,8 +60,8 @@ export class WebsocketService {
     // }
   }
 
-  public closeWebSocket(){
-    if (this.isWebSocketOpen){
+  public closeWebSocket() {
+    if (this.isWebSocketOpen) {
       this.isWebSocketOpen = false;
       this.webSocket.close();
     }

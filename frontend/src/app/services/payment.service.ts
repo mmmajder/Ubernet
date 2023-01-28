@@ -1,7 +1,5 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from "@angular/common/http";
-import {CreditCard} from "../model/CreditCard";
-import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -9,7 +7,6 @@ import {AuthService} from "./auth.service";
 export class PaymentService {
 
   private readonly creditCardUrl: string;
-  // paypalUrl etc.
 
   httpOptions = {
     headers: new HttpHeaders({
@@ -22,11 +19,7 @@ export class PaymentService {
     this.creditCardUrl = 'http://localhost:8000/creditCard';
   }
 
-  public putCreditCardData(email: string, creditCard: CreditCard){
-    return this.http.put<Object>(this.creditCardUrl + "/add/" + email, creditCard, AuthService.getHttpOptions());
-  }
-
-  public getCreditCard(clientEmail:string){
+  public getCreditCard(clientEmail: string) {
     return this.http.get(this.creditCardUrl + "/" + clientEmail, this.httpOptions);
   }
 }
