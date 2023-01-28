@@ -10,6 +10,9 @@ import {
 import {
   ReportDriverDialogComponent
 } from "../../views/customer/components/report-driver-dialog/report-driver-dialog.component";
+import {
+  DriversProfileDialogComponent
+} from "../../views/admin/components/drivers-profile-dialog/drivers-profile-dialog.component";
 
 @Component({
   selector: 'app-notifications',
@@ -19,8 +22,10 @@ import {
 export class NotificationsComponent implements OnInit {
   @Input() notifications: NotificationDTO[];
   user: User;
+  photo: string;
 
-  constructor(private dialog: MatDialog, private notificationService: NotificationService, private store: Store) {
+  constructor(private driversProfile: MatDialog, private dialog: MatDialog, private notificationService: NotificationService, private store: Store) {
+    this.photo = '../../assets/default-profile-picture.jpg';
   }
 
   ngOnInit(): void {
@@ -34,11 +39,10 @@ export class NotificationsComponent implements OnInit {
           })
       }
     })
-
   }
 
-  notificationClicked(event: any) {
-    const notificationId = event.target.attributes.id.value
+  notificationClicked(id: any) {
+    const notificationId = id
     this.notificationService.getNotificationById(notificationId).subscribe((clickedNotification) => {
       console.log(clickedNotification)
       if (clickedNotification.type === "SPLIT_FARE") {
@@ -47,5 +51,10 @@ export class NotificationsComponent implements OnInit {
         this.dialog.open(ReportDriverDialogComponent, {data: clickedNotification});
       }
     })
+  }
+
+  openDriverInfoPopup(driverEmail: string) {
+    const dialogRef = this.driversProfile.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
+    dialogRef.componentInstance.userEmail = driverEmail;
   }
 }

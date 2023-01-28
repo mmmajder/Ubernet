@@ -3,6 +3,7 @@ import {FormBuilder, Validators} from "@angular/forms";
 import {CarTypeService} from "../../../../services/car-type.service";
 import {AuthService} from "../../../../services/auth.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-register-new-driver-dialog',
@@ -41,7 +42,7 @@ export class RegisterNewDriverDialogComponent {
   indexOfCarType: number = 0;
   carName: string = "";
 
-  constructor(private _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private authService: AuthService, private carTypeService: CarTypeService) {
+  constructor(public dialogRef: MatDialogRef<RegisterNewDriverDialogComponent>, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private authService: AuthService, private carTypeService: CarTypeService) {
     this.carTypeService.getCarTypes()
       .subscribe(types => {
         for(let type of types)
@@ -64,10 +65,12 @@ export class RegisterNewDriverDialogComponent {
       "carType": this.selectedCarType,
       "plates": this.plates
     }).subscribe({
-      next: () => this._snackBar.open("Driver added successfully.", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      }),
+      next: () => {
+        this._snackBar.open("Driver added successfully.", '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        })
+      },
       error: () => this._snackBar.open("Error occurred.", '', {
         duration: 3000,
         panelClass: ['snack-bar']

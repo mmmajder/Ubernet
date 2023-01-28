@@ -37,6 +37,7 @@ import {PaymentComponent} from "./components/payment/payment.component";
 import { ReportDriverDialogComponent } from './components/report-driver-dialog/report-driver-dialog.component';
 import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
 import {MatLineModule} from "@angular/material/core";
+import {UserChipComponent} from "./components/user-chip/user-chip.component";
 
 @NgModule({
   declarations: [
@@ -48,7 +49,8 @@ import {MatLineModule} from "@angular/material/core";
     RateDialogComponent,
     PaymentComponent,
     ReportDriverDialogComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UserChipComponent
   ],
     imports: [
         MatToolbarModule,
@@ -78,7 +80,8 @@ import {MatLineModule} from "@angular/material/core";
     ProfileDataComponent,
     ProfileCustomerContainerComponent,
     PaymentComponent,
-    ResetPasswordComponent
+    ResetPasswordComponent,
+    UserChipComponent
   ],
 })
 export class CustomerModule {

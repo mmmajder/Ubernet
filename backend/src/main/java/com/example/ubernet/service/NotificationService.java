@@ -65,6 +65,7 @@ public class NotificationService {
             Notification notification = notificationFactory(customer.getEmail(), ride.getId());
             notification.setType(NotificationType.ACCEPTED_RIDE);
             notification.setText("Driver accepted ride! Your Uber is coming soon");
+            notification.setDriverEmail(ride.getDriver().getEmail());
             save(notification);
             simpMessagingService.notifyCustomersInitRide(notification);
         }

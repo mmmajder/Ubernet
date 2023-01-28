@@ -5,4 +5,5 @@ export class NotificationDTO {
   receiverEmail!: string;
   id!: number
   rideId!: number
+  driverEmail: string
 }

@@ -25,4 +25,5 @@ public class Notification {
     private String receiverEmail;
     private Long rideId;
     private LocalDateTime timeCreated;
+    private String driverEmail;
 }

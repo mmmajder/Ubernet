@@ -31,31 +31,32 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {NotificationsComponent} from "./notification/notifications.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {CustomerModule} from "../views/customer/customer.module";
 
 @NgModule({
   declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatMenuModule,
-    CommonModule,
-    MatButtonModule,
-    MatBadgeModule,
-    MatListModule,
-    MatTooltipModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatChipsModule,
-    MatExpansionModule,
-    MatSlideToggleModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatMenuModule,
+        CommonModule,
+        MatButtonModule,
+        MatBadgeModule,
+        MatListModule,
+        MatTooltipModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatChipsModule,
+        MatExpansionModule,
+        MatSlideToggleModule,
+    ],
   exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {

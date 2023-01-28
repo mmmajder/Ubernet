@@ -6,10 +6,9 @@ import {
   RegisterNewDriverDialogComponent
 } from "../register-new-driver-dialog/register-new-driver-dialog.component";
 import {DriversProfileDialogComponent} from "../drivers-profile-dialog/drivers-profile-dialog.component";
-import {Store} from "@ngxs/store";
-import {Drivers} from "../../../../store/actions/drivers.actions";
 import {Driver} from "../../../../model/Driver";
 import {ImageService} from "../../../../services/image.service";
+import {DriversService} from "../../../../services/drivers.service";
 
 @Component({
   selector: 'app-drivers',
@@ -23,7 +22,7 @@ export class DriversComponent implements OnInit {
   drivers: Driver[];
   profilePictures: Map<string, string> = new Map<string, string>();
 
-  constructor(private driversProfile: MatDialog, private registerNewDriverDialog: MatDialog, private store: Store, private imageService: ImageService) {
+  constructor(private driversService: DriversService, private driversProfile: MatDialog, private registerNewDriverDialog: MatDialog, private imageService: ImageService) {
   }
 
   applyFilter(event: Event) {
@@ -32,18 +31,25 @@ export class DriversComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.store.dispatch(new Drivers()).subscribe((resp) => {
-      console.log(resp);
-      this.drivers = resp.drivers;
+    this.getDrivers();
+  }
+
+  private getDrivers() {
+    this.driversService.getDrivers().subscribe((drivers) => {
+      this.drivers = drivers;
       this.driversList = new MatTableDataSource<DriverListItem>(this.usersToDriverListItems(this.drivers));
     });
   }
 
   registerNewDriver() {
-    this.registerNewDriverDialog.open(RegisterNewDriverDialogComponent, {
+    const dialogRef = this.registerNewDriverDialog.open(RegisterNewDriverDialogComponent, {
       width: '600px',
       height: '600px'
     });
+
+    dialogRef.afterClosed().subscribe(result => {
+      this.getDrivers()
+    })
   }
 
   blockDriver(element: DriverListItem) {

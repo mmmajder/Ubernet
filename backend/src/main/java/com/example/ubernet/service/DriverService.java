@@ -8,6 +8,7 @@ import com.example.ubernet.repository.CarRepository;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.DriverRepository;
 import com.example.ubernet.repository.DriverActivityPeriodRepository;
+import com.example.ubernet.repository.NavigationRepository;
 import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.EntityMapper;
 import lombok.AllArgsConstructor;
@@ -32,7 +33,7 @@ public class DriverService {
     private final CarTypeService carTypeService;
     private final PositionService positionService;
     private final PasswordEncoder passwordEncoder;
-
+    private final NavigationRepository navigationRepository;
     public Driver toggleActivity(String email, boolean activate) {
         Driver driver = (Driver) userService.findByEmail(email);
         if (driver == null) throw new BadRequestException("Driver with this email does not exist");
@@ -77,12 +78,14 @@ public class DriverService {
 
         Car car = new Car();
         car.setIsAvailable(true);
+        car.setDeleted(false);
         car.setAllowsBaby(dto.getAllowsBaby());
         car.setAllowsPet(dto.getAllowsPet());
         car.setPlates(dto.getPlates());
         car.setCarType(carTypeService.findCarTypeByName(dto.getCarType()));
         car.setName(dto.getCarName());
-        car.setPosition(positionService.save(new Position(45.267136, 19.833549)));
+        car.setPosition(positionService.save(new Position(19.833549, 45.267136)));
+        car.setNavigation(navigationRepository.save(new Navigation()));
         driver.setCar(car);
 
         carRepository.save(car);
@@ -190,6 +193,7 @@ public class DriverService {
         Driver driver = findByEmail(email);
         if (driver == null) throw new BadRequestException("Driver with this email does not exist");
         DriverDailyActivity driverDailyActivity = driver.getDriverDailyActivity();
+        updateIntervals(driverDailyActivity);
         return getNumberOfActiveHoursInLast24h(driverDailyActivity.getPeriodsInLast24h(), driverDailyActivity.getLastPeriodStart());
     }
 

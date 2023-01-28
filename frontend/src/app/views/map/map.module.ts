@@ -33,6 +33,8 @@ import {
   ReasonForRideCancellationComponent
 } from "./components/reason-for-ride-cancelation/reason-for-ride-cancellation.component";
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
+import {MatChipsModule} from "@angular/material/chips";
+import {CustomerModule} from "../customer/customer.module";
 
 @NgModule({
   declarations: [
@@ -67,6 +69,8 @@ import {MatAutocompleteModule} from "@angular/material/autocomplete";
         NgxMaterialTimepickerModule,
         MatRadioModule,
         MatAutocompleteModule,
+        MatChipsModule,
+        CustomerModule,
     ],
   exports: [
     MapComponent,
