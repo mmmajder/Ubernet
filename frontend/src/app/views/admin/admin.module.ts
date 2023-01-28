@@ -19,7 +19,6 @@ import {ListOfChatsComponent} from './components/list-of-chats/list-of-chats.com
 import {AdminChatComponent} from './components/admin-chat/admin-chat.component';
 import {MatListModule} from "@angular/material/list";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {DriverRegistartionComponent} from './components/driver-registartion/driver-registartion.component';
 import {DriversComponent} from './components/drivers/drivers.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {AdminProfileContainerComponent} from './container/admin-profile-container/admin-profile-container.component';
@@ -28,7 +27,6 @@ import {
 } from './components/register-new-driver-dialog/register-new-driver-dialog.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import {DriversProfileDialogComponent} from './components/drivers-profile-dialog/drivers-profile-dialog.component';
-import {ChangesRequestsComponent} from './components/changes-requests/changes-requests.component';
 import {ChangesRequestDialogComponent} from './components/changes-request-dialog/changes-request-dialog.component';
 import {AdminCommentsComponent} from './components/admin-comments/admin-comments.component';
 import {CustomersComponent} from './components/customers/customers.component';
@@ -44,12 +42,10 @@ import {MatSelectModule} from "@angular/material/select";
     ChatContainerComponent,
     ListOfChatsComponent,
     AdminChatComponent,
-    DriverRegistartionComponent,
     DriversComponent,
     AdminProfileContainerComponent,
     RegisterNewDriverDialogComponent,
     DriversProfileDialogComponent,
-    ChangesRequestsComponent,
     ChangesRequestDialogComponent,
     AdminCommentsComponent,
     CustomersComponent,

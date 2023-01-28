@@ -15,4 +15,5 @@ public class Driver extends User {
     private Car car;
     @ManyToOne
     private DriverDailyActivity driverDailyActivity;
+    private boolean requestedProfileChanges;
 }

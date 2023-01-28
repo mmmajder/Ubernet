@@ -1,1 +1,131 @@
-<p>changes-request-dialog works!</p>
+<div style="padding: 20px">
+  <h3><b>Request for profile data changes</b></h3>
+  <p style="color: var(--gray)">Email address is not changeable. It is {{request.driver.email}}.</p>
+  <p style="color: var(--gray)">Request created: {{formatDate(request.requestTime.toString())}}.</p>
+  <hr style="width: 100%">
+  <p>
+    <button mat-button color="primary" *ngIf="!showOnlyChanges" (click)="showOnlyChanges = true">Show me only changes
+    </button>
+    <button mat-button color="primary" *ngIf="showOnlyChanges" (click)="showOnlyChanges = false">Show me everything
+    </button>
+  </p>
+
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.name !== request.name)">
+    <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+      <mat-label>Current name</mat-label>
+      <input matInput [(ngModel)]="request.driver.name" disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+      <mat-label>New name</mat-label>
+      <input matInput [(ngModel)]="request.name" disabled>
+    </mat-form-field>
+  </p>
+
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.surname !== request.surname)">
+    <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+      <mat-label>Current surname</mat-label>
+      <input matInput [(ngModel)]="request.driver.surname" disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+      <mat-label>New surname</mat-label>
+      <input matInput [(ngModel)]="request.surname" disabled>
+    </mat-form-field>
+  </p>
+
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.phoneNumber !== request.phoneNumber)">
+    <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+      <mat-label>Current phone number</mat-label>
+      <input matInput [(ngModel)]="request.driver.phoneNumber" disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+      <mat-label>New phone number</mat-label>
+      <input matInput [(ngModel)]="request.phoneNumber" disabled>
+    </mat-form-field>
+  </p>
+
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.car.plates !== request.plates)">
+    <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+      <mat-label>Current car plates</mat-label>
+      <input matInput [(ngModel)]="request.driver.car.plates" disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+      <mat-label>New car plates</mat-label>
+      <input matInput [(ngModel)]="request.plates" disabled>
+    </mat-form-field>
+  </p>
+
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.car.name !== request.carName)">
+    <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+      <mat-label>Current car name</mat-label>
+      <input matInput [(ngModel)]="request.driver.car.name" disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+      <mat-label>New car name</mat-label>
+      <input matInput [(ngModel)]="request.carName" disabled>
+    </mat-form-field>
+  </p>
+
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.car.carType.name !== request.carType)">
+    <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+      <mat-label>Current car type</mat-label>
+      <input matInput [(ngModel)]="request.driver.car.carType.name" disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+      <mat-label>New car type</mat-label>
+      <input matInput [(ngModel)]="request.carType" disabled>
+    </mat-form-field>
+  </p>
+
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.car.allowsPet !== request.allowsPets)">Currently
+    driver
+    <span *ngIf="!request.driver.car.allowsPet">
+    doesn't allow
+    </span>
+    <span *ngIf="request.driver.car.allowsPet">
+    allows
+    </span>
+    pets. In the future, driver
+    <span *ngIf="request.allowsPets">
+      wants
+    </span>
+    <span *ngIf="!request.allowsPets">
+      doesn't want
+    </span>
+    to allow pets in the vehicle.
+  </p>
+
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.car.allowsBaby !== request.allowsBabies)">Currently
+    driver
+    <span *ngIf="!request.driver.car.allowsBaby">
+    doesn't allow
+    </span>
+    <span *ngIf="request.driver.car.allowsBaby">
+    allows
+    </span>
+    babies. In the future, driver
+    <span *ngIf="request.allowsBabies">
+      wants
+    </span>
+    <span *ngIf="!request.allowsBabies">
+      doesn't want
+    </span>
+    to allow babies in the vehicle.
+  </p>
+
+  <p>
+    <button style="width: 49%; margin-right: 1%" mat-raised-button (click)="acceptRequest(false)">
+      <mat-icon color="warn">error</mat-icon>
+      Deny
+    </button>
+    <button style="width: 49%; margin-left: 1%" color="primary" (click)="acceptRequest(true)" mat-raised-button>
+      <mat-icon>check</mat-icon>
+      Accept
+    </button>
+  </p>
+</div>

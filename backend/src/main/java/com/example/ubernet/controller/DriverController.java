@@ -1,8 +1,11 @@
 package com.example.ubernet.controller;
 
+import com.example.ubernet.dto.DriverChangeRequest;
+import com.example.ubernet.dto.DriverChangeResponse;
 import com.example.ubernet.dto.DriverDto;
 import com.example.ubernet.dto.DriverResponse;
 import com.example.ubernet.model.Driver;
+import com.example.ubernet.model.ProfileChangesRequest;
 import com.example.ubernet.service.DriverService;
 import com.example.ubernet.utils.DTOMapper;
 import lombok.AllArgsConstructor;
@@ -50,8 +53,29 @@ public class DriverController {
         return ResponseEntity.ok(driverService.getDriverByEmail(email));
     }
 
+    @GetMapping("/getFullDriver/{email}")
+    public ResponseEntity<DriverChangeResponse> getFullDriver(@PathVariable String email) {
+        return ResponseEntity.ok(driverService.getFullDriverByEmail(email));
+    }
+
     @GetMapping("/active-hours/{email}")
     public long getNumberOfActiveHoursInLast24h(@PathVariable String email) {
         return driverService.getNumberOfActiveHoursInLast24h(email);
+    }
+
+    @PostMapping("/requestProfileChanges")
+    public boolean requestProfileChanges(@RequestBody DriverChangeRequest driverChangeRequest) {
+        ProfileChangesRequest request = driverService.createRequest(driverChangeRequest);
+        return request != null;
+    }
+
+    @GetMapping("/getProfileChangesRequest/{email}")
+    public ProfileChangesRequest getProfileChangesRequest(@PathVariable String email) {
+        return driverService.getProfileChangesRequest(email);
+    }
+
+    @GetMapping("/getProfileChangesRequests")
+    public List<ProfileChangesRequest> getProfileChangesRequests() {
+        return driverService.getProfileChangesRequests();
     }
 }

@@ -5,7 +5,6 @@ import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
-import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
 import com.example.ubernet.repository.UserRepository;
 import com.example.ubernet.utils.DTOMapper;
@@ -16,7 +15,6 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.Optional;
 
 @Service
@@ -25,8 +23,6 @@ public class UserService implements UserDetailsService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
-    @Autowired
-    private ProfileUpdateRequestRepository profileUpdateRequestRepository;
 
     public UserService() {
     }
@@ -64,21 +60,7 @@ public class UserService implements UserDetailsService {
     private void setNewUserProperties(User user, UserEditDTO userEditRequest) {
         if (user.getRole() == UserRole.CUSTOMER || user.getRole() == UserRole.ADMIN) {
             updateUser(user, userEditRequest);
-        } else if (user.getRole() == UserRole.DRIVER) {
-            createDriverUpdateRequest(user, userEditRequest);
         }
-    }
-
-    private void createDriverUpdateRequest(User user, UserEditDTO userEditRequest) {
-        ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest();
-        profileUpdateRequest.setUser(user);
-        profileUpdateRequest.setName(Optional.ofNullable(userEditRequest.getName()).orElse(user.getName()));
-        profileUpdateRequest.setSurname(Optional.ofNullable(userEditRequest.getSurname()).orElse(user.getSurname()));
-        profileUpdateRequest.setCity(Optional.ofNullable(userEditRequest.getCity()).orElse(user.getCity()));
-        profileUpdateRequest.setPhoneNumber(Optional.ofNullable(userEditRequest.getPhoneNumber()).orElse(user.getPhoneNumber()));
-        profileUpdateRequest.setProcessed(false);
-        profileUpdateRequest.setRequestTime(new Timestamp(System.currentTimeMillis()));
-        profileUpdateRequestRepository.save(profileUpdateRequest);
     }
 
     public void updateUser(User user, UserEditDTO userEditRequest) {

@@ -21,11 +21,13 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {CarSettingsComponent} from './components/car-settings/car-settings.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
 import {MatSelectModule} from "@angular/material/select";
+import {DriverRequestChangeComponent} from "./components/driver-request-change/driver-request-change.component";
 
 @NgModule({
   declarations: [
     ProfileDriverContainerComponent,
-    CarSettingsComponent
+    CarSettingsComponent,
+    DriverRequestChangeComponent
   ],
     imports: [
         MatToolbarModule,

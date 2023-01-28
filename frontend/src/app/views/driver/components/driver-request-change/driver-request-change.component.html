@@ -1,0 +1,94 @@
+<mat-card>
+  <mat-card-content>
+    <form [formGroup]="formGroup" (ngSubmit)="requestChanges()">
+      <h3>Driver's data</h3>
+      <p>
+        <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input type="email" matInput [(ngModel)]="email" formControlName="emailFormCtr"
+                 placeholder="Ex. pat@example.com" required>
+          <mat-error
+            *ngIf="formGroup.hasError('required', 'emailFormCtr') && !formGroup.hasError('required', 'emailFormCtr')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="formGroup.hasError('required', 'emailFormCtr')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+          <mat-label>Phone number</mat-label>
+          <input matInput type="tel" [(ngModel)]="phoneNumber" formControlName="phoneFormCtr"
+                 placeholder="Ex. +381 1234567"
+                 required>
+          <mat-error *ngIf="formGroup.hasError('required', 'phoneFormCtr')">
+            Phone number is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p style="margin-top: -10px">
+        <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+          <mat-label>Enter driver's name</mat-label>
+          <input matInput formControlName="nameFormCtr" [(ngModel)]="name" required>
+          <mat-error *ngIf="formGroup.hasError('required', 'nameFormCtr')">
+            Name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+          <mat-label>Enter driver's last name</mat-label>
+          <input matInput formControlName="lastNameFormCtr" [(ngModel)]="lastName" required>
+          <mat-error *ngIf="formGroup.hasError('required', 'lastNameFormCtr')">
+            Last name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p style="margin-top: -10px">
+        <mat-form-field style="width: 100%" appearance="outline">
+          <mat-label>Enter the city driver lives in</mat-label>
+          <input matInput formControlName="cityFormCtr" [(ngModel)]="city" required>
+          <mat-error *ngIf="formGroup.hasError('required', 'cityFormCtr')">
+            City is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <h3>Car's data</h3>
+      <p>
+        <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+          <mat-label>Enter car's mark name</mat-label>
+          <input matInput [(ngModel)]="carName" formControlName="carNameFormCtr" required>
+          <mat-error *ngIf="formGroup.hasError('required', 'nameFormCtr')">
+            Car name is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+        <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+          <mat-label>Enter car's plates</mat-label>
+          <input matInput [(ngModel)]="plates" formControlName="platesFormCtr" required>
+          <mat-error *ngIf="formGroup.hasError('required', 'platesFormCtr')">
+            Car plates are <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p>
+        <mat-form-field style="width: 100%" appearance="outline" floatLabel="always">
+          <mat-label>Car type</mat-label>
+          <mat-select [(ngModel)]="selectedCarType" [ngModelOptions]="{standalone: true}" required>
+            <mat-option *ngFor="let carType of carTypes" [value]="carType">{{carType}}</mat-option>
+          </mat-select>
+        </mat-form-field>
+      </p>
+      <p style="margin-top: -10px">
+        <mat-checkbox color="primary" (change)="allowsBaby = !allowsBaby" [checked]="allowsBaby"
+                      [indeterminate]="false">Allows babies
+        </mat-checkbox>
+        &nbsp;&nbsp;
+        <mat-checkbox color="primary" (change)="allowsPet = !allowsPet" [checked]="allowsPet"
+                      [indeterminate]="false">Allows pets
+        </mat-checkbox>
+      </p>
+      <button mat-raised-button color="primary" type="submit" style="width: 100%"
+              [disabled]="!formGroup.valid || alreadyRequestedChanges">
+        Request changes
+      </button>
+      <p *ngIf="alreadyRequestedChanges">You already requested profile data changes.</p>
+    </form>
+  </mat-card-content>
+</mat-card>

@@ -3,17 +3,17 @@ import {Action, Selector, State, StateContext} from "@ngxs/store";
 import {tap} from "rxjs";
 import {DriversService} from "../../services/drivers.service";
 import {Drivers} from "../actions/drivers.actions";
-import {Driver} from "../../model/Driver";
+import {DriverDTO} from "../../model/DriverDTO";
 
-@State<Driver[]>({
+@State<DriverDTO[]>({
   name: 'drivers',
-  defaults: [] as Driver[]
+  defaults: [] as DriverDTO[]
 })
 @Injectable()
 export class DriversState {
 
   @Selector()
-  static drivers(state: Driver[]) {
+  static drivers(state: DriverDTO[]) {
     return state;
   }
 
@@ -21,9 +21,9 @@ export class DriversState {
   }
 
   @Action(Drivers)
-  getDrivers(ctx: StateContext<Driver[]>) {
+  getDrivers(ctx: StateContext<DriverDTO[]>) {
     return this.driversService.getDrivers()
-      .pipe(tap((drivers: Driver[]) =>
+      .pipe(tap((drivers: DriverDTO[]) =>
         ctx.setState(drivers)
       ));
   }

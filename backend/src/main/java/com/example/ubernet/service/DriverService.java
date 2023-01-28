@@ -1,6 +1,8 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.dto.CreateDriverDTO;
+import com.example.ubernet.dto.DriverChangeRequest;
+import com.example.ubernet.dto.DriverChangeResponse;
 import com.example.ubernet.dto.DriverDto;
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.model.*;
@@ -8,6 +10,7 @@ import com.example.ubernet.repository.CarRepository;
 import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.DriverRepository;
 import com.example.ubernet.repository.DriverActivityPeriodRepository;
+import com.example.ubernet.repository.ProfileChangesRequestRepository;
 import com.example.ubernet.utils.DTOMapper;
 import com.example.ubernet.utils.EntityMapper;
 import lombok.AllArgsConstructor;
@@ -32,6 +35,7 @@ public class DriverService {
     private final CarTypeService carTypeService;
     private final PositionService positionService;
     private final PasswordEncoder passwordEncoder;
+    private final ProfileChangesRequestRepository profileChangesRequestRepository;
 
     public Driver toggleActivity(String email, boolean activate) {
         Driver driver = (Driver) userService.findByEmail(email);
@@ -55,6 +59,7 @@ public class DriverService {
         driverDailyActivity.setLastPeriodStart(LocalDateTime.now());
         driverDailyActivityService.save(driverDailyActivity);
     }
+
     public Driver saveDriver(CreateDriverDTO dto, UserAuth userAuth) {
         Driver driver = new Driver();
         driver.setUserAuth(userAuth);
@@ -105,7 +110,8 @@ public class DriverService {
 
     public void logoutDriver(String email) {
         Driver driver = driverRepository.findByEmail(email);
-        if (!driver.getCar().getIsAvailable()) throw new BadRequestException("You need to finish your rides to logout.");
+        if (!driver.getCar().getIsAvailable())
+            throw new BadRequestException("You need to finish your rides to logout.");
         deactivateDriver(driver);
         Car car = driver.getCar();
         car.setIsAvailable(false);
@@ -132,6 +138,7 @@ public class DriverService {
                     .phoneNumber(driver.getPhoneNumber())
                     .isWorking(driver.getDriverDailyActivity().getIsActive())
                     .blocked(driver.getBlocked())
+                    .requestedChanges(driver.isRequestedProfileChanges())
                     .build());
         }
         return drivers;
@@ -163,7 +170,7 @@ public class DriverService {
 
         for (DriverActivityPeriod interval : periodsInLast24h) {
             if (interval.getStartOfPeriod().isAfter(LocalDateTime.now().minusDays(1))) remainingPeriods.add(interval);
-            else if(interval.getEndOfPeriod().isAfter(LocalDateTime.now().minusDays(1))) {
+            else if (interval.getEndOfPeriod().isAfter(LocalDateTime.now().minusDays(1))) {
                 interval.setStartOfPeriod(LocalDateTime.now());
                 intervalRepository.save(interval);
                 remainingPeriods.add(interval);
@@ -201,5 +208,56 @@ public class DriverService {
         if (lastPeriodStart != null)
             totalDurationInSeconds += lastPeriodStart.until(LocalDateTime.now(), ChronoUnit.SECONDS);
         return totalDurationInSeconds;
+    }
+
+    public DriverChangeResponse getFullDriverByEmail(String email) {
+        Driver driver = findByEmail(email);
+        return DriverChangeResponse.builder()
+                .email(driver.getEmail())
+                .name(driver.getName())
+                .surname(driver.getSurname())
+                .phoneNumber(driver.getPhoneNumber())
+                .city(driver.getCity())
+                .carName(driver.getCar().getName())
+                .plates(driver.getCar().getPlates())
+                .carType(driver.getCar().getCarType().getName())
+                .allowsBabies(driver.getCar().getAllowsBaby())
+                .allowsPets(driver.getCar().getAllowsPet())
+                .alreadyRequestedChanges(driver.isRequestedProfileChanges())
+                .build();
+    }
+
+    public ProfileChangesRequest createRequest(DriverChangeRequest driverChangeRequest) {
+        Driver driver = driverRepository.findByEmail(driverChangeRequest.getEmail());
+        if (driver.isRequestedProfileChanges()) {
+            return null;
+        }
+        ProfileChangesRequest request = ProfileChangesRequest.builder()
+                .allowsBabies(driverChangeRequest.getAllowsBabies())
+                .allowsPets(driverChangeRequest.getAllowsPets())
+                .carName(driverChangeRequest.getCarName())
+                .carType(driverChangeRequest.getCarType())
+                .city(driverChangeRequest.getCity())
+                .name(driverChangeRequest.getName())
+                .surname(driverChangeRequest.getSurname())
+                .phoneNumber(driverChangeRequest.getPhoneNumber())
+                .plates(driverChangeRequest.getPlates())
+                .processed(false)
+                .requestTime(LocalDateTime.now())
+                .build();
+
+        driver.setRequestedProfileChanges(true);
+        request.setDriver(driver);
+        driverRepository.save(driver);
+        profileChangesRequestRepository.save(request);
+        return request;
+    }
+
+    public ProfileChangesRequest getProfileChangesRequest(String driverEmail) {
+        return profileChangesRequestRepository.findByDriverEmail(driverEmail);
+    }
+
+    public List<ProfileChangesRequest> getProfileChangesRequests() {
+        return profileChangesRequestRepository.findByProcessedFalse();
     }
 }
