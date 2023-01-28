@@ -14,7 +14,7 @@ import {RideDetailsDialogComponent} from "../../../../shared/ride-details-dialog
 })
 export class CustomerRatingsDashboardComponent {
   rides: RideToRate[] = [];
-  customerEmail: string = "";
+  customerEmail = "";
 
   constructor(private dialog: MatDialog, private store: Store, private service: RatingsService) {
     this.store.dispatch(new CurrentlyLogged()).subscribe({

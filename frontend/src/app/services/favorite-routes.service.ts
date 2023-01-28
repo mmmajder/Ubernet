@@ -20,17 +20,17 @@ export class FavoriteRoutesService {
   }
 
   public isRouteFavorite(customerEmail: string, rideId: number): Observable<boolean> {
-    let body = new FavoriteRouteRequest(customerEmail, rideId);
+    const body = new FavoriteRouteRequest(customerEmail, rideId);
     return this.http.post<boolean>(this.favoriteRoutesUrl + "isRouteFavorite", body, AuthService.getHttpOptions());
   }
 
   public addToFavoriteRoutes(customerEmail: string, rideId: number): Observable<void> {
-    let body = new FavoriteRouteRequest(customerEmail, rideId);
+    const body = new FavoriteRouteRequest(customerEmail, rideId);
     return this.http.post<void>(this.favoriteRoutesUrl + "addToFavoriteRoutes", body, AuthService.getHttpOptions());
   }
 
   public removeFromFavoriteRoutes(customerEmail: string, rideId: number): Observable<void> {
-    let body = new FavoriteRouteRequest(customerEmail, rideId);
+    const body = new FavoriteRouteRequest(customerEmail, rideId);
     return this.http.post<void>(this.favoriteRoutesUrl + "removeFromFavoriteRoutes", body, AuthService.getHttpOptions());
   }
 }

@@ -3,7 +3,6 @@ import {FormControl, Validators} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthService} from "../../../../services/auth.service";
 import {RegisterCredentials} from "../../../../model/RegisterCredentials";
-import {UserRole} from "../../../../model/UserRole";
 
 @Component({
   selector: 'app-registration',

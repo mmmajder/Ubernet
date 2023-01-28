@@ -19,7 +19,6 @@ import {ChangePasswordComponent} from "./profile-edit/change-password/change-pas
 import {MatCardModule} from "@angular/material/card";
 import {StarRatingComponent} from './star-rating/star-rating.component';
 import {UserProfileComponent} from './user-profile/user-profile.component';
-import {ActivityLogComponent} from "./activity-log/activity-log.component";
 import {ReviewsComponent} from './reviews/reviews.component';
 import {RidesHistoryComponent} from "./rides-history/rides-history.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
@@ -31,33 +30,32 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {NotificationsComponent} from "./notification/notifications.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
-import {CustomerModule} from "../views/customer/customer.module";
 
 @NgModule({
-  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
-    imports: [
-        MatToolbarModule,
-        MatIconModule,
-        MatMenuModule,
-        CommonModule,
-        MatButtonModule,
-        MatBadgeModule,
-        MatListModule,
-        MatTooltipModule,
-        FormsModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatCardModule,
-        MatProgressSpinnerModule,
-        MatTableModule,
-        MatPaginatorModule,
-        MatSortModule,
-        MatChipsModule,
-        MatExpansionModule,
-        MatSlideToggleModule,
-    ],
-  exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ActivityLogComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
+  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
+  imports: [
+    MatToolbarModule,
+    MatIconModule,
+    MatMenuModule,
+    CommonModule,
+    MatButtonModule,
+    MatBadgeModule,
+    MatListModule,
+    MatTooltipModule,
+    FormsModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatCardModule,
+    MatProgressSpinnerModule,
+    MatTableModule,
+    MatPaginatorModule,
+    MatSortModule,
+    MatChipsModule,
+    MatExpansionModule,
+    MatSlideToggleModule,
+  ],
+  exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {
 }

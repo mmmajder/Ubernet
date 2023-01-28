@@ -71,7 +71,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    let rideId = this.route.snapshot.paramMap.get('rideId');
+    const rideId = this.route.snapshot.paramMap.get('rideId');
     if (rideId !== null) {
       this.initializeFavoriteRoute(rideId as string);
     }
@@ -135,7 +135,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.createRouteForSelectedCar(JSON.parse(message.body))
     })
     this.stompClient.subscribe("/notify-driver/decline-ride-" + this.loggedUser.email, (message: any) => {
-      let notifications: DriverNotification[] = JSON.parse(message.body)
+      const notifications: DriverNotification[] = JSON.parse(message.body)
       this.notificationDriverComponent.removeDriverNotifications(notifications);
       this.initRouteDriver()
     })
@@ -156,21 +156,21 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   getWaypoints(currentRide: CurrentRide): L.LatLng[] {
-    let positions: L.LatLng[] = [];
+    const positions: L.LatLng[] = [];
     currentRide.positions.forEach((positionInTime) => {
-      let position = positionInTime.position
+      const position = positionInTime.position
       positions.push(L.latLng(position.y, position.x))
     })
     return positions
   }
 
   createPins(positionsInTime: PositionInTime[], routeForUser: (Polyline | Control | Marker)[]) {
-    let firstPosition = positionsInTime[0].position
-    let firstMarker = L.marker([firstPosition.y, firstPosition.x]).addTo(this.map);
+    const firstPosition = positionsInTime[0].position
+    const firstMarker = L.marker([firstPosition.y, firstPosition.x]).addTo(this.map);
     firstMarker.dragging?.disable()
     routeForUser.push(firstMarker)
-    let lastPosition = positionsInTime[positionsInTime.length - 1].position
-    let lastMarker = L.marker([lastPosition.y, lastPosition.x]).addTo(this.map);
+    const lastPosition = positionsInTime[positionsInTime.length - 1].position
+    const lastMarker = L.marker([lastPosition.y, lastPosition.x]).addTo(this.map);
     lastMarker.dragging?.disable()
     routeForUser.push(lastMarker)
   }
@@ -306,7 +306,7 @@ export class MapComponent implements AfterViewInit, OnInit {
       }).on('routesfound', (response) => {
         this.allRoutesSearch[index] = response.routes
         const route = response.routes[0]
-        let totalTime = route.summary.totalTime
+        const totalTime = route.summary.totalTime
         this.estimationsSearch.time = secondsToDhms(totalTime)
         this.estimationsSearch.lengthInKm = route.summary.totalDistance / 1000
         if (this.typeOfVehicle != undefined) {

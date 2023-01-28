@@ -6,9 +6,7 @@ import {PositionInTime} from "../model/PositionInTime";
 import {Position} from "../model/Position";
 import {RideDetails} from "../model/RideDetails";
 import {RideDTO} from "../model/RideDTO";
-import {RouteDTO} from "../model/RouteDTO";
 import {CurrentRide} from "../model/CurrentRide";
-import {LeafletRoute} from "../model/LeafletRoute";
 import {AuthService} from "./auth.service";
 
 @Injectable({

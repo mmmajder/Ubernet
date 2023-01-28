@@ -3,6 +3,7 @@ import {FormControl, Validators} from "@angular/forms";
 import {UserService} from "../../../services/user.service";
 import {AuthService} from "../../../services/auth.service";
 import {PasswordChangeInfo} from "../../../model/PasswordChangeInfo";
+import {User} from "../../../model/User";
 
 @Component({
   selector: 'app-change-password',
@@ -14,10 +15,10 @@ export class ChangePasswordComponent implements OnInit {
   hideNewPassword = true;
   hideReEnteredNewPassword = true;
 
-  currentPassword: any = "";
-  newPassword: any = "";
-  reEnteredNewPassword: any = "";
-  loggedUser: any = null;
+  currentPassword = "";
+  newPassword = "";
+  reEnteredNewPassword = "";
+  loggedUser: User;
 
   currentPasswordFormControl = new FormControl('', [Validators.required]);
   newPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);

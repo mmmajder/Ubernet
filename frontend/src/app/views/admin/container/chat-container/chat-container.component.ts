@@ -6,6 +6,7 @@ import {Message} from "../../../../model/Message";
 import {Chat} from "../../../../model/Chat";
 import {UserService} from "../../../../services/user.service";
 import {ImageService} from "../../../../services/image.service";
+import {User} from "../../../../model/User";
 
 @Component({
   selector: 'app-chat-container',
@@ -15,7 +16,7 @@ import {ImageService} from "../../../../services/image.service";
 export class ChatContainerComponent implements OnInit {
 
   chats: Chat[] = [];
-  loggedUser: any = null;
+  loggedUser: User;
   clientName: string;
   clientEmail: string;
   messagesWithClient: Message[] = [];

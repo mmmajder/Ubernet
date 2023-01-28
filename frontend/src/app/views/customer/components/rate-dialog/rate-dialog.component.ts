@@ -14,7 +14,7 @@ export class RateDialogComponent {
 
   driverRating = 5;
   carRating = 5;
-  comment: string = "";
+  comment = "";
 
   constructor(private service: RatingsService, private _snackBar: MatSnackBar) {
   }

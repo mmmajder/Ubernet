@@ -1,12 +1,12 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {FormControl, FormGroup} from "@angular/forms";
 import {Chart, registerables} from "chart.js";
-import {MatDatepickerInputEvent} from "@angular/material/datepicker";
 import {ReportService} from "../../../services/reports.service";
 import {CurrentlyLogged} from "../../../store/actions/loggedUser.actions";
 import {Store} from "@ngxs/store";
 import {UserRole} from "../../../model/UserRole";
 import {ReportRequest, ReportResponse} from "../../../model/ReportRequest";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 Chart.register(...registerables);
 
@@ -33,7 +33,7 @@ export class AnalyticsContainerComponent {
     end: new FormControl(new Date()),
   });
 
-  constructor(private reportService: ReportService, private store: Store) {
+  constructor(private reportService: ReportService, private store: Store, private _snackBar: MatSnackBar) {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
         this.userRole = resp.loggedUser.role;
@@ -53,20 +53,27 @@ export class AnalyticsContainerComponent {
       if (this.userRole == UserRole.DRIVER) {
         this.reportService.generateReportForDriver(reportRequest).subscribe({
           next: value => this.updateCharts(value),
-          error: err => console.log("Error occured.")
-        });
+          error: () => this.showErrorSnackBar()
+        })
       } else if (this.userRole == UserRole.CUSTOMER) {
         this.reportService.generateReportForCustomer(reportRequest).subscribe({
           next: value => this.updateCharts(value),
-          error: err => console.log("Error occured.")
-        });
+          error: () => this.showErrorSnackBar()
+        })
       } else {
         this.reportService.generateReportForAdmin(reportRequest).subscribe({
           next: value => this.updateCharts(value),
-          error: err => console.log("Error occured.")
-        });
+          error: () => this.showErrorSnackBar()
+        })
       }
     }
+  }
+
+  showErrorSnackBar() {
+    this._snackBar.open("Couldn't generate report.", '', {
+      duration: 3000,
+      panelClass: ['snack-bar']
+    });
   }
 
   updateCharts(report: ReportResponse) {

@@ -43,7 +43,7 @@ export class SidenavComponent implements OnInit {
   notificationBadgeHidden: boolean;
   private stompClient: any;
   driverActive: boolean;
-  workingHours: string = "0 minutes";
+  workingHours = "0 minutes";
 
   constructor(private _snackBar: MatSnackBar, private driverService: DriversService, public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService, private notificationService: NotificationService) {
     this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
@@ -114,7 +114,7 @@ export class SidenavComponent implements OnInit {
       this.updateNotificationBadge();
     })
     this.stompClient.subscribe("/driver/active-seconds-" + this.user.email, (message: any) => {
-      let seconds: number = JSON.parse(message.body)
+      const seconds: number = JSON.parse(message.body)
       this.workingHours = secondsToHm(seconds);
     })
   }

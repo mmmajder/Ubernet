@@ -1,5 +1,3 @@
-import {UserRole} from "./UserRole";
-
 export class RegisterCredentials {
   email!: string;
   name!: string;

@@ -1,7 +1,6 @@
-import {Component, Inject, OnInit} from '@angular/core';
+import {Component, Inject} from '@angular/core';
 import {MAT_DIALOG_DATA} from "@angular/material/dialog";
 import {NotificationDTO} from "../../../../model/NotificationDTO";
-import {DriverInconsistency} from "../../../../model/DriverInconsistency";
 import {DriverInconsistencyService} from "../../../../services/driver-inconsistency.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
@@ -10,15 +9,12 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   templateUrl: './report-driver-dialog.component.html',
   styleUrls: ['./report-driver-dialog.component.css']
 })
-export class ReportDriverDialogComponent implements OnInit {
+export class ReportDriverDialogComponent {
 
   notification: NotificationDTO
 
   constructor(private _snackBar: MatSnackBar, @Inject(MAT_DIALOG_DATA) public data: NotificationDTO, private driverInconsistencyService: DriverInconsistencyService) {
     this.notification = data
-  }
-
-  ngOnInit(): void {
   }
 
   accept() {

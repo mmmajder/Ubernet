@@ -20,7 +20,7 @@ import {CustomersService} from "../../../../services/customers.service";
 import {RideAlternativeService} from "../../../../services/ride-alternative.service";
 import {RideDTO} from "../../../../model/RideDTO";
 import {OpenStreetMapProvider} from 'leaflet-geosearch';
-import {debounceTime, distinctUntilChanged, from, map, Observable, startWith, switchMap} from "rxjs";
+import {debounceTime, distinctUntilChanged, from, Observable, startWith, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -77,7 +77,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   ManageNameControl(index: number) {
     console.log("Manage name")
-    var arrayControl = this.destinationsForm.get('destinations') as FormArray;
+    const arrayControl = this.destinationsForm.get('destinations') as FormArray;
     console.log(arrayControl)
     this.filteredOptions[index] = arrayControl.controls[index].valueChanges
       .pipe(
@@ -147,7 +147,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   initFavRoute() {
     this.positions = this.favoriteRide.route.checkPoints
     for (let i = 0; i < this.favoriteRide.route.checkPoints.length; i++) {
-      let checkpoint = this.favoriteRide.route.checkPoints[i];
+      const checkpoint = this.favoriteRide.route.checkPoints[i];
       if (i < 2)
         this.destinations.controls[i].setValue(checkpoint.name)
       else {
@@ -303,11 +303,11 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   requestRide() {
-    let payment = new PaymentDTO();
+    const payment = new PaymentDTO();
     payment.customerThatPayed = this.loggedUser.email
     payment.totalPrice = +this.estimations.price
-    let route = this.mergeRoutePaths()
-    let ride = this.createRide(route, payment)
+    const route = this.mergeRoutePaths()
+    const ride = this.createRide(route, payment)
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })
@@ -357,7 +357,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   private _filter(value: string): Observable<string[]> {
     const getSuggestions = async () => {
-      let suggestions = await this.provider.search({
+      const suggestions = await this.provider.search({
         query: value
       });
       console.log(suggestions.slice(0, 3))

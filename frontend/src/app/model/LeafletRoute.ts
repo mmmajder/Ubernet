@@ -1,4 +1,3 @@
-import {LatLngDTO} from "./LatLngDTO";
 import {InstructionDTO} from "./InstructionDTO";
 import * as L from 'leaflet';
 
