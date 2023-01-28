@@ -5,7 +5,7 @@ import {LoginResponseDto, UserTokenState} from "../model/LoginResponseDto";
 import {LoginCredentials} from "../model/LoginCredentials";
 import {User} from "../model/User";
 import {LoginSocialCredentials} from "../model/LoginSocialCredentials";
-import {RegisterCredentials} from "../model/RegisterCredentials";
+import {RegisterCredentials, RegisterDriverCredentials} from "../model/RegisterCredentials";
 import {VerifyCredentials} from "../model/VerifyCredentials";
 
 @Injectable({
@@ -20,24 +20,15 @@ export class AuthService {
   }
 
   public login(user: LoginCredentials): Observable<LoginResponseDto> {
-    const body = {
-      "email": user.email,
-      "password": user.password
-    }
-    return this.http.post<LoginResponseDto>(this.authUrl + '/login', body, AuthService.getHttpOptions());
+    return this.http.post<LoginResponseDto>(this.authUrl + '/login', user, AuthService.getHttpOptions());
   }
 
   public register(user: RegisterCredentials): Observable<string> {
-    const body = {
-      "email": user.email,
-      "password": user.password,
-      "name": user.name,
-      "surname": user.lastName,
-      "phoneNumber": user.phoneNumber,
-      "city": user.city,
-      "userRole": user.userRole
-    }
-    return this.http.post<string>(this.authUrl + '/register', body, AuthService.getHttpOptions());
+    return this.http.post<string>(this.authUrl + '/register', user, AuthService.getHttpOptions());
+  }
+
+  public registerDriver(user: RegisterDriverCredentials): Observable<string> {
+    return this.http.post<string>(this.authUrl + '/registerDriver', user, AuthService.getHttpOptions());
   }
 
   public verify(credentials: VerifyCredentials): Observable<string> {
@@ -45,18 +36,7 @@ export class AuthService {
   }
 
   public loginSocial(user: LoginSocialCredentials): Observable<LoginResponseDto> {
-    const body = {
-      "email": user.email,
-      "authToken": user.authToken,
-      "firstName": user.firstName,
-      "id": user.id,
-      "idToken": user.idToken,
-      "lastName": user.lastName,
-      "name": user.name,
-      "photoUrl": user.photoUrl,
-      "provider": user.provider
-    }
-    return this.http.post<LoginResponseDto>(this.authUrl + '/login-social', body, AuthService.getHttpOptions());
+    return this.http.post<LoginResponseDto>(this.authUrl + '/login-social', user, AuthService.getHttpOptions());
   }
 
   public logout(token: UserTokenState | ""): Observable<Object> {

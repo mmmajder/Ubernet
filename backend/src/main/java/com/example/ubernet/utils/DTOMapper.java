@@ -2,6 +2,7 @@ package com.example.ubernet.utils;
 
 import com.example.ubernet.dto.*;
 import com.example.ubernet.model.*;
+import com.example.ubernet.model.enums.UserRole;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -16,6 +17,18 @@ public class DTOMapper {
         user.setPhoneNumber(userDTO.getPhoneNumber());
         user.setPassword(userDTO.getPassword());
         user.setRole(userDTO.getUserRole());
+        return user;
+    }
+
+    public static User getUser(CreateDriverDTO userDTO) {
+        User user = new User();
+        user.setName(userDTO.getName());
+        user.setCity(userDTO.getCity());
+        user.setEmail(userDTO.getEmail());
+        user.setSurname(userDTO.getSurname());
+        user.setPhoneNumber(userDTO.getPhoneNumber());
+        user.setPassword(userDTO.getPassword());
+        user.setRole(UserRole.DRIVER);
         return user;
     }
 

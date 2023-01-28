@@ -185,4 +185,13 @@ public class AuthentificationService {
     }
 
 
+    public Driver addDriver(CreateDriverDTO userDTO) {
+        if (userService.findByEmail(userDTO.getEmail()) != null) {
+            return null;
+        }
+        User user = DTOMapper.getUser(userDTO);
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setBlocked(false);
+        return driverService.saveDriver(userDTO, getUserAuth(user));
+    }
 }

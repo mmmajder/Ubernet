@@ -40,7 +40,10 @@ export class DriversComponent implements OnInit {
   }
 
   registerNewDriver() {
-    this.registerNewDriverDialog.open(RegisterNewDriverDialogComponent);
+    this.registerNewDriverDialog.open(RegisterNewDriverDialogComponent, {
+      width: '600px',
+      height: '600px'
+    });
   }
 
   blockDriver(element: DriverListItem) {

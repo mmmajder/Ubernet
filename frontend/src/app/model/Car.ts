@@ -13,8 +13,8 @@ export class Car {
   allowsPet!: boolean;
   driverEmail!: string;
   driver!: Driver;
-  navigation!: Navigation
-  position!: Position
+  navigation!: Navigation;
+  position!: Position;
 
   constructor(id: number, name: string, plates: string, carType: CarTypeGetResponse, allowsBabies: boolean, allowsPets: boolean,
               driverEmail: string) {
