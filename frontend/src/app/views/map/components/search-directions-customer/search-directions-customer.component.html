@@ -25,6 +25,11 @@
               Stop {{i}}:
             </mat-label>
             <input matInput [name]="'dest' + i" formControlName="{{i}}" id="fromInput">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
             <button mat-icon-button matSuffix *ngIf="destinations.controls.length>2" (click)="removeDestination(i)">
               <mat-icon>
                 location_off

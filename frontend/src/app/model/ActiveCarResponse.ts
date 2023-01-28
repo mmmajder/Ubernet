@@ -6,4 +6,6 @@ export class ActiveCarResponse {
   driverEmail!: string;
   currentPosition!: Position;
   currentRide!: CurrentRide
+  approachFirstRide: CurrentRide
+  firstRide: CurrentRide
 }

@@ -52,7 +52,8 @@ export class AuthService {
   }
 
   public logout(token: UserTokenState): Observable<Object> {
-    return this.http.post(this.authUrl + '/logout/' + token.accessToken, AuthService.getHttpOptions());
+    console.log(token)
+    return this.http.post(this.authUrl + '/logout/' + (localStorage.getItem('token') as string).split(" ")[1], AuthService.getHttpOptions());
   }
 
   public getCurrentlyLoggedUser(): Observable<User> {
@@ -68,7 +69,6 @@ export class AuthService {
   }
 
   public static getHttpOptions() {
-    console.log(localStorage.getItem('token'))
     return {
       headers: new HttpHeaders({
         'Access-Control-Allow-Origin': '*',
@@ -77,7 +77,6 @@ export class AuthService {
       })
     };
   }
-
 
 
 }

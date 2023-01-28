@@ -167,9 +167,11 @@ export class MapComponent implements AfterViewInit, OnInit {
   createPins(positionsInTime: PositionInTime[], routeForUser: (Polyline | Control | Marker)[]) {
     let firstPosition = positionsInTime[0].position
     let firstMarker = L.marker([firstPosition.y, firstPosition.x]).addTo(this.map);
+    firstMarker.dragging?.disable()
     routeForUser.push(firstMarker)
     let lastPosition = positionsInTime[positionsInTime.length - 1].position
     let lastMarker = L.marker([lastPosition.y, lastPosition.x]).addTo(this.map);
+    lastMarker.dragging?.disable()
     routeForUser.push(lastMarker)
   }
 
@@ -263,8 +265,14 @@ export class MapComponent implements AfterViewInit, OnInit {
         })
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
-          const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
-          this.pins.push(marker);
+          console.log(car)
+          if (car.approachFirstRide!==null || (car.firstRide !== null && !car.firstRide.freeRide)) {
+            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.redIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
+            this.pins.push(marker);
+          }else {
+            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
+            this.pins.push(marker);
+          }
         })
       }
     })
@@ -291,7 +299,7 @@ export class MapComponent implements AfterViewInit, OnInit {
             {color: 'blue', opacity: 0.5}
           ],
         },
-        routeWhileDragging: false,
+        routeWhileDragging: true,
         addWaypoints: false,
         showAlternatives: true,
         useZoomParameter: false,
@@ -322,6 +330,15 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   greenIcon = new L.Icon({
     iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  redIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
     shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
     iconSize: [25, 41],
     iconAnchor: [12, 41],

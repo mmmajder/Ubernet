@@ -30,7 +30,9 @@ public class RideAlternativesService {
         for (List<LeafletRouteDTO> alternativePath : alternatives) {
             List<CurrentRide> currentRides = new ArrayList<>();
             for (LeafletRouteDTO variationOfPath : alternativePath) {
-                currentRides.add(rideService.createCurrentRide(variationOfPath.getCoordinates(), variationOfPath.getInstructions()));
+                CurrentRide alternative = rideService.createCurrentRide(variationOfPath.getCoordinates(), variationOfPath.getInstructions());
+                alternative.setShouldGetRouteToClient(false);
+                currentRides.add(alternative);
             }
             PathAlternative pathAlternative = new PathAlternative(currentRides);
             pathAlternativeRepository.save(pathAlternative);

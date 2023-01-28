@@ -17,9 +17,9 @@ class EveryMinute(HttpUser):
     def notify_future_reservation(self):
         self.client.put("/ride-request/notify-time-until-reservation")
 
-    # @task
-    # def check_if_driver_is_active_more_than_8_hours(self):
-    #     self.client.put("/driver/deactivate-too-much-active")
+    @task
+    def update_driver_activity(self):
+        self.client.put("/driver/update-driver-activity")
 
     wait_time = between(5, 5)
 

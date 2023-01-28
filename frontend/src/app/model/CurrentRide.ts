@@ -6,4 +6,5 @@ export class CurrentRide {
   positions!: PositionInTime[];
   currentRide!: any
   numberOfRoute!: number
+  freeRide: boolean
 }

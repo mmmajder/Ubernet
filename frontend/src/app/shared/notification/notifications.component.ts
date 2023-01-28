@@ -7,7 +7,6 @@ import {MatDialog} from "@angular/material/dialog";
 import {
   RideSplitFareDialogComponent
 } from "../../views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component";
-import {SidenavComponent} from "../sidenav/sidenav/sidenav.component";
 import {
   ReportDriverDialogComponent
 } from "../../views/customer/components/report-driver-dialog/report-driver-dialog.component";

@@ -31,7 +31,6 @@ import {AuthState} from "./store/states/auth.state";
 import {LoggedUserState} from "./store/states/loggedUser.state";
 import {PagesModule} from "./views/pages/pages.module";
 import {VerifyRegistrationComponent} from './views/verify/verify-registration/verify-registration.component';
-import {DriversState} from "./store/states/drivers.state";
 import {CustomersState} from "./store/states/customers.state";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatSelectModule} from "@angular/material/select";
@@ -79,7 +78,7 @@ import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig} fro
     AdminModule,
     MapModule,
     PagesModule,
-    NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState, TokensState]),
+    NgxsModule.forRoot([AuthState, LoggedUserState, CustomersState, TokensState]),
     MatProgressSpinnerModule,
     MatSelectModule,
   ],

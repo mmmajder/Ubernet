@@ -5,6 +5,8 @@ import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../../model/LoginResponseDto";
 import {UserRole} from "../../model/UserRole";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 @State<LoginResponseDto>({
   name: 'auth',
@@ -28,13 +30,15 @@ export class AuthState {
     return !!state.token;
   }
 
-  constructor(private authService: AuthService) {
+  constructor(private router: Router, private authService: AuthService, private _snackBar: MatSnackBar) {
   }
 
   @Action(Login)
   login(ctx: StateContext<LoginResponseDto>, action: Login) {
     return this.authService.login(action.payload).pipe(
       tap((result: LoginResponseDto) => {
+        console.log("STATE")
+        console.log(result.token)
         ctx.patchState({
           token: result.token,
           userRole: result.userRole
@@ -47,8 +51,7 @@ export class AuthState {
   loginSocial(ctx: StateContext<LoginResponseDto>, action: LoginSocial) {
     return this.authService.loginSocial(action.payload).pipe(
       tap((result: LoginResponseDto) => {
-        console.log("STATE")
-        console.log(result.token)
+
         ctx.patchState({
           token: result.token,
           userRole: result.userRole
@@ -62,11 +65,24 @@ export class AuthState {
   logout(ctx: StateContext<LoginResponseDto>) {
     const state = ctx.getState();
     return this.authService.logout(state.token).pipe(
-      tap(() => {
-        ctx.setState({
-          token: new UserTokenState(),
-          userRole: UserRole.UNAUTHORIZED
-        });
+      tap({
+        next: () => {
+          console.log("A")
+          ctx.setState({
+            token: new UserTokenState(),
+            userRole: UserRole.UNAUTHORIZED
+          });
+          localStorage.clear();
+          // this.router.navigate(['/'])
+        },
+        error: (message) => {
+          console.log("B")
+          this._snackBar.open(message.error, '', {
+            duration: 3000,
+            panelClass: ['snack-bar']
+          })
+          this.router.navigate(['/map'])
+        }
       })
     );
   }

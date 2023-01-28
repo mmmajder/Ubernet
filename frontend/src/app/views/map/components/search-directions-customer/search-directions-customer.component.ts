@@ -19,6 +19,8 @@ import {LeafletRoute} from "../../../../model/LeafletRoute";
 import {CustomersService} from "../../../../services/customers.service";
 import {RideAlternativeService} from "../../../../services/ride-alternative.service";
 import {RideDTO} from "../../../../model/RideDTO";
+import {OpenStreetMapProvider} from 'leaflet-geosearch';
+import {debounceTime, distinctUntilChanged, from, map, Observable, startWith, switchMap} from "rxjs";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -51,6 +53,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   timeOfRide: string
   typeOfRequest: string;
   isActive: boolean;
+  provider = new OpenStreetMapProvider();
+  filteredOptions: Observable<string[]>[]
+  // filteredOptions: string[][]
 
   constructor(private rideAlternativeService: RideAlternativeService, private customerService: CustomersService, private store: Store, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = []
@@ -59,6 +64,30 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.hasPet = false;
     this.timeOfRide = new Date().toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
     this.optimize = ""
+    this.filteredOptions = []
+    this.destinationsForm = new FormGroup({
+      destinations: new FormArray([
+        new FormControl("", Validators.required),
+        new FormControl("", Validators.required)
+      ]),
+    })
+    this.ManageNameControl(0)
+    this.ManageNameControl(1)
+  }
+
+  ManageNameControl(index: number) {
+    console.log("Manage name")
+    var arrayControl = this.destinationsForm.get('destinations') as FormArray;
+    console.log(arrayControl)
+    this.filteredOptions[index] = arrayControl.controls[index].valueChanges
+      .pipe(
+        startWith(''),
+        debounceTime(400),
+        distinctUntilChanged(),
+        switchMap(name => {
+          return this._filter(name || '')
+        })
+      )
   }
 
   get destinations() {
@@ -74,6 +103,20 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.destinationsForm.get('destinations').controls[0].valueChanges.pipe(startWith(''), switchMap(value => this._filter(value)))
+
+    // this.destinationsForm.get('destinations').controls[0].valueChanges.subscribe((value) => {
+    //   if(value.length >= 1){
+    //     this._filter(value).subscribe(response => {
+    //       this.filteredOptions[0] = response;
+    //     });
+    //   }
+    //   else {
+    //     return null;
+    //   }
+    // })
+
+
     this.customerService.getById(this.loggedUser.email).subscribe((customer: Customer) => {
       this.isActive = customer.isActive
     })
@@ -85,15 +128,11 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         })
       },
     });
-    this.destinationsForm = new FormGroup({
-      destinations: new FormArray([
-        new FormControl("", Validators.required),
-        new FormControl("", Validators.required)
-      ]),
-    })
+
     this.carTypeFormGroup = new FormGroup({
       carType: new FormControl("", Validators.required)
     })
+
 
     this.firstFormGroup = new FormGroup({groups: this.destinationsForm});
     this.secondFormGroup = new FormGroup({groups: this.carTypeFormGroup});
@@ -115,11 +154,14 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         this.destinations.push(new FormControl(checkpoint.name, Validators.required))
       }
     }
-    this.showEstimates().then(res => {})
+    this.showEstimates().then()
   }
 
   addNewDestination() {
     this.destinations.push(new FormControl("", Validators.required))
+    this.destinations.controls.forEach((control) => {
+
+    })
   }
 
   removeDestination(number: number) {
@@ -133,6 +175,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   async showEstimates() {
+    console.log("Show")
+    console.log(this.filteredOptions)
+
     console.log(this.destinations.controls)
     if (!validInput(this.destinations.controls)) {
       this._snackBar.open("Please enter all existing locations!", '', {
@@ -308,5 +353,16 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   selectOptimizedValue() {
     this.setSelectedRouteOptimized.emit()
+  }
+
+  private _filter(value: string): Observable<string[]> {
+    const getSuggestions = async () => {
+      let suggestions = await this.provider.search({
+        query: value
+      });
+      console.log(suggestions.slice(0, 3))
+      return suggestions.map(i => i.label).slice(0, 3)
+    }
+    return from(getSuggestions())
   }
 }

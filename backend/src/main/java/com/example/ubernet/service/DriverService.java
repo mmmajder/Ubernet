@@ -62,6 +62,7 @@ public class DriverService {
 
     public void logoutDriver(String email) {
         Driver driver = driverRepository.findByEmail(email);
+        if (!driver.getCar().getIsAvailable()) throw new BadRequestException("You need to finish your rides to logout.");
         deactivateDriver(driver);
         Car car = driver.getCar();
         car.setIsAvailable(false);
@@ -114,16 +115,19 @@ public class DriverService {
 
     private void updateIntervals(DriverDailyActivity driverDailyActivity) {
         List<DriverActivityPeriod> periodsInLast24h = driverDailyActivity.getPeriodsInLast24h();
+        List<DriverActivityPeriod> remainingPeriods = new ArrayList<>();
         if (periodsInLast24h == null) return;
+
         for (DriverActivityPeriod interval : periodsInLast24h) {
-            if (interval.getStartOfPeriod().isAfter(LocalDateTime.now().minusDays(1))) break;
-            if (interval.getEndOfPeriod().isBefore(LocalDateTime.now().minusDays(1))) periodsInLast24h.remove(interval);
-            else {
+            if (interval.getStartOfPeriod().isAfter(LocalDateTime.now().minusDays(1))) remainingPeriods.add(interval);
+            else if(interval.getEndOfPeriod().isAfter(LocalDateTime.now().minusDays(1))) {
                 interval.setStartOfPeriod(LocalDateTime.now());
                 intervalRepository.save(interval);
+                remainingPeriods.add(interval);
                 break;
             }
         }
+        driverDailyActivity.setPeriodsInLast24h(remainingPeriods);
         driverDailyActivityService.save(driverDailyActivity);
     }
 

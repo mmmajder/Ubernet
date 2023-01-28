@@ -4,7 +4,7 @@
   </span>
   <span class="example-spacer"></span>
   <button mat-button *ngIf="user.role==='CUSTOMER'" (click)="addTokens()">
-    <span class="number-of-tokens">{{numberOfTokens}} </span>
+    <span class="number-of-tokens">{{numberOfTokens | number:'1.2-2' }} </span>
     <mat-icon class="token">monetization_on</mat-icon>
   </button>
   <button *ngIf="user.role==='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="notificationMenu" (click)="hideBadge()">
