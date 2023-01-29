@@ -396,7 +396,7 @@ public class RideService {
     }
 
     public List<Ride> getReservedRidesThatShouldStartIn10Minutes() {
-        List<Ride> rides = this.rideRepository.getReservedRides();
+        List<Ride> rides = this.rideRepository.getReservedWithStatusReservedRides();
         List<Ride> res = new ArrayList<>();
         for (Ride ride : rides) {
             if (ride.getScheduledStart().isBefore(LocalDateTime.now().plusMinutes(10))) {
@@ -493,7 +493,7 @@ public class RideService {
     }
 
     public List<Ride> getReservedRidesThatWereNotPayedAndScheduledTimePassed() {
-        List<Ride> rides = rideRepository.getReservedRidesThatWereNotPayedAndScheduledTimePassed();
+        List<Ride> rides = rideRepository.getReservedRidesThatWithStatusRequestedAndScheduledStartIsNotNull();
         rides.removeIf(ride -> ride.getScheduledStart().isAfter(LocalDateTime.now()));
         return rides;
     }

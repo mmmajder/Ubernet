@@ -112,7 +112,7 @@ public class NotificationService {
     }
 
     public void createNotificationForCustomersCarReachedDestination(Car car) {
-        Ride nextRide = rideRepository.findRideFromDriverEmail(car.getDriver().getEmail()).get(0);
+        Ride nextRide = rideRepository.findRidesFromDriverEmail(car.getDriver().getEmail()).get(0);
         for (Customer customer : nextRide.getCustomers()) {
             Notification notification = notificationFactory(customer.getEmail(), nextRide.getId());
             notification.setType(NotificationType.CAR_REACHED_DESTINATION);
@@ -126,7 +126,7 @@ public class NotificationService {
         Navigation navigation = car.getNavigation();
         if (car.getNavigation().getApproachFirstRide() == null) return;
         long approachFirstRideTime = calculateTimeUntilRideStarts(navigation.getApproachFirstRide());
-        Ride ride = rideRepository.findRideFromDriverEmail(car.getDriver().getEmail()).get(0);
+        Ride ride = rideRepository.findRidesFromDriverEmail(car.getDriver().getEmail()).get(0);
         for (Customer customer : ride.getCustomers()) {
             Notification notification = notificationFactory(customer.getEmail(), ride.getId());
             notification.setType(NotificationType.CAR_POSITION);

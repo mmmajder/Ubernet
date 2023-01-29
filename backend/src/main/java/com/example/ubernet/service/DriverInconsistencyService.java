@@ -41,7 +41,7 @@ public class DriverInconsistencyService {
     }
 
     public List<Ride> getReportableRides() {
-        List<Ride> currentRides = rideRepository.findCurrentRides();
+        List<Ride> currentRides = rideRepository.findRidesWithStatusTravelling();
         List<Ride> reportableRides = new ArrayList<>();
         for (Ride ride : currentRides) {
             if (driverInconsistencyRepository.findByRideId(ride.getId())!=null) continue;
