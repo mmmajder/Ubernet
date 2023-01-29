@@ -18,7 +18,7 @@ public class Ride {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
-    private long id;
+    private Long id;
 
     private RideState rideState;
 
@@ -44,4 +44,20 @@ public class Ride {
 
     @OneToOne
     private RideRequest rideRequest;
+
+    public Ride(Long id, RideState rideState, Driver driver) {
+        this.id = id;
+        this.rideState = rideState;
+        this.driver = driver;
+    }
+
+    public Ride(RideState rideState) {
+        this.rideState = rideState;
+    }
+
+    public Ride(Long id, RideState rideState, List<Customer> customers) {
+        this.id = id;
+        this.rideState = rideState;
+        this.customers = customers;
+    }
 }

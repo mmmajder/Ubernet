@@ -142,9 +142,7 @@ public class AuthentificationService {
         if (user == null) {
             return false;
         }
-        user.setPassword("");
-        user.getUserAuth().setIsEnabled(false);
-        user.getUserAuth().setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
+
         String randomCode = RandomString.make(64);
         user.getUserAuth().setResetPasswordCode(randomCode);
         userAuthService.save(user.getUserAuth());

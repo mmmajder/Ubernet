@@ -17,7 +17,7 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
-    private long id;
+    private Long id;
 
     private Boolean deleted=false;
     @OneToOne
@@ -55,5 +55,10 @@ public class Car {
                 ", plates='" + plates + '\'' +
                 ", name='" + name + '\'' +
                 '}';
+    }
+
+    public Car(Long id, String plates) {
+        this.id = id;
+        this.plates = plates;
     }
 }
