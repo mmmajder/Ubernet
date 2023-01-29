@@ -38,17 +38,17 @@ export class DriverChangeRequest {
 }
 
 export class ProfileChangesRequest {
-  email!: string;
-  name!: string;
-  surname!: string;
-  phoneNumber!: string;
-  city!: string;
-  allowsPets: boolean;
-  allowsBabies: boolean;
-  carName: string;
-  carType: string;
-  plates: string;
-  isProcessed: boolean;
-  requestTime: string;
-  driver: Driver;
+  email: string = "";
+  name: string = "";
+  surname: string = "";
+  phoneNumber: string = "";
+  city: string = "";
+  allowsPets: boolean = false;
+  allowsBabies: boolean = false;
+  carName: string = "";
+  carType: string = "";
+  plates: string = "";
+  isProcessed: boolean = false;
+  requestTime: string = "";
+  driver: Driver = new Driver();
 }

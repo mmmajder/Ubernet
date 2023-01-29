@@ -1,11 +1,10 @@
 <div class="scrollable" style="min-height: 350px">
   <mat-list>
     <mat-list-item *ngFor="let chat of chats" (click)="selectChat(chat.clientEmail)">
-      <img class="avatar" style="margin-right: 10px" [src]="profilePictures[chat.clientEmail]" alt="avatar"/>
-      <div>
-        <div matListItemLine> {{chat.clientFullname}} </div>
-        <div matListItemLine style="font-size: 13px"> {{chat.mostRecentMessage.content}} </div>
-      </div>
+      <img matListItemIcon class="avatar" style="margin-right: 10px" [src]="profilePictures.get(chat.clientEmail)"
+           alt="avatar"/>
+      <div matListItemLine><b>{{chat.clientFullname}}</b></div>
+      <div matListItemLine style="font-size: 13px"> {{chat.mostRecentMessage.content}} </div>
       <mat-divider></mat-divider>
     </mat-list-item>
   </mat-list>

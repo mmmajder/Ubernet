@@ -1,8 +1,8 @@
-<div *ngIf="isSentByTheUser" [matTooltip]="message.time" [matTooltipPosition]="'right'"
-     matTooltipClass="message-tooltip">
-  <span matListItemLine class="left">{{message.content}}</span>
-</div>
-<div *ngIf="!isSentByTheUser" [matTooltip]="message.time" [matTooltipPosition]="'left'"
-     matTooltipClass="message-tooltip">
-  <span matListItemLine class="right">{{message.content}}</span>
+<div class="message__outer">
+  <div *ngIf="isSentByTheUser">
+    <div class="left" style="overflow-wrap: break-word; max-width: 300px; word-break: break-word" [matTooltip]="message.time" [matTooltipPosition]="'right'">{{message.content}}</div>
+  </div>
+  <div class="message__inner" *ngIf="!isSentByTheUser">
+    <div class="right" style="overflow-wrap: break-word; max-width: 300px; word-break: break-word" [matTooltip]="message.time" [matTooltipPosition]="'left'">{{message.content}}</div>
+  </div>
 </div>

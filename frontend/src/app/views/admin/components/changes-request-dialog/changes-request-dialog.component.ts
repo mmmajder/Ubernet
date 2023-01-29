@@ -11,7 +11,7 @@ import {AdminService} from "../../../../services/admin.service";
 })
 export class ChangesRequestDialogComponent implements OnInit {
   driverEmail: string = "";
-  request: ProfileChangesRequest;
+  request: ProfileChangesRequest = new ProfileChangesRequest();
   showOnlyChanges: boolean = false;
 
   constructor(private driversService: DriversService, private adminService: AdminService, private _snackBar: MatSnackBar) {

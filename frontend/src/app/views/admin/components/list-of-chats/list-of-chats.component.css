@@ -1,7 +1,3 @@
-mat-list-item {
-  border: 1px solid red;
-}
-
 mat-list-item:hover {
   background: var(--light-gray);
   cursor: pointer;
@@ -9,5 +5,5 @@ mat-list-item:hover {
 
 .chat-scrollable {
   overflow-y: scroll;
-  min-height: 350px;
+  height: 400px;
 }

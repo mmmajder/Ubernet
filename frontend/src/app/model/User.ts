@@ -15,13 +15,13 @@ export function userIsDriver(user: User): user is Driver {
 }
 
 export class Driver implements User {
-  blocked: boolean;
-  city: string;
+  blocked: boolean = false;
+  city: string = "";
   email = "";
-  name: string;
-  phoneNumber: string;
-  role: string;
-  surname: string;
+  name: string = "";
+  phoneNumber: string = "";
+  role: string = "";
+  surname: string = "";
   car: Car;
 }
 
