@@ -171,6 +171,7 @@ public class DTOMapper {
         driverDto.setPhoneNumber(driver.getPhoneNumber());
         driverDto.setWorking(driver.getDriverDailyActivity().getIsActive());
         driverDto.setBlocked(driver.getBlocked());
+        driverDto.setRequestedChanges(driver.isRequestedProfileChanges());
         return driverDto;
     }
 }

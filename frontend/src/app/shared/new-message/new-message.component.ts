@@ -13,7 +13,7 @@ export class NewMessageComponent {
 
   @Input() loggedUser: User;
   @Input() messages: Message[];
-  @Input() clientEmail:string;
+  @Input() clientEmail: string;
   @Output() onNewMessageSent = new EventEmitter<Message>();
   messageText = "";
 
@@ -21,8 +21,8 @@ export class NewMessageComponent {
   }
 
   public sendMessage(): void {
-    if (this.messageText.trim() !== ""){
-      const message:Message = this.createMessage();
+    if (this.messageText.trim() !== "") {
+      const message: Message = this.createMessage();
       this.webSocketService.sendMessage(message);
       this.messages.push(message);
       this.onNewMessageSent.emit(message);
@@ -30,13 +30,12 @@ export class NewMessageComponent {
     }
   }
 
-  private createMessage(): Message{
-    let message:Message;
+  private createMessage(): Message {
+    let message: Message;
 
-    if (this.loggedUser.role === "ADMIN"){
+    if (this.loggedUser.role === "ADMIN") {
       message = new Message(this.clientEmail, this.loggedUser.email, true, this.messageText, dateTimeNowToString());
-    }
-    else{
+    } else {
       message = new Message(this.loggedUser.email, "", false, this.messageText, dateTimeNowToString());
     }
 

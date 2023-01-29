@@ -6,9 +6,10 @@ import {
   RegisterNewDriverDialogComponent
 } from "../register-new-driver-dialog/register-new-driver-dialog.component";
 import {DriversProfileDialogComponent} from "../drivers-profile-dialog/drivers-profile-dialog.component";
-import {Driver} from "../../../../model/Driver";
 import {ImageService} from "../../../../services/image.service";
 import {DriversService} from "../../../../services/drivers.service";
+import {DriverDTO} from "../../../../model/DriverDTO";
+import {ChangesRequestDialogComponent} from "../changes-request-dialog/changes-request-dialog.component";
 
 @Component({
   selector: 'app-drivers',
@@ -17,12 +18,13 @@ import {DriversService} from "../../../../services/drivers.service";
 })
 export class DriversComponent implements OnInit {
 
-  displayedColumns: string[] = ['profilePicture', 'name', 'email'];
+  displayedColumns: string[] = ['profilePicture', 'name', 'email', 'requestedChanges'];
   driversList: MatTableDataSource<DriverListItem> = new MatTableDataSource<DriverListItem>();
-  drivers: Driver[];
+  drivers: DriverDTO[];
   profilePictures: Map<string, string> = new Map<string, string>();
+  filterDriversByRequests: boolean = false;
 
-  constructor(private driversService: DriversService, private driversProfile: MatDialog, private registerNewDriverDialog: MatDialog, private imageService: ImageService) {
+  constructor(private driversService: DriversService, private dialog: MatDialog, private registerNewDriverDialog: MatDialog, private imageService: ImageService) {
   }
 
   applyFilter(event: Event) {
@@ -31,10 +33,11 @@ export class DriversComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getDrivers();
+    this.getDrivers(false);
   }
 
-  private getDrivers() {
+  public getDrivers(filterByRequests: boolean) {
+    this.filterDriversByRequests = filterByRequests;
     this.driversService.getDrivers().subscribe((drivers) => {
       this.drivers = drivers;
       this.driversList = new MatTableDataSource<DriverListItem>(this.usersToDriverListItems(this.drivers));
@@ -46,10 +49,15 @@ export class DriversComponent implements OnInit {
       width: '600px',
       height: '600px'
     });
+    dialogRef.afterClosed().subscribe(() => this.getDrivers(false))
+  }
 
-    dialogRef.afterClosed().subscribe(result => {
-      this.getDrivers()
+  openChangesRequest(element: DriverListItem) {
+    const dialogRef = this.dialog.open(ChangesRequestDialogComponent, {
+      width: '600px',
+      height: '600px'
     })
+    dialogRef.componentInstance.driverEmail = element.email;
   }
 
   blockDriver(element: DriverListItem) {
@@ -57,21 +65,23 @@ export class DriversComponent implements OnInit {
   }
 
   openDriversProfileDialog(element: DriverListItem) {
-    const dialogRef = this.driversProfile.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
+    const dialogRef = this.dialog.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
     dialogRef.componentInstance.userEmail = element.email;
   }
 
-  private usersToDriverListItems(users: Driver[]): DriverListItem[] {
+  private usersToDriverListItems(users: DriverDTO[]): DriverListItem[] {
     const driverList: DriverListItem[] = [];
     for (let i = 0; i < users.length; i++) {
-      driverList.push(new DriverListItem(users[i].email, users[i].name + ' ' + users[i].surname));
-      this.imageService.getProfileImage(users[i].email)
-        .subscribe((encodedImage: any) => {
-          if (encodedImage === null)
-            this.profilePictures.set(users[i].email, "../../../../assets/taxi.jpg");
-          else
-            this.profilePictures.set(users[i].email, `data:image/jpeg;base64,${encodedImage.data}`);
-        });
+      if (!this.filterDriversByRequests || (this.filterDriversByRequests && users[i].requestedChanges)) {
+        driverList.push(new DriverListItem(users[i].email, users[i].name + ' ' + users[i].surname, users[i].requestedChanges));
+        this.imageService.getProfileImage(users[i].email)
+          .subscribe((encodedImage: any) => {
+            if (encodedImage === null)
+              this.profilePictures.set(users[i].email, "../../../../assets/taxi.jpg");
+            else
+              this.profilePictures.set(users[i].email, `data:image/jpeg;base64,${encodedImage.data}`);
+          });
+      }
     }
     return driverList;
   }

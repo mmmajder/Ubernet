@@ -1,0 +1,14 @@
+<mat-card>
+  <mat-card-content>
+    <div style="text-align: center;">
+      <img [src]="profileImageSrc" class="profile-picture" alt="profile-picture"/><br>
+      <label class="new-profile-picture">
+        New profile picture
+        <input #fileUploader type="file" (input)="selectFile($event)" accept="image/png, image/jpeg"/>
+      </label>
+      <button mat-raised-button color="primary" style="margin: 10px 0 10px 10px" [disabled]="!hasSelectedFile"
+              (click)="uploadProfileImage()">Save changes
+      </button>
+    </div>
+  </mat-card-content>
+</mat-card>

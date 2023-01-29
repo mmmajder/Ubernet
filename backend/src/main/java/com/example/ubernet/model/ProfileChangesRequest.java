@@ -1,31 +1,37 @@
 package com.example.ubernet.model;
 
-import com.example.ubernet.model.enums.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 
 @Data
+@Builder
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-@Builder
-public class ProfileUpdateRequest {
+public class ProfileChangesRequest {
     @Id
-    @Column(unique = true)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(unique = true)
     private long id;
+
+    @OneToOne
+    private Driver driver;
+
+    private boolean processed;
+    private LocalDateTime requestTime;
 
     private String name;
     private String surname;
     private String city;
     private String phoneNumber;
-    private Timestamp requestTime;
-    @ManyToOne
-    private User user;
-    private boolean isProcessed;
+    private Boolean allowsBabies;
+    private Boolean allowsPets;
+    private String plates;
+    private String carName;
+    private String carType;
 }

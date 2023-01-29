@@ -1,4 +1,4 @@
-export class Driver {
+export class DriverDTO {
   email!: string;
   name!: string;
   surname!: string;
@@ -6,6 +6,7 @@ export class Driver {
   phoneNumber!: string;
   role!: string;
   isWorking: boolean;
+  requestedChanges: boolean;
 
   constructor(name: string, surname: string, email: string, phoneNumber: string, city: string, isWorking: boolean) {
     this.name = name;

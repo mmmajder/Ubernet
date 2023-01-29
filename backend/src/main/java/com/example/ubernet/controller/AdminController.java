@@ -1,14 +1,12 @@
 package com.example.ubernet.controller;
 
+import com.example.ubernet.dto.AcceptRequest;
 import com.example.ubernet.service.ProfileUpdateRequestService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
 @RestController
@@ -16,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 public class AdminController {
     private final ProfileUpdateRequestService profileUpdateRequestService;
 
-    @PutMapping(value = "/manage-profile-update")
-    public ResponseEntity<String> manageProfileUpdateRequest(@RequestParam("id") Long id, @RequestParam("isAccepted") Boolean isAccepted) {
-        if (profileUpdateRequestService.manageProfileUpdateRequest(id, isAccepted)) {
-            return new ResponseEntity<>("Successfully accepted/declined Driver profile edit", HttpStatus.OK);
+    @PostMapping(value = "/acceptProfileChange")
+    public ResponseEntity<String> manageProfileUpdateRequest(@RequestBody AcceptRequest request) {
+        if (profileUpdateRequestService.manageProfileUpdateRequest(request.getDriverEmail(), request.isAccepted())) {
+            return new ResponseEntity<>("Successfully resolved driver's profile edit.", HttpStatus.OK);
         }
         return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
     }

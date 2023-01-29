@@ -72,13 +72,13 @@ values (false, false, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1, 0),
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
-                    driver_daily_activity_id, car_id)
+                    driver_daily_activity_id, car_id, requested_profile_changes)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1),
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1, false),
        ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2),
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2, false),
        ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3);
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3, false);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (2, 2),

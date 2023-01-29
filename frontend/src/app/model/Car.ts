@@ -1,7 +1,7 @@
 import {CarTypeGetResponse} from "./CarTypeGetResponse";
 import {Position} from "./Position";
 import {Navigation} from "./Navigation";
-import {Driver} from "./Driver";
+import {DriverDTO} from "./DriverDTO";
 
 export class Car {
   id!: number;
@@ -11,7 +11,7 @@ export class Car {
   allowsBaby!: boolean;
   allowsPet!: boolean;
   driverEmail!: string;
-  driver!: Driver;
+  driver!: DriverDTO;
   navigation!: Navigation;
   position!: Position;
 

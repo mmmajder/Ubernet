@@ -1,0 +1,17 @@
+mat-form-field {
+  width: 100%;
+}
+
+input[type="file"] {
+  display: none;
+}
+
+.new-profile-picture {
+  cursor: pointer;
+  font-weight: 400;
+  color: var(--blue);
+}
+
+.new-profile-picture:hover {
+  text-decoration: underline;
+}

@@ -30,9 +30,10 @@ import {MatChipsModule} from "@angular/material/chips";
 import {MatExpansionModule} from "@angular/material/expansion";
 import {NotificationsComponent} from "./notification/notifications.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
+import {ProfilePictureComponent} from "./profile-edit/profile-picture/profile-picture.component";
 
 @NgModule({
-  declarations: [SidenavComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
+  declarations: [SidenavComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -55,7 +56,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
     MatExpansionModule,
     MatSlideToggleModule,
   ],
-  exports: [SidenavComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
+  exports: [SidenavComponent, ProfilePictureComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
 })
 export class SharedModule {
 }

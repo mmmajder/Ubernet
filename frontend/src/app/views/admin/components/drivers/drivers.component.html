@@ -5,8 +5,18 @@
       <input matInput (keyup)="applyFilter($event)" #input>
     </mat-form-field>
 
-    <button [matTooltip]="'Register new driver'" style="float: right" (click)="registerNewDriver()" mat-raised-button color="primary">
-      <mat-icon>person_add</mat-icon> Register new driver
+    <button [matTooltip]="'Register new driver'" style="float: right; margin-left: 5px" (click)="registerNewDriver()" mat-raised-button
+            color="primary">
+      <mat-icon>person_add</mat-icon>
+      New driver
+    </button>
+    <button *ngIf="filterDriversByRequests" [matTooltip]="'Show all drivers'" style="float: right" (click)="getDrivers(false)" mat-raised-button>
+      <mat-icon>person</mat-icon>
+      Show all
+    </button>
+    <button *ngIf="!filterDriversByRequests" [matTooltip]="'See drivers with change requests'" style="float: right" (click)="getDrivers(true)" mat-raised-button>
+      <mat-icon>edit_note</mat-icon>
+      Requests
     </button>
   </div>
 
@@ -29,6 +39,16 @@
       <th mat-header-cell *matHeaderCellDef></th>
       <td mat-cell (click)="openDriversProfileDialog(element)" style="cursor: pointer; color: var(--gray)"
           *matCellDef="let element"> {{element.email}} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="requestedChanges">
+      <th mat-header-cell *matHeaderCellDef></th>
+      <td mat-cell (click)="openChangesRequest(element)" style="cursor: pointer; color: var(--gray)"
+          *matCellDef="let element">
+        <mat-icon *ngIf="element.requestedChanges" [matTooltip]="'See data change request'" color="warn">
+          edit_note
+        </mat-icon>
+      </td>
     </ng-container>
 
     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
