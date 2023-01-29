@@ -102,7 +102,7 @@ export class LoginComponent {
     if (this.email != "" && !this.emailFormControl.invalid)
       this.authService.forgotPassword(this.email).subscribe({
         next: (resp) => {
-          this._snackBar.open("Successful reset password! Check you email to set new!", '', {
+          this._snackBar.open("Check you email to set new password!", '', {
             duration: 3000,
             panelClass: ['snack-bar']
           })

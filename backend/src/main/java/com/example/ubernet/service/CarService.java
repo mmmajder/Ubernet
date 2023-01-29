@@ -266,7 +266,7 @@ public class CarService {
     private void createNotificationForDriverToStartRide(Car car) {
         DriverNotification driverNotification = new DriverNotification();
         driverNotification.setDriverNotificationType(DriverNotificationType.START);
-        Ride ride = rideRepository.findRideWhereStatusIsWaitingForCarId(car.getId()).get(0);
+        Ride ride = rideRepository.findRideWhichStatusIsWaitingForCarId(car.getId());
         driverNotification.setRide(ride);
         driverNotification.setFinished(false);
         driverNotificationRepository.save(driverNotification);

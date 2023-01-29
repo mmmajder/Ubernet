@@ -22,4 +22,8 @@ public class Customer extends User {
     @JsonIgnore
     @OneToMany
     private List<Ride> favoriteRoutes;
+
+    public Customer(String email) {
+        super(email);
+    }
 }

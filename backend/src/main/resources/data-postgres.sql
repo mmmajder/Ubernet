@@ -18,17 +18,20 @@ values (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
+       (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null);
 
 insert into admin (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id)
 values ('admin@gmail.com', 'Adminville', false, false, 'Admin',
         '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 1),
        ('admin111@gmail.com', 'Adminville', false, false, 'Admin',
-        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 1);
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 123456', 0, 'Adminic', 2);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (1, 1),
-       (1, 4);
+       (1, 4),
+       (2, 1),
+       (2, 4);
 
 insert into driver_activity_period(end_of_period, start_of_period)
 values ('2023-01-26 15:58', '2023-01-26 08:00');
@@ -74,32 +77,32 @@ values (false, false, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1, 0),
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                     driver_daily_activity_id, car_id, requested_profile_changes)
 values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 2, 1, 1, false),
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 1, 1, false),
        ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 3, 2, 2, false),
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 2, 2, false),
        ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 3, 3, false);
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 5, 3, 3, false);
 
 insert into user_auth_roles(user_auth_id, roles_id)
-values (2, 2),
-       (2, 4),
-       (3, 2),
+values (3, 2),
        (3, 4),
        (4, 2),
-       (4, 4);
+       (4, 4),
+       (5, 2),
+       (5, 4);
 
 insert into customer (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
                       number_of_tokens, is_active)
 values ('customer@gmail.com', 'Customville', false, false, 'Customer',
-        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 5, 1000.0, false),
+        '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 6, 1000.0, false),
        ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
-        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 2, 11150.0, false);
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 7, 11150.0, false);
 
 insert into user_auth_roles(user_auth_id, roles_id)
-values (5, 3),
-       (5, 4),
-       (6, 3),
-       (6, 4);
+values (6, 3),
+       (6, 4),
+       (7, 3),
+       (7, 4);
 
 update car
 set driver_email='driver@gmail.com'
@@ -126,16 +129,17 @@ values (99998, 'petar@gmail.com', null, false, '2022-05-21 11:15',
 
 insert into payment (deleted, is_accepted_payment, total_price)
 values (false, true, 500),
-       (false, true, 500),
-       (false, false, 500);
+       (false, true, 500);
 
 insert into customer_payment (payed, price_per_customer, url, customer_email)
 values (false, 250, 'url1', 'customer@gmail.com'),
+       (false, 250, 'url2', 'petar@gmail.com'),
        (false, 250, 'url2', 'petar@gmail.com');
 
 insert into payment_customers (payment_id, customers_id)
 values (1, 1),
-       (1, 2);
+       (1, 2),
+       (2, 3);
 
 insert into route (deleted, price, time, km)
 values (false, 500, 1200, 5),
@@ -160,19 +164,12 @@ values (1, 1),
        (3, 6),
        (3, 7);
 
--- insert into ride_denial (deleted, reason, ride_id)
--- values (false, 'Eto tako', 1);
-
 insert into ride (actual_end, actual_start, deleted, request_time, scheduled_start, driver_email, payment_id,
                   route_id, ride_state, is_reservation)
 values ('2023-01-26 12:00', '2023-01-26 11:00', false, '2023-01-26 10:00', '2023-01-26 11:00', 'driver@gmail.com', 1,
         1, 4, false),
-       ('2023-01-12 12:00', '2023-01-12 11:00', false, '2023-01-12 10:00', '2023-01-12 11:00', 'driver@gmail.com', 1,
-        1, 4, false),
-       ('2023-01-13 12:00', '2023-01-13 11:00', false, '2023-01-13 10:00', '2023-01-13 11:00', 'driver@gmail.com', 1,
-        1, 4, false),
-       ('2023-01-25 12:00', '2023-01-25 11:00', false, '2023-01-25 10:00', '2023-01-25 11:00', 'driver@gmail.com', 1,
-        1, 4, false);
+       ('2023-01-12 12:00', '2023-01-12 11:00', false, '2023-01-12 10:00', '2023-01-12 11:00', 'driver@gmail.com', 2,
+        2, 4, false);
 
 -- update payment
 -- set ride_id=1
@@ -184,10 +181,8 @@ values ('2023-01-26 12:00', '2023-01-26 11:00', false, '2023-01-26 10:00', '2023
 
 insert into ride_customers(ride_id, customers_email)
 values (1, 'customer@gmail.com'),
-       (2, 'petar@gmail.com'),
-       (3, 'petar@gmail.com'),
-       (4, 'petar@gmail.com'),
-       (4, 'customer@gmail.com');
+       (1, 'petar@gmail.com'),
+       (2, 'petar@gmail.com');
 
 insert into review (comment, car_rating, driver_rating, customer_email)
 values ('Bravo majstore', 4, 5, 'customer@gmail.com'),
