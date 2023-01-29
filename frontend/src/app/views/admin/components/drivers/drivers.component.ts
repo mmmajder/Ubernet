@@ -60,13 +60,10 @@ export class DriversComponent implements OnInit {
     dialogRef.componentInstance.driverEmail = element.email;
   }
 
-  blockDriver(element: DriverListItem) {
-    // TODO
-  }
-
   openDriversProfileDialog(element: DriverListItem) {
     const dialogRef = this.dialog.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
     dialogRef.componentInstance.userEmail = element.email;
+    dialogRef.componentInstance.userRole = 'ADMIN';
   }
 
   private usersToDriverListItems(users: DriverDTO[]): DriverListItem[] {
@@ -75,11 +72,14 @@ export class DriversComponent implements OnInit {
       if (!this.filterDriversByRequests || (this.filterDriversByRequests && users[i].requestedChanges)) {
         driverList.push(new DriverListItem(users[i].email, users[i].name + ' ' + users[i].surname, users[i].requestedChanges));
         this.imageService.getProfileImage(users[i].email)
-          .subscribe((encodedImage: any) => {
-            if (encodedImage === null)
-              this.profilePictures.set(users[i].email, "../../../../assets/taxi.jpg");
-            else
-              this.profilePictures.set(users[i].email, `data:image/jpeg;base64,${encodedImage.data}`);
+          .subscribe({
+            next: (encodedImage: any) => {
+              if (encodedImage === null)
+                this.profilePictures.set(users[i].email, "../../../../assets/default-profile-picture.jpg");
+              else
+                this.profilePictures.set(users[i].email, `data:image/jpeg;base64,${encodedImage.data}`);
+            },
+            error: () => this.profilePictures.set(users[i].email, "../../../../assets/default-profile-picture.jpg")
           });
       }
     }

@@ -54,5 +54,6 @@ export class RidesHistoryComponent {
       width: '1000px'
     });
     dialogRef.componentInstance.id = id;
+    dialogRef.componentInstance.dialogRef = dialogRef;
   }
 }

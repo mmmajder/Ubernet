@@ -29,7 +29,7 @@ export class CustomersComponent implements OnInit {
         this.imageService.getProfileImage(this.customers[i].email)
           .subscribe((encodedImage: any) => {
             if (encodedImage === null)
-              this.profilePictures.set(this.customers[i].email, "../../../../assets/taxi.jpg");
+              this.profilePictures.set(this.customers[i].email, "../../../../assets/default-profile-picture.jpg");
             else
               this.profilePictures.set(this.customers[i].email, `data:image/jpeg;base64,${encodedImage.data}`);
           });

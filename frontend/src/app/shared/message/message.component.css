@@ -32,3 +32,13 @@
   display: flex;
   flex-direction: row-reverse;
 }
+
+.message {
+  overflow-wrap: break-word;
+  word-break: break-word;
+  max-width: 300px;
+}
+
+.smaller-message-width {
+  max-width: 150px;
+}

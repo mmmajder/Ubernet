@@ -48,5 +48,6 @@ export class CustomerRatingsDashboardComponent {
       width: '1000px'
     });
     dialogRef.componentInstance.id = rideId;
+    dialogRef.componentInstance.dialogRef = dialogRef;
   }
 }

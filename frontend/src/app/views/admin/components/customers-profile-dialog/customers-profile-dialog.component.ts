@@ -11,6 +11,7 @@ import {ImageService} from "../../../../services/image.service";
 export class CustomersProfileDialogComponent implements OnInit {
 
   @Input() userEmail: string;
+  @Input() userRole: string = "";
   user: User = new User();
   profileImageSrc: string;
 
@@ -24,7 +25,7 @@ export class CustomersProfileDialogComponent implements OnInit {
     this.imageService.getProfileImage(this.userEmail)
       .subscribe((encodedImage: any) => {
         if (encodedImage === null)
-          this.profileImageSrc = "../../../../assets/taxi.jpg";
+          this.profileImageSrc = "../../../../assets/default-profile-picture.jpg";
         else
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
       });

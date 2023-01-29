@@ -41,9 +41,8 @@ export class NotificationsComponent implements OnInit {
     })
   }
 
-  notificationClicked(id: any) {
-    const notificationId = id
-    this.notificationService.getNotificationById(notificationId).subscribe((clickedNotification) => {
+  notificationClicked(id: number) {
+    this.notificationService.getNotificationById(id).subscribe((clickedNotification) => {
       console.log(clickedNotification)
       if (clickedNotification.type === "SPLIT_FARE") {
         this.dialog.open(RideSplitFareDialogComponent, {data: clickedNotification});
@@ -56,5 +55,6 @@ export class NotificationsComponent implements OnInit {
   openDriverInfoPopup(driverEmail: string) {
     const dialogRef = this.driversProfile.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
     dialogRef.componentInstance.userEmail = driverEmail;
+    dialogRef.componentInstance.userRole = 'CUSTOMER';
   }
 }

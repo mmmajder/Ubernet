@@ -1,6 +1,6 @@
 <app-user-profile [userEmail]="userEmail"></app-user-profile>
 <mat-tab-group mat-align-tabs="start">
-  <mat-tab label="Comments">
+  <mat-tab *ngIf="userRole === 'ADMIN'" label="Comments">
     <app-admin-comments [userEmail]="userEmail"></app-admin-comments>
   </mat-tab>
 </mat-tab-group>

@@ -31,4 +31,5 @@ public class ReviewController {
     public List<RideToRate> getRidesToRate(@PathVariable String customerEmail) {
         return reviewService.getRidesToRate(customerEmail);
     }
+
 }

@@ -141,7 +141,7 @@ export class SidenavComponent implements OnInit {
       .subscribe((encodedImage: any) => {
         console.log(encodedImage);
         if (encodedImage === null)
-          this.profilePictureSrc = "assets/taxi.jpg";
+          this.profilePictureSrc = "assets/default-profile-picture.jpg";
         else
           this.profilePictureSrc = `data:image/jpeg;base64,${encodedImage.data}`;
       });

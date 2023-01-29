@@ -33,7 +33,7 @@ export class ListOfChatsComponent {
         this.imageService.getProfileImage(c.clientEmail)
           .subscribe((encodedImage: any) => {
             if (encodedImage === null)
-              this.profilePictures.set(c.clientEmail, "assets/taxi.jpg");
+              this.profilePictures.set(c.clientEmail, "assets/default-profile-picture.jpg");
             else
               this.profilePictures.set(c.clientEmail, `data:image/jpeg;base64,${encodedImage.data}`);
           });

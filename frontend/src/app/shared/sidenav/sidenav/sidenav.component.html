@@ -7,6 +7,9 @@
     <span class="number-of-tokens">{{numberOfTokens | number:'1.2-2' }} </span>
     <mat-icon class="token">monetization_on</mat-icon>
   </button>
+  <button color="warn" mat-icon-button *ngIf="user.role!=='ADMIN' && user.blocked" [matTooltip]="'Admin blocked you'">
+    <mat-icon>block</mat-icon>
+  </button>
   <button *ngIf="user.role==='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="notificationMenu" (click)="hideBadge()">
     <mat-icon matBadge="!" matBadgeColor="warn" [matBadgeHidden]="notificationBadgeHidden">notifications</mat-icon>
   </button>

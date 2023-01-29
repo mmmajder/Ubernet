@@ -1,9 +1,16 @@
 <div style="padding: 10px; overflow: hidden">
   <h3 style="font-weight: 500; margin-left: 10px">Support</h3>
-  <mat-list class="chat-scrollable">
-    <mat-list-item *ngFor="let message of messagesWithAdmin">
-      <app-message [message]="message" [isUserAdmin]="false"></app-message>
-    </mat-list-item>
-  </mat-list>
-  <app-new-message [loggedUser]="loggedUser" [messages]="messagesWithAdmin"></app-new-message>
+<!--  <mat-list class="chat-scrollable">-->
+<!--    <mat-list-item *ngFor="let message of messagesWithAdmin">-->
+<!--      <app-message [message]="message" [isUserAdmin]="false"></app-message>-->
+<!--    </mat-list-item>-->
+<!--  </mat-list>-->
+  <div class="chat-scrollable">
+    <div *ngFor="let message of messagesWithAdmin">
+      <p>
+        <app-message [message]="message" [isUserAdmin]="false"></app-message>
+      </p>
+    </div>
+  </div>
+  <app-new-message (click) = "$event.stopPropagation()" [loggedUser]="loggedUser" [messages]="messagesWithAdmin"></app-new-message>
 </div>

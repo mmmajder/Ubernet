@@ -28,6 +28,12 @@
                     [matTooltipPosition]="'below'" (click)="addToFavorites()">
             favorite
           </mat-icon>
+          <mat-icon *ngIf="customerEmail !== ''" color="primary"
+                    style="color: var(--gray); margin-left: 5px; cursor: pointer"
+                    [matTooltip]="'Order ride with this route'"
+                    [matTooltipPosition]="'below'" (click)="orderRide()">
+            call
+          </mat-icon>
         </span>
       </h4>
       <div style="margin-top: 15px">
@@ -43,7 +49,8 @@
         <div *ngFor="let customer of ride.customers" style="margin-top: 5px">
           <div style="display: flex; align-items: center; width: 100%">
             <img class="avatar" [src]="profilePictures.get(customer.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
-            <div> {{customer.name}} {{customer.surname}}
+            <div (click)="openCustomersProfileDialog(customer.email)"
+                 style="cursor: pointer"> {{customer.name}} {{customer.surname}}
               <span style="color: gray">{{customer.email}}</span>
             </div>
             <button *ngIf="hasReviews(customer.email)" (click)="toggleReviews(customer.email)" mat-icon-button
@@ -70,7 +77,7 @@
 
       <div style="margin-top: 10px">
         <h4 style="color: var(--gray)">Driver info</h4>
-        <div style="display: flex; margin-top: -5px !important; align-items: center; width: 100%">
+        <div (click)="openDriversProfileDialog()" style="display: flex; margin-top: -5px !important; align-items: center; width: 100%; cursor: pointer">
           <img class="avatar" [src]="profilePictures.get(ride.driver.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
           <div> {{ride.driver.name}} {{ride.driver.surname}}
             <span style="color: gray">{{ride.driver.email}}</span>

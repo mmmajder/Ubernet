@@ -3,7 +3,7 @@ export class NotificationDTO {
   opened!: boolean;
   type!: string;
   receiverEmail!: string;
-  id!: number
-  rideId!: number
-  driverEmail: string
+  id!: number;
+  rideId!: number;
+  driverEmail: string;
 }

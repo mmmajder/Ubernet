@@ -19,7 +19,6 @@ import {ChangePasswordComponent} from "./profile-edit/change-password/change-pas
 import {MatCardModule} from "@angular/material/card";
 import {StarRatingComponent} from './star-rating/star-rating.component';
 import {UserProfileComponent} from './user-profile/user-profile.component';
-import {ReviewsComponent} from './reviews/reviews.component';
 import {RidesHistoryComponent} from "./rides-history/rides-history.component";
 import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
 import {MatTableModule} from "@angular/material/table";
@@ -33,7 +32,7 @@ import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ProfilePictureComponent} from "./profile-edit/profile-picture/profile-picture.component";
 
 @NgModule({
-  declarations: [SidenavComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent, RideDetailsDialogComponent, NotificationsComponent],
+  declarations: [SidenavComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, RideDetailsDialogComponent, NotificationsComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -56,7 +55,7 @@ import {ProfilePictureComponent} from "./profile-edit/profile-picture/profile-pi
     MatExpansionModule,
     MatSlideToggleModule,
   ],
-  exports: [SidenavComponent, ProfilePictureComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, ReviewsComponent],
+  exports: [SidenavComponent, ProfilePictureComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent],
 })
 export class SharedModule {
 }

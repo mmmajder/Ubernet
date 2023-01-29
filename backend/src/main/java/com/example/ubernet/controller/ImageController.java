@@ -47,7 +47,6 @@ public class ImageController {
             return new ResponseEntity<>(null, HttpStatus.OK);
 
         EncodedImage encoded = imageService.encodeImage(image);
-
         return new ResponseEntity<>(encoded, HttpStatus.OK);
     }
 }

@@ -130,7 +130,7 @@ export class ChatContainerComponent implements OnInit {
       .subscribe((encodedImage: any) => {
         console.log(encodedImage);
         if (encodedImage === null)
-          this.openChatProfilePicture = "assets/taxi.jpg";
+          this.openChatProfilePicture = "assets/default-profile-picture.jpg";
         else
           this.openChatProfilePicture = `data:image/jpeg;base64,${encodedImage.data}`;
       });

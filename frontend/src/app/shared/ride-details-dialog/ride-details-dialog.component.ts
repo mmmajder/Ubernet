@@ -10,6 +10,14 @@ import {FavoriteRoutesService} from "../../services/favorite-routes.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {CurrentlyLogged} from "../../store/actions/loggedUser.actions";
 import {Store} from "@ngxs/store";
+import {Router} from "@angular/router";
+import {MatDialog, MatDialogRef} from "@angular/material/dialog";
+import {
+  DriversProfileDialogComponent
+} from "../../views/admin/components/drivers-profile-dialog/drivers-profile-dialog.component";
+import {
+  CustomersProfileDialogComponent
+} from "../../views/admin/components/customers-profile-dialog/customers-profile-dialog.component";
 
 @Component({
   selector: 'app-ride-details-dialog',
@@ -18,8 +26,10 @@ import {Store} from "@ngxs/store";
 })
 export class RideDetailsDialogComponent implements OnInit {
   @Input() id: number;
-  public customerEmail = "";
-  public isFavorite = false;
+  @Input() dialogRef: MatDialogRef<any>;
+  public customerEmail: string = "";
+  public isFavorite: boolean = false;
+  public userRole: string = "CUSTOMER";
 
   private map: L.Map;
   ride: RideDetails = new RideDetails();
@@ -27,9 +37,10 @@ export class RideDetailsDialogComponent implements OnInit {
   reviews: Map<string, RideReview> = new Map<string, RideReview>();
   showReviews: Map<string, boolean> = new Map<string, boolean>();
 
-  constructor(private rideService: RidesHistoryService, private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService, private routeService: FavoriteRoutesService) {
+  constructor(private dialog: MatDialog, private rideService: RidesHistoryService, private router: Router, private store: Store, private _snackBar: MatSnackBar, private imageService: ImageService, private routeService: FavoriteRoutesService) {
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
+        this.userRole = resp.loggedUser.role;
         if (resp.loggedUser.role == "CUSTOMER") {
           this.customerEmail = resp.loggedUser.email;
           this.isRouteFavorite(resp.loggedUser.email);
@@ -54,12 +65,31 @@ export class RideDetailsDialogComponent implements OnInit {
       this.imageService.getProfileImage(customers[i].email)
         .subscribe((encodedImage: any) => {
           if (encodedImage === null)
-            this.profilePictures.set(customers[i].email, "../../../../assets/taxi.jpg");
+            this.profilePictures.set(customers[i].email, "../../../../assets/default-profile-picture.jpg");
           else {
             this.profilePictures.set(customers[i].email, `data:image/jpeg;base64,${encodedImage.data}`);
           }
         });
     }
+  }
+
+  openDriversProfileDialog() {
+    const dialogRef = this.dialog.open(DriversProfileDialogComponent, {panelClass: 'no-padding-card'});
+    dialogRef.componentInstance.userEmail = this.ride.driver.email;
+    dialogRef.componentInstance.userRole = this.userRole;
+    this.dialogRef.close();
+  }
+
+  openCustomersProfileDialog(email: string) {
+    const dialogRef = this.dialog.open(CustomersProfileDialogComponent, {panelClass: 'no-padding-card'});
+    dialogRef.componentInstance.userEmail = email;
+    dialogRef.componentInstance.userRole = this.userRole;
+    this.dialogRef.close();
+  }
+
+  orderRide() {
+    this.router.navigate(["/map", this.ride.id]);
+    this.dialogRef.close();
   }
 
   drawCheckpointsOnMap() {
