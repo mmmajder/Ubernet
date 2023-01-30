@@ -21,7 +21,7 @@ class EveryMinute(HttpUser):
     def update_driver_activity(self):
         self.client.put("/driver/update-driver-activity")
 
-    wait_time = between(5, 5)
+    wait_time = between(60, 60)
 
 
 class Reserve(HttpUser):

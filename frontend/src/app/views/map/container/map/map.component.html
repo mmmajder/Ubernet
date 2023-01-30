@@ -8,19 +8,18 @@
   />
   <script src="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.umd.js"></script>
 </head>
-<app-sidenav currentPage="map"></app-sidenav>
+<app-sidenav currentPage="map" *ngIf="userRole!==userRoles.UNAUTHORIZED"></app-sidenav>
 <ng-container [ngSwitch]="userRole">
   <app-search-directions-unauthorised *ngSwitchCase="userRoles.UNAUTHORIZED"
                                       (addPinsToMap)="drawSearchedRoute($event)"
                                       (getSelectedCarType)="setSelectedCarType($event)"
-                                      [estimations]="estimationsSearch"></app-search-directions-unauthorised>
+                                      [estimations]="estimations"></app-search-directions-unauthorised>
   <app-search-directions-customer *ngSwitchCase="userRoles.CUSTOMER"
                                   (addPinsToMap)="drawSearchedRoute($event)"
                                   (getSelectedCarType)="setSelectedCarType($event)"
                                   (optimizeByPrice)="optimizeRouteByPrice()"
                                   (optimizeByTime)="optimizeRouteByTime()"
-                                  (setSelectedRouteOptimized)="setSelectedRouteOptimized()"
-                                  [estimations]="estimationsSearch"
+                                  [estimations]="estimations"
                                   [favoriteRide]="favoriteRide"
                                   [selectedRoute]="selectedRoute"
                                   [loggedUser]="loggedUser"

@@ -18,8 +18,8 @@ export class ResetPasswordComponent implements OnInit {
   hideNewPassword = true;
   hideReEnteredNewPassword = true;
 
-  newPassword: any = "";
-  reEnteredNewPassword: any = "";
+  newPassword = "";
+  reEnteredNewPassword = "";
 
   newPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
   reEnteredNewPasswordFormControl = new FormControl('', [Validators.required]);

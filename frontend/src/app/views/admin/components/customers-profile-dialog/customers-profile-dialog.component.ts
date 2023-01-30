@@ -11,7 +11,7 @@ import {ImageService} from "../../../../services/image.service";
 export class CustomersProfileDialogComponent implements OnInit {
 
   @Input() userEmail: string;
-  @Input() userRole: string = "";
+  @Input() userRole = "";
   user: User = new User();
   profileImageSrc: string;
 

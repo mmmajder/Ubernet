@@ -39,10 +39,10 @@ export class DriverRequestChangeComponent {
   plates: string;
   indexOfCarType = 0;
   carName = "";
-  alreadyRequestedChanges: boolean = true;
+  alreadyRequestedChanges = true;
 
   driver: DriverChangeRequest;
-  driverEmail: string = '';
+  driverEmail = '';
 
   constructor(private _snackBar: MatSnackBar, private store: Store, private driverService: DriversService, private _formBuilder: FormBuilder, private carTypeService: CarTypeService, private authService: AuthService, private carService: CarService) {
     this.carTypeService.getCarTypes()

@@ -48,14 +48,6 @@
           </p>
         </div>
         <div>
-          <button mat-raised-button color="primary" style="width: 100%" *ngIf="optimize==='price'"
-                  (click)="selectOptimizedValue()">Select optimized by price
-          </button>
-          <button mat-raised-button color="primary" style="width: 100%" *ngIf="optimize==='time'"
-                  (click)="selectOptimizedValue()">Select optimized by time
-          </button>
-        </div>
-        <div>
           <button mat-button matStepperNext
                   style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Next
           </button>
@@ -185,9 +177,9 @@
   <div
     style="margin-top: auto; width: 100%; max-height: 150px; bottom: 0; padding-right: 40px; position: absolute; margin-bottom: 20px">
     <hr>
-    <p *ngIf="estimations.time===undefined && estimations.price===undefined">Please enter all necessary data so that we
+    <p *ngIf="estimations===undefined">Please enter all necessary data so that we
       can estimate price and time of your ride</p>
-    <p *ngIf="estimations.time!==undefined"> Estimated time: {{estimations.time}}</p>
-    <p *ngIf="estimations.price!==undefined"> Estimated price: {{estimations.price}}</p>
+    <p *ngIf="estimations!==undefined && estimations.time!==undefined"> Estimated time: {{estimations.time}}</p>
+    <p *ngIf="estimations!==undefined && estimations.price!==undefined"> Estimated price: {{estimations.price}}</p>
   </div>
 </mat-card>

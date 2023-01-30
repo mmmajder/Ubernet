@@ -27,9 +27,9 @@ import {
 export class RideDetailsDialogComponent implements OnInit {
   @Input() id: number;
   @Input() dialogRef: MatDialogRef<any>;
-  public customerEmail: string = "";
-  public isFavorite: boolean = false;
-  public userRole: string = "CUSTOMER";
+  public customerEmail = "";
+  public isFavorite = false;
+  public userRole = "CUSTOMER";
 
   private map: L.Map;
   ride: RideDetails = new RideDetails();
@@ -103,7 +103,6 @@ export class RideDetailsDialogComponent implements OnInit {
       waypoints: waypoints,
       routeWhileDragging: false,
       addWaypoints: false,
-    }).on('routesfound', () => {
     }).addTo(this.map);
   }
 

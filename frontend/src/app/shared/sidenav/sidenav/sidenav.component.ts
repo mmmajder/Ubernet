@@ -19,6 +19,7 @@ import {NotificationDTO} from "../../../model/NotificationDTO";
 import {DriversService} from "../../../services/drivers.service";
 import {secondsToHm} from "../../../services/utils.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {Client, Message} from "stompjs";
 
 @Component({
   selector: 'app-sidenav',
@@ -41,7 +42,7 @@ export class SidenavComponent implements OnInit {
   private hasRequestedProfilePicture = false;
   public static _this: any;
   notificationBadgeHidden: boolean;
-  private stompClient: any;
+  private stompClient: Client;
   driverActive: boolean;
   workingHours = "0 minutes";
 
@@ -78,7 +79,7 @@ export class SidenavComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
-    this.stompClient.debug = null;
+    // this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openGlobalSocket();
     });
@@ -88,7 +89,7 @@ export class SidenavComponent implements OnInit {
     this.stompClient.subscribe("/notify/split-fare-" + this.user.email, () => {
       this.updateNotificationBadge()
     })
-    this.stompClient.subscribe("/customer/payback-" + this.user.email, (message: any) => {
+    this.stompClient.subscribe("/customer/payback-" + this.user.email, (message: Message) => {
       const money: number = JSON.parse(message.body)
       this.store.dispatch([new SetTokens(money)])
     })
@@ -113,7 +114,7 @@ export class SidenavComponent implements OnInit {
     this.stompClient.subscribe("/customer/driver-inconsistency-" + this.user.email, () => {
       this.updateNotificationBadge();
     })
-    this.stompClient.subscribe("/driver/active-seconds-" + this.user.email, (message: any) => {
+    this.stompClient.subscribe("/driver/active-seconds-" + this.user.email, (message: Message) => {
       const seconds: number = JSON.parse(message.body)
       this.workingHours = secondsToHm(seconds);
     })

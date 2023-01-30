@@ -22,7 +22,7 @@ export class DriversComponent implements OnInit {
   driversList: MatTableDataSource<DriverListItem> = new MatTableDataSource<DriverListItem>();
   drivers: DriverDTO[];
   profilePictures: Map<string, string> = new Map<string, string>();
-  filterDriversByRequests: boolean = false;
+  filterDriversByRequests = false;
 
   constructor(private driversService: DriversService, private dialog: MatDialog, private registerNewDriverDialog: MatDialog, private imageService: ImageService) {
   }

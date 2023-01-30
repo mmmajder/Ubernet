@@ -4,12 +4,14 @@ import com.example.ubernet.model.CustomerPayment;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.CustomerRepository;
+import com.example.ubernet.repository.RideRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -17,9 +19,8 @@ import java.util.List;
 @AllArgsConstructor
 public class RideRequestService {
     private final RideService rideService;
-    private final CustomerRepository customerRepository;
-    private final SimpMessagingService simpMessagingService;
     private final NotificationService notificationService;
+    private final PaymentService paymentService;
     @Transactional
     public void sendCarsToReservations() {
         List<Ride> rides = rideService.getReservedRidesThatShouldStartIn10Minutes();
@@ -27,6 +28,7 @@ public class RideRequestService {
             System.out.println(ride);
             ride.setRideState(RideState.WAITING);
             rideService.setRidePositions(ride);
+            notificationService.createNotificationForCustomerInitRide(ride);
         }
     }
 
@@ -36,19 +38,11 @@ public class RideRequestService {
             ride.setRideState(RideState.CANCELED);
             rideService.save(ride);
             List<CustomerPayment> customerPayments = ride.getPayment().getCustomers();
-            for (CustomerPayment payment : customerPayments) {
-                if (payment.isPayed()) {
-                    double price = payment.getPricePerCustomer();
-                    payment.getCustomer().setNumberOfTokens(payment.getCustomer().getNumberOfTokens() + price);
-                    customerRepository.save(payment.getCustomer());
-                    // todo notify customer about payback
-                    simpMessagingService.sendPaybackNotification(payment.getCustomer().getEmail(), payment.getCustomer().getNumberOfTokens());
-                    System.out.println("Return money");
-                    System.out.println(payment.getCustomer().getNumberOfTokens());
-                }
-            }
+            paymentService.returnMoneyToCustomers(customerPayments);
         }
     }
+
+
 
     public void notifyTimeUntilReservation() {
         List<Ride> ridesWithAcceptedReservation = rideService.getRidesWithAcceptedReservation();

@@ -11,8 +11,8 @@ import {Car} from "../../../../model/Car";
   styleUrls: ['./drivers-profile-dialog.component.css']
 })
 export class DriversProfileDialogComponent implements OnInit {
-  @Input() userEmail: string = "";
-  @Input() userRole: string = "";
+  @Input() userEmail = "";
+  @Input() userRole = "";
   user: User = new User();
   profileImageSrc: string;
   car: Car;

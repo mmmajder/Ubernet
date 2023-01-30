@@ -1,7 +1,7 @@
 export class DriverListItem {
   email!: string;
   name!: string;
-  requestedChanges: boolean = false;
+  requestedChanges = false;
 
   constructor(email: string, name: string, changes: boolean) {
     this.email = email;

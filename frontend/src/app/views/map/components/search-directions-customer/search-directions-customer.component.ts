@@ -5,7 +5,6 @@ import {Output, EventEmitter, Input} from '@angular/core';
 import {CarTypeService} from "../../../../services/car-type.service";
 import {PositionDTO} from "../../../../model/PositionDTO";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
 import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
 import {RideCreate} from "../../../../model/RideCreate";
 import {RideService} from "../../../../services/ride.service";
@@ -21,6 +20,7 @@ import {RideAlternativeService} from "../../../../services/ride-alternative.serv
 import {RideDTO} from "../../../../model/RideDTO";
 import {OpenStreetMapProvider} from 'leaflet-geosearch';
 import {debounceTime, distinctUntilChanged, from, Observable, startWith, switchMap} from "rxjs";
+import {SearchEstimation} from "../../../../model/SearchEstimation";
 
 @Component({
   selector: 'app-search-directions-customer',
@@ -29,7 +29,7 @@ import {debounceTime, distinctUntilChanged, from, Observable, startWith, switchM
 })
 export class SearchDirectionsCustomerComponent implements OnInit {
   positions: (Place | null)[];
-  @Input() estimations: MapSearchEstimations
+  @Input() estimations: SearchEstimation
   @Input() selectedRoute: LeafletRoute[]
   @Input() loggedUser: User
   @Input() allAlternatives: LeafletRoute[][];
@@ -38,9 +38,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
   @Output() optimizeByTime = new EventEmitter()
-  @Output() setSelectedRouteOptimized = new EventEmitter();
   carTypes: string[];
-  optimize: string;
   friends: ({ friendEmail: string })[];
   hasPet: boolean;
   hasChild: boolean;
@@ -55,6 +53,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   isActive: boolean;
   provider = new OpenStreetMapProvider();
   filteredOptions: Observable<string[]>[]
+
   // filteredOptions: string[][]
 
   constructor(private rideAlternativeService: RideAlternativeService, private customerService: CustomersService, private store: Store, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
@@ -63,7 +62,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.hasChild = false;
     this.hasPet = false;
     this.timeOfRide = new Date().toLocaleString('en-US', {hour: 'numeric', minute: 'numeric', hour12: true})
-    this.optimize = ""
     this.filteredOptions = []
     this.destinationsForm = new FormGroup({
       destinations: new FormArray([
@@ -159,8 +157,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   addNewDestination() {
     this.destinations.push(new FormControl("", Validators.required))
-    this.destinations.controls.forEach((control) => {
-
+    this.destinations.controls.forEach(() => {
     })
   }
 
@@ -261,12 +258,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   optimizePrice() {
     this.optimizeByPrice.emit()
-    this.optimize = "price"
   }
 
   optimizeTime() {
     this.optimizeByTime.emit()
-    this.optimize = "time"
   }
 
   mergeRoutePaths() {
@@ -308,6 +303,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     payment.totalPrice = +this.estimations.price
     const route = this.mergeRoutePaths()
     const ride = this.createRide(route, payment)
+    console.log(ride)
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })
@@ -331,6 +327,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   createRideAlternatives(rideId: number) {
+    console.log("MMM")
+    console.log(this.allAlternatives)
     this.rideAlternativeService.createRideAlternatives(rideId, this.allAlternatives).subscribe(() => {
     })
   }
@@ -342,17 +340,11 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   addFriend() {
-    console.log("AA")
-    console.log(this.newFriend)
     if (this.newFriend.invalid) {
       return
     }
     this.friends.push({friendEmail: this.newFriend.value})
     this.newFriend.reset()
-  }
-
-  selectOptimizedValue() {
-    this.setSelectedRouteOptimized.emit()
   }
 
   private _filter(value: string): Observable<string[]> {

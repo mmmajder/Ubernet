@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ReservedRideItem} from "../../../../model/ReservedRideItem";
 import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import {CurrentlyLogged} from "../../../../store/actions/loggedUser.actions";
@@ -9,6 +8,7 @@ import {Router} from "@angular/router";
 import {NotificationDTO} from "../../../../model/NotificationDTO";
 import {RideService} from "../../../../services/ride.service";
 import {RideDTO} from "../../../../model/RideDTO";
+import {Client, Message} from "stompjs";
 
 @Component({
   selector: 'app-customers-upcoming-rides',
@@ -24,7 +24,7 @@ export class CustomersUpcomingRidesComponent implements OnInit {
   friends: string[];
   display: boolean;
   photo: string;
-  private stompClient: any;
+  private stompClient: Client;
 
   constructor(private store: Store, private router: Router, private rideService: RideService) {
     this.display = false;
@@ -44,14 +44,14 @@ export class CustomersUpcomingRidesComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
-    this.stompClient.debug = null;
+    // this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openDashboardSocket();
     });
   }
 
   private openDashboardSocket() {
-    this.stompClient.subscribe("/customer/time-until-ride-" + this.loggedUser.email, (message: any) => {
+    this.stompClient.subscribe("/customer/time-until-ride-" + this.loggedUser.email, (message: Message) => {
       this.display = true
       const notification: NotificationDTO = JSON.parse(message.body)
       this.timeLeft = Math.floor(+notification.text / 60)

@@ -1,5 +1,4 @@
 export class MapSearchEstimations {
-  time!: string;
-  price!: string;
+  time!: number;
   lengthInKm!: number;
 }

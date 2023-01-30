@@ -28,8 +28,8 @@ export class RideService {
     return this.http.post<void>(this.rideUrl + "/update-car-route/" + carId, ride, AuthService.getHttpOptions());
   }
 
-  public acceptRequestSplitFare(url: string): Observable<any> {
-    return this.http.put<any>(this.rideUrl + "/accept-request-split-fare/" + url, AuthService.getHttpOptions());
+  public acceptRequestSplitFare(url: string): Observable<void> {
+    return this.http.put<void>(this.rideUrl + "/accept-request-split-fare/" + url, AuthService.getHttpOptions());
   }
 
   public getById(id: number): Observable<RideDTO> {

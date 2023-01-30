@@ -10,9 +10,9 @@ import {AdminService} from "../../../../services/admin.service";
   styleUrls: ['./changes-request-dialog.component.css']
 })
 export class ChangesRequestDialogComponent implements OnInit {
-  driverEmail: string = "";
+  driverEmail = "";
   request: ProfileChangesRequest = new ProfileChangesRequest();
-  showOnlyChanges: boolean = false;
+  showOnlyChanges = false;
 
   constructor(private driversService: DriversService, private adminService: AdminService, private _snackBar: MatSnackBar) {
   }
@@ -24,7 +24,7 @@ export class ChangesRequestDialogComponent implements OnInit {
   }
 
   formatDate(requestTime: string) {
-    let splited = requestTime.split(',');
+    const splited = requestTime.split(',');
     return splited[2] + "." + splited[1] + "." + splited[0] + ". at " + splited[3] + ":" + splited[4];
   }
 

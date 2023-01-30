@@ -1,6 +1,5 @@
 import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Store} from "@ngxs/store";
-import {User} from "../../../model/User";
 import {CurrentlyLogged} from "../../../store/actions/loggedUser.actions";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ImageService} from "../../../services/image.service";
@@ -12,7 +11,7 @@ import {SidenavComponent} from "../../sidenav/sidenav/sidenav.component";
   styleUrls: ['./profile-picture.component.css']
 })
 export class ProfilePictureComponent implements OnInit {
-  email: string = "";
+  email = "";
   hasSelectedFile = false;
   selectedImage: any = null;
   profileImageSrc: string;

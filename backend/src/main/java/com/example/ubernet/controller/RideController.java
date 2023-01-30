@@ -1,13 +1,10 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.CreateRideDTO;
-import com.example.ubernet.dto.LeafletRouteDTO;
 import com.example.ubernet.model.CurrentRide;
 import com.example.ubernet.model.Ride;
-import com.example.ubernet.model.Route;
 import com.example.ubernet.model.enums.RideState;
-import com.example.ubernet.service.RideService;
-import com.example.ubernet.service.SimpMessagingService;
+import com.example.ubernet.service.*;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -22,11 +19,15 @@ import javax.validation.Valid;
 @RequestMapping(value = "/ride", produces = MediaType.APPLICATION_JSON_VALUE)
 public class RideController {
     private final RideService rideService;
+    private final CreateRideService createRideService;
     private final SimpMessagingService simpMessagingService;
-
+    private final CarApproachRideService carApproachRideService;
+    private final AcceptRequestSplitFairService acceptRequestSplitFairService;
+    private final StartRideService startRideService;
+    private final EndRideService endRideService;
     @PostMapping("/create")
     public ResponseEntity<Ride> createRide(@Valid @RequestBody CreateRideDTO createRideDTO) {
-        Ride ride = rideService.createRide(createRideDTO);
+        Ride ride = createRideService.createRide(createRideDTO);
         if (ride == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -38,13 +39,13 @@ public class RideController {
     }
 
     @PostMapping("/update-car-route/{carId}")
-    public void updateCarRoute(@PathVariable Long carId, @RequestBody CreateRideDTO createRideDTO) {
-        rideService.updateCarRoute(carId, createRideDTO);
+    public void createApproachForRide(@PathVariable Long carId, @RequestBody CreateRideDTO createRideDTO) {
+        carApproachRideService.createApproach(carId, createRideDTO);
     }
 
     @PutMapping("/accept-request-split-fare/{url}")
     public void acceptSplitFare(@PathVariable String url) {
-        rideService.acceptSplitFare(url);
+        acceptRequestSplitFairService.acceptSplitFare(url);
     }
 
     @GetMapping("/{id}")
@@ -55,13 +56,13 @@ public class RideController {
 
     @PutMapping("/start-ride/{rideId}")
     public ResponseEntity<Ride> startRide(@PathVariable Long rideId) {
-        Ride ride = rideService.startRide(rideId);
+        Ride ride = startRideService.startRide(rideId);
         return ResponseEntity.ok(ride);
     }
 
     @PutMapping("/end-ride/{rideId}")
     public ResponseEntity<Ride> endRide(@PathVariable Long rideId) {
-        Ride ride = rideService.endRide(rideId);
+        Ride ride = endRideService.endRide(rideId);
         return ResponseEntity.ok(ride);
     }
 

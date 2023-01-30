@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild} from '@angular/core';
 import * as L from 'leaflet';
 import {Control, LatLng, Marker, Polyline} from 'leaflet';
 import 'leaflet-routing-machine';
@@ -14,8 +14,7 @@ import * as Stomp from 'stompjs';
 import {RideService} from "../../../../services/ride.service";
 import {User, userIsDriver} from "../../../../model/User";
 import {CurrentlyLogged} from "../../../../store/actions/loggedUser.actions";
-import {ActivatedRoute} from '@angular/router';
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from '@angular/router';
 import {Store} from "@ngxs/store";
 import {CarService} from "../../../../services/car.service";
 import {DriverNotification} from "../../../../model/DriverNotification";
@@ -27,17 +26,21 @@ import {NavigationDisplay} from "../../../../model/NavigationDisplay";
 import {CurrentRide} from "../../../../model/CurrentRide";
 import {PositionInTime} from "../../../../model/PositionInTime";
 import {RideDTO} from "../../../../model/RideDTO";
+import {SearchEstimation} from "../../../../model/SearchEstimation";
+import {Message, Client} from "stompjs";
+import {RideDetails} from "../../../../model/RideDetails";
 
 @Component({
   selector: 'app-map',
   templateUrl: './map.component.html',
   styleUrls: ['./map.component.css']
 })
-export class MapComponent implements AfterViewInit, OnInit {
+export class MapComponent implements OnInit {
   userRole: UserRole | null
   userRoles = UserRole
   map: L.Map
-  estimationsSearch: MapSearchEstimations
+  estimationsSearch: MapSearchEstimations[]
+  estimations: SearchEstimation
   typeOfVehicle: string
   searchedRoutes: L.Routing.Control[];
   pins: Marker[];
@@ -47,7 +50,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   routeForDriver: (L.Polyline | L.Control | L.Marker)[];
   routeForCustomer: (L.Polyline | L.Marker)[]
   optimizedRoute: LeafletRoute[]
-  private stompClient: any;
+  private stompClient: Client;
   favoriteRide: RideDTO;
 
   @ViewChild(NotificationDriverComponent) notificationDriverComponent: NotificationDriverComponent;
@@ -55,7 +58,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   constructor(private route: ActivatedRoute, private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
     this.searchedRoutes = [];
-    this.estimationsSearch = new MapSearchEstimations();
+    this.estimationsSearch = [];
     this.pins = []
     this.routeForDriver = []
     this.selectedRoute = []
@@ -71,16 +74,12 @@ export class MapComponent implements AfterViewInit, OnInit {
   }
 
   ngOnInit(): void {
-    const rideId = this.route.snapshot.paramMap.get('rideId');
-    if (rideId !== null) {
-      this.initializeFavoriteRoute(rideId as string);
-    }
+    this.initMap()
+    this.initializeWebSocketConnection();
+    this.initPins()
     this.store.dispatch(new CurrentlyLogged()).subscribe({
       next: (resp) => {
         this.loggedUser = resp.loggedUser;
-        this.initMap()
-        this.initializeWebSocketConnection();
-        this.initPins()
         if (resp.loggedUser.role === "CUSTOMER") {
           this.userRole = UserRole.CUSTOMER
           this.initRouteCustomer()
@@ -89,8 +88,15 @@ export class MapComponent implements AfterViewInit, OnInit {
           this.initRouteDriver()
         }
       },
-      error: () => this.router.navigate(['/'])
+      error: () => {
+        this.userRole = this.userRoles.UNAUTHORIZED
+        // this.router.navigate(['/'])
+      }
     });
+    const rideId = this.route.snapshot.paramMap.get('rideId');
+    if (rideId !== null) {
+      this.initializeFavoriteRoute(rideId as string);
+    }
   }
 
   initRouteDriver() {
@@ -120,7 +126,7 @@ export class MapComponent implements AfterViewInit, OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
-    this.stompClient.debug = null;
+    // this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openSocket();
     });
@@ -131,28 +137,30 @@ export class MapComponent implements AfterViewInit, OnInit {
       this.removePins()
       this.initPins();
     })
-    this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.loggedUser.email, (message: any) => {
-      this.createRouteForSelectedCar(JSON.parse(message.body))
-    })
-    this.stompClient.subscribe("/notify-driver/decline-ride-" + this.loggedUser.email, (message: any) => {
-      const notifications: DriverNotification[] = JSON.parse(message.body)
-      this.notificationDriverComponent.removeDriverNotifications(notifications);
-      this.initRouteDriver()
-    })
-    this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: any) => {
-      const rideDriverNotificationDTO: RideDriverNotificationDTO = JSON.parse(message.body)
-      this.notificationDriverComponent.updateNotificationStartRide(rideDriverNotificationDTO.driverNotification);
-      this.initRouteDriver()
-    })
-    this.stompClient.subscribe("/notify-driver/end-ride-" + this.loggedUser.email, (message: any) => {
-      const endRideNotification: DriverNotification = JSON.parse(message.body)
-      this.notificationDriverComponent.updateNotificationEndRide(endRideNotification);
-      this.initRouteDriver()
-    })
-    this.stompClient.subscribe("/customer/init-ride-" + this.loggedUser.email, () => {
-      this.sideNavComponent.updateNotificationBadge()
-      this.initRouteCustomer()
-    })
+    if (this.loggedUser) {
+      this.stompClient.subscribe("/map-updates/update-route-for-selected-car-" + this.loggedUser.email, (message: Message) => {
+        this.createRouteForSelectedCar(JSON.parse(message.body))
+      })
+      this.stompClient.subscribe("/notify-driver/decline-ride-" + this.loggedUser.email, (message: Message) => {
+        const notifications: DriverNotification[] = JSON.parse(message.body)
+        this.notificationDriverComponent.removeDriverNotifications(notifications);
+        this.initRouteDriver()
+      })
+      this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: Message) => {
+        const rideDriverNotificationDTO: RideDriverNotificationDTO = JSON.parse(message.body)
+        this.notificationDriverComponent.updateNotificationStartRide(rideDriverNotificationDTO.driverNotification);
+        this.initRouteDriver()
+      })
+      this.stompClient.subscribe("/notify-driver/end-ride-" + this.loggedUser.email, (message: Message) => {
+        const endRideNotification: DriverNotification = JSON.parse(message.body)
+        this.notificationDriverComponent.updateNotificationEndRide(endRideNotification);
+        this.initRouteDriver()
+      })
+      this.stompClient.subscribe("/customer/init-ride-" + this.loggedUser.email, () => {
+        this.sideNavComponent.updateNotificationBadge()
+        this.initRouteCustomer()
+      })
+    }
   }
 
   getWaypoints(currentRide: CurrentRide): L.LatLng[] {
@@ -209,7 +217,7 @@ export class MapComponent implements AfterViewInit, OnInit {
     }).addTo(this.map);
   }
 
-  createRouteForSelectedCar(ride: any) {
+  createRouteForSelectedCar(ride: RideDetails) {
     const showOnMap = (start: Position, end: Position) => {
       const checkPoints: LatLng[] = []
       checkPoints.push(L.latLng(start.y, start.x))
@@ -222,8 +230,7 @@ export class MapComponent implements AfterViewInit, OnInit {
         },
       }).on('routesfound', (response) => {
         const route = response.routes[0]
-        this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe(() => {
-        })
+        this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe()
       }).addTo(this.map)
     }
     let start: Position
@@ -256,7 +263,7 @@ export class MapComponent implements AfterViewInit, OnInit {
 
   initPins() {
     this.mapService.getActiveCars().subscribe((activeCars) => {
-      if (userIsDriver(this.loggedUser)) {
+      if (this.loggedUser!==undefined && userIsDriver(this.loggedUser)) {
         this.carService.getActiveCar(this.loggedUser.email).subscribe((car: ActiveCarResponse) => {
           if (car !== null) {
             const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
@@ -266,10 +273,10 @@ export class MapComponent implements AfterViewInit, OnInit {
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
           console.log(car)
-          if (car.approachFirstRide!==null || (car.firstRide !== null && !car.firstRide.freeRide)) {
+          if (car.approachFirstRide !== null || (car.firstRide !== null && !car.firstRide.freeRide)) {
             const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.redIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
             this.pins.push(marker);
-          }else {
+          } else {
             const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
             this.pins.push(marker);
           }
@@ -282,9 +289,8 @@ export class MapComponent implements AfterViewInit, OnInit {
     if (routingControls == undefined) {
       return
     }
-    routingControls.forEach((routingControl: any) => {
+    routingControls.forEach((routingControl:Control) => {
       this.map.removeControl(routingControl);
-      routingControl = null;
     })
   }
 
@@ -305,21 +311,22 @@ export class MapComponent implements AfterViewInit, OnInit {
         useZoomParameter: false,
       }).on('routesfound', (response) => {
         this.allRoutesSearch[index] = response.routes
-        const route = response.routes[0]
-        const totalTime = route.summary.totalTime
-        this.estimationsSearch.time = secondsToDhms(totalTime)
-        this.estimationsSearch.lengthInKm = route.summary.totalDistance / 1000
-        if (this.typeOfVehicle != undefined) {
-          this.calculatePrice()
-        }
       })
         .on('routeselected', (e) => {
           this.selectedRoute[index] = e.route
+          const totalTime = e.route.summary.totalTime
+          this.estimationsSearch[index] = new MapSearchEstimations()
+          this.estimationsSearch[index].time = totalTime
+          this.estimationsSearch[index].lengthInKm = e.route.summary.totalDistance / 1000
+          if (this.typeOfVehicle != undefined) {
+            this.calculatePriceAndTime()
+          }
         })
         .addTo(this.map)
       this.searchedRoutes.push(route)
     }
     this.removeRoutingControls(this.searchedRoutes)
+    this.estimationsSearch = []
     for (let i = 1; i < positions.length; i++) {
       drawRoute([
         L.latLng(positions[i - 1].position.y, positions[i - 1].position.x),
@@ -346,14 +353,10 @@ export class MapComponent implements AfterViewInit, OnInit {
     shadowSize: [41, 41]
   });
 
-
-  ngAfterViewInit(): void {
-  }
-
   setSelectedCarType(carType: string) {
     this.typeOfVehicle = carType
-    if (this.estimationsSearch.time != undefined) {
-      this.calculatePrice()
+    if (this.estimationsSearch[0].time != undefined) {
+      this.calculatePriceAndTime()
     }
   }
 
@@ -366,32 +369,38 @@ export class MapComponent implements AfterViewInit, OnInit {
   optimizeRouteByTime() {
     this.mapService.optimizeRouteByTime(this.allRoutesSearch).subscribe((optimizedRide: LeafletRoute[]) => {
       this.drawOptimizedLine(optimizedRide)
+      this.selectedRoute = this.optimizedRoute
     })
   }
 
   drawOptimizedLine(optimizedRide: LeafletRoute[]) {
-    this.allRoutesSearch.forEach((route) => {
-      for (let i = 0; i < route.length; i++) {
-        if (route[i].coordinates.length === optimizedRide[i].coordinates.length) {
-          this.optimizedRoute[i] = optimizedRide[i];
-          L.Routing.line(route[i], {
-            addWaypoints: false,
-            extendToWaypoints: false,
-            missingRouteTolerance: 0,
-            styles: [{color: 'yellow', opacity: 0.5}]
-          }).addTo(this.map);
+    optimizedRide.forEach((optimizedPath, index) => {
+      this.allRoutesSearch[index].forEach((route) => {
+          if (route.coordinates.length === optimizedPath.coordinates.length) {
+            this.optimizedRoute[index] = optimizedRide[index];
+            new L.Polyline(route.coordinates, {
+              color: 'yellow',
+              weight: 4,
+              opacity: 1,
+              smoothFactor: 1
+            }).addTo(this.map);
+          }
         }
-      }
+      )
     })
   }
 
-  setSelectedRouteOptimized() {
-    this.selectedRoute = this.optimizedRoute
-  }
-
-  calculatePrice() {
-    this.ridePayService.calculatePrice(this.estimationsSearch.lengthInKm, this.typeOfVehicle).subscribe(value => {
-      this.estimationsSearch.price = (Math.round(value * 100) / 100) as unknown as string
+  calculatePriceAndTime() {
+    this.estimations = new SearchEstimation()
+    let lengthInKM = 0
+    let time = 0
+    this.estimationsSearch.forEach((estimation) => {
+      lengthInKM += estimation.lengthInKm
+      time += estimation.time
+    })
+    this.estimations.time = secondsToDhms(time)
+    this.ridePayService.calculatePrice(lengthInKM, this.typeOfVehicle).subscribe(value => {
+      this.estimations.price += (Math.round(value * 100) / 100) as unknown as string
     })
   }
 }

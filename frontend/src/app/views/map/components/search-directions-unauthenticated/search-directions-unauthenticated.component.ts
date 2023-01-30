@@ -2,7 +2,7 @@ import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
 import {Place, Position} from "../../../../model/Position";
 import {MapService} from "../../../../services/map.service";
 import {CarTypeService} from "../../../../services/car-type.service";
-import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
+import {SearchEstimation} from "../../../../model/SearchEstimation";
 
 @Component({
   selector: 'app-search-directions-unauthorised',
@@ -16,7 +16,7 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   toValue: string;
   carType: string;
   carTypes: string[];
-  @Input() estimations: MapSearchEstimations
+  @Input() estimations: SearchEstimation
   @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
 

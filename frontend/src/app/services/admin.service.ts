@@ -15,7 +15,7 @@ export class AdminService {
   }
 
   public acceptProfileChange(driverEmail: string, accepted: boolean): Observable<string> {
-    let body = {
+    const body = {
       'driverEmail': driverEmail,
       'accepted': accepted
     }

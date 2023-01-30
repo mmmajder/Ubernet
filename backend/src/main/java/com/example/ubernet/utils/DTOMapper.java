@@ -18,6 +18,7 @@ public class DTOMapper {
         userVerificationResponseDTO.setName(user.getName());
         return userVerificationResponseDTO;
     }
+
     public static User getUser(CreateUserDTO userDTO) {
         User user = new User();
         user.setName(userDTO.getName());
@@ -173,5 +174,13 @@ public class DTOMapper {
         driverDto.setBlocked(driver.getBlocked());
         driverDto.setRequestedChanges(driver.isRequestedProfileChanges());
         return driverDto;
+    }
+
+    public static ActiveCarResponse getActiveAvailableCar(Car car) {
+        ActiveCarResponse activeAvailableCarResponse = new ActiveCarResponse();
+        activeAvailableCarResponse.setCarId(car.getId());
+        activeAvailableCarResponse.setDriverEmail(car.getDriver().getEmail());
+        activeAvailableCarResponse.setCurrentPosition(car.getPosition());
+        return activeAvailableCarResponse;
     }
 }

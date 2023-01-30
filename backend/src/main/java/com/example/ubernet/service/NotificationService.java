@@ -152,4 +152,14 @@ public class NotificationService {
         save(notification);
         simpMessagingService.notifyCustomersDriverInconsistency(notification);
     }
+
+    public void createNotificationForCustomersRideDenied(Ride ride) {
+        for (Customer customer : ride.getCustomers()) {
+            Notification notification = notificationFactory(customer.getEmail(), ride.getId());
+            notification.setType(NotificationType.RIDE_DENIED);
+            notification.setText("There are no available cars. Your request has been canceled. You will soon have your tokens back. You can request new ride.");
+            save(notification);
+            simpMessagingService.notifyCustomersTimeUntilRide(notification);
+        }
+    }
 }

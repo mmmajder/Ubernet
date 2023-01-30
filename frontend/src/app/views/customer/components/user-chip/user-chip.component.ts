@@ -1,7 +1,4 @@
 import {Component, Input} from '@angular/core';
-import {Router} from "@angular/router";
-import {ActivatedRoute} from '@angular/router';
-import {Store} from "@ngxs/store";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {AuthService} from "../../../../services/auth.service";
 import {SimpleUser} from "../../../../model/User";

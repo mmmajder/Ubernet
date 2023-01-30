@@ -27,7 +27,7 @@
       </p>
     </div>
   </mat-tab>
-  <mat-tab *ngIf="userRole == 'ADMIN'" label="Comments">
+  <mat-tab *ngIf="userRole === 'ADMIN'" label="Comments">
     <app-admin-comments [userEmail]="userEmail"></app-admin-comments>
   </mat-tab>
 </mat-tab-group>

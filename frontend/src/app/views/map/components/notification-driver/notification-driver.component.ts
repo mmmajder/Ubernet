@@ -11,6 +11,7 @@ import {
 } from "../reason-for-ride-cancelation/reason-for-ride-cancellation.component";
 import {Place} from "../../../../model/Position";
 import {RideService} from "../../../../services/ride.service";
+import {Client, Message} from "stompjs";
 
 @Component({
   selector: 'app-notification-driver',
@@ -21,7 +22,7 @@ export class NotificationDriverComponent implements OnInit {
 
   @Input() loggedUser: User;
   @Output() updateRouteDisplay = new EventEmitter<void>();
-  private stompClient: any;
+  private stompClient: Client;
   notifications: DriverNotification[];
   photo: string;
 
@@ -37,18 +38,18 @@ export class NotificationDriverComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
-    this.stompClient.debug = null;
+    // this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openDriverNotificationSocket();
     });
   }
 
   openDriverNotificationSocket() {
-    this.stompClient.subscribe("/notify-driver/new-ride-" + this.loggedUser.email, (message: any) => {
+    this.stompClient.subscribe("/notify-driver/new-ride-" + this.loggedUser.email, (message: Message) => {
       const notification: DriverNotification = JSON.parse(message.body)
       this.notifications.push(notification)
     })
-    this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: any) => {
+    this.stompClient.subscribe("/notify-driver/start-ride-" + this.loggedUser.email, (message: Message) => {
       const notification: DriverNotification = JSON.parse(message.body)
       this.notifications.push(notification)
     })
@@ -90,6 +91,7 @@ export class NotificationDriverComponent implements OnInit {
 
   startRide(ride: RideDetails) {
     this.rideService.startRide(ride.id).subscribe((ride: RideDetails) => {
+      console.log(ride)
       this.notifications = this.notifications.filter(item => item.ride.id !== ride.id)
       this.updateRouteDisplay.emit()
     })
