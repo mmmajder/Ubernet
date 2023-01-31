@@ -72,6 +72,10 @@ export class SidenavComponent implements OnInit {
             this.workingHours = secondsToHm(seconds)
           })
         }
+        if (this.user !== undefined && this.user !== null) {
+          // this.hasRequestedProfilePicture = true;
+          this.getProfilePicture();
+        }
       }
     })
   }
@@ -120,12 +124,12 @@ export class SidenavComponent implements OnInit {
     })
   }
 
-  ngDoCheck(): void {
-    if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture) {
-      this.hasRequestedProfilePicture = true;
-      this.getProfilePicture();
-    }
-  }
+  // ngDoCheck(): void {
+  //   if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture) {
+  //     this.hasRequestedProfilePicture = true;
+  //     this.getProfilePicture();
+  //   }
+  // }
 
   setNumberOfTokens() {
     if (this.user.role == "CUSTOMER") {
