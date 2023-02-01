@@ -20,6 +20,10 @@ public class DashboardPage {
 
     @FindBy(id = "tokenBtn")
     private WebElement tokenBtn;
+
+    @FindBy(css = "div.mat-mdc-snack-bar-label")
+    private WebElement snackBar;
+
     public DashboardPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -38,5 +42,11 @@ public class DashboardPage {
     public void checkIfTokenBtnExists() {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOf(tokenBtn));
+    }
+
+    public String getSnackbarText() {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOf(snackBar));
+        return snackBar.getText();
     }
 }

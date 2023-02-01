@@ -8,9 +8,6 @@ import com.example.ubernet.model.enums.UserRole;
 import com.example.ubernet.repository.*;
 import org.junit.jupiter.api.DisplayName;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
@@ -24,6 +21,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
@@ -108,14 +106,14 @@ public class CreateRideServiceTest {
     }
 
     @Test
-    @DisplayName("Should return ride with WAITING state")
+    @DisplayName("Should return ride with WAITING state for one customer")
     public void shouldReturnRideWithWaitingState() {
         CreateRideDTO createRideDTO = createRideDTO();
         createRideDTO.setPassengers(List.of(CUSTOMER2_EMAIL));
         Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(createCustomer(CUSTOMER2_EMAIL));
         Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
         mockPositionsAndPlaceSave();
-        Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(createCar());;
+        Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(createCar(createDriver()));;
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertEquals(RideState.WAITING, foundRide.getRideState());
     }
@@ -131,6 +129,8 @@ public class CreateRideServiceTest {
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertEquals(RideState.REQUESTED, foundRide.getRideState());
     }
+
+
 
     @Test
     @DisplayName("Should throw BadRequestExceptionWhenInvitedPassengerIsBlocked")
@@ -148,15 +148,40 @@ public class CreateRideServiceTest {
         });
     }
 
-    private Car createCar() {
+    @Test
+    @DisplayName("Should init ride when customer request ride for himself and ride is not reservation")
+    public void shouldInitRideWhenCustomerOrdersRideForOnlyHimselfAndNotReservation() {
+        CreateRideDTO createRideDTO = createRideDTO();
+        Driver driver = createDriver();
+        Car car = createCar(driver);
+        driver.setCar(car);
+        createRideDTO.setPassengers(List.of(CUSTOMER2_EMAIL));
+        Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(createCustomer(CUSTOMER2_EMAIL));
+        Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
+        mockPositionsAndPlaceSave();
+        Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(car);;
+        Ride foundRide = createRideService.createRide(createRideDTO);
+        assertNotNull(foundRide.getDriver());
+        assertNotNull(foundRide.getDriver().getCar());
+        assertTrue(foundRide.getDriver().getDriverDailyActivity().getIsActive());
+    }
+
+    private Car createCar(Driver driver) {
         Car car = new Car();
-        car.setDriver(createDriver());
+        car.setDriver(driver);
         return car;
     }
 
     private Driver createDriver() {
         Driver driver = new Driver();
+        driver.setDriverDailyActivity(createDriverDailyActivity());
         return driver;
+    }
+
+    private DriverDailyActivity createDriverDailyActivity() {
+        DriverDailyActivity driverDailyActivity = new DriverDailyActivity();
+        driverDailyActivity.setIsActive(true);
+        return driverDailyActivity;
     }
 
 
