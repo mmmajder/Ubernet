@@ -16,7 +16,7 @@ public class Image {
     @GeneratedValue(generator = "uuid")
     @GenericGenerator(name = "uuid", strategy = "uuid2")
     private String id;
-    //    @Lob
+        @Lob
     private byte[] data;
     private boolean isActive;
     @ManyToOne

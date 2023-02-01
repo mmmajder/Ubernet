@@ -46,22 +46,23 @@ public class CreateRideService {
 
     private Ride getNewRide(CreateRideDTO createRideDTO) {
         Ride ride = new Ride();
-        ride.setRideState(getRideStateCreateRide(createRideDTO.isReservation(), createRideDTO.getPassengers().size()));
-        ride.setRoute(getRouteCreateRide(createRideDTO));
+        ride.setRideState(getRideState(createRideDTO.isReservation(), createRideDTO.getPassengers().size()));
+        ride.setRoute(getRoute(createRideDTO));
         ride.setRequestTime(LocalDateTime.now());
-        ride.setCustomers(getCustomersCreateRide(createRideDTO.getPassengers()));
+        ride.setCustomers(getCustomers(createRideDTO.getPassengers()));
         ride.setDeleted(false);
         ride.setReservation(createRideDTO.isReservation());
         if (createRideDTO.isReservation()) {
             ride.setScheduledStart(TimeUtils.getDateTimeForReservationMaxFiveHoursMin15MinutesAdvance(createRideDTO.getReservationTime()));
         }
         ride.setRideRequest(createRideRequest(createRideDTO));
-        ride.setPayment(getPaymentCreateRide(createRideDTO));
+        ride.setPayment(getPayment(createRideDTO));
         if (ride.getRideState() == RideState.WAITING) {
             initRide(createRideDTO, ride);
             rideRepository.save(ride);
         }
-        return rideRepository.save(ride);
+        rideRepository.save(ride);
+        return ride;
     }
 
     private RideRequest createRideRequest(CreateRideDTO createRideDTO) {
@@ -83,7 +84,7 @@ public class CreateRideService {
         notificationService.createNotificationForCustomerInitRide(ride);
     }
 
-    private List<Customer> getCustomersCreateRide(List<String> passengers) {
+    private List<Customer> getCustomers(List<String> passengers) {
         List<Customer> customers = customerService.getCustomersByEmails(passengers);
         for (Customer customer : customers) {
             if (customer.getBlocked())
@@ -92,7 +93,7 @@ public class CreateRideService {
         return customers;
     }
 
-    private Payment getPaymentCreateRide(CreateRideDTO createRideDTO) {
+    private Payment getPayment(CreateRideDTO createRideDTO) {
         Payment payment = new Payment();
         payment.setDeleted(false);
         payment.setTotalPrice(createRideDTO.getPayment().getTotalPrice());
@@ -106,13 +107,13 @@ public class CreateRideService {
         List<CustomerPayment> customerPayments = new ArrayList<>();
         List<Customer> customers = customerService.getCustomersByEmails(createRideDTO.getPassengers());
         double avgPrice = createRideDTO.getPayment().getTotalPrice() / customers.size();
-        customerPayments.add(createCustomerPaymentForIssueCustomerCreateRide(createRideDTO, avgPrice));
+        customerPayments.add(createCustomerPaymentForIssueCustomer(createRideDTO, avgPrice));
         customerPayments.addAll(createCustomerPaymentForInvitedCustomersAndSendMails(customers, avgPrice));
         return customerPayments;
     }
 
-    private CustomerPayment createCustomerPaymentForIssueCustomerCreateRide(CreateRideDTO createRideDTO, double avgPrice) {
-        Customer issueCustomer = customerService.getCustomerByEmail(createRideDTO.getPayment().getCustomerThatPayed());
+    private CustomerPayment createCustomerPaymentForIssueCustomer(CreateRideDTO createRideDTO, double avgPrice) {
+        Customer issueCustomer = customerRepository.findByEmail(createRideDTO.getPayment().getCustomerThatPayed());
         customerService.checkIfCustomersCanPay(avgPrice, issueCustomer);
         issueCustomer.setNumberOfTokens(issueCustomer.getNumberOfTokens() - avgPrice);
         issueCustomer.setActive(true);
@@ -145,18 +146,18 @@ public class CreateRideService {
         return customerPayments;
     }
 
-    private Route getRouteCreateRide(CreateRideDTO createRideDTO) {
+    private Route getRoute(CreateRideDTO createRideDTO) {
         Route route = new Route();
         route.setDeleted(false);
         route.setPrice(createRideDTO.getTotalDistance() / 1000 * 120 + carTypeService.findCarTypeByName(createRideDTO.getCarType()).getPriceForType());
         route.setTime(createRideDTO.getTotalTime());
         route.setKm(createRideDTO.getTotalDistance() / 1000);
-        route.setCheckPoints(getCheckpointsCreateRide(createRideDTO.getRoute()));
+        route.setCheckPoints(getCheckpoints(createRideDTO.getRoute()));
         routeRepository.save(route);
         return route;
     }
 
-    private List<Place> getCheckpointsCreateRide(List<PlaceDTO> route) {
+    private List<Place> getCheckpoints(List<PlaceDTO> route) {
         List<Place> places = new ArrayList<>();
         for (PlaceDTO placeDTO : route) {
             Position position = new Position(placeDTO.getPosition().getX(), placeDTO.getPosition().getY());
@@ -168,7 +169,7 @@ public class CreateRideService {
         return places;
     }
 
-    private RideState getRideStateCreateRide(boolean isReservation, int numberOfPassengers) {
+    private RideState getRideState(boolean isReservation, int numberOfPassengers) {
         if (isReservation && numberOfPassengers == 1) {
             return RideState.RESERVED;
         } else if (!isReservation && numberOfPassengers == 1) {
