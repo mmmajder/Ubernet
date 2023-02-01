@@ -12,19 +12,14 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
-import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.ArgumentMatchers.eq;
 import static org.mockito.Mockito.*;
 
 //@SpringBootTest
@@ -61,13 +56,17 @@ public class CreateRideServiceTest {
     private PlaceRepository placeRepository;
     @Mock
     private UserService userService;
-
+    @Mock
+    private SimpMessagingService simpMessagingService;
+    @Captor
+    private ArgumentCaptor<Notification> notificationArgumentCaptor;
     @InjectMocks
     private CreateRideService createRideService;
 
     private final String CUSTOMER_EMAIL = "aca@gmail.com";
     private final String CUSTOMER2_EMAIL = "customer@gmail.com";
     private final String CAR_TYPE_CABRIO = "Cabrio";
+    private final Long RIDE_ID = 1L;
 
     @Test
     @DisplayName("Should throw BadRequestException when customer is active")
@@ -108,7 +107,6 @@ public class CreateRideServiceTest {
     }
 
 
-
     @Test
     @DisplayName("Should return ride with WAITING state for one customer")
     public void shouldReturnRideWithWaitingState() {
@@ -117,7 +115,8 @@ public class CreateRideServiceTest {
         Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(createCustomer(CUSTOMER2_EMAIL));
         Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
         mockPositionsAndPlaceSave();
-        Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(createCar(createDriver()));;
+        Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(createCar(createDriver()));
+        ;
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertEquals(RideState.WAITING, foundRide.getRideState());
     }
@@ -133,7 +132,6 @@ public class CreateRideServiceTest {
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertEquals(RideState.REQUESTED, foundRide.getRideState());
     }
-
 
 
     @Test
@@ -163,11 +161,19 @@ public class CreateRideServiceTest {
         Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(createCustomer(CUSTOMER2_EMAIL));
         Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
         mockPositionsAndPlaceSave();
-        Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(car);;
+        Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(car);
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertNotNull(foundRide.getDriver());
         assertNotNull(foundRide.getDriver().getCar());
         assertTrue(foundRide.getDriver().getDriverDailyActivity().getIsActive());
+    }
+
+    @Test
+    @DisplayName("Should init ride when customer request ride for himself and ride is not reservation")
+    public void shouldCreateNotificationsForPassengersThanAreInvitedToSplitFare() {
+        List<Customer> customers = List.of(createCustomer("a@gmail.com"), createCustomer("p@gmail.com"), createCustomer("c@gmail.com"));
+        createRideService.notifyCustomers(customers, RIDE_ID);
+        verify(notificationService, times(customers.size()-1)).save(notificationArgumentCaptor.capture());
     }
 
     private Car createCar(Driver driver) {
@@ -287,14 +293,14 @@ public class CreateRideServiceTest {
         System.out.println(midn);
         String hour;
         String sufix;
-        if (localDateTime.getHour()==0) {
+        if (localDateTime.getHour() == 0) {
             hour = "12";
             sufix = "AM";
-        } else if(localDateTime.getHour()<=12) {
+        } else if (localDateTime.getHour() <= 12) {
             hour = String.valueOf(localDateTime.getHour());
             sufix = "AM";
         } else {
-            hour = String.valueOf(localDateTime.getHour()-12);
+            hour = String.valueOf(localDateTime.getHour() - 12);
             sufix = "PM";
         }
         return hour + ":" + String.format("%02d", localDateTime.getMinute()) + " " + sufix;
