@@ -75,5 +75,10 @@ public class User implements UserDetails {
     public User(String email) {
         this.email = email;
     }
+
+    public User(String email, Boolean blocked) {
+        this.email = email;
+        this.blocked = blocked;
+    }
 }
 

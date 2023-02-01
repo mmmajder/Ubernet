@@ -26,4 +26,14 @@ public class Customer extends User {
     public Customer(String email) {
         super(email);
     }
+
+    public Customer(String email, boolean isActive) {
+        super(email);
+        this.isActive = isActive;
+    }
+
+    public Customer(String email, Boolean blocked, boolean isActive) {
+        super(email, blocked);
+        this.isActive = isActive;
+    }
 }

@@ -54,8 +54,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   provider = new OpenStreetMapProvider();
   filteredOptions: Observable<string[]>[]
 
-  // filteredOptions: string[][]
-
   constructor(private rideAlternativeService: RideAlternativeService, private customerService: CustomersService, private store: Store, private mapService: MapService, private rideService: RideService, private carTypeService: CarTypeService, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder) {
     this.friends = []
     this.typeOfRequest = "now"
@@ -303,10 +301,10 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     payment.totalPrice = +this.estimations.price
     const route = this.mergeRoutePaths()
     const ride = this.createRide(route, payment)
-    console.log(ride)
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })
+    console.log(ride)
 
     this.rideService.createRideRequest(ride).subscribe({
       next: (res: RideDetails) => {
