@@ -18,6 +18,8 @@ import org.junit.jupiter.api.Test;
 import org.mockito.*;
 import org.mockito.junit.jupiter.MockitoExtension;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -96,7 +98,7 @@ public class CreateRideServiceTest {
     public void shouldReturnRideWithReservedState() {
         CreateRideDTO createRideDTO = createRideDTO();
         createRideDTO.setReservation(true);
-        createRideDTO.setReservationTime("3:30 PM");
+        createRideDTO.setReservationTime(getReservationTimeIn1Hour());
         createRideDTO.setPassengers(List.of(CUSTOMER2_EMAIL));
         Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(createCustomer(CUSTOMER2_EMAIL));
         Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
@@ -104,6 +106,8 @@ public class CreateRideServiceTest {
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertEquals(RideState.RESERVED, foundRide.getRideState());
     }
+
+
 
     @Test
     @DisplayName("Should return ride with WAITING state for one customer")
@@ -274,6 +278,26 @@ public class CreateRideServiceTest {
         instructions.add(new InstructionDTO(42.2, 6.1, "Пролаз Милоша Хаџића"));
         instructions.add(new InstructionDTO(0, 0, "Пролаз Милоша Хаџића"));
         return instructions;
+    }
+
+    private String getReservationTimeIn1Hour() {
+        LocalDateTime localDateTime = LocalDateTime.now().plusHours(1);
+        System.out.println(localDateTime);
+        LocalDateTime midn = LocalDateTime.of(2023, 2, 1, 0, 1);
+        System.out.println(midn);
+        String hour;
+        String sufix;
+        if (localDateTime.getHour()==0) {
+            hour = "12";
+            sufix = "AM";
+        } else if(localDateTime.getHour()<=12) {
+            hour = String.valueOf(localDateTime.getHour());
+            sufix = "AM";
+        } else {
+            hour = String.valueOf(localDateTime.getHour()-12);
+            sufix = "PM";
+        }
+        return hour + ":" + String.format("%02d", localDateTime.getMinute()) + " " + sufix;
     }
 }
 

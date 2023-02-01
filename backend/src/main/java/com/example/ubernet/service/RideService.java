@@ -173,6 +173,12 @@ public class RideService {
         return rides;
     }
 
+    public List<Ride> getReservedRidesThatScheduledTimePassed() {
+        List<Ride> rides = rideRepository.getReservedRidesThatWithStatusReservedAndScheduledStartIsNotNull();
+        rides.removeIf(ride -> ride.getScheduledStart().isAfter(LocalDateTime.now()));
+        return rides;
+    }
+
     public List<Ride> getReservedRidesThatShouldStartIn10Minutes() {
         List<Ride> rides = this.rideRepository.getReservedWithStatusReservedRides();
         List<Ride> res = new ArrayList<>();

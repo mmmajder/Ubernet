@@ -51,7 +51,7 @@ public class NotificationService {
         return notifications;
     }
 
-    private Notification notificationFactory(String email, long rideId) {
+    private Notification notificationFactory(String email, Long rideId) {
         Notification notification = new Notification();
         notification.setRideId(rideId);
         notification.setTimeCreated(LocalDateTime.now());
@@ -161,5 +161,12 @@ public class NotificationService {
             save(notification);
             simpMessagingService.notifyCustomersTimeUntilRide(notification);
         }
+    }
+
+    public void createNotificationForCustomersMoneyPayback(Customer customer) {
+        Notification notification = notificationFactory(customer.getEmail(), null);
+        notification.setType(NotificationType.RIDE_DENIED);
+        notification.setText("Your ride has been canceled. We sent you your tokens back.");
+        save(notification);
     }
 }

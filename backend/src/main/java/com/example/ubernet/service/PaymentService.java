@@ -13,13 +13,14 @@ public class PaymentService {
 
     private final CustomerRepository customerRepository;
     private final SimpMessagingService simpMessagingService;
-
+    private final NotificationService notificationService;
     public void returnMoneyToCustomers(List<CustomerPayment> customerPayments) {
         for (CustomerPayment payment : customerPayments) {
             if (payment.isPayed()) {
                 double price = payment.getPricePerCustomer();
                 payment.getCustomer().setNumberOfTokens(payment.getCustomer().getNumberOfTokens() + price);
                 customerRepository.save(payment.getCustomer());
+                notificationService.createNotificationForCustomersMoneyPayback(payment.getCustomer());
                 simpMessagingService.sendPaybackNotification(payment.getCustomer().getEmail(), payment.getCustomer().getNumberOfTokens());
                 System.out.println("Return money");
                 System.out.println(payment.getCustomer().getNumberOfTokens());

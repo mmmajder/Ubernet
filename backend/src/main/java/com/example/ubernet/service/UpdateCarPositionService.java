@@ -106,7 +106,7 @@ public class UpdateCarPositionService {
     private void createNotificationForDriverToStartRide(Car car) {
         DriverNotification driverNotification = new DriverNotification();
         driverNotification.setDriverNotificationType(DriverNotificationType.START);
-        Ride ride = rideRepository.findRideWhichStatusIsWaitingForCarId(car.getId());
+        Ride ride = rideRepository.findRidesWhichStatusIsWaitingForCarId(car.getId()).get(0);
         driverNotification.setRide(ride);
         driverNotification.setFinished(false);
         driverNotificationRepository.save(driverNotification);

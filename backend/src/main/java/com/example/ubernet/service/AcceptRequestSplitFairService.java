@@ -71,7 +71,7 @@ public class AcceptRequestSplitFairService {
         Payment payment = ride.getPayment();
         payment.setIsAcceptedPayment(true);
         paymentRepository.save(payment);
-        ride.setRideState(getRideStateAllPassangersPayed(ride));
+        ride.setRideState(getRideStateAllPassengersPayed(ride));
         ride.setRequestTime(LocalDateTime.now());
         rideRepository.save(ride);
         this.notificationService.createNotificationForCustomersEveryonePayed(ride);
@@ -80,7 +80,7 @@ public class AcceptRequestSplitFairService {
         }
     }
 
-    private RideState getRideStateAllPassangersPayed(Ride ride) {
+    private RideState getRideStateAllPassengersPayed(Ride ride) {
         if (ride.isReservation()) {
             if (ride.getScheduledStart().isAfter(LocalDateTime.now().plusMinutes(10)))
                 return RideState.RESERVED;
