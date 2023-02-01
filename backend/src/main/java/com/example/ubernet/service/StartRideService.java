@@ -1,5 +1,7 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.exception.BadRequestException;
+import com.example.ubernet.exception.NoRideWithSuchIdException;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.RideAlternativesRepository;
@@ -35,6 +37,7 @@ public class StartRideService {
 
     private Ride updateRide(Long rideId) {
         Ride ride = rideService.findById(rideId);
+        if (ride == null) throw new BadRequestException("Ride does not exist");
         ride.setRideState(RideState.TRAVELLING);
         ride.setActualStart(LocalDateTime.now());
         rideService.save(ride);
