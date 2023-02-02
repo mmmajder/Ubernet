@@ -36,7 +36,6 @@ public class RideDenialService {
         if (ride == null) throw new BadRequestException("Ride does not exist");
         if (cancelRideRequest.isShouldSetDriverInactive()) {
             rideDenialSetDriverInactive(ride);
-            setCustomersInactive(ride.getCustomers());
             this.notificationService.createNotificationForCustomersCarTechnicalProblem(ride);
         } else {
             rideDenialFreeDriverFromRide(ride);
