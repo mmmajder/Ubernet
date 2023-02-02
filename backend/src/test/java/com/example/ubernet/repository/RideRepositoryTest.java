@@ -350,7 +350,7 @@ public class RideRepositoryTest {
         Customer customer = new Customer();
         customer.setEmail("asdecascac@gmail.com");
         Ride ride = new Ride();
-        ride.setId(3L);
+        ride.setId(1L);
         ride.setRideState(RideState.TRAVELLING);
         ride.setCustomers(List.of(customer));
 
@@ -360,7 +360,7 @@ public class RideRepositoryTest {
 
         Ride activeRide = rideRepository.findActiveRideForCustomer("asdecascac@gmail.com");
 
-        assertEquals(3L, activeRide.getId());
+        assertEquals(1L, activeRide.getId());
     }
 
     @Test
@@ -384,7 +384,7 @@ public class RideRepositoryTest {
     @Test
     public void shouldReturnRideWhenSaving() {
         Ride ride = new Ride();
-        ride.setId(3L);
+        ride.setId(1L);
 
         Ride savedRide = rideRepository.save(ride);
 

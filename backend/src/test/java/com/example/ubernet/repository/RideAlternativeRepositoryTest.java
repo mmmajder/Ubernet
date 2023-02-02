@@ -27,7 +27,7 @@ public class RideAlternativeRepositoryTest {
     @Test
     public void shouldReturnRideAlternativesWhenFindingByValidId() {
         Ride ride = new Ride();
-        ride.setId(3L);
+        ride.setId(1L);
         RideAlternatives rideAlternatives =  new RideAlternatives();
         rideAlternatives.setId(1L);
         rideAlternatives.setRide(ride);
@@ -43,9 +43,9 @@ public class RideAlternativeRepositoryTest {
     }
 
     @Test
-    public void shouldReturnNulWhenFindingByInvalidId() {
+    public void shouldReturnNullWhenFindingByInvalidId() {
         Ride ride = new Ride();
-        ride.setId(3L);
+        ride.setId(1L);
         RideAlternatives rideAlternatives =  new RideAlternatives();
         rideAlternatives.setId(1L);
         rideAlternatives.setRide(ride);
