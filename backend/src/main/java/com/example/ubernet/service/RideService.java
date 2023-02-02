@@ -157,7 +157,7 @@ public class RideService {
         List<Ride> rides = rideRepository.getReservedRidesThatWithStatusRequestedAndScheduledStartIsNotNull();
         List<Ride> passedReservations = new ArrayList<>();
         for (Ride ride : rides) {
-            if (ride.getScheduledStart().isAfter(LocalDateTime.now())) {
+            if (ride.getScheduledStart().isBefore(LocalDateTime.now())) {
                 passedReservations.add(ride);
             }
         }
@@ -168,7 +168,7 @@ public class RideService {
         List<Ride> rides = rideRepository.getReservedRidesThatWithStatusReservedAndScheduledStartIsNotNull();
         List<Ride> passedRides = new ArrayList<>();
         for (Ride ride : rides) {
-            if (ride.getScheduledStart().isAfter(LocalDateTime.now())) {
+            if (ride.getScheduledStart().isBefore(LocalDateTime.now())) {
                 passedRides.add(ride);
             }
         }

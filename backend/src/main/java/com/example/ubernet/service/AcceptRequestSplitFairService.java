@@ -89,11 +89,12 @@ public class AcceptRequestSplitFairService {
         return RideState.WAITING;
     }
 
-    private void sendCarToCustomers(Ride ride) {
+    public void sendCarToCustomers(Ride ride) {
         try {
             rideService.setRidePositions(ride);
             notificationService.createNotificationForCustomerInitRide(ride);
         } catch (Exception e) {
+            if (ride.isReservation() && ride.getScheduledStart().isAfter(LocalDateTime.now())) return;
             rideService.updateRideStatus(ride, RideState.CANCELED);
             setCustomersActive(ride.getCustomers());
             notificationService.createNotificationForCustomersRideDenied(ride);

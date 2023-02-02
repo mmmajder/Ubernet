@@ -171,7 +171,7 @@ public class RideServiceTest {
         Mockito.when(rideRepository.getReservedRidesThatWithStatusRequestedAndScheduledStartIsNotNull()).thenReturn(List.of(createRideScheduledTimePassed(11), createRideScheduledTimeNotPassed(12)));
         List<Ride> foundRides = rideService.getReservedRidesThatWereNotPayedAndScheduledTimePassed();
         assertEquals(1, foundRides.size());
-        assertTrue(foundRides.get(0).getScheduledStart().isAfter(LocalDateTime.now()));
+        assertTrue(foundRides.get(0).getScheduledStart().isBefore(LocalDateTime.now()));
     }
 
     @Test
@@ -180,7 +180,7 @@ public class RideServiceTest {
         Mockito.when(rideRepository.getReservedRidesThatWithStatusRequestedAndScheduledStartIsNotNull()).thenReturn(List.of(createRideScheduledTimePassed(10), createRideScheduledTimeNotPassed(11)));
         List<Ride> foundRides = rideService.getReservedRidesThatWereNotPayedAndScheduledTimePassed();
         assertEquals(1, foundRides.size());
-        assertTrue(foundRides.get(0).getScheduledStart().isAfter(LocalDateTime.now()));
+        assertTrue(foundRides.get(0).getScheduledStart().isBefore(LocalDateTime.now()));
     }
 
     @Test

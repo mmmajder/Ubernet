@@ -39,6 +39,10 @@ public class AcceptRequestSplitFairServiceTest {
     private PaymentRepository paymentRepository;
     @Mock
     private NotificationService notificationService;
+    @Mock
+    private PaymentService paymentService;
+    @Mock
+    private RideService rideService;
     @Captor
     private ArgumentCaptor<CustomerPayment> customerPaymentArgumentCaptor;
     @Captor
@@ -170,21 +174,107 @@ public class AcceptRequestSplitFairServiceTest {
         verify(rideRepository, times(1)).save(rideArgumentCaptor.capture());
     }
 
+    @Test
+    @DisplayName("Should update customers payment and lower the amount of tokens of user. Everyone did pay. Ride status should be WAITING because it is not reservation.")
+    public void shouldUpdateCustomersPaymentAndLowerAmountOfTokensOfUserEveryonePayedForNotReservedRideRideStatusBecomesWaiting() {
+        CustomerPayment customerPayment = createCustomerPayment();
+        customerPayment.getCustomer().setNumberOfTokens(300);
+        customerPayment.setPricePerCustomer(200.00);
+        Mockito.when(customerPaymentRepository.findByUrl(any())).thenReturn(customerPayment);
 
+        Ride ride = new Ride();
+        ride.setReservation(false);
+        ride.setPayment(createPaymentOtherPayed(customerPayment));
+        Mockito.when(rideRepository.getRideByCustomerPaymentURL(any())).thenReturn(ride);
 
+        acceptRequestSplitFairService.acceptSplitFare(any());
 
-//    @Test
-//    @DisplayName("Should update customers payment and lower the amount of tokens of user.")
-//    public void shouldUpdateCustomersPaymentAndLowerAmountOfTokensOfUser() {
-//        CustomerPayment customerPayment = createCustomerPayment();
-//        customerPayment.getCustomer().setNumberOfTokens(300);
-//        customerPayment.setPricePerCustomer(200.00);
-//        Mockito.when(customerPaymentRepository.findByUrl(any())).thenReturn(customerPayment);
-//        Ride ride = new Ride();
-//        Mockito.when(rideRepository.getRideByCustomerPaymentURL(any())).thenReturn(ride);
-//        verify(customerPaymentRepository, times(1)).save(customerPaymentArgumentCaptor.capture());
-//        verify(customerRepository, times(1)).save(customerArgumentCaptor.capture());
-//    }
+        verify(customerPaymentRepository, times(1)).save(customerPaymentArgumentCaptor.capture());
+        verify(customerRepository, times(1)).save(customerArgumentCaptor.capture());
+
+        assertEquals(true, ride.getPayment().getIsAcceptedPayment());
+        assertEquals(RideState.WAITING, ride.getRideState());
+
+        verify(paymentRepository, times(1)).save(paymentArgumentCaptor.capture());
+        verify(rideRepository, times(1)).save(rideArgumentCaptor.capture());
+    }
+
+    @Test
+    @DisplayName("Should send car to customers.")
+    public void shouldSetRidePositionsAndNotifyCustomers() {
+        CustomerPayment customerPayment = createCustomerPayment();
+        customerPayment.getCustomer().setNumberOfTokens(300);
+        customerPayment.setPricePerCustomer(200.00);
+        Mockito.when(customerPaymentRepository.findByUrl(any())).thenReturn(customerPayment);
+
+        Ride ride = new Ride();
+        ride.setReservation(false);
+        ride.setPayment(createPaymentOtherPayed(customerPayment));
+        Mockito.when(rideRepository.getRideByCustomerPaymentURL(any())).thenReturn(ride);
+
+        acceptRequestSplitFairService.acceptSplitFare(any());
+
+        verify(customerPaymentRepository, times(1)).save(customerPaymentArgumentCaptor.capture());
+        verify(customerRepository, times(1)).save(customerArgumentCaptor.capture());
+
+        assertEquals(true, ride.getPayment().getIsAcceptedPayment());
+        assertEquals(RideState.WAITING, ride.getRideState());
+
+        verify(paymentRepository, times(1)).save(paymentArgumentCaptor.capture());
+        verify(rideRepository, times(1)).save(rideArgumentCaptor.capture());
+    }
+
+    @Test
+    @DisplayName("Should not send car to customers. There is non available. Ride is not set to canceled because ride is reserved for future.")
+    public void shouldTryToSendCarsButRideShouldRemainTheSameBecauseItIsFutureReservationAndSettingCarsFailed() {
+        Ride ride = new Ride();
+        ride.setReservation(true);
+        ride.setScheduledStart(LocalDateTime.now().plusMinutes(5));
+        Mockito.when(rideService.setRidePositions(any())).thenThrow(BadRequestException.class);
+        acceptRequestSplitFairService.sendCarToCustomers(ride);
+        verify(rideRepository, times(0)).save(rideArgumentCaptor.capture());  // ride was not set to canceled
+    }
+
+    @Test
+    @DisplayName("Should not send car to customers. There is non available. Ride is set to canceled because ride is reserved for past.")
+    public void shouldTryToSendCarsButRideShouldBeSetToCanceledBecauseItIsPastReservationAndSettingCarsFailed() {
+        Ride ride = new Ride();
+        Customer customerA = createCustomer("a@gmail.com");
+        Customer customerB = createCustomer("b@gmail.com");
+        ride.setCustomers(List.of(customerA, customerB));
+        ride.setReservation(true);
+        CustomerPayment customerPaymentA = new CustomerPayment();
+        customerPaymentA.setCustomer(customerA);
+        CustomerPayment customerPaymentB = new CustomerPayment();
+        customerPaymentB.setCustomer(customerB);
+        Payment payment = new Payment();
+        payment.setCustomers(List.of(customerPaymentA, customerPaymentB));
+        ride.setPayment(payment);
+        ride.setScheduledStart(LocalDateTime.now().minusMinutes(5));
+        Mockito.when(rideService.setRidePositions(any())).thenThrow(BadRequestException.class);
+        acceptRequestSplitFairService.sendCarToCustomers(ride);
+        verify(customerRepository, times(ride.getCustomers().size())).save(customerArgumentCaptor.capture());   // customers set to active
+    }
+
+    @Test
+    @DisplayName("Should not send car to customers. There is non available. Ride is set to canceled because ride is not future reservation.")
+    public void shouldTryToSendCarsButRideShouldBeSetToCanceledBecauseItIsNotReservationAndSettingCarsFailed() {
+        Ride ride = new Ride();
+        Customer customerA = createCustomer("a@gmail.com");
+        Customer customerB = createCustomer("b@gmail.com");
+        ride.setCustomers(List.of(customerA, customerB));
+        ride.setReservation(false);
+        CustomerPayment customerPaymentA = new CustomerPayment();
+        customerPaymentA.setCustomer(customerA);
+        CustomerPayment customerPaymentB = new CustomerPayment();
+        customerPaymentB.setCustomer(customerB);
+        Payment payment = new Payment();
+        payment.setCustomers(List.of(customerPaymentA, customerPaymentB));
+        ride.setPayment(payment);
+        Mockito.when(rideService.setRidePositions(any())).thenThrow(BadRequestException.class);
+        acceptRequestSplitFairService.sendCarToCustomers(ride);
+        verify(customerRepository, times(ride.getCustomers().size())).save(customerArgumentCaptor.capture());   // customers set to active
+    }
 
     private Payment createPaymentOtherPayed(CustomerPayment customerPayment) {
         CustomerPayment customerPayment2 = new CustomerPayment();
@@ -194,7 +284,6 @@ public class AcceptRequestSplitFairServiceTest {
         payment.setCustomers(List.of(customerPayment, customerPayment2));
         return payment;
     }
-
     private Payment createPayment(CustomerPayment customerPayment) {
         CustomerPayment customerPayment2 = new CustomerPayment();
         customerPayment2.setCustomer(createCustomer("a@gmail.com"));
