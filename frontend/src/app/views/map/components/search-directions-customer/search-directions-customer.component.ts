@@ -158,11 +158,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   async showEstimates() {
     this.searching = true;
-    console.log(this.filteredOptions)
-
     console.log(this.destinations.controls)
     if (!validInput(this.destinations.controls)) {
-      this._snackBar.open("Please enter all existing locations!", '', {
+      this._snackBar.open("Please enter existing locations!", '', {
         duration: 3000,
         panelClass: ['snack-bar']
       })
@@ -175,7 +173,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       this.addPinsToMap.emit(castToPlace(this.positions))
       this.searching = false;
     } else {
-      this._snackBar.open("Please enter all existing locations!", '', {
+      this._snackBar.open("Please enter existing locations!", '', {
         duration: 3000,
         panelClass: ['snack-bar']
       })
@@ -316,7 +314,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   createRideAlternatives(rideId: number) {
-    console.log("MMM")
     console.log(this.allAlternatives)
     this.rideAlternativeService.createRideAlternatives(rideId, this.allAlternatives).subscribe(() => {
     })
@@ -329,11 +326,11 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   addFriend() {
-    if (this.loggedUser.email === this.newFriend.value) {
+    if(this.loggedUser.email === this.newFriend.value) {
       this._snackBar.open("You cannot add yourself.", '', {
         duration: 3000,
         panelClass: ['snack-bar']
-      });
+      })
     } else if (this.newFriend.valid) {
       this.friends.push({friendEmail: this.newFriend.value})
       this.newFriend.reset()

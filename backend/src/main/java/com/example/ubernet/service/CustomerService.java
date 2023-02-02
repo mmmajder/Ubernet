@@ -147,15 +147,6 @@ public class CustomerService {
             throw new BadRequestException("You do not have enough money to pay for ride");
     }
 
-
-
-    public void addToFavoriteRoutes(String rideId) {
-
-    }
-
-    public void removeFromFavoriteRoutes(String rideId) {
-    }
-
     public void deactivateCustomers(List<Customer> customers) {
         for (Customer customer: customers) {
             customer.setActive(false);

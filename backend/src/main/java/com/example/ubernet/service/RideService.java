@@ -72,7 +72,7 @@ public class RideService {
         if (car == null) {
             car = carService.getClosestCarWhenAllAreNotAvailable(firstPositionOfRide, hasPet, hasChild, carType);
             if (car == null)
-                throw new NotFoundException("All cars are not free");
+                throw new NotFoundException("There are no available cars at the moment");
         }
         return car;
     }

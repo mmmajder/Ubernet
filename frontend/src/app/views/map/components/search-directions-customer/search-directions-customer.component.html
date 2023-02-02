@@ -2,7 +2,7 @@
   <mat-stepper labelPosition="bottom" [linear]="true">
     <mat-step [stepControl]="firstFormGroup">
       <ng-template matStepLabel>
-        <mat-icon [matTooltip]="'Route'">route</mat-icon>
+        <mat-icon [matTooltip]="'Route'" id="routeStep">route</mat-icon>
       </ng-template>
       <p>
         <span style="font-weight: 500; font-size: 16px; margin-top: 30px">Route</span>
@@ -180,7 +180,7 @@
           <div *ngIf="typeOfRequest==='reserve'" class="default-time-example">
             <p>When do you want your ride?</p>
             <input aria-label="default time" [ngxTimepicker]="defaultValue" [(ngModel)]="timeOfRide" readonly>
-            <ngx-material-timepicker #defaultValue></ngx-material-timepicker>
+            <ngx-material-timepicker id="reservationTime" #defaultValue></ngx-material-timepicker>
             <p style="color: gray; font-size: 12px">*You can reserve a ride max 5h in advance</p>
           </div>
         </div>
@@ -192,8 +192,7 @@
       <p *ngIf="findingDriver" style="text-align: center">
         <mat-spinner id="request-spinner" color="primary"></mat-spinner>
       </p>
-      <button mat-button matStepperPrevious
-              style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Back
+      <button mat-button matStepperPrevious style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Back
       </button>
     </mat-step>
   </mat-stepper>

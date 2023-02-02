@@ -6,10 +6,11 @@ import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.FindBy;
 import org.openqa.selenium.support.PageFactory;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 
 public class MapPage {
@@ -20,6 +21,15 @@ public class MapPage {
 
     @FindBy(css = "#spinner")
     private WebElement spinner;
+
+    @FindBy(css = "mat-radio-button[value='reserve']")
+    private WebElement rideType;
+
+    @FindBy(css = "#reservationTime")
+    private WebElement reservationTime;
+
+    @FindBy(css = "#routeStep")
+    private WebElement routeStep;
 
     @FindBy(css = "#carTypeStep")
     private WebElement carTypeStep;
@@ -35,9 +45,6 @@ public class MapPage {
 
     @FindBy(css = "#addFriendButton")
     private WebElement addFriendButton;
-
-    @FindBy(css = "#carTypeSelect mat-option .mat-mdc-option")
-    private List<WebElement> carTypeSelectOptions;
 
     @FindBy(css = "#mat-option-0")
     private WebElement carTypeSelectOption;
@@ -57,6 +64,9 @@ public class MapPage {
     @FindBy(css = "div.mat-mdc-snack-bar-label")
     private WebElement snackBar;
 
+    @FindBy(css = "ngx-material-timepicker-content")
+    private WebElement timeDialog;
+
     public MapPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -73,25 +83,54 @@ public class MapPage {
         this.carTypeSelectOption.click();
     }
 
-    public void friendsStep() {
+    public void friendsStep(String email) {
         this.friendsStep.click();
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOf(this.friendsEmailField));
         this.friendsEmailField.click();
-        this.friendsEmailField.sendKeys("petar@gmail.com");
+        this.friendsEmailField.sendKeys(email);
         this.addFriendButton.click();
+    }
+
+    public void friendsStep() {
+        this.friendsStep.click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOf(this.friendsEmailField));
     }
 
     public void summaryStep() {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.elementToBeClickable(this.summaryStep));
         this.summaryStep.click();
-
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(this.requestButton));
-        this.requestButton.click();
-
+        this.clickRequestRide();
         this.waitForRequestSpinner();
+    }
+
+    public void reserveRide(int hours, int minutes) {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(this.summaryStep));
+        this.summaryStep.click();
+        this.rideType.click();
+        selectTime(hours, minutes);
+    }
+
+    public void selectTime(int hours, int minutes) {
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.elementToBeClickable(this.reservationTime));
+        this.reservationTime.click();
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOf(this.timeDialog));
+
+        WebElement hoursWE = driver.findElement(By.cssSelector(".clock-dace__number>span[value=" + hours + "]"));
+        hoursWE.click();
+
+        WebElement minutesWE = driver.findElement(By.cssSelector(".clock-dace__number>span[value=" + minutes + "]"));
+        new WebDriverWait(driver, Duration.ofSeconds(10))
+                .until(ExpectedConditions.visibilityOf(minutesWE));
+        minutesWE.click();
+
+        WebElement timePickerButton = driver.findElement(By.cssSelector("button.timepicker-button"));
+        timePickerButton.click();
     }
 
     public void searchDirections() {
@@ -101,26 +140,42 @@ public class MapPage {
     public void enterStopValue(int i, String location) {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOf(this.searchButton));
+        this.stops.get(i).clear();
         this.stops.get(i).sendKeys(location);
     }
 
     public void waitForSpinner() {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
+        new WebDriverWait(driver, Duration.ofSeconds(20))
                 .until(ExpectedConditions.visibilityOf(this.spinner));
-        new WebDriverWait(driver, Duration.ofSeconds(10))
+        new WebDriverWait(driver, Duration.ofSeconds(20))
                 .until(ExpectedConditions.invisibilityOf(this.spinner));
     }
 
     public void waitForRequestSpinner() {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
+        new WebDriverWait(driver, Duration.ofSeconds(20))
                 .until(ExpectedConditions.visibilityOf(this.requestSpinner));
-        new WebDriverWait(driver, Duration.ofSeconds(10))
+        new WebDriverWait(driver, Duration.ofSeconds(20))
                 .until(ExpectedConditions.invisibilityOf(this.requestSpinner));
     }
 
     public String getSnackBarMessage() {
-        new WebDriverWait(driver, Duration.ofSeconds(3000))
+        new WebDriverWait(driver, Duration.ofSeconds(20))
                 .until(ExpectedConditions.visibilityOf(snackBar));
         return snackBar.getText();
+    }
+
+    public void clickRequestRide() {
+        new WebDriverWait(driver, Duration.ofSeconds(20))
+                .until(ExpectedConditions.elementToBeClickable(this.requestButton));
+        this.requestButton.click();
+    }
+
+    public void waitForSnackBarToDissapear() {
+        new WebDriverWait(driver, Duration.ofSeconds(5))
+                .until(ExpectedConditions.invisibilityOf(snackBar));
+    }
+
+    public void goToSearchDirections() {
+        this.routeStep.click();
     }
 }
