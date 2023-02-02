@@ -48,6 +48,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   carTypeFormGroup: any;
   secondFormGroup: FormGroup;
   friendsFormGroup: FormGroup;
+  searching: boolean = false;
+  findingDriver: boolean = false;
   timeOfRide: string
   typeOfRequest: string;
   isActive: boolean;
@@ -99,20 +101,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    // this.destinationsForm.get('destinations').controls[0].valueChanges.pipe(startWith(''), switchMap(value => this._filter(value)))
-
-    // this.destinationsForm.get('destinations').controls[0].valueChanges.subscribe((value) => {
-    //   if(value.length >= 1){
-    //     this._filter(value).subscribe(response => {
-    //       this.filteredOptions[0] = response;
-    //     });
-    //   }
-    //   else {
-    //     return null;
-    //   }
-    // })
-
-
     this.customerService.getById(this.loggedUser.email).subscribe((customer: Customer) => {
       this.isActive = customer.isActive
     })
@@ -128,7 +116,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.carTypeFormGroup = new FormGroup({
       carType: new FormControl("", Validators.required)
     })
-
 
     this.firstFormGroup = new FormGroup({groups: this.destinationsForm});
     this.secondFormGroup = new FormGroup({groups: this.carTypeFormGroup});
@@ -170,7 +157,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   async showEstimates() {
-    console.log("Show")
+    this.searching = true;
     console.log(this.filteredOptions)
 
     console.log(this.destinations.controls)
@@ -186,6 +173,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
     if (validOutput(this.positions)) {
       this.addPinsToMap.emit(castToPlace(this.positions))
+      this.searching = false;
     } else {
       this._snackBar.open("Please enter all existing locations!", '', {
         duration: 3000,
@@ -296,6 +284,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   requestRide() {
+    this.findingDriver = true;
     const payment = new PaymentDTO();
     payment.customerThatPayed = this.loggedUser.email
     payment.totalPrice = +this.estimations.price
@@ -309,6 +298,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.rideService.createRideRequest(ride).subscribe({
       next: (res: RideDetails) => {
         this.store.dispatch([new DecrementTokens(res.payment.customers[0].pricePerCustomer)])
+        this.findingDriver = false;
         this._snackBar.open("Successfully reserved ride", '', {
           duration: 3000,
           panelClass: ['snack-bar']
@@ -316,6 +306,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         this.createRideAlternatives(res.id)
       },
       error: (res: any) => {
+        this.findingDriver = false;
         this._snackBar.open(res.error, '', {
           duration: 3000,
           panelClass: ['snack-bar']
@@ -338,11 +329,15 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   addFriend() {
-    if (this.newFriend.invalid) {
-      return
+    if (this.loggedUser.email === this.newFriend.value) {
+      this._snackBar.open("You cannot add yourself.", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      });
+    } else if (this.newFriend.valid) {
+      this.friends.push({friendEmail: this.newFriend.value})
+      this.newFriend.reset()
     }
-    this.friends.push({friendEmail: this.newFriend.value})
-    this.newFriend.reset()
   }
 
   private _filter(value: string): Observable<string[]> {

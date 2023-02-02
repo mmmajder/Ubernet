@@ -3,7 +3,9 @@ package com.example.ubernet.e2e.tests;
 import com.example.ubernet.e2e.pages.DashboardPage;
 import com.example.ubernet.e2e.pages.HomePage;
 import org.testng.annotations.Test;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+
 public class LoginTest extends TestBase {
 
     @Test

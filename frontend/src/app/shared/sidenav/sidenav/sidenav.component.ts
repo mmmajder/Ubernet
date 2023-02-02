@@ -37,9 +37,8 @@ export class SidenavComponent implements OnInit {
   numberOfTokens!: number;
   private valueSubscription: Subscription;
   public profilePictureSrc: string;
-  private hasRequestedProfilePicture = false;
   public static _this: any;
-  notificationBadgeHidden: boolean;
+  notificationBadgeHidden: boolean = true;
   private stompClient: Client;
   driverActive: boolean;
   workingHours = "0 minutes";
@@ -70,10 +69,7 @@ export class SidenavComponent implements OnInit {
             this.workingHours = secondsToHm(seconds)
           })
         }
-        if (this.user !== undefined && this.user !== null) {
-          // this.hasRequestedProfilePicture = true;
-          this.getProfilePicture();
-        }
+        this.getProfilePicture();
       }
     })
   }
@@ -81,7 +77,6 @@ export class SidenavComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
-    // this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openGlobalSocket();
     });
@@ -122,13 +117,6 @@ export class SidenavComponent implements OnInit {
       this.workingHours = secondsToHm(seconds);
     })
   }
-
-  // ngDoCheck(): void {
-  //   if (this.user !== undefined && this.profilePictureSrc === undefined && !this.hasRequestedProfilePicture) {
-  //     this.hasRequestedProfilePicture = true;
-  //     this.getProfilePicture();
-  //   }
-  // }
 
   setNumberOfTokens() {
     if (this.user.role == "CUSTOMER") {

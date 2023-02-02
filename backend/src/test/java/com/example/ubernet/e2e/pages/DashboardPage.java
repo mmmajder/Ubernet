@@ -24,6 +24,9 @@ public class DashboardPage {
     @FindBy(css = "div.mat-mdc-snack-bar-label")
     private WebElement snackBar;
 
+    @FindBy(xpath = "//mat-icon[text() = 'location_pin']")
+    private WebElement mapSidenavLink;
+
     public DashboardPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -48,5 +51,9 @@ public class DashboardPage {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.visibilityOf(snackBar));
         return snackBar.getText();
+    }
+
+    public void goToMap() {
+        mapSidenavLink.click();
     }
 }

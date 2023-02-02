@@ -1,24 +1,28 @@
 <mat-card class="destination-input" *ngIf="!isActive">
   <mat-stepper labelPosition="bottom" [linear]="true">
     <mat-step [stepControl]="firstFormGroup">
-      <ng-template matStepLabel>Direction</ng-template>
-      <div>
-        <span style="font-weight: 500; font-size: 16px; margin-top: 30px">Direction</span>
-        <div class="header-right">
-          <button mat-stroked-button style="margin-right: 5px" (click)="clearInputFields()">Clear all</button>
-          <button mat-stroked-button (click)="addNewDestination()">
-            <mat-icon>add_location_alt</mat-icon>
+      <ng-template matStepLabel>
+        <mat-icon [matTooltip]="'Route'">route</mat-icon>
+      </ng-template>
+      <p>
+        <span style="font-weight: 500; font-size: 16px; margin-top: 30px">Route</span>
+        <span style="float: right">
+          <button mat-stroked-button style="margin-right: 5px; font-size: 12px"
+                  (click)="clearInputFields()">Clear all</button>
+          <button mat-stroked-button style="font-size: 12px" color="primary" (click)="addNewDestination()">
+            <mat-icon>add_location_alt</mat-icon> Add stop
           </button>
-        </div>
-      </div>
+        </span>
+      </p>
+      <br>
       <form [formGroup]="destinationsForm" (ngSubmit)="showEstimates()">
-        <div
-          style="overflow-y:scroll; max-height: 300px; margin-top: 20px; margin-bottom: -10px; margin-right: -20px; position: relative"
-          formArrayName="destinations">
+        <div id="route-div"
+             style="overflow-y:scroll; max-height: 250px; margin-top: 20px; margin-bottom: -10px; margin-right: -20px;"
+             formArrayName="destinations">
           <mat-form-field appearance="outline"
                           *ngFor="let destinationForm of destinationsForm.get('destinations')['controls']; let i=index"
                           [ngSwitch]="i"
-                          style="width: 100%;">
+                          style="width: 100%; margin-top: 5px;">
             <mat-label *ngSwitchCase=0>From:</mat-label>
             <mat-label *ngSwitchCase=destinations.controls.length-1>To:</mat-label>
             <mat-label *ngSwitchDefault>
@@ -36,10 +40,11 @@
               </mat-icon>
             </button>
           </mat-form-field>
-
         </div>
         <div style="margin-top: 10px;">
-          <button mat-raised-button color="primary" style="width: 100%" type="submit">Search</button>
+          <button mat-raised-button color="primary" id="search-route" style="width: 100%; margin-top: 5px"
+                  type="submit">Search
+          </button>
           <p style="color: var(--dark); margin-top: 10px;">Optimize by <span
             style="font-weight: 500; cursor: pointer"
             (click)="optimizePrice()">price</span>
@@ -47,21 +52,29 @@
             <span style="font-weight: 500; cursor: pointer" (click)="optimizeTime()">time</span>.
           </p>
         </div>
-        <div>
+        <p *ngIf="searching" style="text-align: center">
+          <mat-spinner id="spinner" color="primary"></mat-spinner>
+        </p>
+
+        <div style="margin-top: 10px">
           <button mat-button matStepperNext
                   style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Next
           </button>
         </div>
       </form>
     </mat-step>
-    <mat-step label="Car type" [stepControl]="secondFormGroup">
+
+    <mat-step [stepControl]="secondFormGroup">
+      <ng-template matStepLabel>
+        <mat-icon [matTooltip]="'Car type'" id="carTypeStep">directions_car</mat-icon>
+      </ng-template>
       <div>
         <span style="font-weight: 500; font-size: 16px; margin-top: 30px">Car type</span>
       </div>
       <mat-form-field appearance="outline" style="width: 100%; padding-right:20px; padding-top: 10px"
                       [formGroup]="carTypeFormGroup">
         <mat-label>Choose car type</mat-label>
-        <mat-select formControlName="carType" (ngModelChange)="changeCarType()">
+        <mat-select id="carTypeSelect" formControlName="carType" (ngModelChange)="changeCarType()">
           <mat-option *ngFor="let type of carTypes" [value]="type">{{type}}</mat-option>
         </mat-select>
       </mat-form-field>
@@ -85,28 +98,31 @@
       </form>
     </mat-step>
 
-    <mat-step label="Friends">
+    <mat-step>
+      <ng-template matStepLabel>
+        <mat-icon [matTooltip]="'Friends'" id="friendsStep">emoji_people</mat-icon>
+      </ng-template>
       <div>
-        <span style="font-weight: 500; font-size: 16px; margin-top: 30px">Add people to split fare</span>
+        <span style="font-weight: 500; font-size: 16px; margin-top: 30px">
+          Add people to split fare
+        </span>
       </div>
-      <span>
-            <mat-form-field appearance="outline" style="width: 80%; align-self: center" [formGroup]="friendsFormGroup">
-              <mat-label>Friend email</mat-label>
-              <input matInput type="email" formControlName="newFriend">
-            </mat-form-field>
-          <button mat-stroked-button
-                  style="flex: 1; margin-left: 10px; height: 50px; align-self: center; margin-top: -20px"
-                  (click)="addFriend()">
+      <mat-form-field [formGroup]="friendsFormGroup" id="friendsEmailField" style="width: 100%; margin-top: 10px" appearance="outline">
+        <mat-label>Friend's email</mat-label>
+        <input matInput type="email" formControlName="newFriend">
+        <button mat-icon-button matSuffix id="addFriendButton" (click)="addFriend()">
           <mat-icon>person_add_alt_1</mat-icon>
         </button>
-      </span>
+        <mat-error *ngIf="friendsFormGroup.hasError('email', 'newFriend')">
+          Invalid email format.
+        </mat-error>
+      </mat-form-field>
       <div
-        style="overflow-y:scroll; max-height: 300px; margin-bottom: -10px; margin-right: -20px; position: relative">
+        style="overflow-y:scroll; max-height: 250px; margin-bottom: -10px; margin-right: -20px; position: relative">
         <div *ngFor="let friend of friends; let i=index">
-          <mat-form-field appearance="outline" style="width: 100%;">
+          <mat-form-field appearance="outline" style="width: 100%; margin-top: 5px">
             <mat-label>Friend email</mat-label>
-            <input matInput [name]="'friend' + i" [ngModel]="friends[i].friendEmail">
-            <!--                   (ngModelChange)="setDestination($event, i)">-->
+            <input matInput [name]="'friend' + i" [ngModel]="friends[i].friendEmail" disabled>
             <button mat-icon-button matSuffix (click)="removeFriend(i)">
               <mat-icon>
                 person_remove
@@ -128,40 +144,44 @@
     </mat-step>
 
     <mat-step>
-      <ng-template matStepLabel>Summary</ng-template>
-      <div style="overflow-y:scroll; max-height: 300px; margin-bottom: 10px">
+      <ng-template matStepLabel>
+        <mat-icon [matTooltip]="'Summary'" id="summaryStep">call</mat-icon>
+      </ng-template>
+      <div style="overflow-y:scroll; max-height: 400px; margin-bottom: 10px">
         <div>
-          <span><h3>Directions:</h3></span>
-          <!--          <mat-list role="list">-->
-          <!--            <mat-list-item role="listitem" *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i">-->
-          <!--              {{destination.value}}-->
-          <!--&lt;!&ndash;              <span>{{destination.value}}</span>&ndash;&gt;-->
-          <!--            </mat-list-item>-->
-          <!--          </mat-list>-->
+        <span style="font-weight: 500; font-size: 16px; margin-top: 30px; margin-bottom: 10px">
+          Summary
+        </span>
+          <p>Route:</p>
           <div
             *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i"
-            style="width: 100%">{{i + 1}} {{destination.value}}
+            style="width: 100%">{{i + 1}}) {{destination.value}}
           </div>
         </div>
+        <br>
         <div *ngIf="friends.length!==0">
-          <span>Friends:</span>
+          <p>Friends:</p>
           <div *ngFor="let friend of friends; let i=index" [ngSwitch]="i"
-               style="width: 100%">{{i + 1}} {{friends[i].friendEmail}}
+               style="width: 100%">{{i + 1}}) {{friends[i].friendEmail}}
           </div>
+          <br>
         </div>
-        <div style="margin-top: 10px">Notes:</div>
-        <span>Car type is: {{carType.value}}. </span>
-        <span *ngIf="hasChild">Children seat is required. </span>
-        <span *ngIf="hasPet">Pet transport is required.</span>
+        <p>Car</p>
+        <span>Car type: {{carType.value}}. </span>
+        <span *ngIf="hasChild"><br>Children seat is required.<br></span>
+        <span *ngIf="hasPet">Pet transport is required.<br></span>
+        <br>
         <div style="margin-top: 10px">
-          <span>When:</span>
           <mat-radio-group [(ngModel)]="typeOfRequest" aria-label="Select an option">
-            <mat-radio-button value="now">Now</mat-radio-button>
-            <mat-radio-button value="reserve">Reserve</mat-radio-button>
+            <mat-radio-button value="now">I want my ride NOW</mat-radio-button>
+            <br>
+            <mat-radio-button value="reserve">I want to reserve my ride for later</mat-radio-button>
           </mat-radio-group>
           <div *ngIf="typeOfRequest==='reserve'" class="default-time-example">
+            <p>When do you want your ride?</p>
             <input aria-label="default time" [ngxTimepicker]="defaultValue" [(ngModel)]="timeOfRide" readonly>
             <ngx-material-timepicker #defaultValue></ngx-material-timepicker>
+            <p style="color: gray; font-size: 12px">*You can reserve a ride max 5h in advance</p>
           </div>
         </div>
       </div>
@@ -169,6 +189,9 @@
         <button id="request" mat-raised-button color="primary" style="width: 100%"
                 (click)="requestRide()">Request ride</button>
         </span>
+      <p *ngIf="findingDriver" style="text-align: center">
+        <mat-spinner id="request-spinner" color="primary"></mat-spinner>
+      </p>
       <button mat-button matStepperPrevious
               style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Back
       </button>

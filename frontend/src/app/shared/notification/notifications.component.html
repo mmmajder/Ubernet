@@ -1,4 +1,5 @@
-<button *ngFor="let notification of notifications" id="{{notification.id}}" mat-menu-item (click)="notificationClicked(notification.id)">
+<button *ngFor="let notification of notifications" id="{{notification.id}}" mat-menu-item
+        (click)="notificationClicked(notification.id)">
   {{notification.text}}
   <div *ngIf="notification.type==='ACCEPTED_RIDE'">
     <mat-chip (click)="openDriverInfoPopup(notification.driverEmail)">
@@ -8,4 +9,4 @@
     </mat-chip>
   </div>
 </button>
-
+<p *ngIf="notifications.length === 0" style="padding: 10px">No notifications at the moment.</p>
