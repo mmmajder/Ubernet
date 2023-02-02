@@ -22,6 +22,18 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.example.ubernet.model.CurrentRide;
+import com.example.ubernet.model.Customer;
+import com.example.ubernet.model.Ride;
+import com.example.ubernet.model.RideRequest;
+import com.example.ubernet.repository.RideRepository;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.Mockito;
+import java.util.Optional;
+
+import static org.mockito.Mockito.verifyNoMoreInteractions;
+
 @ExtendWith(MockitoExtension.class)
 public class RideServiceTest {
     @Mock
@@ -323,5 +335,94 @@ public class RideServiceTest {
         return car;
     }
 
+    private static Long ID = 1111L;
+    private static String EMAIL = "email@gmail.com";
 
+    @Test
+    @DisplayName("Should return Null when finding by invalid ID")
+    public void shouldReturnNullWhenFindingByInvalidId() {
+        Optional<Ride> o = Optional.empty();
+        Mockito.when(rideRepository.findById(ID))
+                .thenReturn(o);
+
+        Ride ride = rideService.findById(ID);
+        assertNull(ride);
+        verify(rideRepository).findById(ID);
+        verifyNoMoreInteractions(rideRepository);
+    }
+
+    @Test
+    @DisplayName("Should return Ride when finding by valid ID")
+    public void shouldReturnRideWhenFindingByValidId() {
+        Ride r = new Ride();
+        r.setId(ID);
+        Optional<Ride> o = Optional.of(r);
+        Mockito.when(rideRepository.findById(ID))
+                .thenReturn(o);
+
+        Ride ride = rideService.findById(ID);
+        assertEquals(ride.getId(), ID);
+        verify(rideRepository).findById(ID);
+        verifyNoMoreInteractions(rideRepository);
+    }
+
+    @Test
+    @DisplayName("Should throw Bad Request Null when finding by invalid email")
+    public void shouldReturnNullWhenFindingCustomerByInvalidEmail() {
+        Mockito.when(customerService.findByEmail(EMAIL))
+                .thenReturn(null);
+
+        assertThrowsExactly(BadRequestException.class,
+                () -> rideService.findCurrentRideForClient(EMAIL));
+        verify(customerService).findByEmail(EMAIL);
+        verifyNoMoreInteractions(customerService);
+        verifyNoMoreInteractions(rideRepository);
+    }
+
+    @Test
+    @DisplayName("Should throw Bad Request when finding by valid email but no active ride")
+    public void shouldReturnNullWhenFindingActiveRideByValidEmailButNoActiveRide() {
+        Customer c = new Customer();
+        c.setEmail(EMAIL);
+
+        Mockito.when(customerService.findByEmail(EMAIL))
+                .thenReturn(c);
+        Mockito.when(rideRepository.findActiveRideForCustomer(EMAIL))
+                .thenReturn(null);
+
+        CurrentRide activeRide = rideService.findCurrentRideForClient(EMAIL);
+
+        assertNull(activeRide);
+        verify(customerService).findByEmail(EMAIL);
+        verify(rideRepository).findActiveRideForCustomer(EMAIL);
+        verifyNoMoreInteractions(customerService);
+        verifyNoMoreInteractions(rideRepository);
+    }
+
+    @Test
+    @DisplayName("Should return CurrentRide when finding by valid email and has active ride")
+    public void shouldReturnCurrentRideWhenFindingByValidEmailAndHasActiveRide() {
+        Customer c = new Customer();
+        c.setEmail(EMAIL);
+
+        CurrentRide currentRide = new CurrentRide();
+        currentRide.setId(ID);
+        RideRequest rideRequest = new RideRequest();
+        rideRequest.setCurrentRide(currentRide);
+        Ride activeRide = new Ride();
+        activeRide.setRideRequest(rideRequest);
+
+        Mockito.when(customerService.findByEmail(EMAIL))
+                .thenReturn(c);
+        Mockito.when(rideRepository.findActiveRideForCustomer(EMAIL))
+                .thenReturn(activeRide);
+
+        CurrentRide cRide = rideService.findCurrentRideForClient(EMAIL);
+
+        assertEquals(cRide.getId(), activeRide.getRideRequest().getCurrentRide().getId());
+        verify(customerService).findByEmail(EMAIL);
+        verify(rideRepository).findActiveRideForCustomer(EMAIL);
+        verifyNoMoreInteractions(customerService);
+        verifyNoMoreInteractions(rideRepository);
+    }
 }
