@@ -7,6 +7,7 @@ import com.example.ubernet.model.Payment;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.CustomerPaymentRepository;
+import com.example.ubernet.repository.CustomerRepository;
 import com.example.ubernet.repository.PaymentRepository;
 import com.example.ubernet.repository.RideRepository;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class AcceptRequestSplitFairService {
     private final CustomerPaymentRepository customerPaymentRepository;
     private final RideRepository rideRepository;
     private final RideService rideService;
-    private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
     private final PaymentRepository paymentRepository;
     private final NotificationService notificationService;
     private final PaymentService paymentService;
@@ -57,7 +58,7 @@ public class AcceptRequestSplitFairService {
         customerPaymentRepository.save(customerPayment);
         customer.setNumberOfTokens(customer.getNumberOfTokens() - price);
         customer.setActive(true);
-        customerService.save(customer);
+        customerRepository.save(customer);
     }
 
     private boolean allPassengersPayed(List<CustomerPayment> customerPayments) {
@@ -103,7 +104,7 @@ public class AcceptRequestSplitFairService {
     private void setCustomersActive(List<Customer> customers) {
         for (Customer customer : customers) {
             customer.setActive(false);
-            customerService.save(customer);
+            customerRepository.save(customer);
         }
     }
 }
