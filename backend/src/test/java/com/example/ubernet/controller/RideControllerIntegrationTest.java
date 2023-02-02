@@ -6,7 +6,7 @@ import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.enums.RideState;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.junit.runner.RunWith;
+//import org.junit.runner.RunWith;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -70,6 +70,7 @@ public class RideControllerIntegrationTest {
 //        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
 ////        assertEquals(ride.getId(), 1L);
 //    }
+
 
 //    @Test
 //    public void getByValidIdShouldReturnOK() throws Exception {

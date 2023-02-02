@@ -183,4 +183,16 @@ public class DTOMapper {
         activeAvailableCarResponse.setCurrentPosition(car.getPosition());
         return activeAvailableCarResponse;
     }
+
+    public static CarResponse getCarResponseWithCurrentRide(Car car) {
+        CarResponse carResponse = new CarResponse();
+        carResponse.setCarType(car.getCarType());
+        carResponse.setDriver(car.getDriver());
+        PositionDTO positionDTO = new PositionDTO();
+        positionDTO.setX(car.getPosition().getX());
+        positionDTO.setY(car.getPosition().getY());
+        carResponse.setPosition(positionDTO);
+        carResponse.setCurrentRide(car.getNavigation().getFirstRide());
+        return carResponse;
+    }
 }

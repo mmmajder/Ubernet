@@ -49,7 +49,7 @@ public class Car {
                 ", navigation=" + navigation +
                 ", carType=" + carType +
                 ", isAvailable=" + isAvailable +
-                ", driver=" + driver.getName() +
+//                ", driver=" + driver.getName() +
                 ", allowsBaby=" + allowsBaby +
                 ", allowsPet=" + allowsPet +
                 ", plates='" + plates + '\'' +
