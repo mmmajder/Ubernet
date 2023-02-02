@@ -8,9 +8,8 @@ import {DebugElement} from "@angular/core";
 import {By} from '@angular/platform-browser';
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {LoginComponent} from "./login.component";
-import {StateStream, Store} from "@ngxs/store";
-import {InternalStateOperations} from "@ngxs/store/src/internal/state-operations";
-import {SocialAuthService, SocialLoginModule} from "@abacritt/angularx-social-login";
+import {Store} from "@ngxs/store";
+import {SocialAuthService} from "@abacritt/angularx-social-login";
 
 describe('ContactComponent', () => {
   let comp: LoginComponent;
@@ -58,9 +57,8 @@ describe('ContactComponent', () => {
 
     fixture = TestBed.createComponent(LoginComponent);
     comp = fixture.componentInstance; // RegistrationComponent test instance
-    elem = fixture.debugElement.query(By.css('#login-button'));
+    elem = fixture.debugElement.query(By.css('#loginBtn'));
     submitButton = elem.nativeElement;
-    let store = fixture.debugElement.injector.get(Store);
     fixture.detectChanges();
   });
 

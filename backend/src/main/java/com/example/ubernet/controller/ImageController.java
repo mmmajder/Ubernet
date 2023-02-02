@@ -11,6 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping(value = "/image")
@@ -37,16 +39,20 @@ public class ImageController {
     }
 
     @GetMapping("/{email}")
-    public ResponseEntity<EncodedImage> getUsersImage(@PathVariable String email) {
+    public ResponseEntity<EncodedImage> getUsersImage(@PathVariable String email) throws IOException {
         User user = userService.findByEmail(email);
         if (user == null)
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
 
         Image image = imageService.findUsersProfileImage(user);
-        if (image == null)
-            return new ResponseEntity<>(null, HttpStatus.OK);
+        EncodedImage encoded;
 
-        EncodedImage encoded = imageService.encodeImage(image);
+        if (image == null){
+            encoded = imageService.getEncodedDefaultProfileImage();
+        }else {
+            encoded = imageService.encodeImage(image);
+        }
+
         return new ResponseEntity<>(encoded, HttpStatus.OK);
     }
 }

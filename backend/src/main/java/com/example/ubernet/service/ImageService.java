@@ -8,7 +8,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.util.Base64;
 
 @Service
@@ -27,7 +29,6 @@ public class ImageService {
         User user = userService.findByEmail(email);
         deactivateUsersProfileImage(user);
         Image image = new Image(user, file.getBytes());
-
         return imageRepository.save(image);
     }
 
@@ -54,6 +55,15 @@ public class ImageService {
 
     public EncodedImage encodeImage(Image image) {
         String encodedData = Base64.getEncoder().encodeToString(image.getData());
+        EncodedImage encodedImage = new EncodedImage(encodedData);
+
+        return encodedImage;
+    }
+
+    public EncodedImage getEncodedDefaultProfileImage() throws IOException {
+        File fi = new File("src/main/resources/default-profile-picture.jpg");
+        byte[] defaultImage = Files.readAllBytes(fi.toPath());
+        String encodedData = Base64.getEncoder().encodeToString(defaultImage);
         EncodedImage encodedImage = new EncodedImage(encodedData);
 
         return encodedImage;

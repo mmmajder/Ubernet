@@ -66,12 +66,14 @@ export class ProfileDataComponent implements OnInit {
     });
   }
 
-  public selectFile(event: any) {
-    console.log("event")
-    console.log(event)
-    console.log(event.target.files[0])
-    this.selectedImage = event.target.files[0];
-    this.hasSelectedFile = true;
+  public selectFile(event: Event) {
+    const input = (<HTMLInputElement>event.target)
+    if (input.files !== null){
+      const file:File = input.files[0];
+      this.selectedImage = file;
+      this.hasSelectedFile = true;
+      this.newProfileImagePreview(file);
+    }
   }
 
   public uploadProfileImage() {
@@ -82,6 +84,18 @@ export class ProfileDataComponent implements OnInit {
           this.resetFileUploader();
           SidenavComponent.changeProfilePicture(`data:image/jpeg;base64,${encodedImage.data}`);
         });
+    }
+  }
+
+  public newProfileImagePreview(file : File){
+    if (file !== null){
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        this.profileImageSrc = reader.result as string;
+      };
+
     }
   }
 

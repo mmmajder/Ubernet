@@ -2,12 +2,13 @@
   <mat-card-title>Welcome back...</mat-card-title>
   <mat-card-subtitle>Please enter your email and password</mat-card-subtitle>
   <mat-card-content>
+<<<<<<< HEAD
     <form [formGroup]="formGroup">
       <p style="margin-top: 10px">
         <mat-form-field class="example-full-width" style="width: 100%" appearance="outline">
           <mat-label>Email</mat-label>
           <input type="email" matInput formControlName="emailFormControl" [(ngModel)]="email"
-                 placeholder="Ex. pat@example.com">
+                 placeholder="Ex. pat@example.com" id="emailInput">
           <mat-error
             *ngIf="formGroup.hasError('email', 'emailFormControl') && !formGroup.hasError('required', 'emailFormControl')">
             Please enter a valid email address
@@ -21,7 +22,7 @@
         <mat-form-field style="width: 100%" appearance="outline">
           <mat-label>Enter your password</mat-label>
           <input matInput [type]="hide ? 'password' : 'text'" formControlName="passwordFormControl"
-                 [(ngModel)]="password">
+                 [(ngModel)]="password" id="passwordInput">
           <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                   [attr.aria-pressed]="hide">
             <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
@@ -31,7 +32,7 @@
           </mat-error>
         </mat-form-field>
       </p>
-      <button mat-raised-button type="submit" id="login-button" [disabled]="formGroup.invalid"
+      <button mat-raised-button type="submit" id="loginBtn" [disabled]="formGroup.invalid"
               color="primary"
               style="width: 100%; margin-top: -20px;" (click)="login()">Login
       </button>

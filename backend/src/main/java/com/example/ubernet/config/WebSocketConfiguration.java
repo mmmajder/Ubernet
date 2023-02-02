@@ -1,5 +1,6 @@
 package com.example.ubernet.config;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.messaging.simp.config.MessageBrokerRegistry;
@@ -21,7 +22,7 @@ public class WebSocketConfiguration implements WebSocketConfigurer, WebSocketMes
     }
 
     @Override
-    public void registerStompEndpoints(StompEndpointRegistry registry) {
+    public void registerStompEndpoints(@NotNull StompEndpointRegistry registry) {
         registry.addEndpoint("/socket")
                 .setAllowedOrigins("http://localhost:4200")
                 .withSockJS().setSuppressCors(false);
