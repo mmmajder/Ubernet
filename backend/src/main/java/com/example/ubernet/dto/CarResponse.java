@@ -1,9 +1,6 @@
 package com.example.ubernet.dto;
 
-import com.example.ubernet.model.Car;
-import com.example.ubernet.model.CarType;
-import com.example.ubernet.model.Driver;
-import com.example.ubernet.model.Position;
+import com.example.ubernet.model.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -23,6 +20,7 @@ public class CarResponse {
     private Boolean allowsPet;
     private Driver driver;
     private PositionDTO position;
+    private CurrentRide currentRide;
 
     public CarResponse(Car car){
         this.id = car.getId();

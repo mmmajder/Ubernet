@@ -19,6 +19,7 @@ values (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
+       (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null);
 
 insert into admin (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id)
@@ -39,7 +40,8 @@ values ('2023-01-26 15:58', '2023-01-26 08:00');
 insert into driver_daily_activity (deleted, is_active, last_period_start)
 values (false, false, null),
        (false, false, null),
-       (false, false, null);
+       (false, false, null),
+        (false, true, now()::timestamp);
 
 insert into driver_daily_activity_periods_in_last24h (driver_daily_activity_id, periods_in_last24h_id)
 values (1, 1);
@@ -66,12 +68,14 @@ values (false, 45.267136, 19.833549),
 insert into navigation (deleted)
 values (false),
        (false),
-       (false);
+       (false),
+        (false);
 
 insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name, navigation_id, version)
 values (false, false, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1, 0),
        (false, false, 1, 3, false, false, 'NS-GLAMOC1', 'Audi', 2, 0),
-       (false, false, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3, 0);
+       (false, false, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3, 0),
+       (false, true, 2, 6, true, false, 'BTACAB7312', 'Yugo', 4, 0);
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
@@ -81,7 +85,10 @@ values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
        ('driver2@gmail.com', 'Driverville', false, false, 'Driver2',
         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 4, 2, 2, false),
        ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 5, 3, 3, false);
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 5, 3, 3, false),
+       ('driver4@gmail.com', 'Driverville', false, false, 'Driver4',
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 183546', 1, 'Driveric', 8, 4, 4, false);
+
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (3, 2),
@@ -113,6 +120,9 @@ where id = 2;
 update car
 set driver_email='driver3@gmail.com'
 where id = 3;
+update car
+set driver_email='driver4@gmail.com'
+where id = 4;
 
 insert into user_auth(deleted, is_enabled, last_password_set, verification_code)
 values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');
