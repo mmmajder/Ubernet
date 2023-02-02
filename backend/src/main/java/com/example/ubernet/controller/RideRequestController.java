@@ -18,12 +18,12 @@ public class RideRequestController {
 
     @PutMapping("/send-cars-to-reservations")
     public void sendCarsToReservations() {
-        rideRequestService.sendCarsToReservations();
+        rideRequestService.sendCarsToRidesInReservedState();
     }
 
     @PutMapping("/return-money")
     public void returnMoney() {
-        rideRequestService.returnMoneyNotPayedPassedReservations();
+        rideRequestService.returnMoney();
     }
 
     @PutMapping("/notify-time-until-reservation")

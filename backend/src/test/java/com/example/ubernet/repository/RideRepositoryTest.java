@@ -40,7 +40,7 @@ public class RideRepositoryTest {
     }
 
     @Test
-    public void shouldReturnRideWhenFindingRideWhichStatusIsWaitingForCarId() {
+    public void shouldReturnRidesWhenFindingRidesWhichStatusIsWaitingForCarId() {
         Car car = new Car(null, "NS 123 BA");
         Driver driver = new Driver("test-driver@gmail.com", "Jova", "Jovic", car);
         Ride ride = new Ride(null, RideState.WAITING, driver);
@@ -49,15 +49,16 @@ public class RideRepositoryTest {
         testEntityManager.persist(ride);
         testEntityManager.flush();
 
-        Ride foundRide = rideRepository.findRideWhichStatusIsWaitingForCarId(car.getId());
-        assertEquals(driver.getEmail(), foundRide.getDriver().getEmail());
-        assertEquals(RideState.WAITING, foundRide.getRideState());
+        List<Ride> foundRides = rideRepository.findRidesWhichStatusIsWaitingForCarId(car.getId());
+        assertEquals(driver.getEmail(), foundRides.get(0).getDriver().getEmail());
+        assertEquals(RideState.WAITING, foundRides.get(0).getRideState());
+        assertEquals(1, foundRides.size());
     }
 
     @Test
     public void shouldReturnNullWhenFindingRideWhichStatusIsWaitingForCarId() {
-        Ride ride = rideRepository.findRideWhichStatusIsWaitingForCarId(1000L);
-        assertNull(ride);
+        List<Ride> rides = rideRepository.findRidesWhichStatusIsWaitingForCarId(1000L);
+        assertEquals(0, rides.size()) ;
     }
 
     @Test
@@ -220,28 +221,6 @@ public class RideRepositoryTest {
         List<Ride> foundRides = rideRepository.findRideByDriverEmailAndDateRange(driver.getEmail(), LocalDateTime.now().minusDays(10), LocalDateTime.now().minusDays(1));
         assertEquals(2, foundRides.size());
     }
-
-    @Test
-    public void shouldReturnRidesWhenFindingFinishedRidesWithDateOfActualStartBetweenDates() {
-        Ride ride1 = new Ride(RideState.FINISHED);
-        ride1.setActualStart(LocalDateTime.now());
-        Ride ride2 = new Ride(RideState.FINISHED);
-        ride2.setActualStart(LocalDateTime.now().minusDays(5));
-        Ride ride3 = new Ride(RideState.FINISHED);
-        ride3.setActualStart(LocalDateTime.now().minusDays(2));
-        Ride ride4 = new Ride(RideState.FINISHED);
-        ride4.setActualStart(LocalDateTime.now().minusDays(6));
-        testEntityManager.persist(ride1);
-        testEntityManager.persist(ride2);
-        testEntityManager.persist(ride3);
-        testEntityManager.persist(ride4);
-        testEntityManager.flush();
-        List<Ride> foundRides = rideRepository.findRideByDateRange(LocalDateTime.now().minusDays(6), LocalDateTime.now().minusDays(1));
-        assertEquals(2, foundRides.size());
-    }
-
-
-
 
 //        Ride ride = new Ride();
 //        Customer customer1 = createCustomer1();

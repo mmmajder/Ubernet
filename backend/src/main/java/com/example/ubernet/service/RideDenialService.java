@@ -88,13 +88,19 @@ public class RideDenialService {
             navigationRepository.save(navigation);
             car.setIsAvailable(true);
             carRepository.save(car);
+        } else {
+            navigation.setFirstRide(navigation.getSecondRide());
+            navigation.setSecondRide(null);
+            navigation.setApproachSecondRide(null);
+            navigationRepository.save(navigation);
+            this.simpMessagingService.updateRouteForSelectedCar(car.getDriver().getEmail(), ride);
         }
     }
 
     private void rideDenialSetDriverInactive(Ride ride) {
         ride.setRideState(RideState.RESERVED);      // set ride state to reserved, in order to set different car to go to destination
         ride.setReservation(true);
-        ride.setScheduledStart(LocalDateTime.now());
+        ride.setScheduledStart(LocalDateTime.now().plusMinutes(4));
         rideRepository.save(ride);
         Driver driver = ride.getDriver();
         driver.getDriverDailyActivity().setIsActive(false);

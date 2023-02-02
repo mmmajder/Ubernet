@@ -4,6 +4,7 @@ import com.example.ubernet.dto.CreateRideDTO;
 import com.example.ubernet.dto.PlaceDTO;
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.model.*;
+import com.example.ubernet.model.enums.NotificationType;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.*;
 import com.example.ubernet.utils.TimeUtils;
@@ -36,6 +37,8 @@ public class CreateRideService {
     private final CarTypeService carTypeService;
     private final RouteRepository routeRepository;
     private final PlaceRepository placeRepository;
+    private final SimpMessagingService simpMessagingService;
+
     @Transactional
     public Ride createRide(CreateRideDTO createRideDTO) {
         Customer customer = customerRepository.findByEmail(createRideDTO.getPassengers().get(0));
@@ -176,5 +179,19 @@ public class CreateRideService {
             return RideState.WAITING;
         }
         return RideState.REQUESTED;
+    }
+
+    public void notifyCustomers(List<Customer> customers, long rideId) {
+        for (int i = 1; i < customers.size(); i++) {
+            Notification notification = new Notification();
+            notification.setOpened(false);
+            notification.setText("You have been invited to split fare for ride.");
+            notification.setType(NotificationType.SPLIT_FARE);
+            notification.setReceiverEmail(customers.get(i).getEmail());
+            notification.setRideId(rideId);
+            notification.setTimeCreated(LocalDateTime.now());
+            notificationService.save(notification);
+            this.simpMessagingService.notifyCustomersSplitFair(customers.get(i).getEmail(), notification);
+        }
     }
 }

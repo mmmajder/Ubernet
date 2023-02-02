@@ -100,6 +100,7 @@ export class MapComponent implements OnInit {
   }
 
   initRouteDriver() {
+    console.log(this.routeForDriver)
     this.routeForDriver.forEach(i => {
       if (i instanceof L.Polyline || i instanceof L.Marker)
         this.map.removeLayer(i)
@@ -222,7 +223,7 @@ export class MapComponent implements OnInit {
       const checkPoints: LatLng[] = []
       checkPoints.push(L.latLng(start.y, start.x))
       checkPoints.push(L.latLng(end.y, end.x))
-      L.Routing.control({
+      this.routeForDriver.push(L.Routing.control({
         waypoints: checkPoints,
         altLineOptions: {
           extendToWaypoints: false,
@@ -231,7 +232,7 @@ export class MapComponent implements OnInit {
       }).on('routesfound', (response) => {
         const route = response.routes[0]
         this.rideService.createRouteForSelectedCar(route, ride.driver.car.id).subscribe()
-      }).addTo(this.map)
+      }).addTo(this.map))
     }
     let start: Position
     let end: Position

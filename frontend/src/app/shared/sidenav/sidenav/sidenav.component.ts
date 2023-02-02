@@ -94,6 +94,7 @@ export class SidenavComponent implements OnInit {
     this.stompClient.subscribe("/customer/payback-" + this.user.email, (message: Message) => {
       const money: number = JSON.parse(message.body)
       this.store.dispatch([new SetTokens(money)])
+      this.updateNotificationBadge()
     })
     this.stompClient.subscribe("/customer/everyone-payed-" + this.user.email, () => {
       this.updateNotificationBadge();

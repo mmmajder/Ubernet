@@ -4,7 +4,6 @@ import com.example.ubernet.dto.*;
 import com.example.ubernet.exception.BadRequestException;
 import com.example.ubernet.exception.NotFoundException;
 import com.example.ubernet.model.*;
-import com.example.ubernet.model.enums.NotificationType;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.*;
 import com.example.ubernet.utils.DTOMapper;
@@ -24,13 +23,13 @@ import java.util.List;
 public class RideService {
     private final RideRepository rideRepository;
     private final CarService carService;
+    private final CarRepository carRepository;
     private final CustomerService customerService;
     private final CarTypeService carTypeService;
-    private final PositionService positionService;
-    private final PositionInTimeService positionInTimeService;
+    private final PositionRepository positionRepository;
+    private final PositionInTimeRepository positionInTimeRepository;
     private final CurrentRideService currentRideService;
     private final SimpMessagingService simpMessagingService;
-    private final NotificationService notificationService;
     private final NavigationRepository navigationRepository;
     private final DriverNotificationService driverNotificationService;
 
@@ -54,7 +53,7 @@ public class RideService {
         }
         car.setNavigation(navigation);
         car.setIsAvailable(false);
-        carService.save(car);
+        carRepository.save(car);
         if (navigation.getFirstRide() == null || navigation.getFirstRide().isFreeRide()) {
             navigation.setFirstRide(currentRide);
         } else {
@@ -89,8 +88,8 @@ public class RideService {
             positionInTime.setSecondsPast(timeSlots.get(i));
             positionInTime.setPosition(position);
             positions.add(positionInTime);
-            positionService.save(position);
-            positionInTimeService.save(positionInTime);
+            positionRepository.save(position);
+            positionInTimeRepository.save(positionInTime);
         }
         System.out.println(positions);
         return positions;
@@ -144,33 +143,36 @@ public class RideService {
         driverNotificationService.sendNextRideNotificationToDriver(ride);
         return ride;
     }
-    public void notifyCustomers(List<Customer> customers, long rideId) {
-        for (int i = 1; i < customers.size(); i++) {
-            Notification notification = new Notification();
-            notification.setOpened(false);
-            notification.setText("You have been invited to split fare for ride.");
-            notification.setType(NotificationType.SPLIT_FARE);
-            notification.setReceiverEmail(customers.get(i).getEmail());
-            notification.setRideId(rideId);
-            notification.setTimeCreated(LocalDateTime.now());
-            notificationService.save(notification);
-            this.simpMessagingService.notifyCustomersSplitFair(customers.get(i).getEmail(), notification);
-        }
-    }
 
     public List<Ride> getRidesWithAcceptedReservation() {
         return this.rideRepository.getAcceptedReservationsThatCarDidNotComeYet();
     }
 
-    public void updateRideStatus(Ride ride, RideState finished) {
-        ride.setRideState(finished);
+    public void updateRideStatus(Ride ride, RideState rideState) {
+        ride.setRideState(rideState);
         save(ride);
     }
 
     public List<Ride> getReservedRidesThatWereNotPayedAndScheduledTimePassed() {
         List<Ride> rides = rideRepository.getReservedRidesThatWithStatusRequestedAndScheduledStartIsNotNull();
-        rides.removeIf(ride -> ride.getScheduledStart().isAfter(LocalDateTime.now()));
-        return rides;
+        List<Ride> passedReservations = new ArrayList<>();
+        for (Ride ride : rides) {
+            if (ride.getScheduledStart().isBefore(LocalDateTime.now())) {
+                passedReservations.add(ride);
+            }
+        }
+        return passedReservations;
+    }
+
+    public List<Ride> getReservedRidesThatScheduledTimePassed() {
+        List<Ride> rides = rideRepository.getReservedRidesThatWithStatusReservedAndScheduledStartIsNotNull();
+        List<Ride> passedRides = new ArrayList<>();
+        for (Ride ride : rides) {
+            if (ride.getScheduledStart().isBefore(LocalDateTime.now())) {
+                passedRides.add(ride);
+            }
+        }
+        return passedRides;
     }
 
     public List<Ride> getReservedRidesThatShouldStartIn10Minutes() {
@@ -185,7 +187,7 @@ public class RideService {
     }
 
     @Transactional
-    public CurrentRide findCurrentRouteForClient(String email) {
+    public CurrentRide findCurrentRideForClient(String email) {
         Customer customer = customerService.findByEmail(email);
         if (customer == null) throw new BadRequestException("Customer with this email does not exist");
         Ride activeRide = rideRepository.findActiveRideForCustomer(email);

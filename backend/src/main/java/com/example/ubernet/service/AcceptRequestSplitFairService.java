@@ -7,6 +7,7 @@ import com.example.ubernet.model.Payment;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.CustomerPaymentRepository;
+import com.example.ubernet.repository.CustomerRepository;
 import com.example.ubernet.repository.PaymentRepository;
 import com.example.ubernet.repository.RideRepository;
 import lombok.AllArgsConstructor;
@@ -24,7 +25,7 @@ public class AcceptRequestSplitFairService {
     private final CustomerPaymentRepository customerPaymentRepository;
     private final RideRepository rideRepository;
     private final RideService rideService;
-    private final CustomerService customerService;
+    private final CustomerRepository customerRepository;
     private final PaymentRepository paymentRepository;
     private final NotificationService notificationService;
     private final PaymentService paymentService;
@@ -57,7 +58,7 @@ public class AcceptRequestSplitFairService {
         customerPaymentRepository.save(customerPayment);
         customer.setNumberOfTokens(customer.getNumberOfTokens() - price);
         customer.setActive(true);
-        customerService.save(customer);
+        customerRepository.save(customer);
     }
 
     private boolean allPassengersPayed(List<CustomerPayment> customerPayments) {
@@ -71,7 +72,7 @@ public class AcceptRequestSplitFairService {
         Payment payment = ride.getPayment();
         payment.setIsAcceptedPayment(true);
         paymentRepository.save(payment);
-        ride.setRideState(getRideStateAllPassangersPayed(ride));
+        ride.setRideState(getRideStateAllPassengersPayed(ride));
         ride.setRequestTime(LocalDateTime.now());
         rideRepository.save(ride);
         this.notificationService.createNotificationForCustomersEveryonePayed(ride);
@@ -80,7 +81,7 @@ public class AcceptRequestSplitFairService {
         }
     }
 
-    private RideState getRideStateAllPassangersPayed(Ride ride) {
+    private RideState getRideStateAllPassengersPayed(Ride ride) {
         if (ride.isReservation()) {
             if (ride.getScheduledStart().isAfter(LocalDateTime.now().plusMinutes(10)))
                 return RideState.RESERVED;
@@ -88,11 +89,12 @@ public class AcceptRequestSplitFairService {
         return RideState.WAITING;
     }
 
-    private void sendCarToCustomers(Ride ride) {
+    public void sendCarToCustomers(Ride ride) {
         try {
             rideService.setRidePositions(ride);
             notificationService.createNotificationForCustomerInitRide(ride);
         } catch (Exception e) {
+            if (ride.isReservation() && ride.getScheduledStart().isAfter(LocalDateTime.now())) return;
             rideService.updateRideStatus(ride, RideState.CANCELED);
             setCustomersActive(ride.getCustomers());
             notificationService.createNotificationForCustomersRideDenied(ride);
@@ -103,7 +105,7 @@ public class AcceptRequestSplitFairService {
     private void setCustomersActive(List<Customer> customers) {
         for (Customer customer : customers) {
             customer.setActive(false);
-            customerService.save(customer);
+            customerRepository.save(customer);
         }
     }
 }

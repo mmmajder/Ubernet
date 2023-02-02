@@ -3,15 +3,12 @@ package com.example.ubernet.service;
 import com.example.ubernet.model.CustomerPayment;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.enums.RideState;
-import com.example.ubernet.repository.CustomerRepository;
-import com.example.ubernet.repository.RideRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,24 +18,41 @@ public class RideRequestService {
     private final RideService rideService;
     private final NotificationService notificationService;
     private final PaymentService paymentService;
+    private final CustomerService customerService;
     @Transactional
-    public void sendCarsToReservations() {
+    public void sendCarsToRidesInReservedState() {
         List<Ride> rides = rideService.getReservedRidesThatShouldStartIn10Minutes();
         for (Ride ride : rides) {
-            System.out.println(ride);
+            ride = rideService.setRidePositions(ride);
             ride.setRideState(RideState.WAITING);
-            rideService.setRidePositions(ride);
+            rideService.save(ride);
             notificationService.createNotificationForCustomerInitRide(ride);
         }
+    }
+
+    public void returnMoney() {
+        returnMoneyPassedReservations();
+        returnMoneyNotPayedPassedReservations();
+    }
+    public void returnMoneyPassedReservations() {
+        List<Ride> rides = rideService.getReservedRidesThatScheduledTimePassed();
+        for (Ride ride : rides) {
+            cancelRide(ride);
+        }
+    }
+
+    private void cancelRide(Ride ride) {
+        ride.setRideState(RideState.CANCELED);
+        rideService.save(ride);
+        List<CustomerPayment> customerPayments = ride.getPayment().getCustomers();
+        paymentService.returnMoneyToCustomers(customerPayments);
+        customerService.deactivateCustomers(ride.getCustomers());
     }
 
     public void returnMoneyNotPayedPassedReservations() {
         List<Ride> rides = rideService.getReservedRidesThatWereNotPayedAndScheduledTimePassed();
         for (Ride ride : rides) {
-            ride.setRideState(RideState.CANCELED);
-            rideService.save(ride);
-            List<CustomerPayment> customerPayments = ride.getPayment().getCustomers();
-            paymentService.returnMoneyToCustomers(customerPayments);
+            cancelRide(ride);
         }
     }
 

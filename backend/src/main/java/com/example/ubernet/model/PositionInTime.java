@@ -34,4 +34,9 @@ public class PositionInTime {
                 ", position=" + position +
                 '}';
     }
+
+    public PositionInTime(double secondsPast, Position position) {
+        this.secondsPast = secondsPast;
+        this.position = position;
+    }
 }

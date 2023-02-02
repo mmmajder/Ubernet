@@ -42,9 +42,17 @@ public class DriverService {
     public Driver toggleActivity(String email, boolean activate) {
         Driver driver = (Driver) userService.findByEmail(email);
         if (driver == null) throw new BadRequestException("Driver with this email does not exist");
-        if (activate) activateDriver(driver);
+        if (activate) {
+            activateDriver(driver);
+            activateCar(driver.getCar());
+        }
         else deactivateDriver(driver);
         return driver;
+    }
+
+    private void activateCar(Car car) {
+        car.setIsAvailable(true);
+        carRepository.save(car);
     }
 
     public Driver findByEmail(String email) {

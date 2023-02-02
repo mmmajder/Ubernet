@@ -34,7 +34,7 @@ public class RideController {
         if (ride.getRideState() == RideState.WAITING) {
             this.simpMessagingService.updateRouteForSelectedCar(ride.getDriver().getEmail(), ride);
         }
-        rideService.notifyCustomers(ride.getCustomers(), ride.getId());
+        createRideService.notifyCustomers(ride.getCustomers(), ride.getId());
         return ResponseEntity.ok(ride);
     }
 
@@ -68,7 +68,7 @@ public class RideController {
 
     @GetMapping("/find-scheduled-route-navigation-client/{email}")
     public ResponseEntity<CurrentRide> findScheduledRouteForClient(@PathVariable String email) {
-        CurrentRide customersRide = rideService.findCurrentRouteForClient(email);
+        CurrentRide customersRide = rideService.findCurrentRideForClient(email);
         return ResponseEntity.ok(customersRide);
     }
 }

@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 @AllArgsConstructor
@@ -46,6 +47,9 @@ public class StartRideService {
         RideAlternatives rideAlternatives = rideAlternativesRepository.getRideAlternativesByRideId(ride.getId());
         navigation.getFirstRide().setPositions(new ArrayList<>());
         for (PathAlternative pathAlternative : rideAlternatives.getAlternatives()) {
+            double endOfLastPartTime = 0;
+            if (navigation.getFirstRide().getPositions().size() != 0)
+                endOfLastPartTime = getSecondsOfLastPath(navigation.getFirstRide().getPositions());
             CurrentRide currentRide = pathAlternative.getAlternatives().get(rand.nextInt(pathAlternative.getAlternatives().size()));
             for (PositionInTime positionInTime : currentRide.getPositions()) {
                 Position position = new Position();
@@ -54,7 +58,7 @@ public class StartRideService {
                 positionService.save(position);
                 PositionInTime newPositionInTime = new PositionInTime();
                 newPositionInTime.setPosition(position);
-                newPositionInTime.setSecondsPast(positionInTime.getSecondsPast());
+                newPositionInTime.setSecondsPast(endOfLastPartTime + positionInTime.getSecondsPast());
                 positionInTimeService.save(newPositionInTime);
                 navigation.getFirstRide().getPositions().add(newPositionInTime);
                 currentRideService.save(navigation.getFirstRide());
@@ -62,5 +66,10 @@ public class StartRideService {
 //                navigation.getFirstRide().getPositions().addAll(currentRide.getPositions());
         }
         return navigation;
+    }
+
+    private double getSecondsOfLastPath(List<PositionInTime> positions) {
+        return positions.get(positions.size() - 1).getSecondsPast();
+
     }
 }
