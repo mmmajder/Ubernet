@@ -11,6 +11,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.context.ActiveProfiles;
 
+import javax.transaction.Transactional;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -309,4 +310,63 @@ public class RideRepositoryTest {
 //        return userAuth;
 //    }
 
+    @Test
+    public void shouldReturnRideWhenFindingByValidId() {
+        Ride ride = rideRepository.findById(1L).orElse(null);
+
+        assertEquals(1L, ride.getId());
+    }
+
+    @Test
+    public void shouldReturnNullWhenFindingByInvalidId() {
+        Ride ride = rideRepository.findById(695412L).orElse(null);
+
+        assertNull(ride);
+    }
+
+    @Test
+    public void shouldReturnRideWhenFindingByValidEmailAndActiveRide() {
+        Customer customer = new Customer();
+        customer.setEmail("asdecascac@gmail.com");
+        Ride ride = new Ride();
+        ride.setId(1L);
+        ride.setRideState(RideState.TRAVELLING);
+        ride.setCustomers(List.of(customer));
+
+        testEntityManager.merge(customer);
+        testEntityManager.merge(ride);
+        testEntityManager.flush();
+
+        Ride activeRide = rideRepository.findActiveRideForCustomer("asdecascac@gmail.com");
+
+        assertEquals(1L, activeRide.getId());
+    }
+
+    @Test
+    public void shouldReturnNullWhenFindingByValidEmailAndInactiveRide() {
+        Customer customer = new Customer();
+        customer.setEmail("asdecascac@gmail.com");
+        Ride ride = new Ride();
+        ride.setId(555L);
+        ride.setRideState(RideState.FINISHED);
+        ride.setCustomers(List.of(customer));
+
+        testEntityManager.merge(customer);
+        testEntityManager.merge(ride);
+        testEntityManager.flush();
+
+        Ride activeRide = rideRepository.findActiveRideForCustomer("asdecascac@gmail.com");
+
+        assertNull(activeRide);
+    }
+
+    @Test
+    public void shouldReturnRideWhenSaving() {
+        Ride ride = new Ride();
+        ride.setId(1L);
+
+        Ride savedRide = rideRepository.save(ride);
+
+        assertEquals(ride.getId(), savedRide.getId());
+    }
 }

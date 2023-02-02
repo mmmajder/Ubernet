@@ -156,6 +156,9 @@ public class CarService {
         if (navigation.getSecondRide() != null) {
             navigationDisplay.setSecondRide(navigation.getSecondRide());
         }
+        System.out.println("Milan");
+        System.out.println(driver);
+        System.out.println(navigationDisplay);
         return navigationDisplay;
     }
 }

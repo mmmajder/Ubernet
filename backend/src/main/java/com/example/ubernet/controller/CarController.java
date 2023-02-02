@@ -102,7 +102,7 @@ public class CarController {
         if (car == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
-        return ResponseEntity.ok(DTOMapper.getCarResponse(car));
+        return ResponseEntity.ok(DTOMapper.getCarResponseWithCurrentRide(car));
     }
 
     @PutMapping("/new-position")
