@@ -20,7 +20,8 @@
     "target": "ES2022",
     "module": "es2020",
     "types": [
-      "node"
+      "node",
+      "jest"
     ],
     "lib": [
       "es2020",

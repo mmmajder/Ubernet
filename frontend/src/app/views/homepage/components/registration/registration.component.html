@@ -2,23 +2,24 @@
   <mat-card-title>Sign up</mat-card-title>
   <mat-card-subtitle>Please enter your data</mat-card-subtitle>
   <mat-card-content>
+    <form [formGroup]="formGroup">
     <p style="margin-top: 10px">
       <mat-form-field class="example-full-width" style="width: 49%; margin-right: 1%" appearance="outline">
         <mat-label>Email</mat-label>
-        <input type="email" matInput [(ngModel)]="email" [formControl]="emailFormControl"
+        <input type="email" matInput [(ngModel)]="email" formControlName="emailFormControl"
                placeholder="Ex. pat@example.com">
-        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
+        <mat-error *ngIf="formGroup.hasError('email', 'emailFormControl') && !formGroup.hasError('required', 'emailFormControl')">
           Please enter a valid email address
         </mat-error>
-        <mat-error *ngIf="emailFormControl.hasError('required')">
+        <mat-error *ngIf="formGroup.hasError('required', 'emailFormControl')">
           Email is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
         <mat-label>Phone number</mat-label>
-        <input matInput type="tel" [(ngModel)]="phoneNumber" [formControl]="phoneFormControl"
+        <input matInput type="tel" [(ngModel)]="phoneNumber" formControlName="phoneFormControl"
                placeholder="Ex. +381 1234567">
-        <mat-error *ngIf="phoneFormControl.hasError('required')">
+        <mat-error *ngIf="formGroup.hasError('required', 'phoneFormControl')">
           Phone number is <strong>required</strong>
         </mat-error>
       </mat-form-field>
@@ -26,27 +27,27 @@
     <p style="margin-top: -10px">
       <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
         <mat-label>Password</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password" [formControl]="passwordFormControl">
+        <input matInput [type]="hide ? 'password' : 'text'" [(ngModel)]="password" formControlName="passwordFormControl">
         <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hide">
           <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error *ngIf="passwordFormControl.hasError('required')">
+        <mat-error *ngIf="formGroup.hasError('required', 'passwordFormControl')">
           Password is <strong>required</strong>
         </mat-error>
-        <mat-error *ngIf="passwordFormControl.hasError('minlength')  && !passwordFormControl.hasError('required')">
+        <mat-error *ngIf="formGroup.hasError('minlength', 'passwordFormControl') && !formGroup.hasError('required', 'passwordFormControl')">
           Password has to be <strong>at least 6 characters long</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
         <mat-label>Re-enter password</mat-label>
         <input matInput [type]="hide2 ? 'password' : 'text'" [(ngModel)]="password2"
-               [formControl]="password2FormControl">
+               formControlName="password2FormControl">
         <button mat-icon-button matSuffix (click)="hide2 = !hide2" [attr.aria-label]="'Hide password'"
                 [attr.aria-pressed]="hide2">
           <mat-icon>{{hide2 ? 'visibility_off' : 'visibility'}}</mat-icon>
         </button>
-        <mat-error *ngIf="password2FormControl.hasError('required')">
+        <mat-error *ngIf="formGroup.hasError('required', 'password2FormControl')">
           Re-entering is <strong>required</strong>
         </mat-error>
         <mat-error *ngIf="password !== password2">
@@ -57,15 +58,15 @@
     <p style="margin-top: -10px">
       <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
         <mat-label>Name</mat-label>
-        <input matInput [formControl]="nameFormControl" [(ngModel)]="name">
-        <mat-error *ngIf="nameFormControl.hasError('required')">
+        <input matInput formControlName="nameFormControl" [(ngModel)]="name">
+        <mat-error *ngIf="formGroup.hasError('required', 'nameFormControl')">
           Name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
       <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
         <mat-label>Last name</mat-label>
-        <input matInput [formControl]="lastNameFormControl" [(ngModel)]="lastName">
-        <mat-error *ngIf="lastNameFormControl.hasError('required')">
+        <input matInput formControlName="lastNameFormControl" [(ngModel)]="lastName">
+        <mat-error *ngIf="formGroup.hasError('required', 'lastNameFormControl')">
           Last name is <strong>required</strong>
         </mat-error>
       </mat-form-field>
@@ -73,16 +74,17 @@
     <p style="margin-top: -10px">
       <mat-form-field style="width: 100%" appearance="outline">
         <mat-label>City you live in</mat-label>
-        <input matInput [formControl]="cityFormControl" [(ngModel)]="city">
-        <mat-error *ngIf="cityFormControl.hasError('required')">
+        <input matInput formControlName="cityFormControl" [(ngModel)]="city">
+        <mat-error *ngIf="formGroup.hasError('required', 'cityFormControl')">
           City is <strong>required</strong>
         </mat-error>
       </mat-form-field>
     </p>
-    <button mat-raised-button color="primary" style="width: 100%; margin-top: -20px;" (click)="registerNewUser()">Create
+    <button mat-raised-button id="register-button" color="primary" type="submit" style="width: 100%; margin-top: -20px;" (click)="registerNewUser()" [disabled]="formGroup.invalid">Create
       an account
     </button>
     <a mat-button style="width: 100%" (click)="switchToLoginForm()">Login <i
       class="material-icons">arrow_forward</i></a>
+    </form>
   </mat-card-content>
 </mat-card>

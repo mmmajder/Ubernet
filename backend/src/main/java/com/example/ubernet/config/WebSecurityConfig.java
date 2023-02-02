@@ -1,6 +1,5 @@
 package com.example.ubernet.config;
 
-
 import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.TokenUtils;
 import com.example.ubernet.utils.auth.RestAuthenticationEntryPoint;
@@ -43,6 +42,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
+    }
+
+    public void setUserService(UserService userService) {
+        this.customUserDetailsService = userService;
     }
 
     // Definisemo nacin utvrdjivanja korisnika pri autentifikaciji

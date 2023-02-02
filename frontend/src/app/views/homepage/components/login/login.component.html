@@ -2,41 +2,52 @@
   <mat-card-title>Welcome back...</mat-card-title>
   <mat-card-subtitle>Please enter your email and password</mat-card-subtitle>
   <mat-card-content>
-    <p style="margin-top: 10px">
-      <mat-form-field class="example-full-width" style="width: 100%" appearance="outline">
-        <mat-label>Email</mat-label>
-        <input type="email" matInput [formControl]="emailFormControl" [(ngModel)]="email" placeholder="Ex. pat@example.com">
-        <mat-error *ngIf="emailFormControl.hasError('email') && !emailFormControl.hasError('required')">
-          Please enter a valid email address
-        </mat-error>
-        <mat-error *ngIf="emailFormControl.hasError('required')">
-          Email is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-    </p>
-    <p style="margin-top: -10px">
-      <mat-form-field style="width: 100%" appearance="outline">
-        <mat-label>Enter your password</mat-label>
-        <input matInput [type]="hide ? 'password' : 'text'" [formControl]="passwordFormControl" [(ngModel)]="password">
-        <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
-                [attr.aria-pressed]="hide">
-          <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
-        </button>
-        <mat-error *ngIf="passwordFormControl.hasError('required')">
-          Password is <strong>required</strong>
-        </mat-error>
-      </mat-form-field>
-    </p>
-    <button mat-raised-button color="primary" style="width: 100%; margin-top: -20px;" (click)="login()">Login</button>
+    <form [formGroup]="formGroup">
+      <p style="margin-top: 10px">
+        <mat-form-field class="example-full-width" style="width: 100%" appearance="outline">
+          <mat-label>Email</mat-label>
+          <input type="email" matInput formControlName="emailFormControl" [(ngModel)]="email"
+                 placeholder="Ex. pat@example.com">
+          <mat-error
+            *ngIf="formGroup.hasError('email', 'emailFormControl') && !formGroup.hasError('required', 'emailFormControl')">
+            Please enter a valid email address
+          </mat-error>
+          <mat-error *ngIf="formGroup.hasError('required', 'emailFormControl')">
+            Email is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <p style="margin-top: -10px">
+        <mat-form-field style="width: 100%" appearance="outline">
+          <mat-label>Enter your password</mat-label>
+          <input matInput [type]="hide ? 'password' : 'text'" formControlName="passwordFormControl"
+                 [(ngModel)]="password">
+          <button mat-icon-button matSuffix (click)="hide = !hide" [attr.aria-label]="'Hide password'"
+                  [attr.aria-pressed]="hide">
+            <mat-icon>{{hide ? 'visibility_off' : 'visibility'}}</mat-icon>
+          </button>
+          <mat-error *ngIf="formGroup.hasError('required', 'passwordFormControl')">
+            Password is <strong>required</strong>
+          </mat-error>
+        </mat-form-field>
+      </p>
+      <button mat-raised-button type="submit" id="login-button" [disabled]="formGroup.invalid"
+              color="primary"
+              style="width: 100%; margin-top: -20px;" (click)="login()">Login
+      </button>
+    </form>
     <a mat-button style="width: 100%" routerLink="." (click)="forgotPassword()">Forgot password?</a>
     <div class="hr-line">
       <span class="or">
         or log in with
       </span>
     </div>
-    <button mat-raised-button class="fb" (click)="facebookSignIn()"><i class="fa fa-facebook fa-fw"></i> Facebook</button>
-    <button mat-raised-button class="google" (click)="loginWithGoogle()"><i class="fa fa-google fa-fw"></i>Google+</button>
+    <button mat-raised-button class="fb" (click)="facebookSignIn()"><i class="fa fa-facebook fa-fw"></i> Facebook
+    </button>
+    <button mat-raised-button class="google" (click)="loginWithGoogle()"><i class="fa fa-google fa-fw"></i>Google+
+    </button>
     <div class="hr-line"></div>
-    <a mat-button style="width: 100%" (click)="switchToRegisterForm()">Don't have an account? Create one <i class="material-icons">arrow_forward</i></a>
+    <a mat-button style="width: 100%" (click)="switchToRegisterForm()">Don't have an account? Create one <i
+      class="material-icons">arrow_forward</i></a>
   </mat-card-content>
 </mat-card>

@@ -1,20 +1,18 @@
 package com.example.ubernet.model;
 
-
 import com.example.ubernet.model.enums.RideDenialType;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 
 @Data
 @Entity
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class RideDenial {
 
     @Id

@@ -14,6 +14,7 @@ import {SetPasswordDTO} from "../model/SetPasswordDTO";
 export class AuthService {
 
   private readonly authUrl: string;
+  facebookFlag: boolean = false;
 
   constructor(private http: HttpClient) {
     this.authUrl = 'http://localhost:8000/auth';

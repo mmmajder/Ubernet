@@ -117,6 +117,5 @@ import {CanActivateAuthGuard} from "./model/CanActivateAuthGuard";
     AuthService, NotificationsService, CanActivateAuthGuard],
   bootstrap: [AppComponent]
 })
-
 export class AppModule {
 }

@@ -38,7 +38,7 @@ import {RegistrationComponent} from './components/registration/registration.comp
     MatSnackBarModule,
     ReactiveFormsModule,
     MatMenuModule,
-    SharedModule,
+    SharedModule
   ],
   exports: [
     HomepageContainerComponent,

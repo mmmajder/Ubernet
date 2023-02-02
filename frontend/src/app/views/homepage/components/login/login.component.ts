@@ -1,5 +1,5 @@
 import {Component, EventEmitter, Output} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
+import {FormBuilder, Validators} from "@angular/forms";
 import {AuthService} from "../../../../services/auth.service";
 import {Router} from '@angular/router';
 import {Login, LoginSocial} from "../../../../store/actions/authentication.actions";
@@ -15,15 +15,17 @@ import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthService} from "@ab
 export class LoginComponent {
   @Output() switchForm = new EventEmitter();
 
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  passwordFormControl = new FormControl('', [Validators.required]);
+  formGroup = this._formBuilder.group({
+    emailFormControl: ['email', [Validators.required, Validators.email]],
+    passwordFormControl: ['password', [Validators.required]]
+  })
 
   hide = true;
 
   email = "";
   password = "";
 
-  constructor(private _snackBar: MatSnackBar, private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService) {
+  constructor(private _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService) {
   }
 
   facebookSignIn() {
@@ -56,10 +58,7 @@ export class LoginComponent {
         "provider": value.provider,
       })).subscribe({
         next: (value) => this.postLogin(value.auth.token.accessToken),
-        error: () => this._snackBar.open("Wrong email or password.", '', {
-          duration: 3000,
-          panelClass: ['snack-bar']
-        })
+        error: () => this.openSnack("Wrong email or password.")
       });
     })
   }
@@ -91,34 +90,25 @@ export class LoginComponent {
       "password": this.password
     })).subscribe({
       next: (value) => this.postLogin(value.auth.token.accessToken),
-      error: () => this._snackBar.open("Wrong email or password.", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      })
+      error: () => this.openSnack("Wrong email or password.")
     });
   }
 
   forgotPassword() {
-    if (this.email != "" && !this.emailFormControl.invalid)
+    if (this.email != "" && !this.formGroup.controls["emailFormControl"].hasError("email")) {
       this.authService.forgotPassword(this.email).subscribe({
-        next: () => {
-          this._snackBar.open("Check you email to set new password!", '', {
-            duration: 3000,
-            panelClass: ['snack-bar']
-          })
-        },
-        error: () => {
-          this._snackBar.open("Please enter valid email!", '', {
-            duration: 3000,
-            panelClass: ['snack-bar']
-          })
-        }
+        next: () => this.openSnack("Check you email to set new password!"),
+        error: () => this.openSnack("Please enter valid email!")
       })
-    else {
-      this._snackBar.open("Please enter valid email!", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      })
+    } else {
+      this.openSnack("Please enter valid email!")
     }
+  }
+
+  openSnack(message: string) {
+    this._snackBar.open(message, '', {
+      duration: 3000,
+      panelClass: ['snack-bar']
+    })
   }
 }

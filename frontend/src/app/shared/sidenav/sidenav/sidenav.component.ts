@@ -14,7 +14,6 @@ import {SetTokens} from "../../../store/actions/tokens.action";
 import * as SockJS from "sockjs-client";
 import * as Stomp from "stompjs";
 import {NotificationService} from "../../../services/notification.service";
-import {MapComponent} from "../../../views/map/container/map/map.component";
 import {NotificationDTO} from "../../../model/NotificationDTO";
 import {DriversService} from "../../../services/drivers.service";
 import {secondsToHm} from "../../../services/utils.service";
@@ -28,7 +27,6 @@ import {Client, Message} from "stompjs";
 })
 export class SidenavComponent implements OnInit {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
-  @ViewChild(MapComponent) mapComponent: MapComponent;
   @Input() currentPage = 'dashboard';
   @Select(TokensState.value) numberOfTokens$!: Observable<number>;
 
