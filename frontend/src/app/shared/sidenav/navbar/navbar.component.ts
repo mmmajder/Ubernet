@@ -38,7 +38,7 @@ export class NavbarComponent implements OnInit {
   public profilePictureSrc: string;
   public static _this: any;
   notificationBadgeHidden: boolean = true;
-  private stompClient: Client;
+  private stompClient: any;
   driverActive: boolean;
   workingHours = "0 minutes";
 
@@ -71,6 +71,7 @@ export class NavbarComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
+    this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openGlobalSocket();
     });

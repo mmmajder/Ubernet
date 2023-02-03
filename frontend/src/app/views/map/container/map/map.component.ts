@@ -50,7 +50,7 @@ export class MapComponent implements OnInit {
   routeForDriver: (L.Polyline | L.Control | L.Marker)[];
   routeForCustomer: (L.Polyline | L.Marker)[]
   optimizedRoute: LeafletRoute[]
-  private stompClient: Client;
+  private stompClient: any;
   favoriteRide: RideDTO;
 
   @ViewChild(NotificationDriverComponent) notificationDriverComponent: NotificationDriverComponent;
@@ -126,7 +126,7 @@ export class MapComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
-    // this.stompClient.debug = null;
+    this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openSocket();
     });

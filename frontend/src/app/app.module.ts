@@ -41,9 +41,13 @@ import {
 import {
   RideSplitFareDialogComponent
 } from './views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component';
-import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig} from "@abacritt/angularx-social-login";
 import {NotAuthorizedPageComponent} from "./views/403/not-authorized-page/not-authorized-page.component";
 import {CanActivateAuthGuard} from "./model/CanActivateAuthGuard";
+import {SocialLoginModule, SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
+import {
+  GoogleLoginProvider,
+  FacebookLoginProvider,
+} from '@abacritt/angularx-social-login';
 
 @NgModule({
   declarations: [
@@ -84,6 +88,7 @@ import {CanActivateAuthGuard} from "./model/CanActivateAuthGuard";
     NgxsModule.forRoot([AuthState, LoggedUserState, CustomersState, TokensState]),
     MatProgressSpinnerModule,
     MatSelectModule,
+    SocialLoginModule
   ],
   exports: [],
   providers: [
@@ -101,11 +106,7 @@ import {CanActivateAuthGuard} from "./model/CanActivateAuthGuard";
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '263337550240-ilitbfe2sqc3v0vlc61tiuu5bb3no8f6.apps.googleusercontent.com',
-              {
-                // scope: 'profile email',
-                // plugin_name: 'login' //you can use any name here
-              }
+              "409257141396-5kl1dff2s24dip94g2kql41tgr7j0jik.apps.googleusercontent.com",
             )
           }
         ],

@@ -24,7 +24,7 @@ export class CustomersUpcomingRidesComponent implements OnInit {
   friends: string[];
   display: boolean;
   photo: string;
-  private stompClient: Client;
+  private stompClient: any;
 
   constructor(private store: Store, private router: Router, private rideService: RideService) {
     this.display = false;
@@ -44,7 +44,7 @@ export class CustomersUpcomingRidesComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
-    // this.stompClient.debug = null;
+    this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openDashboardSocket();
     });

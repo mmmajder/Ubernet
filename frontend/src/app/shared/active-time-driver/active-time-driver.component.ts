@@ -12,14 +12,16 @@ import {CurrentlyLogged} from "../../store/actions/loggedUser.actions";
 })
 export class ActiveTimeDriverComponent implements OnInit {
   workingHours: string = "0 minutes"
+
   constructor(private store: Store, private driverService: DriversService) {
   }
 
   ngOnInit(): void {
     this.store.dispatch(new CurrentlyLogged()).subscribe((resp) => {
-      this.driverService.getNumberOfActiveHoursInLast24h(resp.loggedUser.email).subscribe((seconds: number) => {
-        this.workingHours = secondsToHm(seconds)
-      })
+      if (resp.loggedUser.role === "DRIVER")
+        this.driverService.getNumberOfActiveHoursInLast24h(resp.loggedUser.email).subscribe((seconds: number) => {
+          this.workingHours = secondsToHm(seconds)
+        })
     });
   }
 

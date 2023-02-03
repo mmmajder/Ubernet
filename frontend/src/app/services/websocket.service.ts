@@ -41,7 +41,7 @@ export class WebsocketService {
       }
 
       this.webSocket.onclose = (event) => {
-        console.log("Close " + email, event)
+        // console.log("Close " + email, event)
       }
       // }
       //
