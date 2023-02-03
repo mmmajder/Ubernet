@@ -16,7 +16,6 @@ export class CommentsService {
   }
 
   public getComments(userEmail: string): Observable<Comment[]> {
-    console.log(userEmail)
     return this.http.get<Comment[]>(this.commentsUrl + "/get-comments/" + userEmail, AuthService.getHttpOptions());
   }
 

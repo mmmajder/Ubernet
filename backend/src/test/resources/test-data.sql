@@ -20,6 +20,7 @@ values (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
+       (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null);
 
 insert into admin (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id)
@@ -41,7 +42,8 @@ insert into driver_daily_activity (deleted, is_active, last_period_start)
 values (false, false, null),
        (false, false, null),
        (false, false, null),
-        (false, true, now()::timestamp);
+       (false, true, now()::timestamp),
+       (false, true, now()::timestamp);
 
 insert into driver_daily_activity_periods_in_last24h (driver_daily_activity_id, periods_in_last24h_id)
 values (1, 1);
@@ -69,13 +71,15 @@ insert into navigation (deleted)
 values (false),
        (false),
        (false),
-        (false);
+       (false),
+       (false);
 
 insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name, navigation_id, version)
 values (false, false, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1, 0),
        (false, false, 1, 3, false, false, 'NS-GLAMOC1', 'Audi', 2, 0),
        (false, false, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3, 0),
-       (false, true, 2, 6, true, false, 'BTACAB7312', 'Yugo', 4, 0);
+       (false, true, 2, 6, true, false, 'BTACAB7312', 'Yugo', 4, 0),
+       (false, true, 2, 7, true, false, 'BTACAB7777', 'Yugo', 5, 0);
 
 
 insert into driver (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id,
@@ -87,7 +91,10 @@ values ('driver@gmail.com', 'Driverville', false, false, 'Driver',
        ('driver3@gmail.com', 'Driverville', false, false, 'Driver3',
         '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 123546', 1, 'Driveric', 5, 3, 3, false),
        ('driver4@gmail.com', 'Driverville', false, false, 'Driver4',
-        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 183546', 1, 'Driveric', 8, 4, 4, false);
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 183546', 1, 'Driveric', 8, 4, 4, false),
+       ('driver5@gmail.com', 'Driverville', false, false, 'Driver5',
+        '$2a$10$gyVv5jxxWVZRfUYlcbewoePW1wpaOjwFkolJhhg5fvmeHScQYom0q', '064 183546', 1, 'Driveric', 9, 5, 5, false);
+
 
 
 insert into user_auth_roles(user_auth_id, roles_id)
@@ -123,6 +130,9 @@ where id = 3;
 update car
 set driver_email='driver4@gmail.com'
 where id = 4;
+update car
+set driver_email='driver5@gmail.com'
+where id = 5;
 
 insert into user_auth(deleted, is_enabled, last_password_set, verification_code)
 values (false, true, '2023-12-12', 'c98hzb4daIQhsT0bBRfsE4njlCswQ2DjljQxDIcUDZ8ry0c9wX0404zAkt8x0laI');
@@ -139,6 +149,7 @@ values (99998, 'petar@gmail.com', null, false, '2022-05-21 11:15',
 
 insert into payment (deleted, is_accepted_payment, total_price)
 values (false, true, 500),
+       (false, true, 500),
        (false, true, 500);
 
 insert into customer_payment (payed, price_per_customer, url, customer_email)
@@ -154,6 +165,7 @@ values (1, 1),
 insert into route (deleted, price, time, km)
 values (false, 500, 1200, 5),
        (false, 500, 1200, 5),
+       (false, 500, 1200, 5),
        (false, 500, 1200, 5);
 
 insert into place(name, position_id)
@@ -162,6 +174,8 @@ values ('Kej žrtava racije, Novi Sad', 7),
        ('Trifkovicev trg, Novi Sad', 9),
        ('Telepu, Novi Sad', 10),
        ('Velika menza, Novi Sad', 11),
+       ('Kej žrtava racije, Novi Sad', 7),
+       ('Limanska pijaca, Novi Sad', 8),
        ('Kej žrtava racije, Novi Sad', 7),
        ('Limanska pijaca, Novi Sad', 8);
 
@@ -172,14 +186,18 @@ values (1, 1),
        (2, 4),
        (2, 5),
        (3, 6),
-       (3, 7);
+       (3, 7),
+       (4, 8),
+       (4, 9);
 
 insert into ride (actual_end, actual_start, deleted, request_time, scheduled_start, driver_email, payment_id,
                   route_id, ride_state, is_reservation)
 values ('2023-01-20 12:00', '2023-01-20 11:00', false, '2023-01-20 10:00', '2023-01-20 11:00', 'driver@gmail.com', 1,
         1, 4, false),
        ('2023-01-12 12:00', '2023-01-12 11:00', false, '2023-01-12 10:00', '2023-01-12 11:00', 'driver@gmail.com', 2,
-        2, 4, false);
+        2, 4, false),
+       ('2023-01-12 12:00', now()::timestamp, false, now()::timestamp, now()::timestamp, 'driver5@gmail.com', 3,
+        4, 3, false);
 
 -- update payment
 -- set ride_id=1

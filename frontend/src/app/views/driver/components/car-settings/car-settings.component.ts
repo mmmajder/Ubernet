@@ -49,8 +49,6 @@ export class CarSettingsComponent implements OnInit {
             this.findIndexOfCarType();
             this.fillCarTypeInfo();
           });
-
-        console.log(this.car);
       })
     });
   }
@@ -120,7 +118,6 @@ export class CarSettingsComponent implements OnInit {
     if (this.selectedCarType != undefined)
       this.car.carType = this.selectedCarType;
 
-    console.log(this.car);
     this.carService.putCar(this.car).subscribe(carData => {
       this.fillCarInfo(carData);
       this.isButtonDisabled = true;

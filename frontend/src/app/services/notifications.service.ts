@@ -20,13 +20,13 @@ export class NotificationsService {
     const that = this;
     const socket = new SockJS('tst-rest.mypageexample/hello?activityId=' + this.activityId);
     this.stompClient = Stomp.over(socket);
+    this.stompClient.debug = null;
     this.stompClient.connect({}, function (frame: string) {
-      console.log('Connected: ' + frame);
       that.stompClient.subscribe('/topic/greetings/' + that.activityId, function (greeting: { body: string; }) {
         that.messages.push(JSON.parse(greeting.body).content);
       });
     }, function (err: any) {
-      console.log('err', err);
+      // console.log('err', err);
     });
   }
 

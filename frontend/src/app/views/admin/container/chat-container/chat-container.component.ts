@@ -27,7 +27,6 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    console.log("init admin")
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
       this.loggedUser = data;
 
@@ -47,8 +46,6 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
 
   public onNewMessageFromWebSocket(message: Message): void {
     // add message to the current chat
-    console.log("on new message")
-    console.log(message)
     if (message.clientEmail === this.clientEmail) {
       this.messagesWithClient.push(message);
       this.putCurrentChatAsFirst(message);

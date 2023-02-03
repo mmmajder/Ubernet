@@ -42,10 +42,11 @@
         or log in with
       </span>
     </div>
-    <button mat-raised-button class="fb" (click)="facebookSignIn()"><i class="fa fa-facebook fa-fw"></i> Facebook
-    </button>
-    <button mat-raised-button class="google" (click)="loginWithGoogle()"><i class="fa fa-google fa-fw"></i>Google+
-    </button>
+        <button mat-raised-button class="fb" (click)="singInWithFB()"><i class="fa fa-facebook fa-fw"></i> Facebook
+        </button>
+    <asl-google-signin-button></asl-google-signin-button>
+    <!--    <button mat-raised-button class="google" (click)="loginWithGoogle()"><i class="fa fa-google fa-fw"></i>Google+-->
+    <!--    </button>-->
     <div class="hr-line"></div>
     <a mat-button style="width: 100%" (click)="switchToRegisterForm()">Don't have an account? Create one <i
       class="material-icons">arrow_forward</i></a>

@@ -27,7 +27,7 @@ import {DriverRequestChangeComponent} from "./components/driver-request-change/d
   declarations: [
     ProfileDriverContainerComponent,
     CarSettingsComponent,
-    DriverRequestChangeComponent
+    DriverRequestChangeComponent,
   ],
     imports: [
         MatToolbarModule,

@@ -30,20 +30,18 @@ export class WebsocketService {
       // if (this.webSocket === null || this.webSocket === undefined || this.webSocket.readyState !== this.webSocket.OPEN){
       this.webSocket = new WebSocket(this.chatWSUrl + email);
 
-      this.webSocket.onopen = (event) => {
-        console.log("Open " + email, event)
+      this.webSocket.onopen = () => {
       }
 
       this.webSocket.onmessage = (event) => {
         const message: Message = JSON.parse(event.data);
-        console.log(message.content);
 
         onNewMessage(message);
         // this.message = of(message);
       }
 
       this.webSocket.onclose = (event) => {
-        console.log("Close " + email, event)
+        // console.log("Close " + email, event)
       }
       // }
       //

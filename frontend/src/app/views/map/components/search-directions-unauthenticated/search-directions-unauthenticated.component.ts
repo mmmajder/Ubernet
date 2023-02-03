@@ -67,7 +67,6 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   }
 
   changeCarType(event: string) {
-    console.log(event)
     this.carType = event
   }
 

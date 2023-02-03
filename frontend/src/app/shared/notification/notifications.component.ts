@@ -35,7 +35,6 @@ export class NotificationsComponent implements OnInit {
         if (this.user.role === "CUSTOMER")
           this.notificationService.getNotifications(user.email).subscribe((notifications) => {
             this.notifications = notifications.reverse()
-            console.log(this.notifications)
           })
       }
     })
@@ -43,7 +42,6 @@ export class NotificationsComponent implements OnInit {
 
   notificationClicked(id: number) {
     this.notificationService.getNotificationById(id).subscribe((clickedNotification) => {
-      console.log(clickedNotification)
       if (clickedNotification.type === "SPLIT_FARE") {
         this.dialog.open(RideSplitFareDialogComponent, {data: clickedNotification});
       } else if (clickedNotification.type === "DRIVER_INCONSISTENCY") {

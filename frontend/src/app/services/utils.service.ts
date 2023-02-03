@@ -31,6 +31,9 @@ function addZero(n: number): string {
 }
 
 export function secondsToHm(d: number) {
+  if (d<60) {
+    return "less than a minute"
+  }
   const h = Math.floor(d / 3600);
   const m = Math.floor(d % 3600 / 60);
 

@@ -69,7 +69,8 @@ public class RideServiceTest {
     private final Boolean NO_PET = false;
     private final Boolean NO_CHILD = false;
     private final CarType CABRIO_CAR_TYPE = new CarType(null, "Cabrio", 200.00, false);
-
+    private static Long ID = 1111L;
+    private static String EMAIL = "email@gmail.com";
     @Test
     @DisplayName("Should return closest free car.")
     public void shouldReturnClosestFreeCarWithActiveDriver() {
@@ -333,8 +334,7 @@ public class RideServiceTest {
         return car;
     }
 
-    private static Long ID = 1111L;
-    private static String EMAIL = "email@gmail.com";
+
 
     @Test
     @DisplayName("Should return Null when finding by invalid ID")

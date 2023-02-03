@@ -22,7 +22,7 @@ export class NotificationDriverComponent implements OnInit {
 
   @Input() loggedUser: User;
   @Output() updateRouteDisplay = new EventEmitter<void>();
-  private stompClient: Client;
+  private stompClient: any;
   notifications: DriverNotification[] = [];
   photo: string;
 
@@ -38,7 +38,7 @@ export class NotificationDriverComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
-    // this.stompClient.debug = null;
+    this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openDriverNotificationSocket();
     });
@@ -91,7 +91,6 @@ export class NotificationDriverComponent implements OnInit {
 
   startRide(ride: RideDetails) {
     this.rideService.startRide(ride.id).subscribe((ride: RideDetails) => {
-      console.log(ride)
       this.notifications = this.notifications.filter(item => item.ride.id !== ride.id)
       this.updateRouteDisplay.emit()
     })

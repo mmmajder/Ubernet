@@ -67,6 +67,25 @@ public class MapPage {
     @FindBy(css = "ngx-material-timepicker-content")
     private WebElement timeDialog;
 
+    @FindBy(xpath = "//button/span[contains(text(), 'Start ride')]/..")
+    private WebElement acceptRideBtn;
+
+    @FindBy(xpath = "//button/span[contains(text(), 'End ride')]/..")
+    private WebElement endRideBtn;
+
+    @FindBy(id = "notificationBtn")
+    private WebElement notificationBtn;
+
+    @FindBy(css = ".mdc-list-item__primary-text")
+    private List<WebElement> notifications;
+
+    @FindBy(css = ".mat-mdc-menu-content")
+    private WebElement notificationPanel;
+
+
+    @FindBy(xpath = "//mat-icon[text() = 'logout']")
+    private WebElement logoutLink;
+
     public MapPage(WebDriver driver) {
         this.driver = driver;
         PageFactory.initElements(driver, this);
@@ -81,6 +100,10 @@ public class MapPage {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.elementToBeClickable(this.carTypeSelectOption));
         this.carTypeSelectOption.click();
+    }
+
+    public void passFriendsStep() {
+        this.friendsStep.click();
     }
 
     public void friendsStep(String email) {
@@ -165,4 +188,22 @@ public class MapPage {
     public void goToSearchDirections() {
         this.routeStep.click();
     }
+
+    public void acceptRide() {
+        new WebDriverWait(driver, Duration.ofSeconds(10*60))
+                .until(ExpectedConditions.elementToBeClickable(acceptRideBtn));
+        acceptRideBtn.click();
+    }
+
+    public void endRide() {
+        new WebDriverWait(driver, Duration.ofSeconds(10*60))
+                .until(ExpectedConditions.elementToBeClickable(endRideBtn));
+        endRideBtn.click();
+    }
+
+
+    public void logout() {
+        logoutLink.click();
+    }
+
 }

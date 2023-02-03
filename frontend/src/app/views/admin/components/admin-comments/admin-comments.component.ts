@@ -48,7 +48,6 @@ export class AdminCommentsComponent implements OnInit {
   blockThisUser() {
     this.userService.blockUser(this.userEmail).subscribe({
         next: (blocked) => {
-          console.log(blocked);
           this.blocked = blocked;
         }
       }
@@ -58,7 +57,6 @@ export class AdminCommentsComponent implements OnInit {
   unblockThisUser() {
     this.userService.unblockUser(this.userEmail).subscribe({
         next: (blocked) => {
-          console.log(blocked);
           this.blocked = blocked;
         }
       }
@@ -73,7 +71,6 @@ export class AdminCommentsComponent implements OnInit {
     this.commentsService.getComments(this.userEmail).subscribe({
       next: value => {
         this.comments = value;
-        console.log(value)
       }
     })
   }

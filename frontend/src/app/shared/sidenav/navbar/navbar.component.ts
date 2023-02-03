@@ -17,7 +17,7 @@ import {NotificationDTO} from "../../../model/NotificationDTO";
 import {DriversService} from "../../../services/drivers.service";
 import {secondsToHm} from "../../../services/utils.service";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {Client, Message} from "stompjs";
+import {Message} from "stompjs";
 
 @Component({
   selector: 'app-navbar',
@@ -37,8 +37,8 @@ export class NavbarComponent implements OnInit {
   private valueSubscription: Subscription;
   public profilePictureSrc: string;
   public static _this: any;
-  notificationBadgeHidden = true;
-  private stompClient: Client;
+  notificationBadgeHidden: boolean = true;
+  private stompClient: any;
   driverActive: boolean;
   workingHours = "0 minutes";
 
@@ -58,14 +58,9 @@ export class NavbarComponent implements OnInit {
           this.notificationBadgeHidden = res;
         })
         this.initializeWebSocketConnection();
-        console.log(this.user)
         if (this.user.role === "DRIVER") {
           this.driverService.getDriver(this.user.email).subscribe((driver) => {
             this.driverActive = driver.isWorking
-          })
-          this.driverService.getNumberOfActiveHoursInLast24h(this.user.email).subscribe((seconds: number) => {
-            console.log(seconds)
-            this.workingHours = secondsToHm(seconds)
           })
         }
         this.getProfilePicture();
@@ -76,6 +71,7 @@ export class NavbarComponent implements OnInit {
   initializeWebSocketConnection() {
     const ws = new SockJS('http://localhost:8000/socket');
     this.stompClient = Stomp.over(ws);
+    this.stompClient.debug = null;
     this.stompClient.connect({}, () => {
       this.openGlobalSocket();
     });
@@ -168,13 +164,12 @@ export class NavbarComponent implements OnInit {
   toggleDriverActivity() {
     this.driverService.toggleActivity(this.user.email, this.driverActive).subscribe({
       error: (resp) => {
-        console.log(resp)
         this.driverActive = !this.driverActive
         this._snackBar.open(resp.error, '', {
           duration: 3000,
           panelClass: ['snack-bar']
         })
       }
-    })
+    });
   }
 }

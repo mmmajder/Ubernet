@@ -34,7 +34,6 @@ export class RideSplitFareDialogComponent implements OnInit {
         this.loggedUser = user;
       }
     })
-    console.log(this.notification)
     this.rideService.getById(this.notification.rideId).subscribe((ride) => {
       this.ride = ride;
       this.path = this.printCheckpoints(ride.route.checkPoints)
