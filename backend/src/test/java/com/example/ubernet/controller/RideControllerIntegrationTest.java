@@ -1,5 +1,6 @@
 package com.example.ubernet.controller;
 
+import com.example.ubernet.dto.*;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.*;
@@ -10,11 +11,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
+import javax.validation.Valid;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.NotEmpty;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -59,6 +65,8 @@ public class RideControllerIntegrationTest {
     private CustomerRepository customerRepository;
     @Autowired
     private RideRequestRepository rideRequestRepository;
+    @Autowired
+    private DriverDailyActivityRepository driverDailyActivityRepository;
 
     @Test
     @DisplayName("Should return Null for invalid ID when making GET request to endpoint - /ride/{id}")
@@ -208,6 +216,156 @@ public class RideControllerIntegrationTest {
         assertEquals(ride, null);
     }
 
+    @Test
+    @DisplayName("Should return OK for valid ID when making PUT request to endpoint - /ride/find-scheduled-route-navigation-client/{email}")
+    @Rollback
+    public void shouldReturnOkForValidEmailButAndHasCurrentRouteWhenFindingScheduledRoute(){
+        setupShouldReturnOkForValidEmailButAndHasCurrentRouteWhenFindingScheduledRoute();
+
+        ResponseEntity<CurrentRide> responseEntity = restTemplate.exchange("/ride/find-scheduled-route-navigation-client/" + "customedcustomer@2f4u.com",
+                HttpMethod.GET,
+                null,
+                CurrentRide.class);
+
+        CurrentRide gottenRide = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(gottenRide.getId(), 1L);
+    }
+
+    // zakazivanje vvv
+    @Test
+    @DisplayName("Should return Ride and OK  when making  request to endpoint - POST /ride/create")
+    public void shouldReturnRideAndOKForValidCreateRideDTO(){
+        setupShouldReturnRideAndOKForValidCreateRideDTO();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<Ride> responseEntity = restTemplate.exchange("/ride/create" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<Ride>() {
+                });
+
+        Ride ride = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(ride);
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest for active user when making  request to endpoint - POST /ride/create")
+    public void shouldThrowBadRequestForValidCreateRideDTOAndActiveCustomer(){
+        setupShouldThrowBadRequestForValidCreateRideDTOAndActiveCustomer();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/create" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "Active customer can not request another ride!");
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest for blocked user when making  request to endpoint - POST /ride/create")
+    public void shouldThrowBadRequestForValidCreateRideDTOAndBlockedCustomer(){
+        setupShouldThrowBadRequestForValidCreateRideDTOAndBlockedCustomer();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/create" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "You are blocked by admin and can not request ride!");
+    }
+
+    private HttpEntity<String> createCreateRideDTO() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String jsonString = """
+                {
+                    "coordinates": [{"lat": 19.586, "lng": 18.451}],
+                    "instructions": [{"distance": 20, "time": 20, "road": "cool road"}],
+                    "carType": "Cabrio",
+                    "hasChild": true,
+                    "hasPet": false,
+                    "passengers": ["customedcustomer@2f4u.com"],
+                    "totalDistance": 15,
+                    "totalTime": 15,
+                    "reservationTime": "3:30",
+                    "route": [],
+                    "payment": { "totalPrice": 150, "customerThatPayed": "customedcustomer@2f4u.com"},
+                    "reservation": false
+                }
+                """;
+
+        HttpEntity<String> request = new HttpEntity<String>(jsonString, headers);
+
+        return request;
+    }
+
+    private void setupShouldThrowBadRequestForValidCreateRideDTOAndBlockedCustomer(){
+        Customer customer = setupCustomer();
+        customer.setActive(false);
+        customer.setBlocked(true);
+        customer.setNumberOfTokens(99999);
+        customerRepository.save(customer);
+    }
+
+    private void setupShouldThrowBadRequestForValidCreateRideDTOAndActiveCustomer(){
+        Customer customer = setupCustomer();
+        customer.setActive(true);
+        customer.setBlocked(false);
+        customer.setNumberOfTokens(99999);
+        customerRepository.save(customer);
+    }
+
+    private void setupShouldReturnRideAndOKForValidCreateRideDTO(){
+        Customer customer = setupCustomer();
+        customer.setActive(false);
+        customer.setBlocked(false);
+        customer.setNumberOfTokens(99999);
+        customerRepository.save(customer);
+
+        Car car1 = setupCar();
+        Driver driver1 = setupDriver();
+        driver1.setBlocked(false);
+        driver1.setCar(car1);
+        DriverDailyActivity driverDailyActivity1 = new DriverDailyActivity();
+        driverDailyActivity1.setIsActive(true);
+        driverDailyActivityRepository.save(driverDailyActivity1);
+        driver1.setDriverDailyActivity(driverDailyActivity1);
+        driverRepository.save(driver1);
+        car1.setDriver(driver1);
+        car1.setIsAvailable(true);
+        car1.setAllowsBaby(true);
+        CarType carType = new CarType();
+        carType.setId(1L);
+        carType.setName("Cabrio");
+        carType.setPriceForType(200.0);
+        carType.setDeleted(false);
+        car1.setCarType(carType);
+
+        Position position1 = new Position();
+        position1.setX(5.0);
+        position1.setY(5.0);
+        positionRepository.save(position1);
+
+        car1.setPosition(position1);
+
+        driverRepository.save(driver1);
+        carRepository.save(car1);
+    }
+
     private void setupShouldReturnOkForValidEmailButAndHasCurrentRouteWhenFindingScheduledRoute(){
         Car car = setupCar();
         Driver driver = setupDriver();
@@ -233,23 +391,6 @@ public class RideControllerIntegrationTest {
 
         carRepository.save(car);
         rideRepository.save(ride);
-    }
-
-    @Test
-    @DisplayName("Should return OK for valid ID when making PUT request to endpoint - /ride/find-scheduled-route-navigation-client/{email}")
-    @Rollback
-    public void shouldReturnOkForValidEmailButAndHasCurrentRouteWhenFindingScheduledRoute(){
-        setupShouldReturnOkForValidEmailButAndHasCurrentRouteWhenFindingScheduledRoute();
-
-        ResponseEntity<CurrentRide> responseEntity = restTemplate.exchange("/ride/find-scheduled-route-navigation-client/" + "customedcustomer@2f4u.com",
-                HttpMethod.GET,
-                null,
-                CurrentRide.class);
-
-        CurrentRide gottenRide = responseEntity.getBody();
-
-        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-        assertEquals(gottenRide.getId(), 1L);
     }
 
     private void setupShouldReturnOkForValidIdWhenStartingRide(){
