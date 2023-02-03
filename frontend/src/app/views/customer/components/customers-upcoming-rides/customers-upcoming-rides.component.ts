@@ -8,7 +8,7 @@ import {Router} from "@angular/router";
 import {NotificationDTO} from "../../../../model/NotificationDTO";
 import {RideService} from "../../../../services/ride.service";
 import {RideDTO} from "../../../../model/RideDTO";
-import {Client, Message} from "stompjs";
+import {Message} from "stompjs";
 
 @Component({
   selector: 'app-customers-upcoming-rides',

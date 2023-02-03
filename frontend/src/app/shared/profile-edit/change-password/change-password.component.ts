@@ -4,7 +4,6 @@ import {UserService} from "../../../services/user.service";
 import {AuthService} from "../../../services/auth.service";
 import {PasswordChangeInfo} from "../../../model/PasswordChangeInfo";
 import {User} from "../../../model/User";
-import {error} from "@angular/compiler-cli/src/transformers/util";
 import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
@@ -25,7 +24,6 @@ export class ChangePasswordComponent implements OnInit {
   currentPasswordFormControl = new FormControl('', [Validators.required]);
   newPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
   reEnteredNewPasswordFormControl = new FormControl('', [Validators.required]);
-
 
   constructor(private userService: UserService, private authService: AuthService, private _snackBar: MatSnackBar) {}
 

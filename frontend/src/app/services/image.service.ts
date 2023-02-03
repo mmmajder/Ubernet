@@ -24,7 +24,7 @@ export class ImageService {
     this.imageUrl = 'http://localhost:8000/image';
   }
 
-  public postProfileImage(email: string, file: any): Observable<EncodedImage> {
+  public postProfileImage(email: string, file: File): Observable<EncodedImage> {
     const formData = new FormData();
     formData.append("file", file);
     return this.http.post<EncodedImage>(this.imageUrl + "/" + email, formData, this.httpOptions);

@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
-import {LoginResponseDto, UserTokenState} from "../model/LoginResponseDto";
+import {LoginResponseDto} from "../model/LoginResponseDto";
 import {LoginCredentials} from "../model/LoginCredentials";
 import {User} from "../model/User";
 import {LoginSocialCredentials} from "../model/LoginSocialCredentials";
@@ -40,8 +40,8 @@ export class AuthService {
     return this.http.post<LoginResponseDto>(this.authUrl + '/login-social', user, AuthService.getHttpOptions());
   }
 
-  public logout(token: UserTokenState): Observable<Object> {
-    return this.http.post(this.authUrl + '/logout/' + (localStorage.getItem('token') as string).split(" ")[1], AuthService.getHttpOptions());
+  public logout(): Observable<void> {
+    return this.http.post<void>(this.authUrl + '/logout/' + (localStorage.getItem('token') as string).split(" ")[1], AuthService.getHttpOptions());
   }
 
   public getCurrentlyLoggedUser(): Observable<User> {

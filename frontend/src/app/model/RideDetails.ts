@@ -16,5 +16,6 @@ export class RideDetails {
   actualEnd: string;
   reservationTime: string;
   reviews: RideReview[];
-  payment: Payment
+  payment: Payment;
+  canceled: boolean;
 }

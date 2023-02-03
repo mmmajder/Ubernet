@@ -45,7 +45,6 @@ export class MapService {
     return this.http.put<ActiveCarResponse>(this.carUrl + "/save-position/", data, this.httpOptions);
   }
 
-
   getTimeSlots(e: { routes: { instructions: any[]; }[]; }) {
     e.routes[0].instructions.splice(-1) //remove start location
     const distanceSlots = this.getDistanceSlots(e);  //get number of points per path

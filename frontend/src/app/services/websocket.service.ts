@@ -11,7 +11,6 @@ export class WebsocketService {
   isAdmin: boolean;
   isWebSocketOpen = false;
 
-
   private readonly chatWSUrl: string;
 
   constructor() {
@@ -26,12 +25,11 @@ export class WebsocketService {
       this.webSocket = new WebSocket(this.chatWSUrl + email);
 
       this.webSocket.onopen = () => {
-        console.log("otvaram websocket");
+        console.log("websocket open");
       }
 
       this.webSocket.onmessage = (event) => {
         const message: Message = JSON.parse(event.data);
-
         onNewMessage(message);
       }
 
@@ -39,7 +37,6 @@ export class WebsocketService {
         console.log("Close " + email, event)
       }
     }
-
   }
 
   public sendMessage(message: any) {

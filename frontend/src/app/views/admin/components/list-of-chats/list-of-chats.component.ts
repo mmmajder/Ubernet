@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, IterableDiffer, OnDestroy, DoCheck} from '@angular/core';
+import {Component, Input, Output, EventEmitter, IterableDiffer, DoCheck, OnDestroy} from '@angular/core';
 import {Chat} from "../../../../model/Chat";
 import {EncodedImage, ImageService} from "../../../../services/image.service";
 

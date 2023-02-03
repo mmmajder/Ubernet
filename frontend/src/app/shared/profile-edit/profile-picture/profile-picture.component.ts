@@ -27,11 +27,6 @@ export class ProfilePictureComponent implements OnInit {
     });
   }
 
-  // public selectFile(event: any) {
-  //   this.selectedImage = event.target.files[0];
-  //   this.hasSelectedFile = true;
-  // }
-
   public selectFile(event: Event) {
     const input = (<HTMLInputElement>event.target)
     if (input.files !== null){
@@ -50,7 +45,6 @@ export class ProfilePictureComponent implements OnInit {
       reader.onload = () => {
         this.profileImageSrc = reader.result as string;
       };
-
     }
   }
 

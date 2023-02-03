@@ -10,6 +10,7 @@
     <span class="padding-details"><b>Start:</b> {{ride.actualStart}}</span>
     <span class="padding-details"><b>End:</b> {{ride.actualEnd}}</span>
     <span class="padding-details"><b>Total cost:</b> {{ride.totalPrice}}</span>
+    <span class="padding-details" *ngIf="ride.canceled" style="background-color: darkred; color: white"><b>Total cost:</b> CANCELED</span>
   </p>
   <div class="row">
     <div class="col-md-7">

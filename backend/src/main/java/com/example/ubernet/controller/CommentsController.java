@@ -25,5 +25,4 @@ public class CommentsController {
     public void addComment(@RequestBody CommentDTO commentDTO) {
         commentService.addComment(commentDTO);
     }
-
 }
