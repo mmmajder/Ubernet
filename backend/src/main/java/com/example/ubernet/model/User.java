@@ -35,7 +35,7 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<Role> getAuthorities() {
         return getUserAuth().getRoles();
     }
 
