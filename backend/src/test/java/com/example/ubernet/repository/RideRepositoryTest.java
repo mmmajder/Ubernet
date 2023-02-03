@@ -202,7 +202,7 @@ public class RideRepositoryTest {
         testEntityManager.persist(ride3);
         testEntityManager.flush();
         List<Ride> foundRides = rideRepository.findRidesWithStatusTravelling();
-        assertEquals(2, foundRides.size());
+        assertEquals(3, foundRides.size());
     }
 
     @Test
