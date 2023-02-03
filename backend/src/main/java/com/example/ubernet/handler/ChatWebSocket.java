@@ -42,14 +42,17 @@ public class ChatWebSocket {
 
     @OnOpen
     public void onOpen(@PathParam("username") String username, Session session) {
-        User u = userService.findByEmail(username);
-        if (u.getRole() == UserRole.ADMIN){
-            adminSessions.put(username, session);
-        } else {
-            userSessions.put(username, session);
-        }
+        boolean doesAlreadyHaveSession = adminSessions.containsKey(username) || userSessions.containsKey(username);
+        if (!doesAlreadyHaveSession) {
+            User u = userService.findByEmail(username);
+            if (u.getRole() == UserRole.ADMIN) {
+                adminSessions.put(username, session);
+            } else {
+                userSessions.put(username, session);
+            }
 
-        System.out.println(u.getRole() + "  " + username + " connected on " + session.getId());
+            System.out.println(u.getRole() + "  " + username + " connected on " + session.getId());
+        }
     }
 
     @OnMessage

@@ -14,7 +14,7 @@ export class NewMessageComponent {
   @Input() loggedUser: User;
   @Input() messages: Message[];
   @Input() clientEmail: string;
-  @Output() onNewMessageSent = new EventEmitter<Message>();
+  @Output() newMessageSent = new EventEmitter<Message>();
   messageText = "";
 
   constructor(private webSocketService: WebsocketService) {
@@ -25,7 +25,7 @@ export class NewMessageComponent {
       const message: Message = this.createMessage();
       this.webSocketService.sendMessage(message);
       this.messages.push(message);
-      this.onNewMessageSent.emit(message);
+      this.newMessageSent.emit(message);
       this.messageText = "";
     }
   }

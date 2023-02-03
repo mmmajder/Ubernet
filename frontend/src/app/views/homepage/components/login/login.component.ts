@@ -52,16 +52,8 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  loginWithGoogle(): void {
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then((res) => {
-      this.loginSocial();
-    })
-  }
-
   private loginSocial() {
-    console.log("TTT")
     this.socialAuthService.authState.subscribe(value => {
-      console.log(value)
       if (value !== undefined && value !== null && localStorage.getItem("token") === null)
         this.store.dispatch(new LoginSocial({
           "email": value.email,

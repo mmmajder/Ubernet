@@ -4,6 +4,8 @@ import {UserService} from "../../../services/user.service";
 import {AuthService} from "../../../services/auth.service";
 import {PasswordChangeInfo} from "../../../model/PasswordChangeInfo";
 import {User} from "../../../model/User";
+import {error} from "@angular/compiler-cli/src/transformers/util";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-change-password',
@@ -25,27 +27,30 @@ export class ChangePasswordComponent implements OnInit {
   reEnteredNewPasswordFormControl = new FormControl('', [Validators.required]);
 
 
-  constructor(private userService: UserService, private authService: AuthService) {}
+  constructor(private userService: UserService, private authService: AuthService, private _snackBar: MatSnackBar) {}
 
   ngOnInit(): void {
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
-      //TODO should the loggedUser be taken like this? sometimes because of the async it's not working well
       this.loggedUser = data;
     });
   }
 
   changePassword(): void {
     if (this.loggedUser === null || this.currentPassword === "" || this.newPassword === "" || this.newPassword !== this.reEnteredNewPassword)
-    {
-      console.log("something is not filled")
-      //TODO induce showing of errors on form fields
-      return
-    }
+    { return}
 
     const passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
     this.userService.changePassword(this.loggedUser.email, passwordChangeInfo)
-      .subscribe((data) => {
-        // console.log(data);
+      .subscribe({
+        next: () => this.openSnackBar("Password changed."),
+        error: () => this.openSnackBar("Error occured.")
       });
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      duration: 3000,
+      panelClass: ['snack-bar']
+    })
   }
 }

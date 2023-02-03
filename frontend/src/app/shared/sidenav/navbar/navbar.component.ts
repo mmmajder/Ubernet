@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
   private valueSubscription: Subscription;
   public profilePictureSrc: string;
   public static _this: any;
-  notificationBadgeHidden: boolean = true;
+  notificationBadgeHidden = true;
   private stompClient: any;
   driverActive: boolean;
   workingHours = "0 minutes";
@@ -124,14 +124,16 @@ export class NavbarComponent implements OnInit {
   }
 
   private getProfilePicture(): void {
-    this.imageService.getProfileImage(this.user.email)
-      .subscribe((encodedImage: EncodedImage) => {
-        console.log(encodedImage);
-        if (encodedImage === null)
-          this.profilePictureSrc = "assets/default-profile-picture.jpg";
-        else
-          this.profilePictureSrc = `data:image/jpeg;base64,${encodedImage.data}`;
-      });
+    if (this.profilePictureSrc === undefined) {
+      this.imageService.getProfileImage(this.user.email)
+        .subscribe((encodedImage: EncodedImage) => {
+          console.log(encodedImage);
+          if (encodedImage === null)
+            this.profilePictureSrc = "assets/default-profile-picture.jpg";
+          else
+            this.profilePictureSrc = `data:image/jpeg;base64,${encodedImage.data}`;
+        });
+    }
   }
 
   public static changeProfilePicture(profilePictureSrc: string): void {

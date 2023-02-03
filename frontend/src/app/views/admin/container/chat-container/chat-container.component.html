@@ -17,7 +17,7 @@
         <mat-card-content>
           <app-chat [loggedUser]="loggedUser" [messages]="messagesWithClient"></app-chat>
           <app-new-message [loggedUser]="loggedUser" [messages]="messagesWithClient" [clientEmail]="clientEmail"
-                           (onNewMessageSent)="putCurrentChatAsFirst($event)"></app-new-message>
+                           (newMessageSent)="putCurrentChatAsFirst($event)"></app-new-message>
         </mat-card-content>
       </mat-card>
     </div>

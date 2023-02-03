@@ -26,7 +26,7 @@ export class ProfileDataComponent implements OnInit {
   cityFormControl = new FormControl('', [Validators.required]);
 
   hasSelectedFile = false;
-  selectedImage: any = null;
+  selectedImage: File;
   profileImageSrc: string;
   @ViewChild('fileUploader') fileUploader: ElementRef;
 

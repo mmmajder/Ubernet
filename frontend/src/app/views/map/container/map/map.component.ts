@@ -6,7 +6,6 @@ import {MapService} from "../../../../services/map.service";
 import {UserRole} from "../../../../model/UserRole";
 import {ActiveCarResponse} from "../../../../model/ActiveCarResponse";
 import {Place, Position} from "../../../../model/Position";
-import {secondsToDhms} from "../../../../services/utils.service";
 import {RidePayService} from "../../../../services/ride-price.service";
 import {MapSearchEstimations} from "../../../../model/MapSearchEstimations";
 import * as SockJS from 'sockjs-client';
@@ -26,7 +25,7 @@ import {NavigationDisplay} from "../../../../model/NavigationDisplay";
 import {CurrentRide} from "../../../../model/CurrentRide";
 import {PositionInTime} from "../../../../model/PositionInTime";
 import {SearchEstimation} from "../../../../model/SearchEstimation";
-import {Message, Client} from "stompjs";
+import {Message} from "stompjs";
 import {RideDetails} from "../../../../model/RideDetails";
 import {
   SearchDirectionsCustomerComponent

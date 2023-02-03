@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, IterableDiffer} from '@angular/core';
+import {Component, Input, Output, EventEmitter, IterableDiffer, OnDestroy, DoCheck} from '@angular/core';
 import {Chat} from "../../../../model/Chat";
 import {EncodedImage, ImageService} from "../../../../services/image.service";
 
@@ -7,7 +7,7 @@ import {EncodedImage, ImageService} from "../../../../services/image.service";
   templateUrl: './list-of-chats.component.html',
   styleUrls: ['./list-of-chats.component.css']
 })
-export class ListOfChatsComponent {
+export class ListOfChatsComponent implements OnDestroy, DoCheck{
   @Input() chats: Chat[];
   @Output() chatEventEmitter = new EventEmitter<Chat>();
   iterableDiffer: IterableDiffer<Chat>;
@@ -28,8 +28,15 @@ export class ListOfChatsComponent {
 
   public getProfileImages(chats: Chat[]): void {
     for (const c of chats) {
-      const requestedPicture: boolean = Object.prototype.hasOwnProperty.call(this.hasRequestedProfilePictures, c.clientEmail);
-      const hasPicture: boolean = Object.prototype.hasOwnProperty.call(this.profilePictures, c.clientEmail);
+      let requestedPicture: boolean | undefined = this.hasRequestedProfilePictures.get(c.clientEmail);
+
+      if (requestedPicture === undefined){
+        requestedPicture = false;
+        this.hasRequestedProfilePictures.set(c.clientEmail, false);
+      }
+
+      const hasPicture: boolean = this.profilePictures.get(c.clientEmail) !== undefined;
+
       if (!requestedPicture && !hasPicture) {
         this.hasRequestedProfilePictures.set(c.clientEmail, true);
         this.imageService.getProfileImage(c.clientEmail)

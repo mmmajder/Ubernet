@@ -123,6 +123,7 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   }
 
   private getOpenChatProfilePicture(): void {
+    console.log("trazim sliku u chat container")
     this.imageService.getProfileImage(this.clientEmail)
       .subscribe((encodedImage: EncodedImage) => {
         console.log(encodedImage);

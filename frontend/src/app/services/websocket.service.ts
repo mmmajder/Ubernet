@@ -23,28 +23,21 @@ export class WebsocketService {
       this.isWebSocketOpen = true;
       this.email = email;
       this.isAdmin = isAdmin;
-      // if (message !== undefined) {
-      //   this.message = message;
-      // }
-
-      // if (this.webSocket === null || this.webSocket === undefined || this.webSocket.readyState !== this.webSocket.OPEN){
       this.webSocket = new WebSocket(this.chatWSUrl + email);
 
       this.webSocket.onopen = () => {
+        console.log("otvaram websocket");
       }
 
       this.webSocket.onmessage = (event) => {
         const message: Message = JSON.parse(event.data);
 
         onNewMessage(message);
-        // this.message = of(message);
       }
 
-      this.webSocket.onclose = (event) => {
-        // console.log("Close " + email, event)
+      this.webSocket.onclose = (event:CloseEvent) => {
+        console.log("Close " + email, event)
       }
-      // }
-      //
     }
 
   }
@@ -53,9 +46,6 @@ export class WebsocketService {
     if (this.isWebSocketOpen) {
       this.webSocket.send(JSON.stringify(message));
     }
-    // if (this.webSocket !== null && this.webSocket !== undefined){
-    //   this.webSocket.send(JSON.stringify(message));
-    // }
   }
 
   public closeWebSocket() {
@@ -63,8 +53,5 @@ export class WebsocketService {
       this.isWebSocketOpen = false;
       this.webSocket.close();
     }
-    // if (this.webSocket !== null && this.webSocket !== undefined){
-    //   this.webSocket.close();
-    // }
   }
 }

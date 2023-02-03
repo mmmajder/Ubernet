@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {User} from "../../model/User";
 import {Store} from "@ngxs/store";
 import {secondsToHm} from "../../services/utils.service";
 import {DriversService} from "../../services/drivers.service";
@@ -11,7 +10,7 @@ import {CurrentlyLogged} from "../../store/actions/loggedUser.actions";
   styleUrls: ['./active-time-driver.component.css']
 })
 export class ActiveTimeDriverComponent implements OnInit {
-  workingHours: string = "0 minutes"
+  workingHours = "less than a minute";
 
   constructor(private store: Store, private driverService: DriversService) {
   }
