@@ -32,10 +32,16 @@ public class EndRideService {
         Ride ride = rideService.findById(rideId);
         if (ride == null) throw new BadRequestException("Ride does not exist");
         rideService.updateRideStatus(ride, RideState.FINISHED);
+        setEndOfRide(ride);
         setCustomersToInactive(ride.getCustomers());
         Car car = updateCarNavigationAfterEndRide(ride);
         driverNotificationService.resetOldNotificationsForRide(car, ride);
         return ride;
+    }
+
+    private void setEndOfRide(Ride ride) {
+        ride.setActualEnd(LocalDateTime.now());
+        rideService.save(ride);
     }
 
     private void setCustomersToInactive(List<Customer> customers) {

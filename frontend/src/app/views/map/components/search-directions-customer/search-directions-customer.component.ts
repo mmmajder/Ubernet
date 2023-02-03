@@ -33,7 +33,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   @Input() selectedRoute: LeafletRoute[]
   @Input() loggedUser: User
   @Input() allAlternatives: LeafletRoute[][];
-  @Input() favoriteRide: RideDTO;
   @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
   @Output() optimizeByPrice = new EventEmitter()
@@ -120,15 +119,14 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.friendsFormGroup = new FormGroup({
       newFriend: new FormControl("", [Validators.required, Validators.email])
     })
-    if (this.favoriteRide !== undefined) {
-      this.initFavRoute();
-    }
+    console.log("MMMM")
   }
 
-  initFavRoute() {
-    this.positions = this.favoriteRide.route.checkPoints
-    for (let i = 0; i < this.favoriteRide.route.checkPoints.length; i++) {
-      const checkpoint = this.favoriteRide.route.checkPoints[i];
+  initFavRoute(favoriteRide: RideDTO) {
+    console.log(favoriteRide)
+    this.positions = favoriteRide.route.checkPoints
+    for (let i = 0; i < favoriteRide.route.checkPoints.length; i++) {
+      const checkpoint = favoriteRide.route.checkPoints[i];
       if (i < 2)
         this.destinations.controls[i].setValue(checkpoint.name)
       else {
