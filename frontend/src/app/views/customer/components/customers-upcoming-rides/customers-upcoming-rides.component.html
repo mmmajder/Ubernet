@@ -3,13 +3,12 @@
   <mat-card-subtitle>You can reserve a car up to 5 hours in advance.</mat-card-subtitle>
   <mat-card-content class="scrollable" *ngIf="display">
     <mat-list-item>
-      <mat-icon matListItemIcon>timer</mat-icon>
       <div matListItemLine>
         <span class="route-name">{{arriveTime}}</span>
-        <span class="time-left"> &nbsp;&nbsp; {{timeLeft}} minutes left</span>
+        <span class="time-left"> &nbsp;&nbsp;{{timeLeft}} minutes left</span>
       </div>
-      <div mat-line> {{start}} - {{destination}} </div>
-      <div mat-line *ngIf="friends!==undefined && friends.length>0">
+      <div matListItemLine> {{start}} - {{destination}} </div>
+      <div matListItemLine *ngIf="friends!==undefined && friends.length>0">
         <mat-chip-listbox style="display: inline-flex" aria-label="Friends" *ngFor="let friend of friends">
           <mat-chip>
             <img matChipAvatar [src]="photo"
