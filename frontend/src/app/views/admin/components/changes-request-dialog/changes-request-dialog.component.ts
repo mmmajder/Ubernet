@@ -19,7 +19,9 @@ export class ChangesRequestDialogComponent implements OnInit {
 
   ngOnInit() {
     this.driversService.getProfileChangesRequest(this.driverEmail).subscribe({
-      next: value => {this.request = value; console.log(this.request)}
+      next: value => {
+        this.request = value;
+      }
     })
   }
 
@@ -29,16 +31,10 @@ export class ChangesRequestDialogComponent implements OnInit {
   }
 
   acceptRequest(accepted: boolean) {
-    this.adminService.acceptProfileChange(this.driverEmail, accepted).subscribe({
-      next: (value) => {
-        this._snackBar.open("You rated ride successfully.", '', {
+    this.adminService.acceptProfileChange(this.driverEmail, accepted).subscribe(
+      () => this._snackBar.open("Action was a success.", '', {
         duration: 3000,
         panelClass: ['snack-bar']
-      })},
-      error: () => this._snackBar.open("Error occurred.", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      })
-    })
+      }))
   }
 }

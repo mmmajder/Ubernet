@@ -1,11 +1,16 @@
-<button *ngFor="let notification of notifications" id="{{notification.id}}" mat-menu-item
-        (click)="notificationClicked(notification.id)">
-  {{notification.text}}
-  <div *ngIf="notification.type==='ACCEPTED_RIDE'">
-    <mat-chip (click)="openDriverInfoPopup(notification.driverEmail)">
-      <img matChipAvatar [src]="photo"
-           alt="avatar"/>
-      {{notification.driverEmail}}
-    </mat-chip>
+<div style="padding: 10px; overflow: hidden">
+  <h3 style="font-weight: 500; margin-left: 10px">Notifications</h3>
+  <div class="chat-scrollable">
+    <button *ngFor="let notification of notifications" id="{{notification.id}}" mat-menu-item
+            (click)="notificationClicked(notification.id)" style="padding-bottom: 5px; border-bottom: 1px solid var(--light-gray)">
+      {{notification.text}}
+      <div *ngIf="notification.type==='ACCEPTED_RIDE'">
+        <mat-chip (click)="openDriverInfoPopup(notification.driverEmail)" style="margin-bottom: 5px">
+          <img matChipAvatar [src]="photo"
+               alt="avatar"/>
+          {{notification.driverEmail}}
+        </mat-chip>
+      </div>
+    </button>
   </div>
-</button>
+</div>
