@@ -99,38 +99,25 @@ public class MapPage {
     }
 
     public void summaryStep() {
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(this.summaryStep));
-        this.summaryStep.click();
+        goToSummary();
         this.clickRequestRide();
         this.waitForRequestSpinner();
     }
 
-    public void reserveRide(int hours, int minutes) {
+    public void goToSummary() {
         new WebDriverWait(driver, Duration.ofSeconds(10))
                 .until(ExpectedConditions.elementToBeClickable(this.summaryStep));
         this.summaryStep.click();
-        this.rideType.click();
-        selectTime(hours, minutes);
     }
 
-    public void selectTime(int hours, int minutes) {
+    public void reserveRide(String time) {
+        goToSummary();
+        this.rideType.click();
         new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.elementToBeClickable(this.reservationTime));
-        this.reservationTime.click();
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOf(this.timeDialog));
-
-        WebElement hoursWE = driver.findElement(By.cssSelector(".clock-dace__number>span[value=" + hours + "]"));
-        hoursWE.click();
-
-        WebElement minutesWE = driver.findElement(By.cssSelector(".clock-dace__number>span[value=" + minutes + "]"));
-        new WebDriverWait(driver, Duration.ofSeconds(10))
-                .until(ExpectedConditions.visibilityOf(minutesWE));
-        minutesWE.click();
-
-        WebElement timePickerButton = driver.findElement(By.cssSelector("button.timepicker-button"));
-        timePickerButton.click();
+                .until(ExpectedConditions.visibilityOf(this.reservationTime));
+        this.reservationTime.clear();
+        this.reservationTime.sendKeys(time);
+        this.requestButton.click();
     }
 
     public void searchDirections() {

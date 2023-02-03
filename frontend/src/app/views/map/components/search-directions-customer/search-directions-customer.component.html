@@ -107,7 +107,8 @@
           Add people to split fare
         </span>
       </div>
-      <mat-form-field [formGroup]="friendsFormGroup" id="friendsEmailField" style="width: 100%; margin-top: 10px" appearance="outline">
+      <mat-form-field [formGroup]="friendsFormGroup" id="friendsEmailField" style="width: 100%; margin-top: 10px"
+                      appearance="outline">
         <mat-label>Friend's email</mat-label>
         <input matInput type="email" formControlName="newFriend">
         <button mat-icon-button matSuffix id="addFriendButton" (click)="addFriend()">
@@ -178,9 +179,12 @@
             <mat-radio-button value="reserve">I want to reserve my ride for later</mat-radio-button>
           </mat-radio-group>
           <div *ngIf="typeOfRequest==='reserve'" class="default-time-example">
-            <p>When do you want your ride?</p>
-            <input aria-label="default time" [ngxTimepicker]="defaultValue" [(ngModel)]="timeOfRide" readonly>
-            <ngx-material-timepicker id="reservationTime" #defaultValue></ngx-material-timepicker>
+            <mat-form-field appearance="outline" style="width: 100%; margin-top: 5px">
+              <mat-label>Choose time</mat-label>
+              <input id="reservationTime" matInput [ngxTimepicker]="toggleTimepicker" [(ngModel)]="timeOfRide" [disableClick]="true">
+              <ngx-material-timepicker-toggle matSuffix [for]="toggleTimepicker"></ngx-material-timepicker-toggle>
+              <ngx-material-timepicker #toggleTimepicker></ngx-material-timepicker>
+            </mat-form-field>
             <p style="color: gray; font-size: 12px">*You can reserve a ride max 5h in advance</p>
           </div>
         </div>
@@ -192,7 +196,8 @@
       <p *ngIf="findingDriver" style="text-align: center">
         <mat-spinner id="request-spinner" color="primary"></mat-spinner>
       </p>
-      <button mat-button matStepperPrevious style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Back
+      <button mat-button matStepperPrevious
+              style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Back
       </button>
     </mat-step>
   </mat-stepper>

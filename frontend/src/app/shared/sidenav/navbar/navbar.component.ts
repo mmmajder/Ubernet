@@ -1,6 +1,5 @@
 import {Component, Input, OnInit, ViewChild} from '@angular/core';
 import {MatMenuTrigger} from "@angular/material/menu";
-import {Logout} from "../../../store/actions/authentication.actions";
 import {Select, Store} from "@ngxs/store";
 import {Router} from "@angular/router";
 import {User} from "../../../model/User";
@@ -21,11 +20,11 @@ import {MatSnackBar} from "@angular/material/snack-bar";
 import {Client, Message} from "stompjs";
 
 @Component({
-  selector: 'app-sidenav',
-  templateUrl: './sidenav.component.html',
-  styleUrls: ['./sidenav.component.css']
+  selector: 'app-navbar',
+  templateUrl: './navbar.component.html',
+  styleUrls: ['./navbar.component.css']
 })
-export class SidenavComponent implements OnInit {
+export class NavbarComponent implements OnInit {
   @ViewChild(MatMenuTrigger) trigger: MatMenuTrigger | undefined;
   @Input() currentPage = 'dashboard';
   @Select(TokensState.value) numberOfTokens$!: Observable<number>;
@@ -47,7 +46,7 @@ export class SidenavComponent implements OnInit {
     this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
       this.numberOfTokens = value;
     });
-    SidenavComponent._this = this;
+    NavbarComponent._this = this;
   }
 
   ngOnInit(): void {
@@ -140,15 +139,7 @@ export class SidenavComponent implements OnInit {
   }
 
   public static changeProfilePicture(profilePictureSrc: string): void {
-    SidenavComponent._this.profilePictureSrc = profilePictureSrc;
-  }
-
-  toggle() {
-    this.isActive = !this.isActive;
-  }
-
-  logout() {
-    this.store.dispatch(new Logout()).subscribe({});
+    NavbarComponent._this.profilePictureSrc = profilePictureSrc;
   }
 
   navigate(page: string) {

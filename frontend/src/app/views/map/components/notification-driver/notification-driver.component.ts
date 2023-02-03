@@ -23,7 +23,7 @@ export class NotificationDriverComponent implements OnInit {
   @Input() loggedUser: User;
   @Output() updateRouteDisplay = new EventEmitter<void>();
   private stompClient: Client;
-  notifications: DriverNotification[];
+  notifications: DriverNotification[] = [];
   photo: string;
 
   constructor(public dialog: MatDialog, private driverNotificationService: DriverNotificationService, private rideService: RideService) {

@@ -1,0 +1,39 @@
+<mat-toolbar class="navbar">
+  <span>
+    <img class="logo" src="assets/logo.png" alt="logo"/>
+  </span>
+  <span class="example-spacer"></span>
+  <button mat-button *ngIf="user.role==='CUSTOMER'" (click)="addTokens()" id="tokenBtn">
+    <span class="number-of-tokens">{{numberOfTokens | number:'1.2-2' }} </span>
+    <mat-icon class="token">monetization_on</mat-icon>
+  </button>
+  <button color="warn" mat-icon-button *ngIf="user.role!=='ADMIN' && user.blocked" [matTooltip]="'Admin blocked you'">
+    <mat-icon>block</mat-icon>
+  </button>
+  <button *ngIf="user.role==='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="notificationMenu" (click)="hideBadge()">
+    <mat-icon matBadge="!" matBadgeColor="warn" [matBadgeHidden]="notificationBadgeHidden">notifications</mat-icon>
+  </button>
+  <button *ngIf="user.role==='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">
+    <mat-icon>help</mat-icon>
+  </button>
+  <p *ngIf="user.role==='DRIVER'" class="name">You have been working for <b>{{workingHours}}</b> in last 24h.</p>
+  <mat-slide-toggle
+    *ngIf="user.role==='DRIVER'"
+    color="primary"
+    style="margin-bottom: 5px; margin-left: 10px"
+    [(ngModel)]="driverActive" (click)="toggleDriverActivity()" id="driverActivityToggle">
+    <p *ngIf="user.role==='DRIVER'" class="name" style="margin-top: 20px">Activity</p>
+  </mat-slide-toggle>
+  <img [src]="profilePictureSrc" class="avatar" style="margin-left: 20px; margin-right: 10px;" alt="avatar"/>
+  <p class="name" (click)="navigate('/profile')" id="nameAndSurname">{{user.name}} {{user.surname}}</p>
+</mat-toolbar>
+
+<app-sidebar [currentPage]="currentPage" [userRole]="user.role"></app-sidebar>
+
+<mat-menu #menu="matMenu">
+  <app-user-chat></app-user-chat>
+</mat-menu>
+<mat-menu #notificationMenu="matMenu">
+  <app-notifications [notifications]="notificationsCustomer"></app-notifications>
+</mat-menu>
+

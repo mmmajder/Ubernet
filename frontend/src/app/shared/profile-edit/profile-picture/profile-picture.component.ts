@@ -3,7 +3,7 @@ import {Store} from "@ngxs/store";
 import {CurrentlyLogged} from "../../../store/actions/loggedUser.actions";
 import {MatSnackBar} from "@angular/material/snack-bar";
 import {ImageService} from "../../../services/image.service";
-import {SidenavComponent} from "../../sidenav/sidenav/sidenav.component";
+import {NavbarComponent} from "../../sidenav/navbar/navbar.component";
 
 @Component({
   selector: 'app-profile-picture',
@@ -38,7 +38,7 @@ export class ProfilePictureComponent implements OnInit {
         .subscribe((encodedImage: any) => {
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
           this.resetFileUploader();
-          SidenavComponent.changeProfilePicture(`data:image/jpeg;base64,${encodedImage.data}`);
+          NavbarComponent.changeProfilePicture(`data:image/jpeg;base64,${encodedImage.data}`);
         });
     }
   }

@@ -20,7 +20,7 @@ import {
   styleUrls: ['./notifications.component.css']
 })
 export class NotificationsComponent implements OnInit {
-  @Input() notifications: NotificationDTO[];
+  @Input() notifications: NotificationDTO[] = [];
   user: User;
   photo: string;
 

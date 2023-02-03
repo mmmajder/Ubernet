@@ -1,4 +1,4 @@
-<app-sidenav currentPage="profile"></app-sidenav>
+<app-navbar currentPage="profile"></app-navbar>
 <div [ngSwitch]="user.role">
   <app-driver-profile-edit-container *ngSwitchCase="'DRIVER'"></app-driver-profile-edit-container>
   <app-admin-profile-container *ngSwitchCase="'ADMIN'"></app-admin-profile-container>

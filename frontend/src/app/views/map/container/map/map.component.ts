@@ -20,7 +20,7 @@ import {CarService} from "../../../../services/car.service";
 import {DriverNotification} from "../../../../model/DriverNotification";
 import {NotificationDriverComponent} from "../../components/notification-driver/notification-driver.component";
 import {RideDriverNotificationDTO} from "../../../../model/RideDriverNotificationDTO";
-import {SidenavComponent} from "../../../../shared/sidenav/sidenav/sidenav.component";
+import {NavbarComponent} from "../../../../shared/sidenav/navbar/navbar.component";
 import {LeafletRoute} from "../../../../model/LeafletRoute";
 import {NavigationDisplay} from "../../../../model/NavigationDisplay";
 import {CurrentRide} from "../../../../model/CurrentRide";
@@ -54,7 +54,7 @@ export class MapComponent implements OnInit {
   favoriteRide: RideDTO;
 
   @ViewChild(NotificationDriverComponent) notificationDriverComponent: NotificationDriverComponent;
-  @ViewChild(SidenavComponent) sideNavComponent: SidenavComponent;
+  @ViewChild(NavbarComponent) sideNavComponent: NavbarComponent;
 
   constructor(private route: ActivatedRoute, private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
     this.searchedRoutes = [];

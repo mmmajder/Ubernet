@@ -4,7 +4,7 @@ import {MatIconModule} from "@angular/material/icon";
 import {MatMenuModule} from "@angular/material/menu";
 import {CommonModule} from "@angular/common";
 import {MatButtonModule} from "@angular/material/button";
-import {SidenavComponent} from './sidenav/sidenav/sidenav.component';
+import {NavbarComponent} from './sidenav/navbar/navbar.component';
 import {MatBadgeModule} from "@angular/material/badge";
 import {UserChatComponent} from "./user-chat/user-chat.component";
 import {MatListModule} from "@angular/material/list";
@@ -30,9 +30,10 @@ import {MatExpansionModule} from "@angular/material/expansion";
 import {NotificationsComponent} from "./notification/notifications.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ProfilePictureComponent} from "./profile-edit/profile-picture/profile-picture.component";
+import {SidebarComponent} from "./sidenav/sidebar/sidebar.component";
 
 @NgModule({
-  declarations: [SidenavComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, RideDetailsDialogComponent, NotificationsComponent],
+  declarations: [NavbarComponent, SidebarComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, RideDetailsDialogComponent, NotificationsComponent],
   imports: [
     MatToolbarModule,
     MatIconModule,
@@ -55,7 +56,7 @@ import {ProfilePictureComponent} from "./profile-edit/profile-picture/profile-pi
     MatExpansionModule,
     MatSlideToggleModule,
   ],
-  exports: [SidenavComponent, ProfilePictureComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent],
+  exports: [NavbarComponent, ProfilePictureComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent],
 })
 export class SharedModule {
 }

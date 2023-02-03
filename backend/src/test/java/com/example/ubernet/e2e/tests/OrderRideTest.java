@@ -5,8 +5,14 @@ import com.example.ubernet.e2e.pages.HomePage;
 import com.example.ubernet.e2e.pages.MapPage;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+import org.springframework.format.annotation.DateTimeFormat;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
@@ -112,11 +118,26 @@ public class OrderRideTest extends TwoChromesTestBase {
         mapPage.carStep();
         mapPage.friendsStep();
 
-        mapPage.summaryStep();
-        LocalTime time = LocalTime.now().plusMinutes(10);
-        mapPage.reserveRide(time.getHour(), time.getMinute());
+        DateTimeFormatter formatTime = DateTimeFormatter.ofPattern("hh:mm a");
 
-        // check error
+        // CASE 1 - reservation too early
+        LocalDateTime invalidTime1 = LocalDateTime.now().plusMinutes(10);
+        mapPage.reserveRide(invalidTime1.format(formatTime));
+        assertEquals("Reservation can be minimum 15 minutes in advance", mapPage.getSnackBarMessage());
+
+        mapPage.waitForSnackBarToDissapear();
+
+        // CASE 1 - reservation too late
+        LocalTime invalidTime2 = LocalTime.now().plusHours(6);
+        mapPage.reserveRide(invalidTime2.format(formatTime));
+        assertEquals("Reservation can be maximum 5 hours in advance", mapPage.getSnackBarMessage());
+
+        mapPage.waitForSnackBarToDissapear();
+
+        // CASE 1 - successful reservation
+        LocalTime validTime = LocalTime.now().plusHours(3);
+        mapPage.reserveRide(validTime.format(formatTime));
+        assertEquals("Successfully reserved ride", mapPage.getSnackBarMessage());
     }
 
     private void loginCustomer(String email, String password) {
