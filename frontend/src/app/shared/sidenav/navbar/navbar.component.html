@@ -10,13 +10,15 @@
   <button color="warn" mat-icon-button *ngIf="user.role!=='ADMIN' && user.blocked" [matTooltip]="'Admin blocked you'">
     <mat-icon>block</mat-icon>
   </button>
-  <button *ngIf="user.role==='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="notificationMenu" (click)="hideBadge()">
+  <button *ngIf="user.role==='CUSTOMER'" id="notificationBtn" mat-icon-button [matMenuTriggerFor]="notificationMenu" (click)="hideBadge()">
     <mat-icon matBadge="!" matBadgeColor="warn" [matBadgeHidden]="notificationBadgeHidden">notifications</mat-icon>
   </button>
   <button *ngIf="user.role==='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>help</mat-icon>
   </button>
-  <p *ngIf="user.role==='DRIVER'" class="name">You have been working for <b>{{workingHours}}</b> in last 24h.</p>
+  <button *ngIf="user.role==='DRIVER'" mat-icon-button [matMenuTriggerFor]="workingHoursMenu">
+    <mat-icon>timer</mat-icon>
+  </button>
   <mat-slide-toggle
     *ngIf="user.role==='DRIVER'"
     color="primary"
@@ -36,4 +38,6 @@
 <mat-menu #notificationMenu="matMenu">
   <app-notifications [notifications]="notificationsCustomer"></app-notifications>
 </mat-menu>
-
+<mat-menu #workingHoursMenu="matMenu">
+  <app-active-time-driver></app-active-time-driver>
+</mat-menu>

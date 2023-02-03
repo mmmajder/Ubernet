@@ -18,7 +18,6 @@ export class UserChatComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    console.log("init user chat")
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
       this.loggedUser = data;
 

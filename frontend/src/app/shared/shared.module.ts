@@ -31,31 +31,33 @@ import {NotificationsComponent} from "./notification/notifications.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ProfilePictureComponent} from "./profile-edit/profile-picture/profile-picture.component";
 import {SidebarComponent} from "./sidenav/sidebar/sidebar.component";
+import {DriverModule} from "../views/driver/driver.module";
+import {ActiveTimeDriverComponent} from "./active-time-driver/active-time-driver.component";
 
 @NgModule({
-  declarations: [NavbarComponent, SidebarComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, RideDetailsDialogComponent, NotificationsComponent],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatMenuModule,
-    CommonModule,
-    MatButtonModule,
-    MatBadgeModule,
-    MatListModule,
-    MatTooltipModule,
-    FormsModule,
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatCardModule,
-    MatProgressSpinnerModule,
-    MatTableModule,
-    MatPaginatorModule,
-    MatSortModule,
-    MatChipsModule,
-    MatExpansionModule,
-    MatSlideToggleModule,
-  ],
+  declarations: [NavbarComponent, SidebarComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, RideDetailsDialogComponent, NotificationsComponent, ActiveTimeDriverComponent],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatMenuModule,
+        CommonModule,
+        MatButtonModule,
+        MatBadgeModule,
+        MatListModule,
+        MatTooltipModule,
+        FormsModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatCardModule,
+        MatProgressSpinnerModule,
+        MatTableModule,
+        MatPaginatorModule,
+        MatSortModule,
+        MatChipsModule,
+        MatExpansionModule,
+        MatSlideToggleModule,
+    ],
   exports: [NavbarComponent, ProfilePictureComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent],
 })
 export class SharedModule {

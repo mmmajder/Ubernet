@@ -21,7 +21,6 @@ export class RequestSplitFareMailAcceptComponent implements OnInit {
         this.response = "Successfully accepted payment"
       },
       error: (resp) => {
-        console.log(resp)
         this.response = resp.error
       }
     })

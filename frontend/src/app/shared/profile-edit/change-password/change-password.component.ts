@@ -43,7 +43,6 @@ export class ChangePasswordComponent implements OnInit {
     }
 
     const passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
-    console.log(passwordChangeInfo);
     this.userService.changePassword(this.loggedUser.email, passwordChangeInfo)
       .subscribe((data) => {
         console.log(data);

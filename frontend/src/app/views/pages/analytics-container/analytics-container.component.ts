@@ -77,7 +77,6 @@ export class AnalyticsContainerComponent {
   }
 
   updateCharts(report: ReportResponse) {
-    console.log(report)
     this.averageSpent = report.averageMoneyPerDay;
     this.totalSpent = report.totalSum;
 

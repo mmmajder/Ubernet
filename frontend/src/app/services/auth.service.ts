@@ -41,7 +41,6 @@ export class AuthService {
   }
 
   public logout(token: UserTokenState): Observable<Object> {
-    console.log(token)
     return this.http.post(this.authUrl + '/logout/' + (localStorage.getItem('token') as string).split(" ")[1], AuthService.getHttpOptions());
   }
 
@@ -69,7 +68,6 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     const token = localStorage.getItem('token');
-    console.log(token);
     return token !== null;
   }
 }

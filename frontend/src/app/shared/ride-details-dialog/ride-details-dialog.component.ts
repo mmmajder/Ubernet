@@ -55,7 +55,6 @@ export class RideDetailsDialogComponent implements OnInit {
       this.loadProfilePictures(this.ride.customers);
       this.loadProfilePictures([this.ride.driver]);
       this.loadReviews(data);
-      console.log("RIDE: ", this.ride);
       this.initMap();
     });
   }
@@ -94,7 +93,6 @@ export class RideDetailsDialogComponent implements OnInit {
 
   drawCheckpointsOnMap() {
     const waypoints: L.LatLng[] = [];
-    console.log(this.ride)
     this.ride.checkPoints.forEach((place: Place) => {
       waypoints.push(L.latLng(place.position.y, place.position.x));
     });

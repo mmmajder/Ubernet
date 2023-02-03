@@ -58,14 +58,9 @@ export class NavbarComponent implements OnInit {
           this.notificationBadgeHidden = res;
         })
         this.initializeWebSocketConnection();
-        console.log(this.user)
         if (this.user.role === "DRIVER") {
           this.driverService.getDriver(this.user.email).subscribe((driver) => {
             this.driverActive = driver.isWorking
-          })
-          this.driverService.getNumberOfActiveHoursInLast24h(this.user.email).subscribe((seconds: number) => {
-            console.log(seconds)
-            this.workingHours = secondsToHm(seconds)
           })
         }
         this.getProfilePicture();
@@ -130,7 +125,6 @@ export class NavbarComponent implements OnInit {
   private getProfilePicture(): void {
     this.imageService.getProfileImage(this.user.email)
       .subscribe((encodedImage: any) => {
-        console.log(encodedImage);
         if (encodedImage === null)
           this.profilePictureSrc = "assets/default-profile-picture.jpg";
         else
@@ -170,7 +164,6 @@ export class NavbarComponent implements OnInit {
       next: () => {
       },
       error: (resp) => {
-        console.log(resp)
         this.driverActive = !this.driverActive
         this._snackBar.open(resp.error, '', {
           duration: 3000,

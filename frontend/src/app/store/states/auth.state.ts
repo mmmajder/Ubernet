@@ -37,8 +37,6 @@ export class AuthState {
   login(ctx: StateContext<LoginResponseDto>, action: Login) {
     return this.authService.login(action.payload).pipe(
       tap((result: LoginResponseDto) => {
-        console.log("STATE")
-        console.log(result.token)
         ctx.patchState({
           token: result.token,
           userRole: result.userRole
@@ -67,16 +65,13 @@ export class AuthState {
     return this.authService.logout(state.token).pipe(
       tap({
         next: () => {
-          console.log("A")
           ctx.setState({
             token: new UserTokenState(),
             userRole: UserRole.UNAUTHORIZED
           });
           localStorage.clear();
-          // this.router.navigate(['/'])
         },
         error: (message) => {
-          console.log("B")
           this._snackBar.open(message.error, '', {
             duration: 3000,
             panelClass: ['snack-bar']

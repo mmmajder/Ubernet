@@ -31,8 +31,6 @@ public class CarServiceTest {
     private DriverRepository driverRepository;
     @Captor
     private ArgumentCaptor<Car> carArgumentCaptor;
-//    @Captor
-//    private ArgumentCaptor<Ride> rideArgumentCaptor;
 
     @InjectMocks
     private CarService carService;

@@ -30,7 +30,6 @@ export class LoginComponent {
 
   facebookSignIn() {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then((res) => {
-      console.log(res)
       localStorage.setItem('token', "Bearer " + res.authToken);
       this.loginSocial();
     })
@@ -38,7 +37,6 @@ export class LoginComponent {
 
   loginWithGoogle(): void {
     this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then((res) => {
-      console.log(res)
       this.loginSocial();
     })
   }

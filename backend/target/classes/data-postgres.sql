@@ -19,6 +19,7 @@ values (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null),
+       (false, true, '2021-12-12', null),
        (false, true, '2021-12-12', null);
 
 insert into admin (email, city, deleted, blocked, name, password, phone_number, role, surname, user_auth_id)
@@ -50,7 +51,7 @@ values (false, 'Cabrio', 200),
        (false, 'Van', 100);
 
 insert into position (deleted, y, x)
-values (false, 45.267136, 19.833549),
+values (false, 45.256863, 19.844129),
        (false, 45.267136, 19.843549),
        (false, 45.275136, 19.833549),
        (false, 45.275136, 19.843549),
@@ -96,13 +97,17 @@ insert into customer (email, city, deleted, blocked, name, password, phone_numbe
 values ('customer@gmail.com', 'Customville', false, false, 'Customer',
         '$2a$10$2Mtev/q1qqNoSn39O7194eZVLBEvgM2dKzjkO0NUWETNKUYY9R/RO', '064 433456', 2, 'Customic', 6, 1000.0, false),
        ('petar@gmail.com', 'Petrovgrad', false, false, 'Petar',
-        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 7, 11150.0, false);
+        '$2a$10$tnplXdStY6t7kOqqKssMYedAGjJ0T3OJH2BxeT81c1YrDqOUvHLD6', '064 654321', 2, 'Petrovic', 7, 11150.0, false),
+       ('ajder.milan2000@gmail.com', '', false, false, 'Milan',
+        '', '', 2, 'Ajder', 8, 0.0, false);
 
 insert into user_auth_roles(user_auth_id, roles_id)
 values (6, 3),
        (6, 4),
        (7, 3),
-       (7, 4);
+       (7, 4),
+       (8, 3),
+       (8, 4);
 
 update car
 set driver_email='driver@gmail.com'

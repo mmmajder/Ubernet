@@ -91,7 +91,6 @@ export class NotificationDriverComponent implements OnInit {
 
   startRide(ride: RideDetails) {
     this.rideService.startRide(ride.id).subscribe((ride: RideDetails) => {
-      console.log(ride)
       this.notifications = this.notifications.filter(item => item.ride.id !== ride.id)
       this.updateRouteDisplay.emit()
     })

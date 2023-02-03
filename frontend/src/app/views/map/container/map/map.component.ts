@@ -100,7 +100,6 @@ export class MapComponent implements OnInit {
   }
 
   initRouteDriver() {
-    console.log(this.routeForDriver)
     this.routeForDriver.forEach(i => {
       if (i instanceof L.Polyline || i instanceof L.Marker)
         this.map.removeLayer(i)
@@ -273,7 +272,6 @@ export class MapComponent implements OnInit {
         })
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
-          console.log(car)
           if (car.approachFirstRide !== null || (car.firstRide !== null && !car.firstRide.freeRide)) {
             const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.redIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
             this.pins.push(marker);

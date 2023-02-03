@@ -21,7 +21,6 @@ export class NotificationsService {
     const socket = new SockJS('tst-rest.mypageexample/hello?activityId=' + this.activityId);
     this.stompClient = Stomp.over(socket);
     this.stompClient.connect({}, function (frame: string) {
-      console.log('Connected: ' + frame);
       that.stompClient.subscribe('/topic/greetings/' + that.activityId, function (greeting: { body: string; }) {
         that.messages.push(JSON.parse(greeting.body).content);
       });

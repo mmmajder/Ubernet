@@ -74,9 +74,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   ManageNameControl(index: number) {
-    console.log("Manage name")
     const arrayControl = this.destinationsForm.get('destinations') as FormArray;
-    console.log(arrayControl)
     this.filteredOptions[index] = arrayControl.controls[index].valueChanges
       .pipe(
         startWith(''),
@@ -158,7 +156,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   async showEstimates() {
     this.searching = true;
-    console.log(this.destinations.controls)
     if (!validInput(this.destinations.controls)) {
       this._snackBar.open("Please enter existing locations!", '', {
         duration: 3000,
@@ -291,7 +288,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     this.friends.forEach((friend: FriendEmailDTO) => {
       ride.passengers.push(friend.friendEmail)
     })
-    console.log(ride)
 
     this.rideService.createRideRequest(ride).subscribe({
       next: (res: RideDetails) => {
@@ -314,7 +310,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   createRideAlternatives(rideId: number) {
-    console.log(this.allAlternatives)
     this.rideAlternativeService.createRideAlternatives(rideId, this.allAlternatives).subscribe(() => {
     })
   }
@@ -342,7 +337,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
       const suggestions = await this.provider.search({
         query: value
       });
-      console.log(suggestions.slice(0, 3))
       return suggestions.map(i => i.label).slice(0, 3)
     }
     return from(getSuggestions())
