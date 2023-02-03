@@ -1,34 +1,23 @@
 package com.example.ubernet.controller;
 
-import com.example.ubernet.exception.BadRequestException;
-import com.example.ubernet.model.CurrentRide;
-import com.example.ubernet.model.Ride;
+import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.RideState;
+import com.example.ubernet.repository.*;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Order;
 import org.junit.jupiter.api.Test;
-//import org.junit.runner.RunWith;
-import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit4.SpringRunner;
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
-import java.time.LocalDateTime;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import java.util.List;
-
-import static org.hamcrest.Matchers.is;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
 //@RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.DEFINED_PORT)
@@ -41,6 +30,35 @@ public class RideControllerIntegrationTest {
     @SuppressWarnings("SpringJavaInjectionPointsAutowiringInspection")
     @Autowired
     private TestRestTemplate restTemplate;
+
+    @Autowired
+    private NavigationRepository navigationRepository;
+    @Autowired
+    private CurrentRideRepository currentRideRepository;
+    @Autowired
+    private CarRepository carRepository;
+    @Autowired
+    private DriverRepository driverRepository;
+    @Autowired
+    private RideRepository rideRepository;
+    @Autowired
+    private PositionRepository positionRepository;
+    @Autowired
+    private PositionInTimeRepository positionInTimeRepository;
+    @Autowired
+    private PathAlternativeRepository pathAlternativeRepository;
+    @Autowired
+    private RideAlternativesRepository rideAlternativesRepository;
+    @Autowired
+    private UserAuthRepository userAuthRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private CustomerRepository customerRepository;
+    @Autowired
+    private RideRequestRepository rideRequestRepository;
+    @Autowired
+    private DriverDailyActivityRepository driverDailyActivityRepository;
 
     @Test
     @DisplayName("Should return Null for invalid ID when making GET request to endpoint - /ride/{id}")
@@ -56,36 +74,20 @@ public class RideControllerIntegrationTest {
         assertEquals(ride, null);
     }
 
-//    @Test
-//    @DisplayName("Should return OK for valid ID when making GET request to endpoint - /ride/{id}")
-//    public void shouldReturnOkForValidId(){
-//        ResponseEntity<Ride> responseEntity = restTemplate.exchange("/ride/" + "1",
-//                HttpMethod.GET,
-//                null,
-//                Ride.class);
-//
-//        Ride ride = responseEntity.getBody();
-//        System.out.println(ride);
-//
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-////        assertEquals(ride.getId(), 1L);
-//    }
+    @Test
+    @DisplayName("Should return OK for valid ID when making GET request to endpoint - /ride/{id}")
+    public void shouldReturnOkForValidId(){
+        ResponseEntity<Ride> responseEntity = restTemplate.exchange("/ride/" + "1",
+                HttpMethod.GET,
+                null,
+                Ride.class);
 
+        Ride ride = responseEntity.getBody();
 
-//    @Test
-//    public void getByValidIdShouldReturnOK() throws Exception {
-//        Ride ride = new Ride();
-//        ride.setId(2L);
-//
-//        Mockito.when(rideService.findById(ride.getId()))
-//                .thenReturn(ride);
-//
-//        mockMvc.perform(get("/ride/{id}", ride.getId()))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id", is(2)));
-//    }
-//
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(ride.getId(), 1L);
+    }
+
     @Test
     @DisplayName("Should return Bad Request for invalid ID when making PUT request to endpoint - /ride/start-ride/{id}")
     public void shouldReturnBadRequestForInvalidIdWhenStartingRide(){
@@ -101,25 +103,24 @@ public class RideControllerIntegrationTest {
         assertEquals(exceptionMessage, "Ride does not exist");
     }
 
-//    @Test
-//    public void startRideValidIdShouldReturnOK() throws Exception {
-//        Ride ride = new Ride();
-//        ride.setId(2L);
-//        ride.setRideState(RideState.TRAVELLING);
-//        LocalDateTime now = LocalDateTime.of(2023,2,1,21,34,26,7772);
-//        ride.setActualStart(now);
-//
-//        Mockito.when(startRideService.startRide(ride.getId()))
-//                .thenReturn(ride);
-//
-//        mockMvc.perform(put("/ride/start-ride/{rideId}", ride.getId()))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.rideState", is(ride.getRideState().toString())))
-//                .andExpect(jsonPath("$.actualStart", is(List.of(2023,2,1,21,34,26,7772))))
-//                .andExpect(jsonPath("$.id", is(2)));
-//    }
-//
+    @Test
+    @DisplayName("Should return OK for valid ID when making PUT request to endpoint - /ride/start-ride/{rideId}")
+    @Rollback
+    public void shouldReturnOkForValidIdWhenStartingRide(){
+        setupShouldReturnOkForValidIdWhenStartingRide();
+
+        ResponseEntity<Ride> responseEntity = restTemplate.exchange("/ride/start-ride/" + "4",
+                HttpMethod.PUT,
+                null,
+                Ride.class);
+
+        Ride gottenRide = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(gottenRide.getId(), 4L);
+        assertEquals(gottenRide.getRideState(), RideState.TRAVELLING);
+    }
+
     @Test
     @DisplayName("Should return Bad Request for invalid ID when making PUT request to endpoint - /ride/end-ride/{id}")
     public void shouldReturnBadRequestForInvalidIdWhenEndingRide(){
@@ -134,23 +135,49 @@ public class RideControllerIntegrationTest {
         assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
         assertEquals(exceptionMessage, "Ride does not exist");
     }
-//
-//    @Test
-//    public void endRideValidIdShouldReturnOK() throws Exception {
-//        Ride ride = new Ride();
-//        ride.setId(2L);
-//        ride.setRideState(RideState.FINISHED);
-//
-//        Mockito.when(endRideService.endRide(ride.getId()))
-//                .thenReturn(ride);
-//
-//        mockMvc.perform(put("/ride/end-ride/{rideId}", ride.getId()))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.rideState", is(ride.getRideState().toString())))
-//                .andExpect(jsonPath("$.id", is(2)));
-//    }
-//
+
+    @Test
+    @DisplayName("Should return OK for valid ID when making PUT request to endpoint - /ride/end-ride/{rideId}")
+    @Rollback
+    @Order(1)
+    public void shouldReturnOkForValidIdWhenEndingRideAndHasNoSecondRide(){
+        setupShouldReturnOkForValidIdWhenEndingRideAndHasNoSecondRide();
+
+        ResponseEntity<Ride> responseEntity = restTemplate.exchange("/ride/end-ride/" + "4",
+                HttpMethod.PUT,
+                null,
+                Ride.class);
+
+        Ride gottenRide = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(gottenRide.getId(), 4L);
+        assertEquals(gottenRide.getRideState(), RideState.FINISHED);
+        assertFalse(gottenRide.getCustomers().get(0).isActive());
+        assertNull(gottenRide.getDriver().getCar().getNavigation().getFirstRide());
+    }
+
+    @Test
+    @DisplayName("Should return OK for valid ID when making PUT request to endpoint - /ride/end-ride/{rideId}")
+    @Rollback
+    public void shouldReturnOkForValidIdWhenEndingRideAndHasSecondRide(){
+        setupShouldReturnOkForValidIdWhenEndingRideAndHasSecondRide();
+
+        ResponseEntity<Ride> responseEntity = restTemplate.exchange("/ride/end-ride/" + "4",
+                HttpMethod.PUT,
+                null,
+                Ride.class);
+
+        Ride gottenRide = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(gottenRide.getId(), 4L);
+        assertEquals(gottenRide.getRideState(), RideState.FINISHED);
+        assertFalse(gottenRide.getCustomers().get(0).isActive());
+        assertNotNull(gottenRide.getDriver().getCar().getNavigation().getFirstRide());
+        assertNull(gottenRide.getDriver().getCar().getNavigation().getSecondRide());
+    }
+
     @Test
     @DisplayName("Should return Bad Request for invalid email when making GET request to endpoint - /ride/find-scheduled-route-navigation-client/{email}")
     public void shouldReturnBadRequestForInvalidEmailWhenFindingScheduledRoute(){
@@ -181,18 +208,347 @@ public class RideControllerIntegrationTest {
         assertEquals(ride, null);
     }
 
-//    @Test
-//    public void getByValidCustomerEmailShouldReturnCurrentRide() throws Exception {
-//        String email = "customer@gmail.com";
-//        CurrentRide ride = new CurrentRide();
-//        ride.setId(2L);
-//
-//        Mockito.when(rideService.findCurrentRouteForClient(email))
-//                .thenReturn(ride);
-//
-//        mockMvc.perform(get("/ride/find-scheduled-route-navigation-client/{email}", email))
-//                .andDo(print())
-//                .andExpect(status().isOk())
-//                .andExpect(jsonPath("$.id", is(2)));
-//    }
+    @Test
+    @DisplayName("Should return OK for valid ID when making PUT request to endpoint - /ride/find-scheduled-route-navigation-client/{email}")
+    @Rollback
+    public void shouldReturnOkForValidEmailButAndHasCurrentRouteWhenFindingScheduledRoute(){
+        setupShouldReturnOkForValidEmailButAndHasCurrentRouteWhenFindingScheduledRoute();
+
+        ResponseEntity<CurrentRide> responseEntity = restTemplate.exchange("/ride/find-scheduled-route-navigation-client/" + "customedcustomer@2f4u.com",
+                HttpMethod.GET,
+                null,
+                CurrentRide.class);
+
+        CurrentRide gottenRide = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertEquals(gottenRide.getId(), 1L);
+    }
+
+    // zakazivanje vvv
+    @Test
+    @DisplayName("Should return Ride and OK  when making  request to endpoint - POST /ride/create")
+    public void shouldReturnRideAndOKForValidCreateRideDTO(){
+        setupShouldReturnRideAndOKForValidCreateRideDTO();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<Ride> responseEntity = restTemplate.exchange("/ride/create" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<Ride>() {
+                });
+
+        Ride ride = responseEntity.getBody();
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+        assertNotNull(ride);
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest for active user when making  request to endpoint - POST /ride/create")
+    public void shouldThrowBadRequestForValidCreateRideDTOAndActiveCustomer(){
+        setupShouldThrowBadRequestForValidCreateRideDTOAndActiveCustomer();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/create" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "Active customer can not request another ride!");
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest for blocked user when making  request to endpoint - POST /ride/create")
+    public void shouldThrowBadRequestForValidCreateRideDTOAndBlockedCustomer(){
+        setupShouldThrowBadRequestForValidCreateRideDTOAndBlockedCustomer();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/create" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "You are blocked by admin and can not request ride!");
+    }
+
+    private HttpEntity<String> createCreateRideDTO() {
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        String jsonString = """
+                {
+                    "coordinates": [{"lat": 19.586, "lng": 18.451}],
+                    "instructions": [{"distance": 20, "time": 20, "road": "cool road"}],
+                    "carType": "Cabrio",
+                    "hasChild": true,
+                    "hasPet": false,
+                    "passengers": ["customedcustomer@2f4u.com"],
+                    "totalDistance": 15,
+                    "totalTime": 15,
+                    "reservationTime": "3:30",
+                    "route": [],
+                    "payment": { "totalPrice": 150, "customerThatPayed": "customedcustomer@2f4u.com"},
+                    "reservation": false
+                }
+                """;
+
+        HttpEntity<String> request = new HttpEntity<String>(jsonString, headers);
+
+        return request;
+    }
+
+    private void setupShouldThrowBadRequestForValidCreateRideDTOAndBlockedCustomer(){
+        Customer customer = setupCustomer();
+        customer.setActive(false);
+        customer.setBlocked(true);
+        customer.setNumberOfTokens(99999);
+        customerRepository.save(customer);
+    }
+
+    private void setupShouldThrowBadRequestForValidCreateRideDTOAndActiveCustomer(){
+        Customer customer = setupCustomer();
+        customer.setActive(true);
+        customer.setBlocked(false);
+        customer.setNumberOfTokens(99999);
+        customerRepository.save(customer);
+    }
+
+    private void setupShouldReturnRideAndOKForValidCreateRideDTO(){
+        Customer customer = setupCustomer();
+        customer.setActive(false);
+        customer.setBlocked(false);
+        customer.setNumberOfTokens(99999);
+        customerRepository.save(customer);
+
+        Car car1 = setupCar();
+        Driver driver1 = setupDriver();
+        driver1.setBlocked(false);
+        driver1.setCar(car1);
+        DriverDailyActivity driverDailyActivity1 = new DriverDailyActivity();
+        driverDailyActivity1.setIsActive(true);
+        driverDailyActivityRepository.save(driverDailyActivity1);
+        driver1.setDriverDailyActivity(driverDailyActivity1);
+        driverRepository.save(driver1);
+        car1.setDriver(driver1);
+        car1.setIsAvailable(true);
+        car1.setAllowsBaby(true);
+        CarType carType = new CarType();
+        carType.setId(1L);
+        carType.setName("Cabrio");
+        carType.setPriceForType(200.0);
+        carType.setDeleted(false);
+        car1.setCarType(carType);
+
+        Position position1 = new Position();
+        position1.setX(5.0);
+        position1.setY(5.0);
+        positionRepository.save(position1);
+
+        car1.setPosition(position1);
+
+        driverRepository.save(driver1);
+        carRepository.save(car1);
+    }
+
+    private void setupShouldReturnOkForValidEmailButAndHasCurrentRouteWhenFindingScheduledRoute(){
+        Car car = setupCar();
+        Driver driver = setupDriver();
+        driver.setCar(car);
+        driverRepository.save(driver);
+        car.setDriver(driver);
+
+        Customer customer = setupCustomer();
+
+        Ride ride = setupRide();
+        ride.setDriver(driver);
+        ride.setRideState(RideState.TRAVELLING);
+        ride.setCustomers(List.of(customer));
+
+        CurrentRide currentRide = new CurrentRide();
+        currentRide.setId(1L);
+        currentRideRepository.save(currentRide);
+
+        RideRequest rideRequest = new RideRequest();
+        rideRequest.setCurrentRide(currentRide);
+        rideRequestRepository.save(rideRequest);
+        ride.setRideRequest(rideRequest);
+
+        carRepository.save(car);
+        rideRepository.save(ride);
+    }
+
+    private void setupShouldReturnOkForValidIdWhenStartingRide(){
+        Car car = setupCar();
+        Driver driver = setupDriver();
+        driver.setCar(car);
+        driverRepository.save(driver);
+        car.setDriver(driver);
+
+        Ride ride = setupRide();
+        ride.setDriver(driver);
+        ride.setRideState(RideState.WAITING);
+        Navigation n = new Navigation();
+        car.setNavigation(n);
+
+        CurrentRide navCurrentRide = new CurrentRide();
+        n.setFirstRide(navCurrentRide);
+        currentRideRepository.save(navCurrentRide);
+
+        setupRideAlternatives(ride);
+
+        navigationRepository.save(n);
+        carRepository.save(car);
+        rideRepository.save(ride);
+    }
+
+    private void setupShouldReturnOkForValidIdWhenEndingRideAndHasNoSecondRide(){
+        Car car = setupCar();
+        Driver driver = setupDriver();
+        driver.setCar(car);
+        driverRepository.save(driver);
+        car.setDriver(driver);
+
+        Customer customer = setupCustomer();
+
+        Ride ride = setupRide();
+        ride.setDriver(driver);
+        ride.setRideState(RideState.TRAVELLING);
+        ride.setCustomers(List.of(customer));
+        Navigation n = new Navigation();
+        car.setNavigation(n);
+
+        CurrentRide navCurrentRide = new CurrentRide();
+        n.setFirstRide(navCurrentRide);
+        n.setSecondRide(null);
+        currentRideRepository.save(navCurrentRide);
+
+        setupRideAlternatives(ride);
+
+        navigationRepository.save(n);
+        carRepository.save(car);
+        rideRepository.save(ride);
+    }
+
+    private void setupShouldReturnOkForValidIdWhenEndingRideAndHasSecondRide(){
+        Car car = setupCar();
+        Driver driver = setupDriver();
+        driver.setCar(car);
+        driverRepository.save(driver);
+        car.setDriver(driver);
+
+        Customer customer = setupCustomer();
+
+        Ride ride = setupRide();
+        ride.setDriver(driver);
+        ride.setRideState(RideState.TRAVELLING);
+        ride.setCustomers(List.of(customer));
+        Navigation n = new Navigation();
+        car.setNavigation(n);
+
+        CurrentRide navCurrentRide = new CurrentRide();
+        n.setFirstRide(navCurrentRide);
+        CurrentRide secondRide = new CurrentRide();
+        n.setSecondRide(secondRide);
+        n.setApproachSecondRide(secondRide);
+        currentRideRepository.save(navCurrentRide);
+        currentRideRepository.save(secondRide);
+
+        setupRideAlternatives(ride);
+
+        navigationRepository.save(n);
+        carRepository.save(car);
+        rideRepository.save(ride);
+    }
+
+    private Role setupRole(String roleName){
+        Role role = new Role();
+        role.setId(2L);
+        role.setName(roleName);
+        roleRepository.save(role);
+
+        return role;
+    }
+
+    private UserAuth setupUserAuth(Role specificRole, Role userRole){
+        UserAuth userAuth = new UserAuth();
+        userAuth.setRoles(List.of(specificRole, userRole));
+        userAuth.setIsEnabled(true);
+        userAuthRepository.save(userAuth);
+
+        return userAuth;
+    }
+
+    private Customer setupCustomer(){
+        Role roleCustomer = setupRole("ROLE_CUSTOMER");
+        Role roleUser = setupRole("ROLE_USER");
+        UserAuth userAuth = setupUserAuth(roleCustomer, roleUser);
+
+        Customer c = new Customer();
+        c.setEmail("customedcustomer@2f4u.com");
+        c.setUserAuth(userAuth);
+        customerRepository.save(c);
+
+        return c;
+    }
+
+    private Driver setupDriver(){
+        Role roleDriver = setupRole("ROLE_DRIVER");
+        Role roleUser = setupRole("ROLE_USER");
+        UserAuth userAuth = setupUserAuth(roleDriver, roleUser);
+
+        Driver driver = new Driver();
+        driver.setEmail("driverrfast123@2f4u.com");
+        driver.setUserAuth(userAuth);
+        driverRepository.save(driver);
+
+        return driver;
+    }
+
+    private Car setupCar(){
+        Car car = new Car();
+        car.setId(6L);
+        carRepository.save(car);
+
+        return car;
+    }
+
+    private Ride setupRide(){
+        Ride ride = new Ride();
+        ride.setId(4L);
+        rideRepository.save(ride);
+
+        return ride;
+    }
+
+    private RideAlternatives setupRideAlternatives(Ride ride){
+        Position position = new Position();
+        positionRepository.save(position);
+
+        PositionInTime positionInTime = new PositionInTime();
+        positionInTime.setPosition(position);
+        positionInTimeRepository.save(positionInTime);
+
+        CurrentRide currentRide = new CurrentRide();
+        currentRide.setPositions(List.of(positionInTime));
+        currentRideRepository.save(currentRide);
+
+        PathAlternative pathAlternative = new PathAlternative();
+        pathAlternative.setAlternatives(List.of(currentRide));
+        pathAlternativeRepository.save(pathAlternative);
+
+        RideAlternatives rideAlternatives = new RideAlternatives();
+        rideAlternatives.setAlternatives(List.of(pathAlternative));
+        rideAlternatives.setRide(ride);
+        rideAlternativesRepository.save(rideAlternatives);
+
+        return rideAlternatives;
+    }
 }

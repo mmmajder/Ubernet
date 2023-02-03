@@ -365,7 +365,7 @@ public class RideServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw Bad Request Null when finding by invalid email")
+    @DisplayName("Should throw Bad Request Null when finding client current ride by invalid email")
     public void shouldReturnNullWhenFindingCustomerByInvalidEmail() {
         Mockito.when(customerService.findByEmail(EMAIL))
                 .thenReturn(null);
@@ -378,7 +378,7 @@ public class RideServiceTest {
     }
 
     @Test
-    @DisplayName("Should throw Bad Request when finding by valid email but no active ride")
+    @DisplayName("Should throw Bad Request when finding client current ride by valid email but no active ride")
     public void shouldReturnNullWhenFindingActiveRideByValidEmailButNoActiveRide() {
         Customer c = new Customer();
         c.setEmail(EMAIL);
