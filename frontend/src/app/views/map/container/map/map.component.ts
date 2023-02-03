@@ -30,7 +30,6 @@ import {RideDetails} from "../../../../model/RideDetails";
 import {
   SearchDirectionsCustomerComponent
 } from "../../components/search-directions-customer/search-directions-customer.component";
-import {MapDesignService} from "../service/map-design.service";
 
 @Component({
   selector: 'app-map',
@@ -58,7 +57,7 @@ export class MapComponent implements OnInit {
   @ViewChild(NavbarComponent) sideNavComponent: NavbarComponent;
   @ViewChild(SearchDirectionsCustomerComponent) searchDirectionCustomerComponent: SearchDirectionsCustomerComponent;
 
-  constructor(private mapDesignService: MapDesignService, private route: ActivatedRoute, private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
+  constructor(private route: ActivatedRoute, private mapService: MapService, private ridePayService: RidePayService, private rideService: RideService, private router: Router, private store: Store, private carService: CarService) {
     this.searchedRoutes = [];
     this.estimationsSearch = [];
     this.pins = []
@@ -67,6 +66,12 @@ export class MapComponent implements OnInit {
     this.routeForCustomer = []
     this.allRoutesSearch = [[]]
     this.optimizedRoute = []
+  }
+
+  initializeFavoriteRoute(rideId: string) {
+    this.rideService.getById(Number(rideId)).subscribe((ride) => {
+      this.searchDirectionCustomerComponent.initFavRoute(ride)
+    })
   }
 
   ngOnInit(): void {
@@ -95,12 +100,6 @@ export class MapComponent implements OnInit {
     if (rideId !== null) {
       this.initializeFavoriteRoute(rideId as string);
     }
-  }
-
-  initializeFavoriteRoute(rideId: string) {
-    this.rideService.getById(Number(rideId)).subscribe((ride) => {
-      this.searchDirectionCustomerComponent.initFavRoute(ride)
-    })
   }
 
   initRouteDriver() {
@@ -270,17 +269,17 @@ export class MapComponent implements OnInit {
       if (this.loggedUser!==undefined && userIsDriver(this.loggedUser)) {
         this.carService.getActiveCar(this.loggedUser.email).subscribe((car: ActiveCarResponse) => {
           if (car !== null) {
-            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.mapDesignService.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
+            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
             this.pins.push(marker)
           }
         })
       } else {
         activeCars.forEach((car: ActiveCarResponse) => {
           if (car.approachFirstRide !== null || (car.firstRide !== null && !car.firstRide.freeRide)) {
-            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.mapDesignService.redIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
+            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.redIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
             this.pins.push(marker);
           } else {
-            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.mapDesignService.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
+            const marker = L.marker([car.currentPosition.y, car.currentPosition.x], {icon: this.greenIcon}).addTo(this.map).bindPopup('<p>' + car.driverEmail + '</p>');
             this.pins.push(marker);
           }
         })
@@ -322,7 +321,7 @@ export class MapComponent implements OnInit {
           this.estimationsSearch[index].time = totalTime
           this.estimationsSearch[index].lengthInKm = e.route.summary.totalDistance / 1000
           if (this.typeOfVehicle != undefined) {
-            this.mapDesignService.calculatePriceAndTime(this.estimations, this.estimationsSearch, this.typeOfVehicle)
+            this.calculatePriceAndTime()
           }
         })
         .addTo(this.map)
@@ -338,10 +337,28 @@ export class MapComponent implements OnInit {
     }
   }
 
+  greenIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-green.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
+  redIcon = new L.Icon({
+    iconUrl: 'https://raw.githubusercontent.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-red.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/0.7.7/images/marker-shadow.png',
+    iconSize: [25, 41],
+    iconAnchor: [12, 41],
+    popupAnchor: [1, -34],
+    shadowSize: [41, 41]
+  });
+
   setSelectedCarType(carType: string) {
     this.typeOfVehicle = carType
     if (this.estimationsSearch[0].time != undefined) {
-      this.mapDesignService.calculatePriceAndTime(this.estimations, this.estimationsSearch, this.typeOfVehicle)
+      this.calculatePriceAndTime()
     }
   }
 
@@ -372,6 +389,20 @@ export class MapComponent implements OnInit {
           }
         }
       )
+    })
+  }
+
+  calculatePriceAndTime() {
+    this.estimations = new SearchEstimation()
+    let lengthInKM = 0
+    let time = 0
+    this.estimationsSearch.forEach((estimation) => {
+      lengthInKM += estimation.lengthInKm
+      time += estimation.time
+    })
+    this.estimations.time = secondsToDhms(time)
+    this.ridePayService.calculatePrice(lengthInKM, this.typeOfVehicle).subscribe(value => {
+      this.estimations.price += (Math.round(value * 100) / 100) as unknown as string
     })
   }
 }

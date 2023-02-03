@@ -58,6 +58,7 @@ export class DriversComponent implements OnInit {
       height: '600px'
     })
     dialogRef.componentInstance.driverEmail = element.email;
+    dialogRef.afterClosed().subscribe(() => this.getDrivers(false))
   }
 
   openDriversProfileDialog(element: DriverListItem) {

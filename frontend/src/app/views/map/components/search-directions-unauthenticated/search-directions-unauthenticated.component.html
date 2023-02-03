@@ -18,7 +18,7 @@
         <input matInput [(ngModel)]="toValue">
       </mat-form-field>
     </div>
-    <mat-form-field appearance="outline" style="width: 100%; padding-right:20px">
+    <mat-form-field appearance="outline" style="width: 100%;">
       <mat-label>Choose one</mat-label>
       <mat-select [ngModel]="carType" (ngModelChange)="changeCarType($event)">
         <mat-option *ngFor="let type of carTypes" [value]="type">{{type}}</mat-option>
