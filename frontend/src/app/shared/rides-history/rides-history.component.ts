@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, Input, ViewChild} from '@angular/core';
 import {RidesHistoryService} from "../../services/rides-history.service";
 import {RidesDataSource} from "../../model/Ride";
 import {MatPaginator} from "@angular/material/paginator";
@@ -12,7 +12,7 @@ import {RideDetailsDialogComponent} from "../ride-details-dialog/ride-details-di
   templateUrl: './rides-history.component.html',
   styleUrls: ['./rides-history.component.css']
 })
-export class RidesHistoryComponent {
+export class RidesHistoryComponent implements AfterViewInit {
 
   @Input() driverEmail: string;
   @Input() customerEmail: string;

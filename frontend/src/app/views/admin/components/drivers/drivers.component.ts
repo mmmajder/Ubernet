@@ -6,7 +6,7 @@ import {
   RegisterNewDriverDialogComponent
 } from "../register-new-driver-dialog/register-new-driver-dialog.component";
 import {DriversProfileDialogComponent} from "../drivers-profile-dialog/drivers-profile-dialog.component";
-import {ImageService} from "../../../../services/image.service";
+import {EncodedImage, ImageService} from "../../../../services/image.service";
 import {DriversService} from "../../../../services/drivers.service";
 import {DriverDTO} from "../../../../model/DriverDTO";
 import {ChangesRequestDialogComponent} from "../changes-request-dialog/changes-request-dialog.component";
@@ -73,7 +73,7 @@ export class DriversComponent implements OnInit {
         driverList.push(new DriverListItem(users[i].email, users[i].name + ' ' + users[i].surname, users[i].requestedChanges));
         this.imageService.getProfileImage(users[i].email)
           .subscribe({
-            next: (encodedImage: any) => {
+            next: (encodedImage: EncodedImage) => {
               if (encodedImage === null)
                 this.profilePictures.set(users[i].email, "../../../../assets/default-profile-picture.jpg");
               else

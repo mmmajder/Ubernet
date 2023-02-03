@@ -2,7 +2,7 @@ import {Component, Input, OnInit} from '@angular/core';
 import * as L from "leaflet";
 import {RideDetails} from "../../model/RideDetails";
 import {RidesHistoryService} from "../../services/rides-history.service";
-import {ImageService} from "../../services/image.service";
+import {EncodedImage, ImageService} from "../../services/image.service";
 import {SimpleUser} from "../../model/User";
 import {RideReview} from "../../model/Review";
 import {Place} from "../../model/Position";
@@ -63,7 +63,7 @@ export class RideDetailsDialogComponent implements OnInit {
   loadProfilePictures(customers: SimpleUser[]) {
     for (let i = 0; i < customers.length; i++) {
       this.imageService.getProfileImage(customers[i].email)
-        .subscribe((encodedImage: any) => {
+        .subscribe((encodedImage: EncodedImage) => {
           if (encodedImage === null)
             this.profilePictures.set(customers[i].email, "../../../../assets/default-profile-picture.jpg");
           else {

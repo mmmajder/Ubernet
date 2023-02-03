@@ -15,15 +15,17 @@ export class RequestSplitFareMailAcceptComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    const url = this.route.snapshot.paramMap.get('acceptRideUrl')!;
-    this.rideService.acceptRequestSplitFare(url).subscribe({
-      next: () => {
-        this.response = "Successfully accepted payment"
-      },
-      error: (resp) => {
-        console.log(resp)
-        this.response = resp.error
-      }
-    })
+    const url = this.route.snapshot.paramMap.get('acceptRideUrl');
+    if (url !== null) {
+      this.rideService.acceptRequestSplitFare(url).subscribe({
+        next: () => {
+          this.response = "Successfully accepted payment"
+        },
+        error: (resp) => {
+          console.log(resp)
+          this.response = resp.error
+        }
+      })
+    }
   }
 }

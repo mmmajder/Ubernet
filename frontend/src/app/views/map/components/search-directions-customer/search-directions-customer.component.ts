@@ -48,8 +48,8 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   carTypeFormGroup: any;
   secondFormGroup: FormGroup;
   friendsFormGroup: FormGroup;
-  searching: boolean = false;
-  findingDriver: boolean = false;
+  searching = false;
+  findingDriver = false;
   timeOfRide: string
   typeOfRequest: string;
   isActive: boolean;
@@ -142,8 +142,6 @@ export class SearchDirectionsCustomerComponent implements OnInit {
 
   addNewDestination() {
     this.destinations.push(new FormControl("", Validators.required))
-    this.destinations.controls.forEach(() => {
-    })
   }
 
   removeDestination(number: number) {

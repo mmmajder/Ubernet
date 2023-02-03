@@ -4,7 +4,7 @@ import {Select, Store} from "@ngxs/store";
 import {Router} from "@angular/router";
 import {User} from "../../../model/User";
 import {CustomersService} from "../../../services/customers.service";
-import {ImageService} from "../../../services/image.service";
+import {EncodedImage, ImageService} from "../../../services/image.service";
 import {PaymentComponent} from "../../../views/customer/components/payment/payment.component";
 import {MatDialog} from "@angular/material/dialog";
 import {Observable, Subscription} from "rxjs";
@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
   private valueSubscription: Subscription;
   public profilePictureSrc: string;
   public static _this: any;
-  notificationBadgeHidden: boolean = true;
+  notificationBadgeHidden = true;
   private stompClient: Client;
   driverActive: boolean;
   workingHours = "0 minutes";
@@ -129,7 +129,7 @@ export class NavbarComponent implements OnInit {
 
   private getProfilePicture(): void {
     this.imageService.getProfileImage(this.user.email)
-      .subscribe((encodedImage: any) => {
+      .subscribe((encodedImage: EncodedImage) => {
         console.log(encodedImage);
         if (encodedImage === null)
           this.profilePictureSrc = "assets/default-profile-picture.jpg";
@@ -167,8 +167,6 @@ export class NavbarComponent implements OnInit {
 
   toggleDriverActivity() {
     this.driverService.toggleActivity(this.user.email, this.driverActive).subscribe({
-      next: () => {
-      },
       error: (resp) => {
         console.log(resp)
         this.driverActive = !this.driverActive

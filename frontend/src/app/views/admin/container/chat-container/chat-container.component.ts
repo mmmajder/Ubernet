@@ -1,11 +1,11 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {WebsocketService} from "../../../../services/websocket.service";
 import {MessageService} from "../../../../services/message.service";
 import {AuthService} from "../../../../services/auth.service";
 import {Message} from "../../../../model/Message";
 import {Chat} from "../../../../model/Chat";
 import {UserService} from "../../../../services/user.service";
-import {ImageService} from "../../../../services/image.service";
+import {EncodedImage, ImageService} from "../../../../services/image.service";
 import {User} from "../../../../model/User";
 
 @Component({
@@ -13,7 +13,7 @@ import {User} from "../../../../model/User";
   templateUrl: './chat-container.component.html',
   styleUrls: ['./chat-container.component.css']
 })
-export class ChatContainerComponent implements OnInit {
+export class ChatContainerComponent implements OnInit, OnDestroy {
 
   chats: Chat[] = [];
   loggedUser: User;
@@ -66,8 +66,8 @@ export class ChatContainerComponent implements OnInit {
     // add message as a new chat
     // TODO test when user-chat disappearance is fixed
     this.userService.getUserFullName(message.clientEmail).subscribe(data => {
-      const fullname: string = data.name + " " + data.lastname;
-      const c: Chat = new Chat(message.clientEmail, fullname, message);
+      const fullName: string = data.name + " " + data.lastname;
+      const c: Chat = new Chat(message.clientEmail, fullName, message);
       this.chats.unshift(c);
     });
   }
@@ -127,7 +127,7 @@ export class ChatContainerComponent implements OnInit {
 
   private getOpenChatProfilePicture(): void {
     this.imageService.getProfileImage(this.clientEmail)
-      .subscribe((encodedImage: any) => {
+      .subscribe((encodedImage: EncodedImage) => {
         console.log(encodedImage);
         if (encodedImage === null)
           this.openChatProfilePicture = "assets/default-profile-picture.jpg";

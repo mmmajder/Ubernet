@@ -69,6 +69,7 @@ export class AuthService {
 
   isLoggedIn(): boolean {
     const token = localStorage.getItem('token');
+    console.log("IS LOGGED IN??? ");
     console.log(token);
     return token !== null;
   }

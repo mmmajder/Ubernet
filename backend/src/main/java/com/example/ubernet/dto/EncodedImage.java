@@ -1,11 +1,8 @@
 package com.example.ubernet.dto;
 
-import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.ToString;
-
-import javax.validation.constraints.NotNull;
 
 @Data
 @NoArgsConstructor

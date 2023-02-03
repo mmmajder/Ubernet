@@ -67,8 +67,12 @@ public class RideHistoryService {
     }
 
     private String timeToString(LocalDateTime time) {
-        DateTimeFormatter customFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
-        return time.format(customFormat);
+        try {
+            DateTimeFormatter customFormat = DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm");
+            return time.format(customFormat);
+        } catch (NullPointerException e) {
+            return "N/A";
+        }
     }
 
     public RideDetails getRideById(Long id) {

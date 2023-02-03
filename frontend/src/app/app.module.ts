@@ -43,7 +43,7 @@ import {
 } from './views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component';
 import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthServiceConfig} from "@abacritt/angularx-social-login";
 import {NotAuthorizedPageComponent} from "./views/403/not-authorized-page/not-authorized-page.component";
-import {CanActivateAuthGuard} from "./model/CanActivateAuthGuard";
+import {AuthGuard} from "./model/auth-guard.service";
 
 @NgModule({
   declarations: [
@@ -114,7 +114,7 @@ import {CanActivateAuthGuard} from "./model/CanActivateAuthGuard";
         }
       } as SocialAuthServiceConfig,
     },
-    AuthService, NotificationsService, CanActivateAuthGuard],
+    AuthService, NotificationsService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {

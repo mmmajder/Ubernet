@@ -16,7 +16,7 @@ describe('AuthService', () => {
   let service: AuthService;
   let httpController: HttpTestingController;
 
-  let authUrl = 'http://localhost:8000/auth';
+  const authUrl = 'http://localhost:8000/auth';
 
   beforeEach(() => {
     TestBed.configureTestingModule({

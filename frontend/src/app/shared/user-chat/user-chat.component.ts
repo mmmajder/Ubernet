@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {MessageService} from "../../services/message.service";
 import {WebsocketService} from "../../services/websocket.service";
 import {AuthService} from "../../services/auth.service";
@@ -10,7 +10,7 @@ import {User} from "../../model/User";
   templateUrl: './user-chat.component.html',
   styleUrls: ['./user-chat.component.css']
 })
-export class UserChatComponent implements OnInit {
+export class UserChatComponent implements OnInit, OnDestroy {
   messagesWithAdmin: Message[] = [];
   loggedUser: User;
 

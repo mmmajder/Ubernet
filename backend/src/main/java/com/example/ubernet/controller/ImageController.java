@@ -47,9 +47,9 @@ public class ImageController {
         Image image = imageService.findUsersProfileImage(user);
         EncodedImage encoded;
 
-        if (image == null){
+        if (image == null) {
             encoded = imageService.getEncodedDefaultProfileImage();
-        }else {
+        } else {
             encoded = imageService.encodeImage(image);
         }
 

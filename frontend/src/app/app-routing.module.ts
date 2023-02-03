@@ -16,12 +16,12 @@ import {UsersContainerComponent} from "./views/admin/container/users-container/u
 import {
   DashboardCustomerContainerComponent
 } from "./views/customer/container/dashboard-customer-container/dashboard-customer-container.component";
-import {CanActivateAuthGuard} from "./model/CanActivateAuthGuard";
+import {AuthGuard} from "./model/auth-guard.service";
 import {NotAuthorizedPageComponent} from "./views/403/not-authorized-page/not-authorized-page.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
-  {path: 'dashboard', component: DashboardCustomerContainerComponent, canActivate: [CanActivateAuthGuard]},
+  {path: 'dashboard', component: DashboardCustomerContainerComponent, canActivate: [AuthGuard]},
   {path: 'map', component: MapComponent},
   {path: 'map/:rideId', component: MapComponent},
   {path: 'chat', component: ChatContainerComponent},
@@ -29,11 +29,11 @@ const routes: Routes = [
   {path: 'profile', component: ProfileContainerComponent},
   {path: 'rides', component: RidesHistoryContainerComponent},
   {path: 'analytics', component: AnalyticsContainerComponent},
-  {path: 'chat', component: ChatContainerComponent, canActivate: [CanActivateAuthGuard]},
-  {path: 'users', component: UsersContainerComponent, canActivate: [CanActivateAuthGuard]},
-  {path: 'profile', component: ProfileContainerComponent, canActivate: [CanActivateAuthGuard]},
-  {path: 'rides', component: RidesHistoryContainerComponent, canActivate: [CanActivateAuthGuard]},
-  {path: 'analytics', component: AnalyticsContainerComponent, canActivate: [CanActivateAuthGuard]},
+  {path: 'chat', component: ChatContainerComponent, canActivate: [AuthGuard]},
+  {path: 'users', component: UsersContainerComponent, canActivate: [AuthGuard]},
+  {path: 'profile', component: ProfileContainerComponent, canActivate: [AuthGuard]},
+  {path: 'rides', component: RidesHistoryContainerComponent, canActivate: [AuthGuard]},
+  {path: 'analytics', component: AnalyticsContainerComponent, canActivate: [AuthGuard]},
   {path: 'verify/:verificationCode', component: VerifyRegistrationComponent},
   {path: 'reset-password/:resetPasswordCode', component: ResetPasswordComponent},
   {path: 'request-ride/:acceptRideUrl', component: RequestSplitFareMailAcceptComponent},

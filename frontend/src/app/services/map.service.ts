@@ -3,7 +3,6 @@ import {HttpClient, HttpHeaders} from '@angular/common/http';
 import {Observable} from "rxjs";
 import {ActiveCarResponse} from "../model/ActiveCarResponse";
 import {Coordinate} from "../model/Coordinate";
-import {CurrentRide} from "../model/CurrentRide";
 import {LeafletRoute} from "../model/LeafletRoute";
 
 @Injectable({
@@ -104,7 +103,5 @@ export class MapService {
     const url = "https://nominatim.openstreetmap.org/search?format=json&limit=3&q=" + address
     return this.http.get(url);
   }
-
-
 
 }

@@ -1,6 +1,6 @@
 import {Component, Input, Output, EventEmitter, IterableDiffer} from '@angular/core';
 import {Chat} from "../../../../model/Chat";
-import {ImageService} from "../../../../services/image.service";
+import {EncodedImage, ImageService} from "../../../../services/image.service";
 
 @Component({
   selector: 'app-list-of-chats',
@@ -28,10 +28,12 @@ export class ListOfChatsComponent {
 
   public getProfileImages(chats: Chat[]): void {
     for (const c of chats) {
-      if (!this.hasRequestedProfilePictures.hasOwnProperty(c.clientEmail) && !this.profilePictures.hasOwnProperty(c.clientEmail)) {
+      const requestedPicture: boolean = Object.prototype.hasOwnProperty.call(this.hasRequestedProfilePictures, c.clientEmail);
+      const hasPicture: boolean = Object.prototype.hasOwnProperty.call(this.profilePictures, c.clientEmail);
+      if (!requestedPicture && !hasPicture) {
         this.hasRequestedProfilePictures.set(c.clientEmail, true);
         this.imageService.getProfileImage(c.clientEmail)
-          .subscribe((encodedImage: any) => {
+          .subscribe((encodedImage: EncodedImage) => {
             if (encodedImage === null)
               this.profilePictures.set(c.clientEmail, "assets/default-profile-picture.jpg");
             else

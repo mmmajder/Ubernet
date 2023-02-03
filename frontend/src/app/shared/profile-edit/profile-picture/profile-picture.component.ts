@@ -2,7 +2,7 @@ import {Component, ElementRef, OnInit, ViewChild} from '@angular/core';
 import {Store} from "@ngxs/store";
 import {CurrentlyLogged} from "../../../store/actions/loggedUser.actions";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ImageService} from "../../../services/image.service";
+import {EncodedImage, ImageService} from "../../../services/image.service";
 import {NavbarComponent} from "../../sidenav/navbar/navbar.component";
 
 @Component({
@@ -35,7 +35,7 @@ export class ProfilePictureComponent implements OnInit {
   public uploadProfileImage() {
     if (this.selectedImage != null) {
       this.imageService.postProfileImage(this.email, this.selectedImage)
-        .subscribe((encodedImage: any) => {
+        .subscribe((encodedImage: EncodedImage) => {
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
           this.resetFileUploader();
           NavbarComponent.changeProfilePicture(`data:image/jpeg;base64,${encodedImage.data}`);
@@ -45,7 +45,7 @@ export class ProfilePictureComponent implements OnInit {
 
   public getProfileImage(email: string) {
     this.imageService.getProfileImage(email)
-      .subscribe((encodedImage: any) => {
+      .subscribe((encodedImage: EncodedImage) => {
         if (encodedImage === null)
           this.profileImageSrc = "../../../../assets/default-profile-picture.jpg";
         else
