@@ -92,7 +92,6 @@ public class CustomerService {
         customer.setBlocked(false);
         customer.setNumberOfTokens(0);
         customer.setActive(false);
-        customer.setRole(UserRole.CUSTOMER);
         customer.setNumberOfTokens(0);
         return save(customer);
     }

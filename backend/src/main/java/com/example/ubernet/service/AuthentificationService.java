@@ -76,7 +76,6 @@ public class AuthentificationService {
         return new LoginResponseDTO(new UserTokenState(token, expiresIn), user.getRole());
     }
 
-
     private LoginResponseDTO createAccessToken(User user) {
         String jwt = tokenUtils.generateToken(user);
         long expiresIn = tokenUtils.getExpiredIn();
