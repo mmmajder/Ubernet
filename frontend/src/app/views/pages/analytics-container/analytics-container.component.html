@@ -23,8 +23,9 @@
 
   <div *ngIf="chart1">
     <div style="margin-left: 20px; margin-top: 10px">
-      <h3>In average, you were spending <b>{{averageSpent}} tokens</b> a day in the selected period.<br>
-        In total, you spent <b>{{totalSpent}} tokens</b> in the selected period of time.</h3>
+      <h3>In average, you were spending <b>{{averageSpent | number:'1.2-2' }} tokens</b> a day in the selected
+        period.<br>
+        In total, you spent <b>{{totalSpent | number:'1.2-2' }} tokens</b> in the selected period of time.</h3>
     </div>
     <hr style="width: 100%">
     <div class="divChart">

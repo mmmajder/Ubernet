@@ -16,19 +16,14 @@ import {UsersContainerComponent} from "./views/admin/container/users-container/u
 import {
   DashboardCustomerContainerComponent
 } from "./views/customer/container/dashboard-customer-container/dashboard-customer-container.component";
-import {AuthGuard} from "./model/auth-guard.service";
+import {AuthGuard} from "./model/AuthGuard";
 import {NotAuthorizedPageComponent} from "./views/403/not-authorized-page/not-authorized-page.component";
 
 const routes: Routes = [
   {path: '', component: HomepageContainerComponent},
   {path: 'dashboard', component: DashboardCustomerContainerComponent, canActivate: [AuthGuard]},
   {path: 'map', component: MapComponent},
-  {path: 'map/:rideId', component: MapComponent},
-  {path: 'chat', component: ChatContainerComponent},
-  {path: 'users', component: UsersContainerComponent},
-  {path: 'profile', component: ProfileContainerComponent},
-  {path: 'rides', component: RidesHistoryContainerComponent},
-  {path: 'analytics', component: AnalyticsContainerComponent},
+  {path: 'map/:rideId', component: MapComponent, canActivate: [AuthGuard]},
   {path: 'chat', component: ChatContainerComponent, canActivate: [AuthGuard]},
   {path: 'users', component: UsersContainerComponent, canActivate: [AuthGuard]},
   {path: 'profile', component: ProfileContainerComponent, canActivate: [AuthGuard]},

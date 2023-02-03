@@ -24,9 +24,7 @@ export class ProfileContainerComponent implements OnInit {
         this.user.city = resp.city;
         this.user.email = resp.email;
         this.user.role = resp.role;
-      },
-      error: () => this.router.navigate(['/'])
+      }
     });
   }
-
 }
