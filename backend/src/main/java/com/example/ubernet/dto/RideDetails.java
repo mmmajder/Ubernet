@@ -25,4 +25,5 @@ public class RideDetails {
     private String actualEnd;
     private String reservationTime;
     private Set<Review> reviews;
+    private boolean canceled;
 }

@@ -26,7 +26,7 @@ export class ProfileDataComponent implements OnInit {
   cityFormControl = new FormControl('', [Validators.required]);
 
   hasSelectedFile = false;
-  selectedImage: any = null;
+  selectedImage: File;
   profileImageSrc: string;
   @ViewChild('fileUploader') fileUploader: ElementRef;
 
@@ -46,13 +46,6 @@ export class ProfileDataComponent implements OnInit {
   }
 
   update() {
-    if (this.role == "DRIVER")
-      this.updateDriver();
-    else
-      this.updateCustomer();
-  }
-
-  updateCustomer() {
     const user = new Customer(this.name, this.lastName, this.email, this.phoneNumber, this.city);
     this.store.dispatch(new UpdateCustomerData(user)).subscribe({
       next: () => this._snackBar.open("Data updated successfully.", '', {
@@ -112,9 +105,5 @@ export class ProfileDataComponent implements OnInit {
   resetFileUploader() {
     this.fileUploader.nativeElement.value = null;
     this.hasSelectedFile = false;
-  }
-
-  private updateDriver() {
-    // TODO
   }
 }

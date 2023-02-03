@@ -6,6 +6,7 @@ import com.example.ubernet.dto.RideHistorySimpleResponse;
 import com.example.ubernet.dto.SimpleUser;
 import com.example.ubernet.model.Customer;
 import com.example.ubernet.model.Ride;
+import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.RideRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -92,6 +93,7 @@ public class RideHistoryService {
                 .checkPoints(ride.getRoute().getCheckPoints())
                 .totalPrice(ride.getPayment().getTotalPrice())
                 .reviews(ride.getReviews())
+                .canceled(ride.getRideState().equals(RideState.CANCELED))
                 .build();
     }
 
