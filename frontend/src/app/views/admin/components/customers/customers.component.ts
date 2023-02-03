@@ -3,7 +3,7 @@ import {SimpleUser} from "../../../../model/User";
 import {MatTableDataSource} from "@angular/material/table";
 import {MatDialog} from "@angular/material/dialog";
 import {Store} from "@ngxs/store";
-import {ImageService} from "../../../../services/image.service";
+import {EncodedImage, ImageService} from "../../../../services/image.service";
 import {Customers} from "../../../../store/actions/customers.actions";
 import {CustomersProfileDialogComponent} from "../customers-profile-dialog/customers-profile-dialog.component";
 
@@ -27,7 +27,7 @@ export class CustomersComponent implements OnInit {
       this.customersList = new MatTableDataSource<SimpleUser>(this.customers);
       for (let i = 0; i < this.customers.length; i++) {
         this.imageService.getProfileImage(this.customers[i].email)
-          .subscribe((encodedImage: any) => {
+          .subscribe((encodedImage: EncodedImage) => {
             if (encodedImage === null)
               this.profilePictures.set(this.customers[i].email, "../../../../assets/default-profile-picture.jpg");
             else

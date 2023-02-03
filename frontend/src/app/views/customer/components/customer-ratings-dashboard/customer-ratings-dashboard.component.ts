@@ -39,7 +39,6 @@ export class CustomerRatingsDashboardComponent {
       next: value => this.rides = value,
       error: err => console.log(err)
     })
-
   }
 
   openRideDetails(rideId: number) {

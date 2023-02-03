@@ -22,8 +22,7 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
   messagesWithClient: Message[] = [];
   openChatProfilePicture: string;
 
-  constructor(private messageService: MessageService, private webSocketService: WebsocketService, private authService: AuthService
-    , private userService: UserService, private imageService: ImageService) {
+  constructor(private messageService: MessageService, private webSocketService: WebsocketService, private authService: AuthService, private userService: UserService, private imageService: ImageService) {
   }
 
   ngOnInit(): void {
@@ -132,5 +131,4 @@ export class ChatContainerComponent implements OnInit, OnDestroy {
           this.openChatProfilePicture = `data:image/jpeg;base64,${encodedImage.data}`;
       });
   }
-
 }

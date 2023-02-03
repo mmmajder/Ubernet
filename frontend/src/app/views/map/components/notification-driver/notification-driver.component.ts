@@ -11,7 +11,7 @@ import {
 } from "../reason-for-ride-cancelation/reason-for-ride-cancellation.component";
 import {Place} from "../../../../model/Position";
 import {RideService} from "../../../../services/ride.service";
-import {Client, Message} from "stompjs";
+import {Message} from "stompjs";
 
 @Component({
   selector: 'app-notification-driver',

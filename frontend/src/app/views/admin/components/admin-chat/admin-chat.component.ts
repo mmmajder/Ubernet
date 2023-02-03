@@ -9,6 +9,5 @@ import {User} from "../../../../model/User";
 })
 export class AdminChatComponent {
   @Input() messages: Message[];
-  testStr: any;
   @Input() loggedUser: User;
 }

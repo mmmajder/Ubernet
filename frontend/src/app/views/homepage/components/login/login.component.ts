@@ -53,15 +53,13 @@ export class LoginComponent implements OnInit {
   }
 
   loginWithGoogle(): void {
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then((res) => {
+    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(() => {
       this.loginSocial();
     })
   }
 
   private loginSocial() {
-    console.log("TTT")
     this.socialAuthService.authState.subscribe(value => {
-      console.log(value)
       if (value !== undefined && value !== null && localStorage.getItem("token") === null)
         this.store.dispatch(new LoginSocial({
           "email": value.email,
@@ -82,7 +80,6 @@ export class LoginComponent implements OnInit {
 
   postLogin(accessToken: string) {
     localStorage.setItem('token', "Bearer " + accessToken);
-    // setTimeout(() => {
     this.authService.getCurrentlyLoggedUser().subscribe({
       next: (user) => {
         if (user.role === "CUSTOMER")
@@ -93,8 +90,6 @@ export class LoginComponent implements OnInit {
           this.router.navigate(['/analytics']);
       }
     });
-    // },
-    // 3000);
   }
 
   switchToRegisterForm() {
@@ -128,6 +123,5 @@ export class LoginComponent implements OnInit {
       panelClass: ['snack-bar']
     })
   }
-
 
 }

@@ -61,8 +61,7 @@ export class AuthState {
 
   @Action(Logout)
   logout(ctx: StateContext<LoginResponseDto>) {
-    const state = ctx.getState();
-    return this.authService.logout(state.token).pipe(
+    return this.authService.logout().pipe(
       tap({
         next: () => {
           ctx.setState({

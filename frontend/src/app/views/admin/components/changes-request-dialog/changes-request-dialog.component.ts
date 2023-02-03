@@ -30,7 +30,7 @@ export class ChangesRequestDialogComponent implements OnInit {
 
   acceptRequest(accepted: boolean) {
     this.adminService.acceptProfileChange(this.driverEmail, accepted).subscribe({
-      next: (value) => {
+      next: () => {
         this._snackBar.open("You rated ride successfully.", '', {
         duration: 3000,
         panelClass: ['snack-bar']

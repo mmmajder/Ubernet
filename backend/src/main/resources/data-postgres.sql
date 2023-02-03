@@ -69,7 +69,8 @@ values (false),
        (false),
        (false);
 
-insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name, navigation_id, version)
+insert into car (deleted, is_available, car_type_id, position_id, allows_baby, allows_pet, plates, name, navigation_id,
+                 version)
 values (false, false, 1, 1, true, true, 'NS2FAST4U', 'BMW', 1, 0),
        (false, false, 1, 3, false, false, 'NS-GLAMOC1', 'Audi', 2, 0),
        (false, false, 3, 5, true, false, 'BTACAB1312', 'Yugo', 3, 0);
@@ -134,28 +135,58 @@ values (99998, 'petar@gmail.com', null, false, '2022-05-21 11:15',
 
 insert into payment (deleted, is_accepted_payment, total_price)
 values (false, true, 500),
-       (false, true, 500);
+       (false, true, 800),
+       (false, true, 750),
+       (false, true, 500),
+       (false, true, 400),
+       (false, true, 550),
+       (false, true, 450);
 
 insert into customer_payment (payed, price_per_customer, url, customer_email)
 values (false, 250, 'url1', 'customer@gmail.com'),
-       (false, 250, 'url2', 'petar@gmail.com'),
-       (false, 250, 'url2', 'petar@gmail.com');
+       (false, 250, null, 'petar@gmail.com'),
+       (false, 800, null, 'customer@gmail.com'),
+       (false, 375, null, 'customer@gmail.com'),
+       (false, 375, 'url2', 'petar@gmail.com'),
+       (false, 500, null, 'petar@gmail.com'),
+       (false, 400, null, 'customer@gmail.com'),
+       (false, 550, null, 'customer@gmail.com'),
+       (false, 450, null, 'customer@gmail.com');
 
 insert into payment_customers (payment_id, customers_id)
 values (1, 1),
        (1, 2),
-       (2, 3);
+       (2, 3),
+       (3, 4),
+       (3, 5),
+       (4, 6),
+       (5, 7),
+       (6, 8),
+       (7, 9);
 
 insert into route (deleted, price, time, km)
-values (false, 500, 1200, 5),
-       (false, 500, 1200, 5),
-       (false, 500, 1200, 5);
+values (false, 500, 1600, 4),
+       (false, 800, 1200, 2),
+       (false, 750, 1600, 3),
+       (false, 500, 1600, 4),
+       (false, 400, 1300, 3),
+       (false, 550, 1600, 4),
+       (false, 450, 1300, 3);
+
 
 insert into place(name, position_id)
 values ('Kej žrtava racije, Novi Sad', 7),
        ('Limanska pijaca, Novi Sad', 8),
        ('Trifkovicev trg, Novi Sad', 9),
-       ('Telepu, Novi Sad', 10),
+       ('Telep, Novi Sad', 10),
+       ('Velika menza, Novi Sad', 11),
+       ('Kej žrtava racije, Novi Sad', 7),
+       ('Limanska pijaca, Novi Sad', 8),
+       ('Telep, Novi Sad', 10),
+       ('Velika menza, Novi Sad', 11),
+       ('Kej žrtava racije, Novi Sad', 7),
+       ('Limanska pijaca, Novi Sad', 8),
+       ('Telep, Novi Sad', 10),
        ('Velika menza, Novi Sad', 11),
        ('Kej žrtava racije, Novi Sad', 7),
        ('Limanska pijaca, Novi Sad', 8);
@@ -167,14 +198,33 @@ values (1, 1),
        (2, 4),
        (2, 5),
        (3, 6),
-       (3, 7);
+       (3, 7),
+       (4, 8),
+       (4, 9),
+       (5, 10),
+       (5, 11),
+       (6, 12),
+       (6, 13),
+       (7, 14),
+       (7, 15);
 
 insert into ride (actual_end, actual_start, deleted, request_time, scheduled_start, driver_email, payment_id,
                   route_id, ride_state, is_reservation)
 values ('2023-01-26 12:00', '2023-01-26 11:00', false, '2023-01-26 10:00', '2023-01-26 11:00', 'driver@gmail.com', 1,
-        1, 4, false),
+        1, 4, true),
        ('2023-01-12 12:00', '2023-01-12 11:00', false, '2023-01-12 10:00', '2023-01-12 11:00', 'driver@gmail.com', 2,
-        2, 4, false);
+        2, 4, true),
+       ('2023-02-02 12:00', '2023-02-02 11:00', false, '2023-02-02 10:00', '2023-02-02 11:00', 'driver2@gmail.com', 3,
+        3, 4, true),
+       ('2023-02-02 12:00', '2023-02-02 11:00', false, '2023-02-02 10:00', '2023-02-02 11:00', 'driver2@gmail.com', 4,
+        4, 4, true),
+       ('2023-02-03 12:00', '2023-02-03 11:00', false, '2023-02-03 10:00', '2023-02-03 11:00', 'driver@gmail.com', 5,
+        5, 4, true),
+       ('2023-02-01 12:00', '2023-02-01 11:00', false, '2023-02-01 10:00', '2023-02-01 11:00', 'driver3@gmail.com', 6,
+        6, 4, true),
+       ('2023-02-01 12:00', '2023-02-01 11:00', false, '2023-02-01 10:00', '2023-02-01 11:00', 'driver3@gmail.com', 7,
+        7, 4, true);
+
 
 -- update payment
 -- set ride_id=1
@@ -187,7 +237,13 @@ values ('2023-01-26 12:00', '2023-01-26 11:00', false, '2023-01-26 10:00', '2023
 insert into ride_customers(ride_id, customers_email)
 values (1, 'customer@gmail.com'),
        (1, 'petar@gmail.com'),
-       (2, 'petar@gmail.com');
+       (2, 'customer@gmail.com'),
+       (3, 'customer@gmail.com'),
+       (3, 'petar@gmail.com'),
+       (4, 'petar@gmail.com'),
+       (5, 'customer@gmail.com'),
+       (6, 'customer@gmail.com'),
+       (7, 'customer@gmail.com');
 
 insert into review (comment, car_rating, driver_rating, customer_email)
 values ('Bravo majstore', 4, 5, 'customer@gmail.com'),

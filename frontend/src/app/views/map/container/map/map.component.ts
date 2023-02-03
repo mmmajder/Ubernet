@@ -27,7 +27,7 @@ import {CurrentRide} from "../../../../model/CurrentRide";
 import {PositionInTime} from "../../../../model/PositionInTime";
 import {RideDTO} from "../../../../model/RideDTO";
 import {SearchEstimation} from "../../../../model/SearchEstimation";
-import {Message, Client} from "stompjs";
+import {Message} from "stompjs";
 import {RideDetails} from "../../../../model/RideDetails";
 
 @Component({

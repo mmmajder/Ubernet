@@ -1,4 +1,4 @@
-import {Component, Input, Output, EventEmitter, IterableDiffer} from '@angular/core';
+import {Component, Input, Output, EventEmitter, IterableDiffer, DoCheck, OnDestroy} from '@angular/core';
 import {Chat} from "../../../../model/Chat";
 import {EncodedImage, ImageService} from "../../../../services/image.service";
 
@@ -7,7 +7,7 @@ import {EncodedImage, ImageService} from "../../../../services/image.service";
   templateUrl: './list-of-chats.component.html',
   styleUrls: ['./list-of-chats.component.css']
 })
-export class ListOfChatsComponent {
+export class ListOfChatsComponent implements DoCheck, OnDestroy {
   @Input() chats: Chat[];
   @Output() chatEventEmitter = new EventEmitter<Chat>();
   iterableDiffer: IterableDiffer<Chat>;

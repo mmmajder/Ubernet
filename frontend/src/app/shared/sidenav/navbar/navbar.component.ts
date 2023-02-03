@@ -37,7 +37,7 @@ export class NavbarComponent implements OnInit {
   private valueSubscription: Subscription;
   public profilePictureSrc: string;
   public static _this: any;
-  notificationBadgeHidden: boolean = true;
+  notificationBadgeHidden = true;
   private stompClient: any;
   driverActive: boolean;
   workingHours = "0 minutes";

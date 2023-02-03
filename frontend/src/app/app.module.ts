@@ -18,7 +18,6 @@ import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {MatDialogModule} from "@angular/material/dialog";
-import {NotificationsService} from "./services/notifications.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
 import {NotFoundPageComponent} from './views/404/not-found-page/not-found-page.component';
@@ -115,7 +114,7 @@ import {
         }
       } as SocialAuthServiceConfig,
     },
-    AuthService, NotificationsService, AuthGuard],
+    AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
 export class AppModule {

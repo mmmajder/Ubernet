@@ -11,7 +11,6 @@ export class WebsocketService {
   isAdmin: boolean;
   isWebSocketOpen = false;
 
-
   private readonly chatWSUrl: string;
 
   constructor() {
@@ -23,39 +22,23 @@ export class WebsocketService {
       this.isWebSocketOpen = true;
       this.email = email;
       this.isAdmin = isAdmin;
-      // if (message !== undefined) {
-      //   this.message = message;
-      // }
-
-      // if (this.webSocket === null || this.webSocket === undefined || this.webSocket.readyState !== this.webSocket.OPEN){
       this.webSocket = new WebSocket(this.chatWSUrl + email);
-
-      this.webSocket.onopen = () => {
-      }
-
       this.webSocket.onmessage = (event) => {
         const message: Message = JSON.parse(event.data);
-
         onNewMessage(message);
-        // this.message = of(message);
       }
-
+      this.webSocket.onopen = () => {
+      }
       this.webSocket.onclose = (event) => {
         // console.log("Close " + email, event)
       }
-      // }
-      //
     }
-
   }
 
   public sendMessage(message: any) {
     if (this.isWebSocketOpen) {
       this.webSocket.send(JSON.stringify(message));
     }
-    // if (this.webSocket !== null && this.webSocket !== undefined){
-    //   this.webSocket.send(JSON.stringify(message));
-    // }
   }
 
   public closeWebSocket() {
@@ -63,8 +46,5 @@ export class WebsocketService {
       this.isWebSocketOpen = false;
       this.webSocket.close();
     }
-    // if (this.webSocket !== null && this.webSocket !== undefined){
-    //   this.webSocket.close();
-    // }
   }
 }
