@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 @Service
@@ -47,7 +48,7 @@ public class RideDenialService {
     }
 
     private void setCustomersInactive(List<Customer> customers) {
-        for (Customer customer: customers) {
+        for (Customer customer : customers) {
             customer.setActive(false);
             customerRepository.save(customer);
         }
@@ -56,7 +57,7 @@ public class RideDenialService {
     private void removeDriverNotifications(Ride ride) {
         List<DriverNotification> driverNotifications = driverNotificationRepository.getActiveRideDriverNotifications(ride.getDriver().getEmail());
         for (DriverNotification driverNotification : driverNotifications) {
-            if (driverNotification.getRide().getId() == ride.getId()) {
+            if (Objects.equals(driverNotification.getRide().getId(), ride.getId())) {
                 driverNotification.setFinished(true);
                 driverNotificationRepository.save(driverNotification);
             }

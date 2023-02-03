@@ -249,11 +249,9 @@ public class RideServiceTest {
         return ride;
     }
 
-
     private Ride createRide() {
         return new Ride();
     }
-
 
     private List<LatLngDTO> getCoordinatesLatLng() {
         List<LatLngDTO> coords = new ArrayList<>();
