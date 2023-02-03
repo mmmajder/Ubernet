@@ -169,4 +169,8 @@ public class NotificationService {
         notification.setText("Your ride has been canceled. We sent you your tokens back.");
         save(notification);
     }
+
+    public List<Notification> getReminderNotificationsForRide(Ride ride) {
+        return notificationRepository.getReminderNotificationsForRideId(ride.getId());
+    }
 }

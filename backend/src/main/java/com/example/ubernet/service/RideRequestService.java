@@ -1,6 +1,7 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.model.CustomerPayment;
+import com.example.ubernet.model.Notification;
 import com.example.ubernet.model.Ride;
 import com.example.ubernet.model.enums.RideState;
 import lombok.AllArgsConstructor;
@@ -19,6 +20,7 @@ public class RideRequestService {
     private final NotificationService notificationService;
     private final PaymentService paymentService;
     private final CustomerService customerService;
+
     @Transactional
     public void sendCarsToRidesInReservedState() {
         List<Ride> rides = rideService.getReservedRidesThatShouldStartIn10Minutes();
@@ -34,6 +36,7 @@ public class RideRequestService {
         returnMoneyPassedReservations();
         returnMoneyNotPayedPassedReservations();
     }
+
     public void returnMoneyPassedReservations() {
         List<Ride> rides = rideService.getReservedRidesThatScheduledTimePassed();
         for (Ride ride : rides) {
@@ -57,15 +60,18 @@ public class RideRequestService {
     }
 
 
-
     public void notifyTimeUntilReservation() {
         List<Ride> ridesWithAcceptedReservation = rideService.getRidesWithAcceptedReservation();
-        List<Long> minutesForNotification = Arrays.asList(15L, 10L, 5L);
         for (Ride ride : ridesWithAcceptedReservation) {
-            long minutesUntil = LocalDateTime.now().until(ride.getScheduledStart(), ChronoUnit.MINUTES);
-            if (minutesForNotification.contains(minutesUntil)) {
-                notificationService.createNotificationForCustomersReservationReminder(ride, minutesUntil);
-            }
+            createNewReminderNotifications(ride);
+        }
+    }
+
+    private void createNewReminderNotifications(Ride ride) {
+        List<Notification> reminderNotifications = notificationService.getReminderNotificationsForRide(ride);
+        long minutesUntil = LocalDateTime.now().until(ride.getScheduledStart(), ChronoUnit.MINUTES);
+        if (minutesUntil <= 15 - reminderNotifications.size() * 5L){
+            notificationService.createNotificationForCustomersReservationReminder(ride, 15 - reminderNotifications.size() * 5L);
         }
     }
 
