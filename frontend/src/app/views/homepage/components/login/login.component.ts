@@ -12,7 +12,7 @@ import {FacebookLoginProvider, GoogleLoginProvider, SocialAuthService} from "@ab
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
   @Output() switchForm = new EventEmitter();
 
   formGroup = this._formBuilder.group({
@@ -28,9 +28,9 @@ export class LoginComponent implements OnInit {
   constructor(private _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private authService: AuthService, private store: Store, private router: Router, private socialAuthService: SocialAuthService) {
   }
 
-  ngOnInit(): void {
-    this.loginSocial()
-  }
+  // ngOnInit(): void {
+  //   this.loginSocial()
+  // }
 
   singInWithFB() {
     this.socialAuthService.signIn(FacebookLoginProvider.PROVIDER_ID).then((res) => {
@@ -52,31 +52,31 @@ export class LoginComponent implements OnInit {
     })
   }
 
-  loginWithGoogle(): void {
-    this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(() => {
-      this.loginSocial();
-    })
-  }
+  // loginWithGoogle(): void {
+  //   this.socialAuthService.signIn(GoogleLoginProvider.PROVIDER_ID).then(() => {
+  //     this.loginSocial();
+  //   })
+  // }
 
-  private loginSocial() {
-    this.socialAuthService.authState.subscribe(value => {
-      if (value !== undefined && value !== null && localStorage.getItem("token") === null)
-        this.store.dispatch(new LoginSocial({
-          "email": value.email,
-          "authToken": value.authToken,
-          "firstName": value.firstName,
-          "id": value.id,
-          "idToken": value.idToken,
-          "lastName": value.lastName,
-          "name": value.name,
-          "photoUrl": value.photoUrl,
-          "provider": value.provider,
-        })).subscribe({
-          next: (value) => this.postLogin(value.auth.token.accessToken),
-          error: () => this.openSnack("Wrong email or password.")
-        });
-    })
-  }
+  // private loginSocial() {
+  //   this.socialAuthService.authState.subscribe(value => {
+  //     if (value !== undefined && value !== null && localStorage.getItem("token") === null)
+  //       this.store.dispatch(new LoginSocial({
+  //         "email": value.email,
+  //         "authToken": value.authToken,
+  //         "firstName": value.firstName,
+  //         "id": value.id,
+  //         "idToken": value.idToken,
+  //         "lastName": value.lastName,
+  //         "name": value.name,
+  //         "photoUrl": value.photoUrl,
+  //         "provider": value.provider,
+  //       })).subscribe({
+  //         next: (value) => this.postLogin(value.auth.token.accessToken),
+  //         error: () => this.openSnack("Wrong email or password.")
+  //       });
+  //   })
+  // }
 
   postLogin(accessToken: string) {
     localStorage.setItem('token', "Bearer " + accessToken);
