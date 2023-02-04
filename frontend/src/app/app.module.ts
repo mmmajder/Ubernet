@@ -13,44 +13,49 @@ import {MatCardModule} from '@angular/material/card';
 import {MatAutocompleteModule} from "@angular/material/autocomplete";
 import {MatToolbarModule} from '@angular/material/toolbar';
 import {MatIconModule} from '@angular/material/icon';
-import {RestaurantService} from "./services/restaurant.service";
 import {HttpClientModule} from "@angular/common/http";
 import {MatTableModule} from "@angular/material/table";
 import {MatPaginatorModule} from "@angular/material/paginator";
 import {MatSortModule} from "@angular/material/sort";
 import {MatDialogModule} from "@angular/material/dialog";
-import {RestaurantsModule} from "./views/restaurants/restaurants.module";
-import {RestaurantModule} from "./views/restaurant/restaurant.module";
-import {NotificationsService} from "./services/notifications.service";
-import {SocketService} from "./services/sockets.service";
 import {HomepageModule} from "./views/homepage/homepage.module";
 import {AuthService} from "./services/auth.service";
-import {
-  GoogleLoginProvider,
-  SocialAuthServiceConfig,
-  SocialLoginModule,
-  FacebookLoginProvider
-} from "angularx-social-login";
 import {NotFoundPageComponent} from './views/404/not-found-page/not-found-page.component';
 import {DriverModule} from "./views/driver/driver.module";
 import {CustomerModule} from "./views/customer/customer.module";
 import {AdminModule} from "./views/admin/admin.module";
-import {PopupService} from "./services/popup.service";
-import {UnauthenticatedModule} from "./views/unauthenticated/unauthenticated.module";
 import {MapModule} from "./views/map/map.module";
 import {NgxsModule} from '@ngxs/store';
 import {AuthState} from "./store/states/auth.state";
 import {LoggedUserState} from "./store/states/loggedUser.state";
 import {PagesModule} from "./views/pages/pages.module";
 import {VerifyRegistrationComponent} from './views/verify/verify-registration/verify-registration.component';
-import {DriversState} from "./store/states/drivers.state";
 import {CustomersState} from "./store/states/customers.state";
+import {MatProgressSpinnerModule} from "@angular/material/progress-spinner";
+import {MatSelectModule} from "@angular/material/select";
+import {TokensState} from "./store/states/tokens.state";
+import {
+  RequestSplitFareMailAcceptComponent
+} from './views/request-ride-accept/request-split-fare-mail-accept/request-split-fare-mail-accept.component';
+import {
+  RideSplitFareDialogComponent
+} from './views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component';
+import {NotAuthorizedPageComponent} from "./views/403/not-authorized-page/not-authorized-page.component";
+import {AuthGuard} from "./model/AuthGuard";
+import {SocialLoginModule, SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
+import {
+  GoogleLoginProvider,
+  FacebookLoginProvider,
+} from '@abacritt/angularx-social-login';
 
 @NgModule({
   declarations: [
     AppComponent,
     NotFoundPageComponent,
-    VerifyRegistrationComponent
+    NotAuthorizedPageComponent,
+    VerifyRegistrationComponent,
+    RequestSplitFareMailAcceptComponent,
+    RideSplitFareDialogComponent,
   ],
   imports: [
     BrowserModule,
@@ -72,18 +77,17 @@ import {CustomersState} from "./store/states/customers.state";
     MatPaginatorModule,
     MatSortModule,
     MatDialogModule,
-    RestaurantsModule,
-    RestaurantModule,
     HomepageModule,
-    SocialLoginModule,
     BrowserAnimationsModule,
     DriverModule,
     CustomerModule,
     AdminModule,
-    UnauthenticatedModule,
     MapModule,
     PagesModule,
-    NgxsModule.forRoot([AuthState, LoggedUserState, DriversState, CustomersState]),
+    NgxsModule.forRoot([AuthState, LoggedUserState, CustomersState, TokensState]),
+    MatProgressSpinnerModule,
+    MatSelectModule,
+    SocialLoginModule
   ],
   exports: [],
   providers: [
@@ -101,22 +105,17 @@ import {CustomersState} from "./store/states/customers.state";
           {
             id: GoogleLoginProvider.PROVIDER_ID,
             provider: new GoogleLoginProvider(
-              '263337550240-ilitbfe2sqc3v0vlc61tiuu5bb3no8f6.apps.googleusercontent.com',
-              {
-                scope: 'profile email',
-                plugin_name: 'login' //you can use any name here
-              }
+              "409257141396-5kl1dff2s24dip94g2kql41tgr7j0jik.apps.googleusercontent.com",
             )
           }
         ],
         onError: (err) => {
-          console.error();
+          console.error(err);
         }
       } as SocialAuthServiceConfig,
     },
-    RestaurantService, AuthService, NotificationsService, SocketService, PopupService],
+    AuthService, AuthGuard],
   bootstrap: [AppComponent]
 })
-
 export class AppModule {
 }

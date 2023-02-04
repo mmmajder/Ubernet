@@ -9,7 +9,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class CreateReviewDTO {
     private String comment;
-    private int rating;
+    private int driverRating;
+    private int carRating;
     private long rideId;
     private String clientEmail;
 }

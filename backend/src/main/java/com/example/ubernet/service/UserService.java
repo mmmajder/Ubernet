@@ -1,29 +1,32 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.dto.FullnameDTO;
 import com.example.ubernet.dto.UserEditDTO;
 import com.example.ubernet.dto.UserResponse;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.UserRole;
-import com.example.ubernet.repository.ProfileUpdateRequestRepository;
 import com.example.ubernet.repository.RoleRepository;
 import com.example.ubernet.repository.UserRepository;
 import com.example.ubernet.utils.DTOMapper;
-import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import java.sql.Timestamp;
 import java.util.Optional;
 
-@AllArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
-    private final UserRepository userRepository;
-    private final RoleRepository roleRepository;
-    private final ProfileUpdateRequestRepository profileUpdateRequestRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
+    private RoleRepository roleRepository;
+
+    public UserService() {
+    }
+
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Optional<User> user = userRepository.findByEmail(username);
@@ -57,21 +60,7 @@ public class UserService implements UserDetailsService {
     private void setNewUserProperties(User user, UserEditDTO userEditRequest) {
         if (user.getRole() == UserRole.CUSTOMER || user.getRole() == UserRole.ADMIN) {
             updateUser(user, userEditRequest);
-        } else if (user.getRole() == UserRole.DRIVER) {
-            createDriverUpdateRequest(user, userEditRequest);
         }
-    }
-
-    private void createDriverUpdateRequest(User user, UserEditDTO userEditRequest) {
-        ProfileUpdateRequest profileUpdateRequest = new ProfileUpdateRequest();
-        profileUpdateRequest.setUser(user);
-        profileUpdateRequest.setName(Optional.ofNullable(userEditRequest.getName()).orElse(user.getName()));
-        profileUpdateRequest.setSurname(Optional.ofNullable(userEditRequest.getSurname()).orElse(user.getSurname()));
-        profileUpdateRequest.setCity(Optional.ofNullable(userEditRequest.getCity()).orElse(user.getCity()));
-        profileUpdateRequest.setPhoneNumber(Optional.ofNullable(userEditRequest.getPhoneNumber()).orElse(user.getPhoneNumber()));
-        profileUpdateRequest.setProcessed(false);
-        profileUpdateRequest.setRequestTime(new Timestamp(System.currentTimeMillis()));
-        profileUpdateRequestRepository.save(profileUpdateRequest);
     }
 
     public void updateUser(User user, UserEditDTO userEditRequest) {
@@ -103,5 +92,21 @@ public class UserService implements UserDetailsService {
 
     public boolean userExist(String email) {
         return findByEmail(email) != null;
+    }
+
+    public FullnameDTO getUserFullname(String email) {
+        User u = findByEmail(email);
+        return u != null ? new FullnameDTO(u.getName(), u.getSurname()) : null;
+    }
+
+    public boolean blockUser(String email, boolean block) {
+        User user = findByEmail(email);
+        user.setBlocked(block);
+        userRepository.save(user);
+        return block;
+    }
+
+    public User findByResetPasswordCode(String token) {
+        return userRepository.findByResetPasswordCode(token);
     }
 }

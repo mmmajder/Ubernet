@@ -23,8 +23,6 @@ import {
   ProfileCustomerContainerComponent
 } from './container/profile-customer-container/profile-customer-container.component';
 import {MatTabsModule} from "@angular/material/tabs";
-import {UnauthenticatedModule} from "../unauthenticated/unauthenticated.module";
-import {CreditCardComponent} from "./components/profile/credit-card/credit-card.component";
 import {
   CustomersUpcomingRidesComponent
 } from './components/customers-upcoming-rides/customers-upcoming-rides.component';
@@ -34,43 +32,56 @@ import {
 import {MatChipsModule} from "@angular/material/chips";
 import {MatTooltipModule} from "@angular/material/tooltip";
 import {RateDialogComponent} from './components/rate-dialog/rate-dialog.component';
+import {NgxPayPalModule} from "ngx-paypal";
+import {PaymentComponent} from "./components/payment/payment.component";
+import { ReportDriverDialogComponent } from './components/report-driver-dialog/report-driver-dialog.component';
+import {ResetPasswordComponent} from "./components/reset-password/reset-password.component";
+import {MatLineModule} from "@angular/material/core";
+import {UserChipComponent} from "./components/user-chip/user-chip.component";
 
 @NgModule({
   declarations: [
     DashboardCustomerContainerComponent,
     FavoritesComponent,
     ProfileCustomerContainerComponent,
-    CreditCardComponent,
     CustomersUpcomingRidesComponent,
     CustomerRatingsDashboardComponent,
     RateDialogComponent,
+    PaymentComponent,
+    ReportDriverDialogComponent,
+    ResetPasswordComponent,
+    UserChipComponent
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-    MatListModule,
-    MatTabsModule,
-    MatChipsModule,
-    MatTooltipModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatListModule,
+        MatTabsModule,
+        MatChipsModule,
+        MatTooltipModule,
+        NgxPayPalModule,
+        MatLineModule,
+    ],
   exports: [
     DashboardCustomerContainerComponent,
     ProfileDataComponent,
-    UnauthenticatedModule,
     ProfileCustomerContainerComponent,
+    PaymentComponent,
+    ResetPasswordComponent,
+    UserChipComponent
   ],
 })
 export class CustomerModule {

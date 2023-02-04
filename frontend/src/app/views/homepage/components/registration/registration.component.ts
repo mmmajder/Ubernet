@@ -1,62 +1,69 @@
-import {Component, OnInit} from '@angular/core';
-import {FormControl, Validators} from "@angular/forms";
-import {Login, Register} from "../../../../store/actions/authentication.actions";
-import {Store} from "@ngxs/store";
+import {Component, EventEmitter, Output} from '@angular/core';
+import {FormBuilder, Validators} from "@angular/forms";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {UserRole} from "../../../../model/UserRole";
+import {AuthService} from "../../../../services/auth.service";
+import {RegisterCredentials} from "../../../../model/RegisterCredentials";
 
 @Component({
   selector: 'app-registration',
   templateUrl: './registration.component.html',
   styleUrls: ['./registration.component.css']
 })
-export class RegistrationComponent implements OnInit {
-  email: string = "";
-  phoneNumber: string = "";
-  password: string = "";
-  password2: string = "";
-  name: string = "";
-  lastName: string = "";
-  city: string = "";
+export class RegistrationComponent {
+  @Output() switchForm = new EventEmitter();
 
-  hide: boolean = true;
-  hide2: boolean = true;
+  formGroup = this._formBuilder.group({
+    emailFormControl: ['email', [Validators.required, Validators.email]],
+    phoneFormControl: ['phoneNumber', [Validators.required]],
+    nameFormControl: ['name', [Validators.required]],
+    lastNameFormControl: ['lastName', [Validators.required]],
+    cityFormControl: ['city', [Validators.required]],
+    passwordFormControl: ['password', [Validators.required, Validators.minLength(6)]],
+    password2FormControl: ['password2', [Validators.required]]
+  });
 
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  phoneFormControl = new FormControl('', [Validators.required]);
-  nameFormControl = new FormControl('', [Validators.required]);
-  lastNameFormControl = new FormControl('', [Validators.required]);
-  cityFormControl = new FormControl('', [Validators.required]);
-  passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
-  password2FormControl = new FormControl('', [Validators.required]);
+  email = "";
+  phoneNumber = "";
+  password = "";
+  password2 = "";
+  name = "";
+  lastName = "";
+  city = "";
 
-  constructor(private _snackBar: MatSnackBar, private store: Store) {
-  }
+  hide = true;
+  hide2 = true;
 
-  ngOnInit(): void {
+  constructor(private _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private authService: AuthService) {
   }
 
   registerNewUser() {
-    this.store.dispatch(new Register({
-      "email": this.email,
-      "password": this.password,
-      "name": this.name,
-      "lastName": this.lastName,
-      "phoneNumber": this.phoneNumber,
-      "city": this.city,
-      "userRole": UserRole.CUSTOMER
-    })).subscribe({
-      next: (value) => {
-        this._snackBar.open("We sent you registration link", '', {
-          duration: 3000,
-          panelClass: ['snack-bar']
-        })
+    if (this.password !== this.password2) {
+      this.openSnackBar("Passwords are not the same.");
+    } else {
+      const requestBody: RegisterCredentials = {
+        "email": this.email,
+        "password": this.password,
+        "name": this.name,
+        "surname": this.lastName,
+        "phoneNumber": this.phoneNumber,
+        "city": this.city,
+      }
 
-      },
-      error: () => this._snackBar.open("Wrong email or password.", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      })
-    });
+      this.authService.register(requestBody).subscribe({
+        next: () => this.openSnackBar("We sent you registration link"),
+        error: (message) => this.openSnackBar(message)
+      });
+    }
+  }
+
+  openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      duration: 3000,
+      panelClass: ['snack-bar']
+    })
+  }
+
+  switchToLoginForm() {
+    this.switchForm.emit();
   }
 }

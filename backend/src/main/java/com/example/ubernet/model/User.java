@@ -30,24 +30,22 @@ public class User implements UserDetails {
     @OneToOne
     private UserAuth userAuth;
     private UserRole role;
-    private Boolean isBlocked;
+    private Boolean blocked;
 
     @Enumerated(EnumType.STRING)
     private AuthProvider provider;
     @Override
-    public Collection<? extends GrantedAuthority> getAuthorities() {
+    public Collection<Role> getAuthorities() {
         return getUserAuth().getRoles();
     }
 
     @Override
     public String getPassword() {
-        System.out.println(password);
         return password;
     }
 
     @Override
     public String getUsername() {
-        System.out.println(email);
         return email;
     }
 
@@ -69,6 +67,18 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return getUserAuth().getIsEnabled();
+    }
+
+    public User(String email, String name, String surname) {
+        this.email = email;
+    }
+    public User(String email) {
+        this.email = email;
+    }
+
+    public User(String email, Boolean blocked) {
+        this.email = email;
+        this.blocked = blocked;
     }
 }
 

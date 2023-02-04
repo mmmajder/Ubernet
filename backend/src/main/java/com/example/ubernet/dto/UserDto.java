@@ -16,4 +16,5 @@ public class UserDto {
     private String surname;
     private String city;
     private String phoneNumber;
+    private boolean blocked;
 }

@@ -1,17 +1,31 @@
 <mat-card class="dashboard-card">
-<mat-card-header>Favorite routes</mat-card-header>
+  <mat-card-title>Favorite routes</mat-card-title>
+  <mat-card-subtitle *ngIf="favorites.length > 0">Click on the icon to order ride with your favorite route</mat-card-subtitle>
   <mat-card-content class="scrollable" *ngIf="favorites.length > 0">
     <mat-list>
       <mat-list-item *ngFor="let favorite of favorites">
-        <mat-icon mat-list-icon>route</mat-icon>
-        <div mat-line><span class="route-name">{{favorite.name}}</span></div>
-        <div mat-line><span class="start-end">{{favorite.start}} - {{favorite.destination}}</span></div>
-        <mat-icon style="color: var(--yellow)" [matTooltip]="'Remove from favorites'" [matTooltipPosition]="'below'">favorite</mat-icon>
-        <mat-divider></mat-divider>
+        <mat-icon [matTooltip]="'See actions'" [matTooltipPosition]="'below'" matListItemIcon
+                  [matMenuTriggerFor]="menu" style="cursor: pointer">route
+        </mat-icon>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="removeFromFavorites(favorite.rideId)">
+            <mat-icon style="color: var(--yellow); cursor: pointer">
+              heart_broken
+            </mat-icon>
+            Remove from favorites
+          </button>
+          <button mat-menu-item (click)="orderRide(favorite.rideId)">
+            <mat-icon>call</mat-icon>
+            Order ride with this route
+          </button>
+        </mat-menu>
+        <div matListItemLine *ngFor="let station of favorite.checkPoints; let i = index" class="start-end">
+          {{i + 1}}. {{station}}
+        </div>
       </mat-list-item>
     </mat-list>
   </mat-card-content>
-  <mat-card-content *ngIf="favorites.length == 0" style="text-align: center;">
+  <mat-card-content *ngIf="favorites.length === 0" style="text-align: center;">
     <img src="assets/no-favorites.png" style="height: 250px" alt="no-favorites">
   </mat-card-content>
 </mat-card>

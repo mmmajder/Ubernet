@@ -1,0 +1,99 @@
+<head>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
+  <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+</head>
+<div class="container" style="padding: 30px">
+  <h1>Details about ride</h1>
+  <hr style="width: 100%; margin-top: -5px">
+  <p>
+    <span class="padding-details"><b>Start:</b> {{ride.actualStart}}</span>
+    <span class="padding-details"><b>End:</b> {{ride.actualEnd}}</span>
+    <span class="padding-details"><b>Total cost:</b> {{ride.totalPrice}}</span>
+    <span class="padding-details" *ngIf="ride.canceled" style="background-color: darkred; color: white"><b>Total cost:</b> CANCELED</span>
+  </p>
+  <div class="row">
+    <div class="col-md-7">
+
+      <h4 style="color: var(--gray); margin-top: 10px; margin-bottom: -10px">
+        Route
+        <span style="float: right">
+          <mat-icon *ngIf="customerEmail !== '' && isFavorite"
+                    style="color: var(--yellow); cursor: pointer"
+                    [matTooltip]="'Remove route from favorites'"
+                    [matTooltipPosition]="'below'" (click)="removeFromFavorites()">
+            favorite
+          </mat-icon>
+          <mat-icon *ngIf="customerEmail !== '' && !isFavorite" style="color: var(--gray); cursor: pointer"
+                    [matTooltip]="'Add route to favorites'"
+                    [matTooltipPosition]="'below'" (click)="addToFavorites()">
+            favorite
+          </mat-icon>
+          <mat-icon *ngIf="customerEmail !== ''" color="primary"
+                    style="color: var(--gray); margin-left: 5px; cursor: pointer"
+                    [matTooltip]="'Order ride with this route'"
+                    [matTooltipPosition]="'below'" (click)="orderRide()">
+            call
+          </mat-icon>
+        </span>
+      </h4>
+      <div style="margin-top: 15px">
+        <p *ngFor="let station of ride.checkPoints; let i = index" style="font-size: 14px; color: var(--dark-gray)">
+          <b>{{i + 1}}.</b> {{station.name}}
+        </p>
+      </div>
+
+      <hr style="width: 100%">
+
+      <h4 style="color: var(--gray)">Customers info</h4>
+      <div style="margin-top: -10px !important;">
+        <div *ngFor="let customer of ride.customers" style="margin-top: 5px">
+          <div style="display: flex; align-items: center; width: 100%">
+            <img class="avatar" [src]="profilePictures.get(customer.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
+            <div (click)="openCustomersProfileDialog(customer.email)"
+                 style="cursor: pointer"> {{customer.name}} {{customer.surname}}
+              <span style="color: gray">{{customer.email}}</span>
+            </div>
+            <button *ngIf="hasReviews(customer.email)" (click)="toggleReviews(customer.email)" mat-icon-button
+                    color="primary" style="margin-left: auto" [matTooltip]="'See review'">
+              <mat-icon>reviews</mat-icon>
+            </button>
+          </div>
+
+          <div *ngIf="showReviews.get(customer.email)">
+            <div class="review-background">
+              <p class="review-star"><b>{{reviews.get(customer.email)?.carRating}}</b>
+                <mat-icon style="color: var(--yellow);">star</mat-icon>
+                for car
+                &nbsp;&nbsp;|&nbsp;&nbsp;
+                <b>{{reviews.get(customer.email)?.driverRating}}</b>
+                <mat-icon style="color: var(--yellow);">star</mat-icon>
+                for driver
+              </p>
+              <p class="review-comment">{{reviews.get(customer.email)?.comment}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="margin-top: 10px">
+        <h4 style="color: var(--gray)">Driver info</h4>
+        <div (click)="openDriversProfileDialog()" style="display: flex; margin-top: -5px !important; align-items: center; width: 100%; cursor: pointer">
+          <img class="avatar" [src]="profilePictures.get(ride.driver.email)" alt="profilePicture"/>&nbsp;&nbsp;&nbsp;
+          <div> {{ride.driver.name}} {{ride.driver.surname}}
+            <span style="color: gray">{{ride.driver.email}}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-5">
+      <div class="map-container" style="max-height: 350px">
+        <div class="map-frame">
+          <div id="map">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

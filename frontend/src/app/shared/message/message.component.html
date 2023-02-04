@@ -1,9 +1,8 @@
-<div *ngIf="message.type=='left'" [matTooltip]="message.time" [matTooltipPosition]="'right'"
-     matTooltipClass="message-tooltip">
-  <img class="avatar" [src]='message.profileImage' alt="avatar"/>
-  <span mat-line class="left">{{message.text}}</span>
-</div>
-<div *ngIf="message.type=='right'" [matTooltip]="message.time" [matTooltipPosition]="'left'"
-     matTooltipClass="message-tooltip">
-  <span mat-line class="right">{{message.text}}</span>
+<div class="message__outer">
+  <div *ngIf="isSentByTheUser">
+    <div class="left message" [ngClass]="{'smaller-message-width': !isUserAdmin}" [matTooltip]="message.time" [matTooltipPosition]="'right'">{{message.content}}</div>
+  </div>
+  <div class="message__inner" *ngIf="!isSentByTheUser">
+    <div class="right message" [ngClass]="{'smaller-message-width': !isUserAdmin}" style="overflow-wrap: break-word; max-width: 300px; word-break: break-word" [matTooltip]="message.time" [matTooltipPosition]="'left'">{{message.content}}</div>
+  </div>
 </div>

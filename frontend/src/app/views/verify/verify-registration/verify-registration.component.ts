@@ -1,9 +1,9 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from "@angular/router";
 import {ActivatedRoute} from '@angular/router';
-import {Login, Verify} from "../../../store/actions/authentication.actions";
 import {Store} from "@ngxs/store";
 import {MatSnackBar} from "@angular/material/snack-bar";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
   selector: 'app-verify-registration',
@@ -11,25 +11,22 @@ import {MatSnackBar} from "@angular/material/snack-bar";
   styleUrls: ['./verify-registration.component.css']
 })
 export class VerifyRegistrationComponent implements OnInit {
-
-  verificationCode: string | null
-
-  constructor(private _snackBar: MatSnackBar, private router: Router, private route: ActivatedRoute, private store: Store) {
+  header: string
+  message: string
+  constructor(private authService: AuthService, private _snackBar: MatSnackBar, private router: Router, private route: ActivatedRoute, private store: Store) {
   }
 
   ngOnInit(): void {
-    this.verificationCode = this.route.snapshot.paramMap.get('verificationCode');
-    this.store.dispatch(new Verify({
-      "verificationCode": this.verificationCode as string
-    })).subscribe({
-      next: () => this._snackBar.open("Account is verified", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      }),
-      error: () => this._snackBar.open("Wrong email or password.", '', {
-        duration: 3000,
-        panelClass: ['snack-bar']
-      })
+    const verificationCode = this.route.snapshot.paramMap.get('verificationCode') as string;
+    this.authService.verify(verificationCode).subscribe({
+      next: () => {
+        this.header = "Congratulations";
+        this.message = "You have successfully verified your profile";
+      },
+      error: (res) => {
+        this.header = "Unfortunately";
+        this.message = res.error;
+      }
     });
   }
 

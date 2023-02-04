@@ -1,0 +1,31 @@
+<app-navbar currentPage="rides"></app-navbar>
+<div style="margin-left: 90px; margin-right: 10px">
+  <div class="filter-container">
+    <h1 style="font-weight: 400; margin-top: 20px">History of rides</h1>
+    <p class="param" *ngIf="userRole==='ADMIN'">Filter rides by driver and customer, and sort by any parameter. Click the purple icon to see more details.</p>
+    <p class="param" *ngIf="userRole==='CUSTOMER'">Here you can see history of all your rides and sort them by any parameter. Click the purple icon to see more details.</p>
+    <p class="param" *ngIf="userRole==='DRIVER'">Filter all your previous rides by customer, and sort by any parameter. Click the purple icon to see more details.</p>
+
+    <mat-form-field appearance="outline" color="primary" *ngIf="userRole==='ADMIN'">
+      <mat-label>Driver</mat-label>
+      <mat-select [(ngModel)]="driverEmail" (ngModelChange)="loadRides()">
+        <mat-option *ngFor="let type of driversEmails" [value]="type">{{type}}</mat-option>
+      </mat-select>
+      <button *ngIf="driverEmail" matSuffix mat-icon-button aria-label="Clear" (click)="driverEmail=''; loadRides()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" color="primary" *ngIf="userRole==='ADMIN' || userRole==='DRIVER'">
+      <mat-label>Customer</mat-label>
+      <mat-select [(ngModel)]="customerEmail" (ngModelChange)="loadRides()">
+        <mat-option *ngFor="let type of customersEmails" [value]="type">{{type}}</mat-option>
+      </mat-select>
+      <button *ngIf="customerEmail" matSuffix mat-icon-button aria-label="Clear" (click)="customerEmail=''; loadRides()">
+        <mat-icon>close</mat-icon>
+      </button>
+    </mat-form-field>
+  </div>
+
+  <app-rides-history #child [driverEmail]="driverEmail" [customerEmail]="customerEmail"></app-rides-history>
+</div>

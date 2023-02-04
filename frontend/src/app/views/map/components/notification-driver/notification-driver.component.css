@@ -1,0 +1,21 @@
+.destination-input {
+  z-index: 99;
+  width: 30%;
+  max-width: 30%;
+  min-height: 30% !important;
+  position: relative;
+  border-radius: 0;
+  float: right;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}
+
+.notification-item {
+  flex: 1;
+  min-height: 50% !important;
+  flex-direction: column;
+  align-items: stretch;
+  justify-content: center;
+}

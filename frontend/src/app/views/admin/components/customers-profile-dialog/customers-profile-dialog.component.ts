@@ -1,7 +1,7 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../../../model/User";
 import {UserService} from "../../../../services/user.service";
-import {ImageService} from "../../../../services/image.service";
+import {EncodedImage, ImageService} from "../../../../services/image.service";
 
 @Component({
   selector: 'app-customers-profile-dialog',
@@ -11,6 +11,7 @@ import {ImageService} from "../../../../services/image.service";
 export class CustomersProfileDialogComponent implements OnInit {
 
   @Input() userEmail: string;
+  @Input() userRole = "";
   user: User = new User();
   profileImageSrc: string;
 
@@ -22,9 +23,9 @@ export class CustomersProfileDialogComponent implements OnInit {
       (user: User) => this.user = user
     );
     this.imageService.getProfileImage(this.userEmail)
-      .subscribe((encodedImage: any) => {
+      .subscribe((encodedImage: EncodedImage) => {
         if (encodedImage === null)
-          this.profileImageSrc = "../../../../assets/taxi.jpg";
+          this.profileImageSrc = "../../../../assets/default-profile-picture.jpg";
         else
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
       });

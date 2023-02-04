@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {HttpClient, HttpHeaders} from '@angular/common/http';
+import {HttpClient} from '@angular/common/http';
 import {Observable} from "rxjs";
+import {AuthService} from "./auth.service";
 
 @Injectable({
   providedIn: 'root'
@@ -13,20 +14,10 @@ export class RidePayService {
   }
 
   public calculatePrice(estimatedLengthInKm: number, carType: string): Observable<number> {
-    let body = {
+    const body = {
       "estimatedLengthInKm": estimatedLengthInKm,
       "carType": carType
     }
-    return this.http.put<number>(this.ridePriceUrl, body, RidePayService.getHttpOptions());
-  }
-
-  public static getHttpOptions() {
-    console.log(localStorage.getItem('token'))
-    return {
-      headers: new HttpHeaders({
-        'Access-Control-Allow-Origin': '*',
-        'Authorization': localStorage.getItem('token') || 'authkey',
-      })
-    };
+    return this.http.put<number>(this.ridePriceUrl, body, AuthService.getHttpOptions());
   }
 }

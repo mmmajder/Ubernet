@@ -1,0 +1,50 @@
+<div class="spinner-container" *ngIf="dataSource.loading$ | async">
+  <mat-spinner></mat-spinner>
+</div>
+<mat-table [dataSource]="dataSource" matSort matSortActive="start" matSortDirection="desc" matSortDisableClear>
+
+  <ng-container matColumnDef="id">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>ID</mat-header-cell>
+    <mat-cell *matCellDef="let ride">{{ride.id}}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="route">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Route</mat-header-cell>
+    <mat-cell *matCellDef="let ride">{{ride.route}}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="price">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Price</mat-header-cell>
+    <mat-cell *matCellDef="let ride">{{ride.price}}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="start">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>Start</mat-header-cell>
+    <mat-cell *matCellDef="let ride">{{ride.start}}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="end">
+    <mat-header-cell *matHeaderCellDef mat-sort-header>End</mat-header-cell>
+    <mat-cell *matCellDef="let ride">{{ride.end}}</mat-cell>
+  </ng-container>
+
+  <ng-container matColumnDef="details">
+    <mat-header-cell *matHeaderCellDef>Details</mat-header-cell>
+    <mat-cell *matCellDef="let ride">
+      <button (click)="detailsAboutRide(ride.id)" mat-icon-button color="primary">
+        <mat-icon>article</mat-icon>
+      </button>
+    </mat-cell>
+  </ng-container>
+
+  <mat-header-row *matHeaderRowDef="displayedColumns"></mat-header-row>
+  <mat-row *matRowDef="let row; columns: displayedColumns"></mat-row>
+
+  <tr *matNoDataRow>
+    <td>No data matching the filters</td>
+  </tr>
+</mat-table>
+<mat-paginator [pageSize]="10"
+               [length]="dataSource.totalNumber$ | async"
+               showFirstLastButtons
+               [pageSizeOptions]="[5, 10, 50]"></mat-paginator>

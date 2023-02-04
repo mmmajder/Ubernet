@@ -2,27 +2,36 @@
   <link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"/>
   <link rel="stylesheet" href="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.css"/>
   <script src="https://unpkg.com/leaflet-routing-machine@3.2.12/dist/leaflet-routing-machine.js"></script>
+  <link
+    rel="stylesheet"
+    href="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.css"
+  />
+  <script src="https://unpkg.com/leaflet-geosearch@3.0.0/dist/geosearch.umd.js"></script>
 </head>
-<app-sidenav></app-sidenav>
-<!--<div>-->
-  <ng-container [ngSwitch]="userRole">
-    <app-search-directions-unauthorised *ngSwitchCase="userRoles.UNAUTHORIZED"
-                                        (addPinsToMap)="drawSearchedRoute($event)"
-                                        (getSelectedCarType)="setSelectedCarType($event)"
-                                        [estimatedTime]="estimatedTimeSearch"
-                                        [estimatedPrice]="estimatedPriceSearch"></app-search-directions-unauthorised>
-    <app-search-directions-customer *ngSwitchCase="userRoles.CUSTOMER"
-                                    (addPinsToMap)="drawSearchedRoute($event)"
-                                    (getSelectedCarType)="setSelectedCarType($event)"
-                                    [estimatedTime]="estimatedTimeSearch"
-                                    [estimatedPrice]="estimatedPriceSearch"></app-search-directions-customer>
-  </ng-container>
+<app-navbar currentPage="map" *ngIf="userRole!==userRoles.UNAUTHORIZED"></app-navbar>
+<ng-container [ngSwitch]="userRole">
+  <app-search-directions-unauthorised *ngSwitchCase="userRoles.UNAUTHORIZED"
+                                      (addPinsToMap)="drawSearchedRoute($event)"
+                                      (getSelectedCarType)="setSelectedCarType($event)"
+                                      [estimations]="estimations"></app-search-directions-unauthorised>
+  <app-search-directions-customer *ngSwitchCase="userRoles.CUSTOMER"
+                                  (addPinsToMap)="drawSearchedRoute($event)"
+                                  (getSelectedCarType)="setSelectedCarType($event)"
+                                  (optimizeByPrice)="optimizeRouteByPrice()"
+                                  (optimizeByTime)="optimizeRouteByTime()"
+                                  [estimations]="estimations"
+                                  [selectedRoute]="selectedRoute"
+                                  [loggedUser]="loggedUser"
+                                  [allAlternatives]="allRoutesSearch">
+  </app-search-directions-customer>
+  <app-notification-driver *ngSwitchCase="userRoles.DRIVER" [loggedUser]="loggedUser"
+                           (updateRouteDisplay)="initRouteDriver()"
+  ></app-notification-driver>
+</ng-container>
 
-  <div class="map-container">
-      <div class="map-frame">
-        <div id="map">
-        </div>
-      </div>
+<div class="map-container">
+  <div class="map-frame">
+    <div id="map">
+    </div>
   </div>
-<!--</div>-->
-
+</div>

@@ -26,6 +26,6 @@ export class CustomersState {
       .pipe(tap((customers: SimpleUser[]) =>
         ctx.setState(customers)
       ));
-  };
+  }
 
 }

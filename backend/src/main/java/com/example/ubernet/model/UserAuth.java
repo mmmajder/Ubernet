@@ -3,12 +3,9 @@ package com.example.ubernet.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
-import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -22,6 +19,7 @@ public class UserAuth {
     private long id;
 
     private String verificationCode;
+    private String resetPasswordCode;
     private Boolean isEnabled;
     private Timestamp lastPasswordSet;
     private Boolean deleted = false;

@@ -14,8 +14,9 @@ import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
 import {LoginComponent} from "./components/login/login.component";
-import { HomepageContainerComponent } from './container/homepage-container/homepage-container.component';
-import { RegistrationComponent } from './components/registration/registration.component';
+import {HomepageContainerComponent} from './container/homepage-container/homepage-container.component';
+import {RegistrationComponent} from './components/registration/registration.component';
+import {SocialLoginModule} from "@abacritt/angularx-social-login";
 
 @NgModule({
   declarations: [
@@ -23,27 +24,28 @@ import { RegistrationComponent } from './components/registration/registration.co
     LoginComponent,
     RegistrationComponent
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-  ],
-    exports: [
-        HomepageContainerComponent,
-        RegistrationComponent
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        SocialLoginModule
     ],
+  exports: [
+    HomepageContainerComponent,
+    RegistrationComponent
+  ],
   bootstrap: [HomepageContainerComponent]
 })
 export class HomepageModule {

@@ -5,7 +5,8 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
+import javax.persistence.Version;
+
 
 @Entity
 @NoArgsConstructor
@@ -16,13 +17,15 @@ public class Car {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
-    private long id;
+    private Long id;
 
     private Boolean deleted=false;
     @OneToOne
     private Position position;
-    @OneToMany
-    private List<Position> destinations;
+
+    @OneToOne
+    private Navigation navigation;
+
     @OneToOne
     private CarType carType;
     private Boolean isAvailable;
@@ -31,4 +34,31 @@ public class Car {
     private Driver driver;
     private Boolean allowsBaby;
     private Boolean allowsPet;
+    private String plates;
+    private String name;
+
+    @Version
+    private int version;
+
+    @Override
+    public String toString() {
+        return "Car{" +
+                "id=" + id +
+                ", deleted=" + deleted +
+                ", position=" + position +
+                ", navigation=" + navigation +
+                ", carType=" + carType +
+                ", isAvailable=" + isAvailable +
+//                ", driver=" + driver.getName() +
+                ", allowsBaby=" + allowsBaby +
+                ", allowsPet=" + allowsPet +
+                ", plates='" + plates + '\'' +
+                ", name='" + name + '\'' +
+                '}';
+    }
+
+    public Car(Long id, String plates) {
+        this.id = id;
+        this.plates = plates;
+    }
 }

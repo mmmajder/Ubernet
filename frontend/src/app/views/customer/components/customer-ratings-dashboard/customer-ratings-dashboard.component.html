@@ -1,19 +1,36 @@
 <mat-card class="dashboard-card">
-  <mat-card-header>Recent rides</mat-card-header>
+  <mat-card-title>Recent rides</mat-card-title>
+  <mat-card-subtitle *ngIf="rides.length > 0">Click on the icon to rate your recent ride</mat-card-subtitle>
   <mat-card-content class="scrollable" *ngIf="rides.length > 0">
     <mat-list>
       <mat-list-item *ngFor="let ride of rides">
-        <div mat-line>
-          <span class="route-name">{{ride.time}}</span>
-          <span class="time-left"> &nbsp;&nbsp;{{ride.timeToRate}} left to rate</span>
+        <mat-icon matListItemIcon style="color: var(--yellow); cursor: pointer"
+                  [matTooltip]="'See actions'" [matTooltipPosition]="'below'"
+                  [matMenuTriggerFor]="menu">directions_car
+        </mat-icon>
+        <mat-menu #menu="matMenu">
+          <button mat-menu-item (click)="openRatingsDialog(ride)">
+            <mat-icon style="color: var(--yellow); cursor: pointer">
+              star
+            </mat-icon>
+            Rate this ride
+          </button>
+          <button mat-menu-item (click)="openRideDetails(ride.rideId)">
+            <mat-icon>article</mat-icon>
+            See details about ride
+          </button>
+        </mat-menu>
+        <div matListItemLine>
+          <span class="route-name">{{ride.rideDate}}</span>
+          <span class="time-left" *ngIf="ride.daysLeftToRate > 0"> &nbsp;&nbsp;{{ride.daysLeftToRate}} left to rate</span>
+          <span class="time-left" *ngIf="ride.daysLeftToRate === 0"> &nbsp;&nbsp;less than a day left</span>
         </div>
-        <div mat-line><span class="start-end">{{ride.start}} - {{ride.destination}}</span></div>
-        <mat-icon style="color: var(--yellow); cursor: pointer" (click)="openRatingsDialog(ride)" [matTooltip]="'Rate this ride'" [matTooltipPosition]="'below'">star</mat-icon>
+        <div matListItemLine><span class="start-end">{{ride.route}}</span></div>
         <mat-divider></mat-divider>
       </mat-list-item>
     </mat-list>
   </mat-card-content>
-  <mat-card-content *ngIf="rides.length == 0" style="text-align: center;">
+  <mat-card-content *ngIf="rides.length === 0" style="text-align: center;">
     <img src="../../../../../assets/nothing-to-rate.png" style="height: 250px" alt="nothing-to-rate">
   </mat-card-content>
 </mat-card>

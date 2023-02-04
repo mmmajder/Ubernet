@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @Entity
@@ -18,8 +19,10 @@ public class DriverDailyActivity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
-    private double totalDuration;
-    private LocalDateTime lastTimeSetActive;
+
+    @OneToMany
+    private List<DriverActivityPeriod> periodsInLast24h;
+    private LocalDateTime lastPeriodStart;
     private Boolean isActive;
     private Boolean deleted = false;
 }

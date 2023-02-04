@@ -1,0 +1,14 @@
+table {
+  width: 100%;
+}
+
+.mat-column-id,
+.mat-column-details,
+.mat-column-price {
+  max-width: 60px;
+}
+
+.mat-column-start,
+.mat-column-end {
+  max-width: 150px;
+}

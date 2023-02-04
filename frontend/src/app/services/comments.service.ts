@@ -16,16 +16,16 @@ export class CommentsService {
   }
 
   public getComments(userEmail: string): Observable<Comment[]> {
-    console.log(userEmail)
     return this.http.get<Comment[]>(this.commentsUrl + "/get-comments/" + userEmail, AuthService.getHttpOptions());
   }
 
-  public addComments(userEmail: string, adminEmail: string, content: string): Observable<Object> {
-    let body = {
+  public addComments(userEmail: string, adminEmail: string, content: string): Observable<void> {
+    const body = {
+      'userEmail': userEmail,
       'adminEmail': adminEmail,
       'content': content
     }
-    return this.http.post<Object>(this.commentsUrl + "/add-comment/" + userEmail, body, AuthService.getHttpOptions());
+    return this.http.post<void>(this.commentsUrl + "/add-comment", body, AuthService.getHttpOptions());
   }
 
 }

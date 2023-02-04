@@ -1,47 +1,57 @@
-import {Component, OnInit} from '@angular/core';
-import {FavoriteRoute} from "../../../../../model/FavoriteRoute";
+import {Component} from '@angular/core';
+import {FavoriteRouteItem} from "../../../../../model/FavoriteRoute";
+import {FavoriteRoutesService} from "../../../../../services/favorite-routes.service";
+import {CurrentlyLogged} from "../../../../../store/actions/loggedUser.actions";
+import {Store} from "@ngxs/store";
+import {Router} from "@angular/router";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.component.html',
   styleUrls: ['./favorites.component.css']
 })
-export class FavoritesComponent implements OnInit {
-  favorites: FavoriteRoute[] = [{
-      "name": "Kuća-poso",
-      "start": "Danila Kiša 12",
-      "destination": "Bulevar Evrope 56"
-    },
-    {
-      "name": "Poso-kuća",
-      "start": "Bulevar Evrope 56",
-      "destination": "Danila Kiša 12"
-    },
-    {
-      "name": "Kuća-poso",
-      "start": "Danila Kiša 12",
-      "destination": "Bulevar Evrope 56"
-    },
-    {
-      "name": "Poso-kuća",
-      "start": "Bulevar Evrope 56",
-      "destination": "Danila Kiša 12"
-    },
-    {
-      "name": "Kuća-poso",
-      "start": "Danila Kiša 12",
-      "destination": "Bulevar Evrope 56"
-    },
-    {
-      "name": "Poso-kuća",
-      "start": "Bulevar Evrope 56",
-      "destination": "Danila Kiša 12"
-    }];
+export class FavoritesComponent {
+  customerEmail: string;
+  favorites: FavoriteRouteItem[] = [];
 
-  constructor() {
+  constructor(private router: Router, private service: FavoriteRoutesService, private _snackBar: MatSnackBar, private store: Store) {
+    this.store.dispatch(new CurrentlyLogged()).subscribe({
+      next: (resp) => {
+        if (resp.loggedUser.role == "CUSTOMER") {
+          this.customerEmail = resp.loggedUser.email;
+          this.getFavorites();
+        }
+      }
+    });
   }
 
-  ngOnInit(): void {
+  getFavorites() {
+    this.service.getFavoriteRoutes(this.customerEmail).subscribe({
+      next: (value: FavoriteRouteItem[]) => this.favorites = value,
+      error: err => console.log(err)
+    })
   }
 
+  removeFromFavorites(rideId: number) {
+    this.service.removeFromFavoriteRoutes(this.customerEmail, rideId).subscribe({
+      next: () => this.removeRide(rideId),
+      error: () => this._snackBar.open("Something went wrong!", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
+    })
+  }
+
+  private removeRide(rideId: number) {
+    for (let i = 0; i < this.favorites.length; i++) {
+      if (this.favorites[i].rideId === rideId) {
+        this.favorites.splice(i, 1);
+      }
+    }
+  }
+
+  orderRide(rideId: number) {
+    this.router.navigate(["/map", rideId])
+  }
 }

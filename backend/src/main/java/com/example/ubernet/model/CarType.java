@@ -18,7 +18,7 @@ public class CarType {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
-    private long id;
+    private Long id;
     private String name;
     private Double priceForType;
     private Boolean deleted = false;

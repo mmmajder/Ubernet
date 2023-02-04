@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {CurrentlyLogged} from "../../../store/actions/loggedUser.actions";
 import {User} from "../../../model/User";
 import {Store} from "@ngxs/store";
 import {Router} from "@angular/router";
@@ -25,9 +24,7 @@ export class ProfileContainerComponent implements OnInit {
         this.user.city = resp.city;
         this.user.email = resp.email;
         this.user.role = resp.role;
-      },
-      error: () => this.router.navigate(['/'])
+      }
     });
   }
-
 }

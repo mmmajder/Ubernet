@@ -1,7 +1,9 @@
-mat-list-item {
+mat-list-item:hover {
+  background: var(--light-gray);
   cursor: pointer;
 }
 
-mat-list-item:hover {
-  background: var(--light-gray);
+.chat-scrollable {
+  overflow-y: scroll;
+  height: 400px;
 }

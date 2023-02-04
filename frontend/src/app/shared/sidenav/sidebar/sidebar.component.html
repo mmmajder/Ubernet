@@ -1,0 +1,63 @@
+<div class="sidebar" [ngClass]="{ 'active': isActive }">
+  <div class="logo_content">
+    <i class="bx bx-menu" (click)="isActive = !isActive" id="menu-btn"></i>
+  </div>
+  <ul>
+    <li *ngIf="userRole === 'CUSTOMER'">
+      <a (click)="navigate('/dashboard')" [ngClass]="{ 'currentPage': currentPage === 'dashboard' }">
+        <mat-icon>dashboard</mat-icon>
+        <span class="links_name">Dashboard</span>
+      </a>
+      <span class="tooltip">Dashboard</span>
+    </li>
+    <li *ngIf="userRole === 'ADMIN'">
+      <a (click)="navigate('/users')" [ngClass]="{ 'currentPage': currentPage === 'users' }">
+        <mat-icon>groups</mat-icon>
+        <span class="links_name">Users</span>
+      </a>
+      <span class="tooltip">Users</span>
+    </li>
+    <li>
+      <a (click)="navigate('/map')" [ngClass]="{ 'currentPage': currentPage === 'map' }">
+        <mat-icon>location_pin</mat-icon>
+        <span class="links_name">Map</span>
+      </a>
+      <span class="tooltip">Map</span>
+    </li>
+    <li>
+      <a (click)="navigate('/analytics')" [ngClass]="{ 'currentPage': currentPage === 'analytics' }">
+        <mat-icon>query_stats</mat-icon>
+        <span class="links_name">Analytics</span>
+      </a>
+      <span class="tooltip">Analytics</span>
+    </li>
+    <li>
+      <a (click)="navigate('/profile')" [ngClass]="{ 'currentPage': currentPage === 'profile' }">
+        <mat-icon>person</mat-icon>
+        <span class="links_name">My Profile</span>
+      </a>
+      <span class="tooltip">My Profile</span>
+    </li>
+    <li *ngIf="userRole === 'ADMIN'">
+      <a (click)="navigate('/chat')" [ngClass]="{ 'currentPage': currentPage === 'chat' }">
+        <mat-icon>message</mat-icon>
+        <span class="links_name">Messages</span>
+      </a>
+      <span class="tooltip">Messages</span>
+    </li>
+    <li>
+      <a (click)="navigate('/rides')" [ngClass]="{ 'currentPage': currentPage === 'rides' }">
+        <mat-icon>directions_car</mat-icon>
+        <span class="links_name">Rides History</span>
+      </a>
+      <span class="tooltip">Rides History</span>
+    </li>
+    <li>
+      <a (click)="logout()">
+        <mat-icon>logout</mat-icon>
+        <span class="links_name">Log out</span>
+      </a>
+      <span class="tooltip">Log out</span>
+    </li>
+  </ul>
+</div>

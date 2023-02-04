@@ -1,0 +1,47 @@
+<app-navbar currentPage="analytics"></app-navbar>
+<div style="margin-left: 90px; margin-right: 10px">
+  <div class="filter-container">
+    <h1 style="font-weight: 400; margin-top: 20px" id="analyticsHeader">Analytics</h1>
+    <p class="param">Choose start and end date, so that you can get chart with data in that period of time.</p>
+
+    <mat-form-field appearance="outline" color="primary" style="width: 300px">
+      <mat-label>Choose date range</mat-label>
+      <mat-date-range-input
+        [formGroup]="campaignOne"
+        [rangePicker]="campaignOnePicker">
+        <input (dateInput)="getData()" (dateChange)="getData()" matStartDate
+               [(ngModel)]="startDate" placeholder="Start date"
+               formControlName="start">
+        <input (dateInput)="getData()" (dateChange)="getData()" matEndDate
+               [(ngModel)]="endDate" placeholder="End date" formControlName="end">
+      </mat-date-range-input>
+      <mat-hint>Date format: MM/DD/YYYY</mat-hint>
+      <mat-datepicker-toggle matSuffix [for]="campaignOnePicker"></mat-datepicker-toggle>
+      <mat-date-range-picker #campaignOnePicker></mat-date-range-picker>
+    </mat-form-field>
+  </div>
+
+  <div *ngIf="chart1">
+    <div style="margin-left: 20px; margin-top: 10px">
+      <h3>In average, you were spending <b>{{averageSpent | number:'1.2-2' }} tokens</b> a day in the selected
+        period.<br>
+        In total, you spent <b>{{totalSpent | number:'1.2-2' }} tokens</b> in the selected period of time.</h3>
+    </div>
+    <hr style="width: 100%">
+    <div class="divChart">
+      <canvas id="myChart1"></canvas>
+    </div>
+    <hr style="width: 100%">
+    <div class="divChart">
+      <canvas id="myChart2"></canvas>
+    </div>
+    <hr style="width: 100%">
+    <div class="divChart">
+      <canvas id="myChart3"></canvas>
+    </div>
+  </div>
+
+  <div *ngIf="!chart1" style="text-align: center;">
+    <img src="assets/no-chart.png" style="height: 300px" alt="no-chart">
+  </div>
+</div>

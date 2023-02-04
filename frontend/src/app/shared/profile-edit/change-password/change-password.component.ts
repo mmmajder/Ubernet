@@ -3,6 +3,8 @@ import {FormControl, Validators} from "@angular/forms";
 import {UserService} from "../../../services/user.service";
 import {AuthService} from "../../../services/auth.service";
 import {PasswordChangeInfo} from "../../../model/PasswordChangeInfo";
+import {User} from "../../../model/User";
+import {MatSnackBar} from "@angular/material/snack-bar";
 
 @Component({
   selector: 'app-change-password',
@@ -10,42 +12,51 @@ import {PasswordChangeInfo} from "../../../model/PasswordChangeInfo";
   styleUrls: ['./change-password.component.css']
 })
 export class ChangePasswordComponent implements OnInit {
-  hideCurrentPassword: boolean = true;
-  hideNewPassword: boolean = true;
-  hideReEnteredNewPassword: boolean = true;
+  hideCurrentPassword = true;
+  hideNewPassword = true;
+  hideReEnteredNewPassword = true;
 
-  currentPassword: any = "";
-  newPassword: any = "";
-  reEnteredNewPassword: any = "";
-  loggedUser: any = null;
+  currentPassword = "";
+  newPassword = "";
+  reEnteredNewPassword = "";
+  loggedUser: User;
 
   currentPasswordFormControl = new FormControl('', [Validators.required]);
   newPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
   reEnteredNewPasswordFormControl = new FormControl('', [Validators.required]);
 
-
-  constructor(private userService: UserService, private authService: AuthService) {}
+  constructor(private userService: UserService, private authService: AuthService, private _snackBar: MatSnackBar) {
+  }
 
   ngOnInit(): void {
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
-      //TODO should the loggedUser be taken like this? sometimes because of the async it's not working well
       this.loggedUser = data;
     });
   }
 
   changePassword(): void {
-    if (this.loggedUser === null || this.currentPassword === "" || this.newPassword === "" || this.newPassword !== this.reEnteredNewPassword)
-    {
-      console.log("something is not filled")
-      //TODO induce showing of errors on form fields
-      return
+    if (this.loggedUser === null) {
+      return;
+    } else if (this.currentPassword === "") {
+      this.openSnackBar("You have to enter current password.")
+    } else if (this.newPassword === "") {
+      this.openSnackBar("You have to enter new password.")
+    } else if (this.newPassword !== this.reEnteredNewPassword) {
+      this.openSnackBar("Passwords are not the same.")
+    } else {
+      const passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
+      this.userService.changePassword(this.loggedUser.email, passwordChangeInfo)
+        .subscribe({
+          next: () => this.openSnackBar("Password changed."),
+          error: () => this.openSnackBar("Your current password is not correct.")
+        });
     }
+  }
 
-    let passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
-    console.log(passwordChangeInfo);
-    this.userService.changePassword(this.loggedUser.email, passwordChangeInfo)
-      .subscribe((data) => {
-        console.log(data);
-      });
+  openSnackBar(message: string) {
+    this._snackBar.open(message, '', {
+      duration: 3000,
+      panelClass: ['snack-bar']
+    })
   }
 }

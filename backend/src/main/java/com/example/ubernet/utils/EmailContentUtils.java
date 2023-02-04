@@ -1,5 +1,10 @@
 package com.example.ubernet.utils;
 
+import com.example.ubernet.model.Customer;
+import com.example.ubernet.model.CustomerPayment;
+
+import java.util.Objects;
+
 public class EmailContentUtils {
     public static String getVerificationContent() {
         String title = "Verify your email address\r\n";
@@ -15,9 +20,17 @@ public class EmailContentUtils {
         return originalTemplate(title, body, buttonText);
     }
 
+    public static String getRideRequestContent(Customer caller, Customer receiver, Double price) {
+        String title = "You have been added to Uber ride\r\n";
+        String body = "Hi " + receiver.getName() + " " + receiver.getSurname() + "! " + caller.getName() + " " + caller.getSurname() + " invited you to " +
+                "go on the same ride and split fare!\r\nPrice: " + price + " \r\nClick the button below to accept the request.\r\n";
+        String buttonText = "Accept\r\n";
+        return originalTemplate(title, body, buttonText);
+    }
+
     private static String originalTemplate(String title, String body, String buttonText) {
         String button = "";
-        if (buttonText!="") {
+        if (!buttonText.equals("")) {
             button =  "                                    <a href=\"[[URL]]\" target=\"_blank\" style=\"font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.0; font-weight: bold; color: #ffffff; text-transform: uppercase; text-decoration: none; border-radius: 30px; -webkit-border-radius: 30px; -moz-border-radius: 30px; display: block; padding: 12px 25px 12px 25px;\">\r\n"
                     + buttonText
                     + "                                            </a>\r\n";
@@ -378,7 +391,6 @@ public class EmailContentUtils {
                 + "                                Ubernet\r\n"
                 + "                              </span>\r\n"
                 + "\r\n"
-                + "                              <img align=\"right\" style=\"max-width: 80px\" src=\"https://www.greenqueen.com.hk/wp-content/uploads/2022/04/co2-green-queen-1.jpg\" alt=\"Logo\"> </img>\r\n"
                 + "                            </div>\r\n"
                 + "                            \r\n"
                 + "                          </td>\r\n"

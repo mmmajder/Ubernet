@@ -1,10 +1,12 @@
 import {Injectable} from "@angular/core";
 import {Action, Selector, State, StateContext} from "@ngxs/store";
-import {Login, LoginSocial, Logout, Register, Verify} from "../actions/authentication.actions";
+import {Login, LoginSocial, Logout} from "../actions/authentication.actions";
 import {AuthService} from "../../services/auth.service";
 import {tap} from "rxjs";
 import {LoginResponseDto, UserTokenState} from "../../model/LoginResponseDto";
 import {UserRole} from "../../model/UserRole";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {Router} from "@angular/router";
 
 @State<LoginResponseDto>({
   name: 'auth',
@@ -28,7 +30,7 @@ export class AuthState {
     return !!state.token;
   }
 
-  constructor(private authService: AuthService) {
+  constructor(private router: Router, private authService: AuthService, private _snackBar: MatSnackBar) {
   }
 
   @Action(Login)
@@ -43,26 +45,11 @@ export class AuthState {
     );
   }
 
-  @Action(Register)
-  register(ctx: StateContext<string>, action: Register) {
-    return this.authService.register(action.payload).pipe(
-      tap((result: string) => {
-      })
-    );
-  }
-
-  @Action(Verify)
-  verify(ctx: StateContext<string>, action: Verify) {
-    return this.authService.verify(action.payload).pipe(
-      tap((result: string) => {
-      })
-    );
-  }
-
   @Action(LoginSocial)
   loginSocial(ctx: StateContext<LoginResponseDto>, action: LoginSocial) {
     return this.authService.loginSocial(action.payload).pipe(
       tap((result: LoginResponseDto) => {
+
         ctx.patchState({
           token: result.token,
           userRole: result.userRole
@@ -74,13 +61,22 @@ export class AuthState {
 
   @Action(Logout)
   logout(ctx: StateContext<LoginResponseDto>) {
-    const state = ctx.getState();
-    return this.authService.logout(state.token).pipe(
-      tap(() => {
-        ctx.setState({
-          token: new UserTokenState(),
-          userRole: UserRole.UNAUTHORIZED
-        });
+    return this.authService.logout().pipe(
+      tap({
+        next: () => {
+          ctx.setState({
+            token: new UserTokenState(),
+            userRole: UserRole.UNAUTHORIZED
+          });
+          localStorage.clear();
+        },
+        error: (message) => {
+          this._snackBar.open(message.error, '', {
+            duration: 3000,
+            panelClass: ['snack-bar']
+          })
+          this.router.navigate(['/map'])
+        }
       })
     );
   }

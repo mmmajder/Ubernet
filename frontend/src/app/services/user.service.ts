@@ -4,6 +4,11 @@ import {Observable} from "rxjs";
 import {Customer, User, UserDTO} from "../model/User";
 import {AuthService} from "./auth.service";
 import {PasswordChangeInfo} from "../model/PasswordChangeInfo";
+import {Fullname} from "../model/Fullname";
+
+export class StringResponse {
+  message: string
+}
 
 @Injectable({
   providedIn: 'root'
@@ -23,12 +28,23 @@ export class UserService {
   }
 
   public updateCustomerData(customer: Customer): Observable<UserDTO> {
-    let body = new UserDTO(customer.name, customer.surname, customer.phoneNumber, customer.city);
+    const body = new UserDTO(customer.name, customer.surname, customer.phoneNumber, customer.city);
     return this.http.put<UserDTO>(this.userUrl + "/profile?email=" + customer.email, body, AuthService.getHttpOptions());
   }
 
-  public changePassword(email: string, passwordChangeInfo: PasswordChangeInfo){
-    return this.http.put<Object>(this.authUrl + "/changePassword/" + email, passwordChangeInfo, AuthService.getHttpOptions());
+  public changePassword(email: string, passwordChangeInfo: PasswordChangeInfo): Observable<StringResponse> {
+    return this.http.put<StringResponse>(this.authUrl + "/changePassword/" + email, passwordChangeInfo, AuthService.getHttpOptions());
   }
 
+  public getUserFullName(email: string): Observable<Fullname> {
+    return this.http.get<Fullname>(this.userUrl + "/fullname/" + email, AuthService.getHttpOptions());
+  }
+
+  public blockUser(email: string) {
+    return this.http.post<boolean>(this.userUrl + "/block?email=" + email, AuthService.getHttpOptions());
+  }
+
+  public unblockUser(email: string) {
+    return this.http.post<boolean>(this.userUrl + "/unblock?email=" + email, AuthService.getHttpOptions());
+  }
 }

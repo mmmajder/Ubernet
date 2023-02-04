@@ -1,7 +1,8 @@
 import {Component, EventEmitter, Input, OnInit, Output} from '@angular/core';
-import {Position} from "../../../../model/Position";
+import {Place, Position} from "../../../../model/Position";
 import {MapService} from "../../../../services/map.service";
 import {CarTypeService} from "../../../../services/car-type.service";
+import {SearchEstimation} from "../../../../model/SearchEstimation";
 
 @Component({
   selector: 'app-search-directions-unauthorised',
@@ -10,17 +11,13 @@ import {CarTypeService} from "../../../../services/car-type.service";
 })
 export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   estimatesDisplayed: boolean
-  positions: Position[]
+  positions: Place[]
   fromValue: string;
   toValue: string;
   carType: string;
   carTypes: string[];
-
-  @Input()
-  estimatedTime: string;
-  @Input()
-  estimatedPrice: number
-  @Output() addPinsToMap = new EventEmitter<Position[]>();
+  @Input() estimations: SearchEstimation
+  @Output() addPinsToMap = new EventEmitter<Place[]>();
   @Output() getSelectedCarType = new EventEmitter<string>();
 
   constructor(private mapService: MapService, private carTypeService: CarTypeService) {
@@ -50,14 +47,17 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
 
   calculatePositionsSearch() {
     return new Promise(resolve => {
-      let destinations = [this.fromValue, this.toValue]
+      const destinations = [this.fromValue, this.toValue]
       for (let i = 0; i < destinations.length; i++) {
-        let destination = destinations[i]
+        const destination = destinations[i]
         this.mapService.findAddress(destination).subscribe((response) => {
-          let position = new Position()
+          const position = new Position()
           position.x = Object.values(response)[0].lon
           position.y = Object.values(response)[0].lat
-          this.positions[i] = position
+          this.positions[i] = {
+            "position": position,
+            "name": destination
+          }
         })
       }
       setTimeout(() => {
@@ -67,7 +67,6 @@ export class SearchDirectionsUnauthenticatedComponent implements OnInit {
   }
 
   changeCarType(event: string) {
-    console.log(event)
     this.carType = event
   }
 

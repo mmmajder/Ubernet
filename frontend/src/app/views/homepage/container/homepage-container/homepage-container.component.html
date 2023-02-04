@@ -9,89 +9,93 @@
     </header>
     <div class="row">
       <div class="col-md-6">
-        <h2 class="text-white font-weight-bold my-5" style="text-shadow: 2px 2px 4px #000000; line-height: 50px">A New Way<br> To Travel Smart</h2>
-        <a href="#" data-aos="fade" data-aos-easing="linear" data-aos-duration="1000" data-aos-once="true"
+        <h2 class="text-white font-weight-bold my-5" style="text-shadow: 2px 2px 4px #000000; line-height: 50px">A New
+          Way<br> To Travel Smart</h2>
+        <a href="/map" data-aos="fade" data-aos-easing="linear" data-aos-duration="1000" data-aos-once="true"
            class="btn my-4 font-weight-bold atlas-cta cta-green">
           LET'S EXPLORE</a>
       </div>
       <div class="col-md-6">
         <app-login id="login-form" (switchForm)="showForms()"></app-login>
-        <app-registration id="registation-form" class="fade"></app-registration>
+        <app-registration id="registation-form" (switchForm)="showForms()" class="fade"></app-registration>
       </div>
+    </div>
   </div>
-</div>
 
-<div class="container my-5 py-2">
-  <h2 class="text-center font-weight-bold my-5">Why should you choose us?</h2>
-  <div class="row">
-    <div data-aos="fade-up" data-aos-delay="0" data-aos-duration="1000" data-aos-once="true"
-         class="col-md-4 text-center">
-      <img src="assets/advantage-1.png" class="mx-auto advantage" alt="Location tracking">
-      <h4><b>Location tracking</b></h4>
-      <p>You can track all cars on our map. This way, you will know when to go outside and wait. Oh look, your ride is
-        just around the corner!</p>
-    </div>
-    <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000" data-aos-once="true"
-         class="col-md-4 text-center">
-      <img src="assets/advantage-2.png" class="mx-auto advantage" alt="High quality vehicles">
-      <h4><b>High quality vehicles</b></h4>
-      <p>All our cars are safe and comfortable. Some have baby seats and most of them are pet friendly, just remember to
-        ask for special requirements!</p>
-    </div>
-    <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000" data-aos-once="true"
-         class="col-md-4 text-center">
-      <img src="assets/advantage-3.png" class="mx-auto advantage" alt="Ride scheduling">
-      <h4><b>Ride scheduling</b></h4>
-      <p>If you know that you will need a ride in a specific time, you should schedule your ride. You can do it up to 5
-        hours in advance.</p>
+  <div class="container my-5 py-2">
+    <h2 class="text-center font-weight-bold my-5">Why should you choose us?</h2>
+    <div class="row">
+      <div data-aos="fade-up" data-aos-delay="0" data-aos-duration="1000" data-aos-once="true"
+           class="col-md-4 text-center">
+        <img src="assets/advantage-1.png" class="mx-auto advantage" alt="Location tracking">
+        <h4><b>Location tracking</b></h4>
+        <p>You can track all cars on our map. This way, you will know when to go outside and wait. Oh look, your ride is
+          just around the corner!</p>
+      </div>
+      <div data-aos="fade-up" data-aos-delay="200" data-aos-duration="1000" data-aos-once="true"
+           class="col-md-4 text-center">
+        <img src="assets/advantage-2.png" class="mx-auto advantage" alt="High quality vehicles">
+        <h4><b>High quality vehicles</b></h4>
+        <p>All our cars are safe and comfortable. Some have baby seats and most of them are pet friendly, just remember
+          to
+          ask for special requirements!</p>
+      </div>
+      <div data-aos="fade-up" data-aos-delay="400" data-aos-duration="1000" data-aos-once="true"
+           class="col-md-4 text-center">
+        <img src="assets/advantage-3.png" class="mx-auto advantage" alt="Ride scheduling">
+        <h4><b>Ride scheduling</b></h4>
+        <p>If you know that you will need a ride in a specific time, you should schedule your ride. You can do it up to
+          5
+          hours in advance.</p>
+      </div>
     </div>
   </div>
-</div>
 
-<!-- feature (skew background) -->
-<div class="jumbotron jumbotron-fluid feature" id="feature-first">
-  <div class="container my-5">
-    <div class="row justify-content-between text-center text-md-left">
-      <div data-aos="fade-right" data-aos-duration="1000" data-aos-once="true" class="col-md-6">
-        <h2 class="font-weight-bold">Take a look inside</h2>
-        <p class="my-4">Te iisque labitur eos, nec sale argumentum scribentur no,
-          <br> augue disputando in vim. Erat fugit sit at, ius lorem deserunt deterruisset no.</p>
-        <a href="#" class="btn my-4 font-weight-bold atlas-cta cta-blue">Learn More</a>
-      </div>
-      <div data-aos="fade-left" data-aos-duration="1000" data-aos-once="true" class="col-md-6 align-self-center">
-<!--        <img src="assets/feature-1.png" alt="Take a look inside" class="mx-auto d-block">-->
+  <!-- feature (skew background) -->
+  <div class="jumbotron jumbotron-fluid feature" id="feature-first">
+    <div class="container my-5">
+      <div class="row justify-content-between text-center text-md-left">
+        <div data-aos="fade-right" data-aos-duration="1000" data-aos-once="true" class="col-md-6">
+          <h2 class="font-weight-bold">Take a look inside</h2>
+          <p class="my-4">Our map is great! You can search locations, and we can optimize route by time and money. You
+            can
+            also add a few stops in your route if you have to pick someone up!</p>
+          <a href="/map" class="btn my-4 font-weight-bold atlas-cta cta-blue">Learn More</a>
+        </div>
+        <div data-aos="fade-left" data-aos-duration="1000" data-aos-once="true" class="col-md-6 align-self-center">
+          <img src="assets/screenshot1.png" alt="Take a look inside" class="mx-auto d-block">
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<div class="jumbotron jumbotron-fluid feature" id="feature-last">
-  <div class="container">
-    <div class="row justify-content-between text-center text-md-left">
-      <div data-aos="fade-left" data-aos-duration="1000" data-aos-once="true" class="col-md-6 flex-md-last">
-        <h2 class="font-weight-bold">Safe and reliable</h2>
-        <p class="my-4">
-          Duo suas detracto maiestatis ad, commodo lucilius invenire nec ad,
-          <br> eum et oratio disputationi. Falli lobortis his ad
-        </p>
-        <a href="#" class="btn my-4 font-weight-bold atlas-cta cta-blue">Learn More</a>
-      </div>
-      <div data-aos="fade-right" data-aos-duration="1000" data-aos-once="true"
-           class="col-md-6 align-self-center flex-md-first">
-<!--        <img src="assets/feature-2.png" alt="Safe and reliable" class="mx-auto d-block">-->
+  <div class="jumbotron jumbotron-fluid feature" id="feature-last">
+    <div class="container">
+      <div class="row justify-content-between text-center text-md-left">
+        <div data-aos="fade-left" data-aos-duration="1000" data-aos-once="true" class="col-md-6 flex-md-last">
+          <h2 class="font-weight-bold">Safe and reliable</h2>
+          <p class="my-4">
+            Our system remembers your previous rides, let you have your favorite routes, comment on drivers and our
+            vehicles. We also have support system in case you are having some troubles.
+          </p>
+          <a href="/map" class="btn my-4 font-weight-bold atlas-cta cta-blue">Learn More</a>
+        </div>
+        <div data-aos="fade-right" data-aos-duration="1000" data-aos-once="true"
+             class="col-md-6 align-self-center flex-md-first">
+          <img src="assets/screenshot2.png" alt="Safe and reliable" class="mx-auto d-block">
+        </div>
       </div>
     </div>
   </div>
-</div>
 
-<!-- copyright -->
-<div class="jumbotron jumbotron-fluid" id="copyright">
-  <div class="container">
-    <div class="row justify-content-between">
-      <div class="col-md-6 text-white align-self-center text-center text-md-left my-2">
-        Copyright © 2022 Krindž.
+  <!-- copyright -->
+  <div class="jumbotron jumbotron-fluid" id="copyright">
+    <div class="container">
+      <div class="row justify-content-between">
+        <div class="col-md-6 text-white align-self-center text-center text-md-left my-2">
+          Copyright © 2023 Krindž.
+        </div>
       </div>
     </div>
   </div>
-</div>
 </div>

@@ -1,6 +1,5 @@
 package com.example.ubernet.config;
 
-
 import com.example.ubernet.service.UserService;
 import com.example.ubernet.utils.TokenUtils;
 import com.example.ubernet.utils.auth.RestAuthenticationEntryPoint;
@@ -45,6 +44,10 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
         return super.authenticationManagerBean();
     }
 
+    public void setUserService(UserService userService) {
+        this.customUserDetailsService = userService;
+    }
+
     // Definisemo nacin utvrdjivanja korisnika pri autentifikaciji
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
@@ -63,9 +66,6 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     // Injektujemo implementaciju iz TokenUtils klase kako bismo mogli da koristimo njene metode za rad sa JWT u TokenAuthenticationFilteru
     @Autowired
     private TokenUtils tokenUtils;
-
-    @Autowired
-    private UserService userService;
 
     // Definisemo prava pristupa za zahteve ka odredjenim URL-ovima/rutama
     @Override

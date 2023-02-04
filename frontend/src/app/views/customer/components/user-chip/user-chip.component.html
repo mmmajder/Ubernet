@@ -1,0 +1,8 @@
+<mat-chip-listbox style="display: inline-flex" aria-label="Friends"
+                  *ngFor="let customer of customers" (click)="openUserDialog(customer)">
+  <mat-chip>
+    <img matChipAvatar [src]="photo"
+         alt="avatar"/>
+    {{customer.email}}
+  </mat-chip>
+</mat-chip-listbox>

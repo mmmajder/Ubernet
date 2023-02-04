@@ -1,0 +1,17 @@
+.filter-container {
+  margin-left: 20px;
+}
+
+.param {
+  font-weight: 400;
+  margin-top: -10px;
+}
+
+::ng-deep .mdc-text-field--outlined {
+  background-color: white !important;
+  border-radius: 5px !important;
+}
+
+mat-form-field {
+  margin: 5px;
+}

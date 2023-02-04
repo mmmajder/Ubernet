@@ -1,3 +1,4 @@
+<app-navbar currentPage="dashboard"></app-navbar>
 <img src="assets/taxi.jpg" class="dashboard-background" alt="dashboard-background"/>
 <div class="container" style="margin-top: -60px">
   <div class="row">
@@ -5,10 +6,7 @@
       <app-favorites></app-favorites>
     </div>
     <div class="col-md-6">
-      <mat-card class="dashboard-card">
-        <mat-card-header>Activity log</mat-card-header>
-        <app-activity-log></app-activity-log>
-      </mat-card>
+      <app-customer-ratings-dashboard></app-customer-ratings-dashboard>
     </div>
   </div>
   <div class="row">
@@ -16,7 +14,18 @@
       <app-customers-upcoming-rides></app-customers-upcoming-rides>
     </div>
     <div class="col-md-6">
-      <app-customer-ratings-dashboard></app-customer-ratings-dashboard>
+      <mat-card class="dashboard-card">
+        <mat-card-title>Terms and conditions</mat-card-title>
+        <br>
+        <mat-card-subtitle>In Ubernet, we are using tokens. You can see the amounts of tokens that you currently have on navbar.</mat-card-subtitle>
+        <mat-card-subtitle>Whenever you want, you can add more tokens with our Paypal integration.</mat-card-subtitle>
+        <br>
+        <mat-card-subtitle>You can split a ride with your friends. Everybody gets to pay the same amount of money.</mat-card-subtitle>
+        <mat-card-subtitle>If you invite your friends to split fair, they will get email notification.</mat-card-subtitle>
+        <mat-card-subtitle>Your ride will be ordered when everyone agrees to split fair.</mat-card-subtitle>
+        <br>
+        <mat-card-subtitle>If you want to reserve a ride, you can do it up to 5 hours in the future.</mat-card-subtitle>
+      </mat-card>
     </div>
   </div>
 </div>

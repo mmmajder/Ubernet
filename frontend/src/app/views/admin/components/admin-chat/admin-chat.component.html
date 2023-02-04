@@ -1,7 +1,7 @@
-<div>
-  <mat-list class="chat-scrollable">
-    <mat-list-item *ngFor="let message of messages">
-      <app-message [message]="message"></app-message>
-    </mat-list-item>
-  </mat-list>
+<div class="chat-scrollable">
+  <div *ngFor="let message of messages">
+    <p>
+      <app-message [message]="message" [isUserAdmin]="true"></app-message>
+    </p>
+  </div>
 </div>

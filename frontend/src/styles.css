@@ -20,7 +20,6 @@ body {
   --red: #CF0A0A;
   --gray: #8c8c8c;
   --light-gray: #f4f4f4;
-  --pink: #9C27B0;
   --green: #23CE6B;
   --white: #F6F8FF;
   --border-radius: 12px;
@@ -110,3 +109,19 @@ mat-card {
 th.mat-header-cell, td.mat-cell, td.mat-footer-cell {
   border-bottom-width: 0.5px !important;
 }
+
+button:focus,
+mat-form-field {
+  outline: none;
+}
+
+/*.dashboard-card-header {*/
+/*  margin-top: 5px;*/
+/*  font-size: 15px;*/
+/*  font-weight: 500;*/
+/*  color: var(--dark-gray);*/
+/*}*/
+
+/*mat-card {*/
+/*  padding: 10px !important;*/
+/*}*/

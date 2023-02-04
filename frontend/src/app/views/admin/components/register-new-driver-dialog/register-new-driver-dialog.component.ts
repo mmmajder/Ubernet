@@ -1,59 +1,80 @@
-import { Component, OnInit } from '@angular/core';
-import {FormBuilder, FormControl, Validators} from "@angular/forms";
-import {map, Observable} from "rxjs";
-import {BreakpointObserver} from "@angular/cdk/layout";
-import {StepperOrientation} from "@angular/cdk/stepper";
+import {Component} from '@angular/core';
+import {FormBuilder, Validators} from "@angular/forms";
+import {CarTypeService} from "../../../../services/car-type.service";
+import {AuthService} from "../../../../services/auth.service";
+import {MatSnackBar} from "@angular/material/snack-bar";
+import {MatDialogRef} from "@angular/material/dialog";
 
 @Component({
   selector: 'app-register-new-driver-dialog',
   templateUrl: './register-new-driver-dialog.component.html',
   styleUrls: ['./register-new-driver-dialog.component.css']
 })
-export class RegisterNewDriverDialogComponent implements OnInit {
-
-  emailFormControl = new FormControl('', [Validators.required, Validators.email]);
-  phoneFormControl = new FormControl('', [Validators.required]);
-  nameFormControl = new FormControl('', [Validators.required]);
-  lastNameFormControl = new FormControl('', [Validators.required]);
-  cityFormControl = new FormControl('', [Validators.required]);
-  passwordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
-  password2FormControl = new FormControl('', [Validators.required]);
-
-  firstFormGroup = this._formBuilder.group({
-    emailFormCtr: ['', Validators.required, Validators.email],
+export class RegisterNewDriverDialogComponent {
+  formGroup = this._formBuilder.group({
+    emailFormCtr: ['', [Validators.required, Validators.email]],
     phoneFormCtr: ['', Validators.required],
     nameFormCtr: ['', Validators.required],
     lastNameFormCtr: ['', Validators.required],
     cityFormCtr: ['', Validators.required],
-    passwordFormCtr: ['', Validators.required, Validators.minLength(6)],
-    password2FormCtr: ['', Validators.required, Validators.minLength(6)]
+    passwordFormCtr: ['', [Validators.required, Validators.minLength(6)]],
+    password2FormCtr: ['', [Validators.required, Validators.minLength(6)]],
+    platesFormCtr: ['', Validators.required],
+    carNameFormCtr: ['', Validators.required],
   });
-  secondFormGroup = this._formBuilder.group({
-    secondCtrl: ['', Validators.required],
-  });
-  thirdFormGroup = this._formBuilder.group({
-    thirdCtrl: ['', Validators.required],
-  });
-  stepperOrientation: Observable<StepperOrientation>;
 
-  email: string = "";
-  phoneNumber: string = "";
-  password: string = "";
-  password2: string = "";
-  name: string = "";
-  lastName: string = "";
-  city: string = "";
+  email = "";
+  phoneNumber = "";
+  password = "";
+  password2 = "";
+  name = "";
+  lastName = "";
+  city = "";
 
-  hide: boolean = true;
-  hide2: boolean = true;
+  hide = true;
+  hide2 = true;
+  allowsBaby = false;
+  allowsPet = false;
+  canRegister = false;
+  selectedCarType = "";
+  carTypes: string[] = [];
+  plates: string;
+  indexOfCarType = 0;
+  carName = "";
 
-  constructor(private _formBuilder: FormBuilder, breakpointObserver: BreakpointObserver) {
-    this.stepperOrientation = breakpointObserver
-      .observe('(min-width: 800px)')
-      .pipe(map(({matches}) => (matches ? 'horizontal' : 'vertical')));
+  constructor(public dialogRef: MatDialogRef<RegisterNewDriverDialogComponent>, private _snackBar: MatSnackBar, private _formBuilder: FormBuilder, private authService: AuthService, private carTypeService: CarTypeService) {
+    this.carTypeService.getCarTypes()
+      .subscribe(types => {
+        for(const type of types)
+          this.carTypes.push(type.name);
+        this.selectedCarType = this.carTypes[0];
+      });
   }
 
-  ngOnInit(): void {
+  registerDriver() {
+    this.authService.registerDriver({
+      "email": this.email,
+      "name": this.name,
+      "surname": this.lastName,
+      "password": this.password,
+      "phoneNumber": this.phoneNumber,
+      "city": this.city,
+      "allowsPets": this.allowsPet,
+      "allowsBabies": this.allowsBaby,
+      "carName": this.carName,
+      "carType": this.selectedCarType,
+      "plates": this.plates
+    }).subscribe({
+      next: () => {
+        this._snackBar.open("Driver added successfully.", '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        })
+      },
+      error: () => this._snackBar.open("Error occurred.", '', {
+        duration: 3000,
+        panelClass: ['snack-bar']
+      })
+    });
   }
-
 }

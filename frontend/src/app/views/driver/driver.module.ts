@@ -13,47 +13,46 @@ import {CommonModule} from "@angular/common";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
-import {DriverContainerComponent} from "./container/dashboard-driver-container/driver-container.component";
 import {ProfileDriverContainerComponent} from './container/profile-driver-container/profile-driver-container.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {MatListModule} from "@angular/material/list";
 import {CustomerModule} from "../customer/customer.module";
-import {DriverAvailabilityComponent} from './components/driver-availability/driver-availability.component';
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {CarSettingsComponent} from './components/car-settings/car-settings.component';
 import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSelectModule} from "@angular/material/select";
+import {DriverRequestChangeComponent} from "./components/driver-request-change/driver-request-change.component";
 
 @NgModule({
   declarations: [
-    DriverContainerComponent,
     ProfileDriverContainerComponent,
-    DriverAvailabilityComponent,
-    CarSettingsComponent
+    CarSettingsComponent,
+    DriverRequestChangeComponent,
   ],
-  imports: [
-    MatToolbarModule,
-    MatIconModule,
-    MatButtonModule,
-    MatTableModule,
-    MatCardModule,
-    MatSortModule,
-    MatFormFieldModule,
-    MatInputModule,
-    MatDialogModule,
-    FormsModule,
-    CommonModule,
-    MatSnackBarModule,
-    ReactiveFormsModule,
-    MatMenuModule,
-    SharedModule,
-    MatTabsModule,
-    MatListModule,
-    CustomerModule,
-    MatSlideToggleModule,
-    MatCheckboxModule,
-  ],
+    imports: [
+        MatToolbarModule,
+        MatIconModule,
+        MatButtonModule,
+        MatTableModule,
+        MatCardModule,
+        MatSortModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatDialogModule,
+        FormsModule,
+        CommonModule,
+        MatSnackBarModule,
+        ReactiveFormsModule,
+        MatMenuModule,
+        SharedModule,
+        MatTabsModule,
+        MatListModule,
+        CustomerModule,
+        MatSlideToggleModule,
+        MatCheckboxModule,
+        MatSelectModule,
+    ],
   exports: [
-    DriverContainerComponent,
     ProfileDriverContainerComponent
   ]
 })

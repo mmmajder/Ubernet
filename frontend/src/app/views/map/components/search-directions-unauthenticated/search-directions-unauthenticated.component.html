@@ -18,7 +18,7 @@
         <input matInput [(ngModel)]="toValue">
       </mat-form-field>
     </div>
-    <mat-form-field appearance="outline" style="width: 100%; padding-right:20px">
+    <mat-form-field appearance="outline" style="width: 100%;">
       <mat-label>Choose one</mat-label>
       <mat-select [ngModel]="carType" (ngModelChange)="changeCarType($event)">
         <mat-option *ngFor="let type of carTypes" [value]="type">{{type}}</mat-option>
@@ -27,10 +27,10 @@
     <mat-card-actions>
       <button mat-raised-button color="primary" style="width: 100%" (click)="showEstimates()">Search</button>
     </mat-card-actions>
-    <div *ngIf="estimatesDisplayed==true">
+    <div *ngIf="estimations!==undefined">
       <hr>
-      <p>Estimated time: {{estimatedTime}}</p>
-      <p>Estimated price: {{estimatedPrice}}</p>
+      <p>Estimated time: {{estimations.time}}</p>
+      <p>Estimated price: {{estimations.price}}</p>
     </div>
   </mat-card-content>
 </mat-card>

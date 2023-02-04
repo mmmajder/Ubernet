@@ -1,11 +1,11 @@
 export class DriverListItem {
   email!: string;
   name!: string;
-  isWorking!: boolean;
+  requestedChanges = false;
 
-  constructor(email: string, name: string, isWorking: boolean) {
+  constructor(email: string, name: string, changes: boolean) {
     this.email = email;
     this.name = name;
-    this.isWorking = isWorking;
+    this.requestedChanges = changes;
   }
 }

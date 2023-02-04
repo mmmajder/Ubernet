@@ -1,52 +1,212 @@
-<mat-card class="destination-input">
-  <mat-card-header>
-    <span style="padding: 8px; font-weight: 500; margin-left: -30px; font-size: 16px">Directions</span>
-    <div style="flex: 1">
-      <div class="header-right">
-        <button mat-stroked-button style="margin-right: 5px" (click)="clearInputFields()">Clear all</button>
-        <button mat-stroked-button>
-          <mat-icon (click)="addNewDestination()">add_location_alt</mat-icon>
-        </button>
-      </div>
-    </div>
-  </mat-card-header>
-  <mat-card-content style="overflow-y:scroll; max-height: 300px; margin-top: 20px; margin-bottom: -10px">
-    <mat-form-field appearance="outline" *ngFor="let destination of destinations; let i=index" [ngSwitch]="i"
-                    style="width: 100%;">
-      <mat-label *ngSwitchCase=0>From:</mat-label>
-      <mat-label *ngSwitchCase=destinations.length-1>To:</mat-label>
-      <mat-label *ngSwitchDefault>
-        Stop {{i}}:
-      </mat-label>
-      <input matInput [name]="'dest' + i" [ngModel]="destinations[i].locationName"
-             (ngModelChange)="setDestination($event, i)">
-      <button mat-icon-button matSuffix (click)="removeDestination(i)">
-        <mat-icon>
-          location_off
-        </mat-icon>
-      </button>
-    </mat-form-field>
-  </mat-card-content>
-  <mat-form-field appearance="outline" style="width: 100%; padding-right:20px">
-    <mat-label>Choose one</mat-label>
-    <mat-select [ngModel]="carType" (ngModelChange)="changeCarType($event)">
-      <mat-option *ngFor="let type of carTypes" [value]="type">{{type}}</mat-option>
-    </mat-select>
-  </mat-form-field>
-  <mat-card-footer style="padding: 15px">
-    <button mat-raised-button color="primary" style="width: 100%" (click)="showEstimates()">Search</button>
-    <div *ngIf="estimatesPresented==true">
-      <hr>
-      <p> Estimated time: {{estimatedTime}}</p>
-      <p> Estimated price: {{estimatedPrice}}</p>
-      <p *ngIf="canOptimize" style="color: var(--dark)">Optimize by <span style="font-weight: 500; cursor: pointer"
-                                                                          (click)="optimizeByPrice()">price</span> or
-        <span style="font-weight: 500; cursor: pointer" (click)="optimizeByPrice()">time</span>.
+<mat-card class="destination-input" *ngIf="!isActive">
+  <mat-stepper labelPosition="bottom" [linear]="true">
+    <mat-step [stepControl]="firstFormGroup">
+      <ng-template matStepLabel>
+        <mat-icon [matTooltip]="'Route'" id="routeStep">route</mat-icon>
+      </ng-template>
+      <p>
+        <span style="font-weight: 500; font-size: 16px; margin-top: 30px">Route</span>
+        <span style="float: right">
+          <button mat-stroked-button style="margin-right: 5px; font-size: 12px"
+                  (click)="clearInputFields()">Clear all</button>
+          <button mat-stroked-button style="font-size: 12px" color="primary" (click)="addNewDestination()">
+            <mat-icon>add_location_alt</mat-icon> Add stop
+          </button>
+        </span>
       </p>
-      <span style="align-content: center">
-              <button mat-raised-button color="primary" style="width: 49%" (click)="requestRide()">Request ride</button>
-              <button mat-stroked-button color="primary" style="width: 49%; float: right" (click)="reserveRide()">Reserve ride</button>
-      </span>
-    </div>
-  </mat-card-footer>
+      <br>
+      <form [formGroup]="destinationsForm" (ngSubmit)="showEstimates()">
+        <div id="route-div"
+             style="overflow-y:scroll; max-height: 250px; margin-top: 20px; margin-bottom: -10px; margin-right: -20px;"
+             formArrayName="destinations">
+          <mat-form-field appearance="outline"
+                          *ngFor="let destinationForm of destinationsForm.get('destinations')['controls']; let i=index"
+                          [ngSwitch]="i"
+                          style="width: 100%; margin-top: 5px;">
+            <mat-label *ngSwitchCase=0>From:</mat-label>
+            <mat-label *ngSwitchCase=destinations.controls.length-1>To:</mat-label>
+            <mat-label *ngSwitchDefault>
+              Stop {{i}}:
+            </mat-label>
+            <input matInput [name]="'dest' + i" formControlName="{{i}}" id="fromInput">
+            <mat-autocomplete #auto="matAutocomplete">
+              <mat-option *ngFor="let option of filteredOptions[i] | async" [value]="option">
+                {{option}}
+              </mat-option>
+            </mat-autocomplete>
+            <button mat-icon-button matSuffix *ngIf="destinations.controls.length>2" (click)="removeDestination(i)">
+              <mat-icon>
+                location_off
+              </mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+        <div style="margin-top: 10px;">
+          <button mat-raised-button color="primary" id="search-route" style="width: 100%; margin-top: 5px"
+                  type="submit">Search
+          </button>
+          <p style="color: var(--dark); margin-top: 10px;">Optimize by <span
+            style="font-weight: 500; cursor: pointer"
+            (click)="optimizePrice()">price</span>
+            or
+            <span style="font-weight: 500; cursor: pointer" (click)="optimizeTime()">time</span>.
+          </p>
+        </div>
+        <p *ngIf="searching" style="text-align: center">
+          <mat-spinner id="spinner" color="primary"></mat-spinner>
+        </p>
+
+        <div style="margin-top: 10px">
+          <button mat-button matStepperNext
+                  style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Next
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step [stepControl]="secondFormGroup">
+      <ng-template matStepLabel>
+        <mat-icon [matTooltip]="'Car type'" id="carTypeStep">directions_car</mat-icon>
+      </ng-template>
+      <div>
+        <span style="font-weight: 500; font-size: 16px; margin-top: 30px">Car type</span>
+      </div>
+      <mat-form-field appearance="outline" style="width: 100%; padding-right:20px; padding-top: 10px"
+                      [formGroup]="carTypeFormGroup">
+        <mat-label>Choose car type</mat-label>
+        <mat-select id="carTypeSelect" formControlName="carType" (ngModelChange)="changeCarType()">
+          <mat-option *ngFor="let type of carTypes" [value]="type">{{type}}</mat-option>
+        </mat-select>
+      </mat-form-field>
+      <section class="example-section">
+        <p>
+          <mat-checkbox color="primary" [(ngModel)]="hasChild">Children seats</mat-checkbox>
+        </p>
+        <p>
+          <mat-checkbox color="primary" [(ngModel)]="hasPet">Pets allowed</mat-checkbox>
+        </p>
+      </section>
+      <form>
+        <div>
+          <button mat-button matStepperPrevious
+                  style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 90px">Back
+          </button>
+          <button mat-button matStepperNext
+                  style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Next
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>
+        <mat-icon [matTooltip]="'Friends'" id="friendsStep">emoji_people</mat-icon>
+      </ng-template>
+      <div>
+        <span style="font-weight: 500; font-size: 16px; margin-top: 30px">
+          Add people to split fare
+        </span>
+      </div>
+      <mat-form-field [formGroup]="friendsFormGroup" id="friendsEmailField" style="width: 100%; margin-top: 10px"
+                      appearance="outline">
+        <mat-label>Friend's email</mat-label>
+        <input matInput type="email" formControlName="newFriend">
+        <button mat-icon-button matSuffix id="addFriendButton" (click)="addFriend()">
+          <mat-icon>person_add_alt_1</mat-icon>
+        </button>
+        <mat-error *ngIf="friendsFormGroup.hasError('email', 'newFriend')">
+          Invalid email format.
+        </mat-error>
+      </mat-form-field>
+      <div
+        style="overflow-y:scroll; max-height: 250px; margin-bottom: -10px; margin-right: -20px; position: relative">
+        <div *ngFor="let friend of friends; let i=index">
+          <mat-form-field appearance="outline" style="width: 100%; margin-top: 5px">
+            <mat-label>Friend email</mat-label>
+            <input matInput [name]="'friend' + i" [ngModel]="friends[i].friendEmail" disabled>
+            <button mat-icon-button matSuffix (click)="removeFriend(i)">
+              <mat-icon>
+                person_remove
+              </mat-icon>
+            </button>
+          </mat-form-field>
+        </div>
+      </div>
+      <form>
+        <div>
+          <button mat-button matStepperPrevious
+                  style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 90px">Back
+          </button>
+          <button mat-button matStepperNext
+                  style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Next
+          </button>
+        </div>
+      </form>
+    </mat-step>
+
+    <mat-step>
+      <ng-template matStepLabel>
+        <mat-icon [matTooltip]="'Summary'" id="summaryStep">call</mat-icon>
+      </ng-template>
+      <div style="overflow-y:scroll; max-height: 400px; margin-bottom: 10px">
+        <div>
+        <span style="font-weight: 500; font-size: 16px; margin-top: 30px; margin-bottom: 10px">
+          Summary
+        </span>
+          <p>Route:</p>
+          <div
+            *ngFor="let destination of destinationsForm.get('destinations')['controls']; let i=index" [ngSwitch]="i"
+            style="width: 100%">{{i + 1}}) {{destination.value}}
+          </div>
+        </div>
+        <br>
+        <div *ngIf="friends.length!==0">
+          <p>Friends:</p>
+          <div *ngFor="let friend of friends; let i=index" [ngSwitch]="i"
+               style="width: 100%">{{i + 1}}) {{friends[i].friendEmail}}
+          </div>
+          <br>
+        </div>
+        <p>Car</p>
+        <span>Car type: {{carType.value}}. </span>
+        <span *ngIf="hasChild"><br>Children seat is required.<br></span>
+        <span *ngIf="hasPet">Pet transport is required.<br></span>
+        <br>
+        <div style="margin-top: 10px">
+          <mat-radio-group [(ngModel)]="typeOfRequest" aria-label="Select an option">
+            <mat-radio-button value="now">I want my ride NOW</mat-radio-button>
+            <br>
+            <mat-radio-button value="reserve">I want to reserve my ride for later</mat-radio-button>
+          </mat-radio-group>
+          <div *ngIf="typeOfRequest==='reserve'" class="default-time-example">
+            <mat-form-field appearance="outline" style="width: 100%; margin-top: 5px">
+              <mat-label>Choose time</mat-label>
+              <input id="reservationTime" matInput [ngxTimepicker]="toggleTimepicker" [(ngModel)]="timeOfRide" [disableClick]="true">
+              <ngx-material-timepicker-toggle matSuffix [for]="toggleTimepicker"></ngx-material-timepicker-toggle>
+              <ngx-material-timepicker #toggleTimepicker></ngx-material-timepicker>
+            </mat-form-field>
+            <p style="color: gray; font-size: 12px">*You can reserve a ride max 5h in advance</p>
+          </div>
+        </div>
+      </div>
+      <span>
+        <button id="request" mat-raised-button color="primary" style="width: 100%"
+                (click)="requestRide()">Request ride</button>
+        </span>
+      <p *ngIf="findingDriver" style="text-align: center">
+        <mat-spinner id="request-spinner" color="primary"></mat-spinner>
+      </p>
+      <button mat-button matStepperPrevious
+              style="float: right; margin-top: -40px; position: absolute; bottom: 100px; right: 20px">Back
+      </button>
+    </mat-step>
+  </mat-stepper>
+  <div
+    style="margin-top: auto; width: 100%; max-height: 150px; bottom: 0; padding-right: 40px; position: absolute; margin-bottom: 20px">
+    <hr>
+    <p *ngIf="estimations===undefined">Please enter all necessary data so that we
+      can estimate price and time of your ride</p>
+    <p *ngIf="estimations!==undefined && estimations.time!==undefined"> Estimated time: {{estimations.time}}</p>
+    <p *ngIf="estimations!==undefined && estimations.price!==undefined"> Estimated price: {{estimations.price}}</p>
+  </div>
 </mat-card>

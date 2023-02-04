@@ -1,26 +1,69 @@
-from random import random
+from random import randrange
 
-import locust
-from locust import HttpUser, task, between, run_single_user
-import json
+import requests
+from locust import HttpUser, task, between
 
-class MyTaskSet(HttpUser):
-    # host = "http://localhost:8000"
-    def createNewLocation(self):
-        center = [45.26713, 19.833549]
-        x = center[0] + (random() - 0.5) / 10
-        y = center[1] + (random() - 0.5) / 10
-        print([x, y])
+taxi_stops = [
+    (45.238548, 19.848225),  # Stajaliste na keju
+    (45.243097, 19.836284),  # Stajaliste kod limanske pijace
+    (45.256863, 19.844129),  # Stajaliste kod trifkovicevog trga
+    (45.255055, 19.810161),  # Stajaliste na telepu
+    (45.246540, 19.849282)  # Stajaliste kod velike menze
+]
+
+
+class EveryMinute(HttpUser):
+    @task
+    def notify_future_reservation(self):
+        self.client.put("/ride-request/notify-time-until-reservation")
 
     @task
-    def getCurrentState(self):
+    def update_driver_activity(self):
+        self.client.put("/driver/update-driver-activity")
+
+    wait_time = between(60, 60)
+
+
+class Reserve(HttpUser):
+    @task
+    def reserve(self):
+        self.client.put("/ride-request/send-cars-to-reservations")
+
+    @task
+    def return_money_to_passed_reservations_that_did_not_pay_everyone(self):
+        self.client.put("/ride-request/return-money")
+
+    wait_time = between(10, 10)
+
+
+class Movement(HttpUser):
+
+    @task
+    def get_current_state(self):
         response = self.client.get("/car/active-available")
         print("Response status code:", response.status_code)
         for car in response.json():
-            if (car["destinations"][0]["x"] == car["currentPosition"]["x"]) and \
-                    (car["destinations"][0]["y"] == car["currentPosition"]["y"]):
-                new_destination = {"carId": car["carId"], "newDestinations": [{"y": car["destinations"][-1]["y"] + (random() - 0.5) / 200,
-                                                                    "x": car["destinations"][-1]["x"] + (random() - 0.5) / 200}]}
-                self.client.put("/car/new-destination", json=new_destination)
+            if car["firstRide"] is None or (len(car["firstRide"]["positions"]) == 0 and car["secondRide"] is None):
+                random_taxi_stop = taxi_stops[randrange(0, len(taxi_stops))]
+                response = requests.get(
+                    f'https://routing.openstreetmap.de/routed-car/route/v1/driving/{car["currentPosition"]["x"]},{car["currentPosition"]["y"]};{random_taxi_stop[1]},{random_taxi_stop[0]}?geometries=geojson&overview=false&alternatives=true&steps=true')
+                coordinates = []
 
-    wait_time = between(0.5, 10)
+                for step in response.json()['routes'][0]['legs'][0]['steps']:
+                    for coord in step['geometry']['coordinates']:
+                        coordinates.append(coord)
+                # print(coordinates)
+                print(len(coordinates))
+                print("---------------------------------------------------")
+                request = {"carId": car["carId"], "positions": coordinates}
+
+                self.client.put("/car/new-free-ride", json=request)
+            else:
+                print(car["carId"])
+
+        self.client.put("/car/new-position")
+        self.client.put("/driver-inconsistency/check-inconsistency")
+    wait_time = between(2, 2)
+
+
+

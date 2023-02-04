@@ -1,8 +1,11 @@
 package com.example.ubernet.controller;
 
+import com.example.ubernet.dto.DriverChangeRequest;
+import com.example.ubernet.dto.DriverChangeResponse;
 import com.example.ubernet.dto.DriverDto;
 import com.example.ubernet.dto.DriverResponse;
 import com.example.ubernet.model.Driver;
+import com.example.ubernet.model.ProfileChangesRequest;
 import com.example.ubernet.service.DriverService;
 import com.example.ubernet.utils.DTOMapper;
 import lombok.AllArgsConstructor;
@@ -11,6 +14,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -25,20 +29,53 @@ public class DriverController {
         return driverService.getDrivers();
     }
 
+    @GetMapping("/getDriversEmails")
+    public ArrayList<String> getDriversEmails() {
+        return driverService.getDriversEmails();
+    }
+
     @PutMapping("/toggle-activity/{email}")
-    public ResponseEntity<DriverResponse> toggleActivity(@PathVariable String email) {
-        Driver driver = driverService.toggleActivity(email);
+    public ResponseEntity<DriverResponse> toggleActivity(@PathVariable String email, @RequestBody boolean driverActive) {
+        Driver driver = driverService.toggleActivity(email, driverActive);
         if (driver == null) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
         return ResponseEntity.ok(DTOMapper.getDriverResponse(driver));
     }
 
-    @PutMapping("/logout-driver/{email}")
-    public ResponseEntity<String> logoutDriver(@PathVariable String email) {
-        if (driverService.logoutDriver(email)) {
-            return new ResponseEntity<>("Successfully logged out", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("There was a problem logging out", HttpStatus.CONFLICT);
+    @PutMapping("/update-driver-activity")
+    public void updateDriverActivity() {
+        driverService.updateDriverActivity();
+    }
+
+    @GetMapping("/{email}")
+    public ResponseEntity<DriverDto> getDriver(@PathVariable String email) {
+        return ResponseEntity.ok(driverService.getDriverByEmail(email));
+    }
+
+    @GetMapping("/getFullDriver/{email}")
+    public ResponseEntity<DriverChangeResponse> getFullDriver(@PathVariable String email) {
+        return ResponseEntity.ok(driverService.getFullDriverByEmail(email));
+    }
+
+    @GetMapping("/active-hours/{email}")
+    public long getNumberOfActiveHoursInLast24h(@PathVariable String email) {
+        return driverService.getNumberOfActiveHoursInLast24h(email);
+    }
+
+    @PostMapping("/requestProfileChanges")
+    public boolean requestProfileChanges(@RequestBody DriverChangeRequest driverChangeRequest) {
+        ProfileChangesRequest request = driverService.createRequest(driverChangeRequest);
+        return request != null;
+    }
+
+    @GetMapping("/getProfileChangesRequest/{email}")
+    public ProfileChangesRequest getProfileChangesRequest(@PathVariable String email) {
+        return driverService.getProfileChangesRequest(email);
+    }
+
+    @GetMapping("/getProfileChangesRequests")
+    public List<ProfileChangesRequest> getProfileChangesRequests() {
+        return driverService.getProfileChangesRequests();
     }
 }

@@ -1,3 +1,5 @@
+import {Car} from "./Car";
+
 export class User {
   email!: string;
   name!: string;
@@ -5,6 +7,22 @@ export class User {
   city!: string;
   phoneNumber!: string;
   role!: string;
+  blocked!: boolean;
+}
+
+export function userIsDriver(user: User): user is Driver {
+  return user.role === "DRIVER"
+}
+
+export class Driver implements User {
+  blocked = false;
+  city = "";
+  email = "";
+  name = "";
+  phoneNumber = "";
+  role = "";
+  surname = "";
+  car: Car;
 }
 
 export class Customer {
@@ -21,6 +39,7 @@ export class Customer {
   surname!: string;
   city!: string;
   phoneNumber!: string;
+  isActive!: boolean;
 }
 
 export class UserDTO {

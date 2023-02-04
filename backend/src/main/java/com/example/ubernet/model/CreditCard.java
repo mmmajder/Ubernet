@@ -16,10 +16,8 @@ public class CreditCard {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(unique = true)
     private long id;
-
-    @ManyToOne
+    @OneToOne
     private User client;
-
     private String cardNumber;
     private String expirationDate;
     private String cvv;

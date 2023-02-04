@@ -1,32 +1,29 @@
 package com.example.ubernet.model;
 
+import com.example.ubernet.dto.MessageDTO;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
-
-import javax.persistence.*;
-import java.util.List;
+import lombok.ToString;
 
 @Data
-@Entity
-@NoArgsConstructor
 @AllArgsConstructor
-
+@NoArgsConstructor
+@ToString
 public class Chat {
+    private String clientEmail;
+    private String clientFullname;
+    private MessageDTO mostRecentMessage;
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(unique = true)
-    private long id;
+    public Chat(MessageDTO mostRecentMessage, String name, String lastname){
+        this.clientEmail = mostRecentMessage.getClientEmail();
+        this.clientFullname = name.concat(" ").concat(lastname);
+        this.mostRecentMessage = mostRecentMessage;
+    }
 
-    @OneToOne
-    private Admin admin;
-    @OneToOne
-    private Customer customer;
-
-    @OneToMany
-    private List<Message> messages;
-    private Boolean deleted = false;
+    public Chat(Message message, String name, String lastname){
+        this.clientEmail = message.getClientEmail();
+        this.clientFullname = name.concat(" ").concat(lastname);
+        this.mostRecentMessage = new MessageDTO(message);
+    }
 }

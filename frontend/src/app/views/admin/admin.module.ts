@@ -13,13 +13,12 @@ import {CommonModule} from "@angular/common";
 import {MatSnackBarModule} from "@angular/material/snack-bar";
 import {MatMenuModule} from "@angular/material/menu";
 import {SharedModule} from "../../shared/shared.module";
-import {AdminContainerComponent} from "./container/admin-container/admin-container.component";
+import {UsersContainerComponent} from "./container/users-container/users-container.component";
 import {ChatContainerComponent} from './container/chat-container/chat-container.component';
 import {ListOfChatsComponent} from './components/list-of-chats/list-of-chats.component';
 import {AdminChatComponent} from './components/admin-chat/admin-chat.component';
 import {MatListModule} from "@angular/material/list";
 import {MatTooltipModule} from "@angular/material/tooltip";
-import {DriverRegistartionComponent} from './components/driver-registartion/driver-registartion.component';
 import {DriversComponent} from './components/drivers/drivers.component';
 import {MatTabsModule} from "@angular/material/tabs";
 import {AdminProfileContainerComponent} from './container/admin-profile-container/admin-profile-container.component';
@@ -28,26 +27,25 @@ import {
 } from './components/register-new-driver-dialog/register-new-driver-dialog.component';
 import {MatStepperModule} from "@angular/material/stepper";
 import {DriversProfileDialogComponent} from './components/drivers-profile-dialog/drivers-profile-dialog.component';
-import {ChangesRequestsComponent} from './components/changes-requests/changes-requests.component';
 import {ChangesRequestDialogComponent} from './components/changes-request-dialog/changes-request-dialog.component';
 import {AdminCommentsComponent} from './components/admin-comments/admin-comments.component';
 import {CustomersComponent} from './components/customers/customers.component';
 import {
   CustomersProfileDialogComponent
 } from './components/customers-profile-dialog/customers-profile-dialog.component';
+import {MatCheckboxModule} from "@angular/material/checkbox";
+import {MatSelectModule} from "@angular/material/select";
 
 @NgModule({
   declarations: [
-    AdminContainerComponent,
+    UsersContainerComponent,
     ChatContainerComponent,
     ListOfChatsComponent,
     AdminChatComponent,
-    DriverRegistartionComponent,
     DriversComponent,
     AdminProfileContainerComponent,
     RegisterNewDriverDialogComponent,
     DriversProfileDialogComponent,
-    ChangesRequestsComponent,
     ChangesRequestDialogComponent,
     AdminCommentsComponent,
     CustomersComponent,
@@ -72,10 +70,12 @@ import {
     MatListModule,
     MatTooltipModule,
     MatTabsModule,
-    MatStepperModule
+    MatStepperModule,
+    MatCheckboxModule,
+    MatSelectModule
   ],
   exports: [
-    AdminContainerComponent,
+    UsersContainerComponent,
     AdminProfileContainerComponent,
   ]
 })

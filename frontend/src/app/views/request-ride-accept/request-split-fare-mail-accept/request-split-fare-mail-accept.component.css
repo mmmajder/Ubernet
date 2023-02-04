@@ -1,0 +1,15 @@
+.not-found-page-container {
+  text-align: center;
+  margin: auto;
+  padding: 100px;
+  width: 80%;
+}
+
+.navigation {
+  background-image: url("../../../../assets/navigation.jpg");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+  object-fit: cover;
+  height: 100%;
+}

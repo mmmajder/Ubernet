@@ -4,7 +4,8 @@ import {Store} from "@ngxs/store";
 import {Customer} from "../../../model/User";
 import {CurrentlyLogged, UpdateCustomerData} from "../../../store/actions/loggedUser.actions";
 import {MatSnackBar} from "@angular/material/snack-bar";
-import {ImageService} from "../../../services/image.service";
+import {EncodedImage, ImageService} from "../../../services/image.service";
+import {NavbarComponent} from "../../sidenav/navbar/navbar.component";
 
 @Component({
   selector: 'app-profile-data',
@@ -12,20 +13,20 @@ import {ImageService} from "../../../services/image.service";
   styleUrls: ['./profile-data.component.css']
 })
 export class ProfileDataComponent implements OnInit {
-  email: string = "";
-  phoneNumber: string = "";
-  name: string = "";
-  lastName: string = "";
-  city: string = "";
-  role: string = "CUSTOMER";
+  email = "";
+  phoneNumber = "";
+  name = "";
+  lastName = "";
+  city = "";
+  role = "CUSTOMER";
 
   phoneFormControl = new FormControl('', [Validators.required]);
   nameFormControl = new FormControl('', [Validators.required]);
   lastNameFormControl = new FormControl('', [Validators.required]);
   cityFormControl = new FormControl('', [Validators.required]);
 
-  hasSelectedFile: boolean = false;
-  selectedImage: any = null;
+  hasSelectedFile = false;
+  selectedImage: File;
   profileImageSrc: string;
   @ViewChild('fileUploader') fileUploader: ElementRef;
 
@@ -45,14 +46,7 @@ export class ProfileDataComponent implements OnInit {
   }
 
   update() {
-    if (this.role == "DRIVER")
-      this.updateDriver();
-    else
-      this.updateCustomer();
-  }
-
-  updateCustomer() {
-    let user = new Customer(this.name, this.lastName, this.email, this.phoneNumber, this.city);
+    const user = new Customer(this.name, this.lastName, this.email, this.phoneNumber, this.city);
     this.store.dispatch(new UpdateCustomerData(user)).subscribe({
       next: () => this._snackBar.open("Data updated successfully.", '', {
         duration: 3000,
@@ -65,29 +59,44 @@ export class ProfileDataComponent implements OnInit {
     });
   }
 
-  public selectFile(event: any) {
-    console.log("event")
-    console.log(event)
-    console.log(event.target.files[0])
-    this.selectedImage = event.target.files[0];
-    this.hasSelectedFile = true;
+  public selectFile(event: Event) {
+    const input = (<HTMLInputElement>event.target)
+    if (input.files !== null){
+      const file:File = input.files[0];
+      this.selectedImage = file;
+      this.hasSelectedFile = true;
+      this.newProfileImagePreview(file);
+    }
   }
 
   public uploadProfileImage() {
     if (this.selectedImage != null) {
       this.imageService.postProfileImage(this.email, this.selectedImage)
-        .subscribe((encodedImage: any) => {
+        .subscribe((encodedImage: EncodedImage) => {
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
           this.resetFileUploader();
+          NavbarComponent.changeProfilePicture(`data:image/jpeg;base64,${encodedImage.data}`);
         });
+    }
+  }
+
+  public newProfileImagePreview(file : File){
+    if (file !== null){
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+
+      reader.onload = () => {
+        this.profileImageSrc = reader.result as string;
+      };
+
     }
   }
 
   public getProfileImage() {
     this.imageService.getProfileImage(this.email)
-      .subscribe((encodedImage: any) => {
+      .subscribe((encodedImage: EncodedImage) => {
         if (encodedImage === null)
-          this.profileImageSrc = "../../../../assets/taxi.jpg";
+          this.profileImageSrc = "../../../../assets/default-profile-picture.jpg";
         else
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
       });
@@ -96,9 +105,5 @@ export class ProfileDataComponent implements OnInit {
   resetFileUploader() {
     this.fileUploader.nativeElement.value = null;
     this.hasSelectedFile = false;
-  }
-
-  private updateDriver() {
-    // TODO
   }
 }

@@ -3,16 +3,12 @@ package com.example.ubernet.model;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.annotations.SQLDelete;
-import org.hibernate.annotations.Where;
 
 import javax.persistence.*;
-
 @Data
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
-
 public class Position {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -23,5 +19,8 @@ public class Position {
     private Double y;
     private Boolean deleted = false;
 
-
+    public Position(Double x, Double y) {
+        this.x = x;
+        this.y = y;
+    }
 }

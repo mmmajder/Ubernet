@@ -1,6 +1,6 @@
 import {Component, Input, OnInit} from '@angular/core';
 import {User} from "../../model/User";
-import {ImageService} from "../../services/image.service";
+import {EncodedImage, ImageService} from "../../services/image.service";
 import {UserService} from "../../services/user.service";
 
 @Component({
@@ -21,9 +21,9 @@ export class UserProfileComponent implements OnInit {
       (user: User) => this.user = user
     );
     this.imageService.getProfileImage(this.userEmail)
-      .subscribe((encodedImage: any) => {
+      .subscribe((encodedImage: EncodedImage) => {
         if (encodedImage === null)
-          this.profileImageSrc = "../../../../assets/taxi.jpg";
+          this.profileImageSrc = "../../../../assets/default-profile-picture.jpg";
         else
           this.profileImageSrc = `data:image/jpeg;base64,${encodedImage.data}`;
       });

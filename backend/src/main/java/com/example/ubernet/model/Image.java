@@ -22,7 +22,7 @@ public class Image {
     @ManyToOne
     private User user;
 
-    public Image(User user, byte[] data){
+    public Image(User user, byte[] data) {
         this.user = user;
         this.data = data;
         this.isActive = true;

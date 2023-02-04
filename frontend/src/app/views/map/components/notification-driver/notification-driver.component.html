@@ -1,0 +1,40 @@
+<mat-card class="destination-input" *ngIf="notifications.length!==0">
+  <mat-list *ngFor="let notification of notifications" id="{{notification.id}}"
+            class="notification-item">
+    <div *ngIf="notification.driverNotificationType==='APPROACH'">
+      Next ride: {{getRideCheckpoints(notification.ride.route.checkPoints)}}
+      <div mat-line *ngIf="notification.ride.customers!==undefined && notification.ride.customers.length>0">
+        <app-user-chip [customers]="notification.ride.customers"></app-user-chip>
+      </div>
+      <button mat-raised-button color="warn" style="width: 100%; margin-top: 10px"
+              (click)="cancelRideTechnicalOrHealthProblem(notification.ride)">Cancel ride due to health/technical
+        problem
+      </button>
+      <mat-divider style="margin-top: 15px"></mat-divider>
+    </div>
+    <div *ngIf="notification.driverNotificationType==='START'">
+      Start ride: {{getRideCheckpoints(notification.ride.route.checkPoints)}}
+      <div mat-line *ngIf="notification.ride.customers!==undefined && notification.ride.customers.length>0">
+        <app-user-chip [customers]="notification.ride.customers"></app-user-chip>
+      </div>
+      <span style="display: flex; justify-content: space-around">
+        <button mat-raised-button color="primary" style="width: 49%; margin-top: 10px"
+                (click)="startRide(notification.ride)">Start ride</button>
+        <button mat-raised-button color="warn" style="width: 49%; margin-top: 10px"
+                (click)="cancelRide(notification.ride)">Cancel ride</button>
+      </span>
+      <mat-divider style="margin-top: 15px"></mat-divider>
+    </div>
+    <div *ngIf="notification.driverNotificationType==='END'">
+      End ride: {{getRideCheckpoints(notification.ride.route.checkPoints)}}
+      <div mat-line *ngIf="notification.ride.customers!==undefined && notification.ride.customers.length>0">
+        <app-user-chip [customers]="notification.ride.customers"></app-user-chip>
+      </div>
+      <button mat-raised-button color="primary" style="width: 100%; margin-top: 10px"
+              (click)="endRide(notification.ride)">End ride
+      </button>
+      <mat-divider style="margin-top: 15px"></mat-divider>
+    </div>
+  </mat-list>
+</mat-card>
+

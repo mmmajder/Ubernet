@@ -1,11 +1,14 @@
 package com.example.ubernet.controller;
 
 import com.example.ubernet.dto.SimpleUser;
+import com.example.ubernet.dto.TokensDTO;
+import com.example.ubernet.model.Customer;
 import com.example.ubernet.service.CustomerService;
 import lombok.AllArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @AllArgsConstructor
@@ -22,7 +25,22 @@ public class CustomerController {
 
     @GetMapping("/get-number-of-tokens/{email}")
     public double getNumberOfTokens(@PathVariable String email) {
-        return customerService.findByEmail(email).getNumberOfTokens();
+        Customer customer = customerService.findByEmail(email);
+        return customer.getNumberOfTokens();
     }
 
+    @PutMapping("/add-tokens/{email}")
+    public double addTokens(@PathVariable String email, @RequestBody TokensDTO amount) {
+        return customerService.addTokens(email, amount.getTokens());
+    }
+
+    @GetMapping("/getCustomersEmails")
+    public ArrayList<String> getCustomersEmails() {
+        return customerService.getCustomersEmails();
+    }
+
+    @GetMapping("/{email}")
+    public Customer getCustomerByEmail(@PathVariable String email) {
+        return customerService.findByEmail(email);
+    }
 }

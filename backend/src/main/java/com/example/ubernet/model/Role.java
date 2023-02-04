@@ -1,6 +1,7 @@
 package com.example.ubernet.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -12,6 +13,7 @@ import javax.persistence.*;
 @Entity
 @NoArgsConstructor
 @AllArgsConstructor
+@JsonDeserialize(as=Role.class)
 public class Role implements GrantedAuthority {
 
     private static final long serialVersionUID = 1L;
