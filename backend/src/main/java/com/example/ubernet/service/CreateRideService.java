@@ -142,7 +142,7 @@ public class CreateRideService {
             customerPayments.add(customerPayment);
         }
         try {
-            emailService.sendEmailToOtherPassangers(customerPayments);
+            emailService.sendEmailToOtherPassengers(customers.get(0), customerPayments);
         } catch (MessagingException e) {
             throw new RuntimeException(e);
         }

@@ -16,7 +16,7 @@
   <button *ngIf="user.role==='CUSTOMER'" mat-icon-button [matMenuTriggerFor]="menu">
     <mat-icon>help</mat-icon>
   </button>
-  <button *ngIf="user.role==='DRIVER'" mat-icon-button [matMenuTriggerFor]="workingHoursMenu">
+  <button *ngIf="user.role==='DRIVER'" mat-icon-button [matMenuTriggerFor]="workingHoursMenu" (click)="timerClick()">
     <mat-icon>timer</mat-icon>
   </button>
   <mat-slide-toggle
@@ -39,5 +39,7 @@
   <app-notifications [notifications]="notificationsCustomer"></app-notifications>
 </mat-menu>
 <mat-menu #workingHoursMenu="matMenu">
-  <app-active-time-driver></app-active-time-driver>
+  <button mat-menu-item>
+    You have been working for <b>{{workingHours}}</b> in last 24h.
+  </button>
 </mat-menu>

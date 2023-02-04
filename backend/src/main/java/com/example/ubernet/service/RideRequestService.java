@@ -70,7 +70,8 @@ public class RideRequestService {
     private void createNewReminderNotifications(Ride ride) {
         List<Notification> reminderNotifications = notificationService.getReminderNotificationsForRide(ride);
         long minutesUntil = LocalDateTime.now().until(ride.getScheduledStart(), ChronoUnit.MINUTES);
-        if (minutesUntil <= 15 - reminderNotifications.size() * 5L){
+        if (minutesUntil < 5 && reminderNotifications.size() == 0) return;
+        if (minutesUntil <= 15 - reminderNotifications.size() * 5L) {
             notificationService.createNotificationForCustomersReservationReminder(ride, 15 - reminderNotifications.size() * 5L);
         }
     }

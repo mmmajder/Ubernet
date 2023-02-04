@@ -12,6 +12,7 @@ import {
 import {Place} from "../../../../model/Position";
 import {RideService} from "../../../../services/ride.service";
 import {Message} from "stompjs";
+import {ReasonDialogDTO} from "../../../../model/ReasonDialogDTO";
 
 @Component({
   selector: 'app-notification-driver',

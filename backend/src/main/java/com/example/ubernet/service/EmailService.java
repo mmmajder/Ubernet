@@ -1,7 +1,7 @@
 package com.example.ubernet.service;
 
+import com.example.ubernet.model.Customer;
 import com.example.ubernet.model.CustomerPayment;
-import com.example.ubernet.model.Payment;
 import com.example.ubernet.model.User;
 import com.example.ubernet.utils.EmailContentUtils;
 import lombok.AllArgsConstructor;
@@ -56,7 +56,7 @@ public class EmailService {
     }
 
     @Async
-    public void sendEmailToOtherPassangers(List<CustomerPayment> customerPayments) throws MailException, MessagingException {
+    public void sendEmailToOtherPassengers(Customer issueCustomer, List<CustomerPayment> customerPayments) throws MailException, MessagingException {
         for (CustomerPayment customerPayment : customerPayments) {
             if (customerPayment.getUrl() == null) continue;
             System.out.println("Sending email...");
@@ -65,7 +65,7 @@ public class EmailService {
             MimeMessageHelper helper = new MimeMessageHelper(message, true);
             helper.setTo("ubernet-test@outlook.com");
             helper.setFrom(Objects.requireNonNull(env.getProperty("spring.mail.username")));
-            String content = EmailContentUtils.getRideRequestContent(customerPayments.get(0), customerPayment.getCustomer(), customerPayment.getPricePerCustomer());
+            String content = EmailContentUtils.getRideRequestContent(issueCustomer, customerPayment.getCustomer(), customerPayment.getPricePerCustomer());
             String verifyURL = "http://localhost:4200/request-ride/" + customerPayment.getUrl();
             content = content.replace("[[URL]]", verifyURL);
             helper.setText(content, true);

@@ -31,10 +31,9 @@ import {NotificationsComponent} from "./notification/notifications.component";
 import {MatSlideToggleModule} from "@angular/material/slide-toggle";
 import {ProfilePictureComponent} from "./profile-edit/profile-picture/profile-picture.component";
 import {SidebarComponent} from "./sidenav/sidebar/sidebar.component";
-import {ActiveTimeDriverComponent} from "./active-time-driver/active-time-driver.component";
 
 @NgModule({
-  declarations: [NavbarComponent, SidebarComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, RideDetailsDialogComponent, NotificationsComponent, ActiveTimeDriverComponent],
+  declarations: [NavbarComponent, SidebarComponent, ProfilePictureComponent, UserChatComponent, MessageComponent, NewMessageComponent, RidesHistoryComponent, ProfileDataComponent, ChangePasswordComponent, StarRatingComponent, UserProfileComponent, RideDetailsDialogComponent, NotificationsComponent],
     imports: [
         MatToolbarModule,
         MatIconModule,
