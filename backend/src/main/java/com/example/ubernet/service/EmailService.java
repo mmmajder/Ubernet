@@ -1,7 +1,6 @@
 package com.example.ubernet.service;
 
 import com.example.ubernet.model.CustomerPayment;
-import com.example.ubernet.model.Payment;
 import com.example.ubernet.model.User;
 import com.example.ubernet.utils.EmailContentUtils;
 import lombok.AllArgsConstructor;

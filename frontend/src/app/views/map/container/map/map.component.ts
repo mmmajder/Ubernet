@@ -30,6 +30,7 @@ import {RideDetails} from "../../../../model/RideDetails";
 import {
   SearchDirectionsCustomerComponent
 } from "../../components/search-directions-customer/search-directions-customer.component";
+import {secondsToDhms} from "../../../../services/utils.service";
 
 @Component({
   selector: 'app-map',

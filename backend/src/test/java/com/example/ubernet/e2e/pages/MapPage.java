@@ -124,7 +124,6 @@ public class MapPage {
     public void summaryStep() {
         goToSummary();
         this.clickRequestRide();
-        this.waitForRequestSpinner();
     }
 
     public void goToSummary() {
