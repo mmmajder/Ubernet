@@ -33,7 +33,7 @@ export class ResetPasswordComponent implements OnInit {
 
   changePassword() {
     if (this.newPassword === "" || this.newPassword !== this.reEnteredNewPassword) {
-      this._snackBar.open("Please enter valid email", '', {
+      this._snackBar.open("Passwords are not the same.", '', {
         duration: 3000,
         panelClass: ['snack-bar']
       })
@@ -52,7 +52,7 @@ export class ResetPasswordComponent implements OnInit {
           this.router.navigate(['']);
         },
         error: () => {
-          this._snackBar.open("Please enter valid email", '', {
+          this._snackBar.open("Passwords are not the same.", '', {
             duration: 3000,
             panelClass: ['snack-bar']
           })

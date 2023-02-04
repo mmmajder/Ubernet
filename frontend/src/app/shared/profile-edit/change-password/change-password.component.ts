@@ -25,7 +25,8 @@ export class ChangePasswordComponent implements OnInit {
   newPasswordFormControl = new FormControl('', [Validators.required, Validators.minLength(6)]);
   reEnteredNewPasswordFormControl = new FormControl('', [Validators.required]);
 
-  constructor(private userService: UserService, private authService: AuthService, private _snackBar: MatSnackBar) {}
+  constructor(private userService: UserService, private authService: AuthService, private _snackBar: MatSnackBar) {
+  }
 
   ngOnInit(): void {
     this.authService.getCurrentlyLoggedUser().subscribe(data => {
@@ -34,15 +35,22 @@ export class ChangePasswordComponent implements OnInit {
   }
 
   changePassword(): void {
-    if (this.loggedUser === null || this.currentPassword === "" || this.newPassword === "" || this.newPassword !== this.reEnteredNewPassword)
-    { return}
-
-    const passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
-    this.userService.changePassword(this.loggedUser.email, passwordChangeInfo)
-      .subscribe({
-        next: () => this.openSnackBar("Password changed."),
-        error: () => this.openSnackBar("Error occured.")
-      });
+    if (this.loggedUser === null) {
+      return;
+    } else if (this.currentPassword === "") {
+      this.openSnackBar("You have to enter current password.")
+    } else if (this.newPassword === "") {
+      this.openSnackBar("You have to enter new password.")
+    } else if (this.newPassword !== this.reEnteredNewPassword) {
+      this.openSnackBar("Passwords are not the same.")
+    } else {
+      const passwordChangeInfo: PasswordChangeInfo = new PasswordChangeInfo(this.currentPassword, this.newPassword, this.reEnteredNewPassword);
+      this.userService.changePassword(this.loggedUser.email, passwordChangeInfo)
+        .subscribe({
+          next: () => this.openSnackBar("Password changed."),
+          error: () => this.openSnackBar("Your current password is not correct.")
+        });
+    }
   }
 
   openSnackBar(message: string) {

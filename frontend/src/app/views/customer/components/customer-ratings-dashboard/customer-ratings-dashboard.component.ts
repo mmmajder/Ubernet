@@ -49,5 +49,6 @@ export class CustomerRatingsDashboardComponent {
     });
     dialogRef.componentInstance.id = rideId;
     dialogRef.componentInstance.dialogRef = dialogRef;
+    dialogRef.afterClosed().subscribe(() => this.loadRidesToRate())
   }
 }

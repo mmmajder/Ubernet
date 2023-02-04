@@ -93,7 +93,6 @@ public class AuthentificationService {
             return false;
 
         saveNewPassword(user, changePasswordDTO.getNewPassword());
-
         return true;
     }
 
@@ -107,12 +106,9 @@ public class AuthentificationService {
 
     private void saveNewPassword(User user, String setPasswordDTO) {
         user.setPassword(passwordEncoder.encode(setPasswordDTO));
-        if (!user.isEnabled()) {
-            user.getUserAuth().setIsEnabled(true);
-            user.getUserAuth().setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
-            user.getUserAuth().setResetPasswordCode(null);
-            userAuthService.save(user.getUserAuth());
-        }
+        user.getUserAuth().setLastPasswordSet(new Timestamp(System.currentTimeMillis()));
+        user.getUserAuth().setResetPasswordCode(null);
+        userAuthService.save(user.getUserAuth());
         userService.save(user);
     }
 

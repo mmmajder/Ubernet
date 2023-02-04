@@ -22,7 +22,8 @@
         </mat-menu>
         <div matListItemLine>
           <span class="route-name">{{ride.rideDate}}</span>
-          <span class="time-left"> &nbsp;&nbsp;{{ride.daysLeftToRate}} left to rate</span>
+          <span class="time-left" *ngIf="ride.daysLeftToRate > 0"> &nbsp;&nbsp;{{ride.daysLeftToRate}} left to rate</span>
+          <span class="time-left" *ngIf="ride.daysLeftToRate === 0"> &nbsp;&nbsp;less than a day left</span>
         </div>
         <div matListItemLine><span class="start-end">{{ride.route}}</span></div>
         <mat-divider></mat-divider>

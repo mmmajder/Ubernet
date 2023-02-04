@@ -31,7 +31,7 @@ public class EmailContentUtils {
     private static String originalTemplate(String title, String body, String buttonText) {
         String button = "";
         if (!buttonText.equals("")) {
-            button = "                                    <a href=\"[[URL]]\" target=\"_blank\" style=\"font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.0; font-weight: bold; color: #ffffff; text-transform: uppercase; text-decoration: none; border-radius: 30px; -webkit-border-radius: 30px; -moz-border-radius: 30px; display: block; padding: 12px 25px 12px 25px;\">\r\n"
+            button =  "                                    <a href=\"[[URL]]\" target=\"_blank\" style=\"font-family: Arial, Helvetica, sans-serif; font-size: 16px; line-height: 1.0; font-weight: bold; color: #ffffff; text-transform: uppercase; text-decoration: none; border-radius: 30px; -webkit-border-radius: 30px; -moz-border-radius: 30px; display: block; padding: 12px 25px 12px 25px;\">\r\n"
                     + buttonText
                     + "                                            </a>\r\n";
         }
