@@ -15,9 +15,11 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.junit.jupiter.api.Test;
 import org.mockito.*;
 
+import javax.mail.MessagingException;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
@@ -51,6 +53,8 @@ public class CreateRideServiceTest {
     private CarTypeService carTypeService;
     @Mock
     private RouteRepository routeRepository;
+    @Mock
+    private UserRepository userRepository;
     @Mock
     private PlaceRepository placeRepository;
     @Mock
@@ -101,6 +105,7 @@ public class CreateRideServiceTest {
         Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(createCustomer(CUSTOMER2_EMAIL));
         Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
         mockPositionsAndPlaceSave();
+        Mockito.when(customerService.getCustomersByEmails(List.of(CUSTOMER2_EMAIL))).thenReturn(List.of(createCustomer(CUSTOMER2_EMAIL)));
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertEquals(RideState.RESERVED, foundRide.getRideState());
     }
@@ -115,7 +120,7 @@ public class CreateRideServiceTest {
         Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
         mockPositionsAndPlaceSave();
         Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(createCar(createDriver()));
-        ;
+        Mockito.when(customerService.getCustomersByEmails(List.of(CUSTOMER2_EMAIL))).thenReturn(List.of(createCustomer(CUSTOMER2_EMAIL)));
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertEquals(RideState.WAITING, foundRide.getRideState());
     }
@@ -128,6 +133,7 @@ public class CreateRideServiceTest {
         Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(createCustomer(CUSTOMER2_EMAIL));
         Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
         mockPositionsAndPlaceSave();
+        Mockito.when(customerService.getCustomersByEmails(List.of(CUSTOMER2_EMAIL, CUSTOMER_EMAIL))).thenReturn(List.of(createCustomer(CUSTOMER2_EMAIL), createCustomer(CUSTOMER_EMAIL)));
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertEquals(RideState.REQUESTED, foundRide.getRideState());
     }
@@ -151,16 +157,19 @@ public class CreateRideServiceTest {
 
     @Test
     @DisplayName("Should init ride when customer request ride for himself and ride is not reservation")
-    public void shouldInitRideWhenCustomerOrdersRideForOnlyHimselfAndNotReservation() {
+    public void shouldInitRideWhenCustomerOrdersRideForOnlyHimselfAndNotReservation() throws MessagingException {
         CreateRideDTO createRideDTO = createRideDTO();
         Driver driver = createDriver();
         Car car = createCar(driver);
         driver.setCar(car);
+        Customer customer = createCustomer(CUSTOMER2_EMAIL);
         createRideDTO.setPassengers(List.of(CUSTOMER2_EMAIL));
-        Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(createCustomer(CUSTOMER2_EMAIL));
+        Mockito.when(customerRepository.findByEmail(CUSTOMER2_EMAIL)).thenReturn(customer);
         Mockito.when(carTypeService.findCarTypeByName(CAR_TYPE_CABRIO)).thenReturn(createCarTypeCabrio());
         mockPositionsAndPlaceSave();
         Mockito.when(rideService.getCarForRide(getCoordinates().get(0), false, false, "Cabrio")).thenReturn(car);
+        Mockito.doNothing().when(emailService).sendEmailToOtherPassengers(any(), anyList());
+        Mockito.when(customerService.getCustomersByEmails(List.of(CUSTOMER2_EMAIL))).thenReturn(List.of(customer));
         Ride foundRide = createRideService.createRide(createRideDTO);
         assertNotNull(foundRide.getDriver());
         assertNotNull(foundRide.getDriver().getCar());
@@ -172,7 +181,7 @@ public class CreateRideServiceTest {
     public void shouldCreateNotificationsForPassengersThanAreInvitedToSplitFare() {
         List<Customer> customers = List.of(createCustomer("a@gmail.com"), createCustomer("p@gmail.com"), createCustomer("c@gmail.com"));
         createRideService.notifyCustomers(customers, RIDE_ID);
-        verify(notificationService, times(customers.size()-1)).save(notificationArgumentCaptor.capture());
+        verify(notificationService, times(customers.size() - 1)).save(notificationArgumentCaptor.capture());
     }
 
     private Car createCar(Driver driver) {

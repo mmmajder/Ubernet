@@ -11,7 +11,7 @@ import {AdminService} from "../../../../services/admin.service";
 })
 export class ChangesRequestDialogComponent implements OnInit {
   driverEmail = "";
-  request: ProfileChangesRequest = new ProfileChangesRequest();
+  request: ProfileChangesRequest = new ProfileChangesRequest()
   showOnlyChanges = false;
 
   constructor(private driversService: DriversService, private adminService: AdminService, private _snackBar: MatSnackBar) {
@@ -31,10 +31,17 @@ export class ChangesRequestDialogComponent implements OnInit {
   }
 
   acceptRequest(accepted: boolean) {
-    this.adminService.acceptProfileChange(this.driverEmail, accepted).subscribe(
-      () => this._snackBar.open("Action was a success.", '', {
+    this.adminService.acceptProfileChange(this.driverEmail, accepted).subscribe({
+      next: () => this._snackBar.open("Action was a success.", '', {
         duration: 3000,
         panelClass: ['snack-bar']
-      }))
+      }),
+      error: () => {
+        this._snackBar.open("Action was a success.", '', {
+          duration: 3000,
+          panelClass: ['snack-bar']
+        });
+      }
+    })
   }
 }

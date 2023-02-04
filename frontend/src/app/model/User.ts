@@ -1,4 +1,5 @@
 import {Car} from "./Car";
+import {CarTypeGetResponse} from "./CarTypeGetResponse";
 
 export class User {
   email!: string;
@@ -22,7 +23,7 @@ export class Driver implements User {
   phoneNumber = "";
   role = "";
   surname = "";
-  car: Car;
+  car: Car = new Car(1, "", "", new CarTypeGetResponse(""), false, false, "");
 }
 
 export class Customer {

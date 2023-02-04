@@ -17,7 +17,7 @@ export class WebsocketService {
     this.chatWSUrl = 'ws://localhost:8000/chatWebSocket/';
   }
 
-  public openWebSocket(email: string, isAdmin: boolean, onNewMessage: Function) {
+  public openWebSocket(email: string, isAdmin: boolean, onNewMessage: (arg0:any)=> void) {
     if (!this.isWebSocketOpen) {
       this.isWebSocketOpen = true;
       this.email = email;
@@ -39,7 +39,7 @@ export class WebsocketService {
     }
   }
 
-  public sendMessage(message: any) {
+  public sendMessage(message: Message) {
     if (this.isWebSocketOpen) {
       this.webSocket.send(JSON.stringify(message));
     }

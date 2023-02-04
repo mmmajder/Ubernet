@@ -131,11 +131,11 @@
   </p>
 
   <p>
-    <button style="width: 49%; margin-right: 1%" mat-raised-button (click)="acceptRequest(false)">
+    <button style="width: 49%; margin-right: 1%" mat-raised-button mat-dialog-close="true" (click)="acceptRequest(false)">
       <mat-icon color="warn">error</mat-icon>
       Deny
     </button>
-    <button style="width: 49%; margin-left: 1%" color="primary" (click)="acceptRequest(true)" mat-raised-button>
+    <button style="width: 49%; margin-left: 1%" color="primary" mat-dialog-close="true" (click)="acceptRequest(true)" mat-raised-button>
       <mat-icon>check</mat-icon>
       Accept
     </button>
