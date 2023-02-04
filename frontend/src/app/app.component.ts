@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {Actions, ofActionDispatched} from "@ngxs/store";
 import {Router} from "@angular/router";
 import {Logout} from "./store/actions/authentication.actions";
-import {AuthGuard} from "./model/auth-guard.service";
+import {AuthGuard} from "./model/AuthGuard";
 import {AuthService} from "./services/auth.service";
 
 @Component({

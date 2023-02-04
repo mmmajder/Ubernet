@@ -14,7 +14,6 @@ import {SetPasswordDTO} from "../model/SetPasswordDTO";
 export class AuthService {
 
   private readonly authUrl: string;
-  facebookFlag = false;
 
   constructor(private http: HttpClient) {
     this.authUrl = 'http://localhost:8000/auth';
@@ -66,10 +65,7 @@ export class AuthService {
     };
   }
 
-  isLoggedIn(): boolean {
-    const token = localStorage.getItem('token');
-    console.log("IS LOGGED IN??? ");
-    console.log(token);
-    return token !== null;
+  public isLoggedIn(): boolean {
+    return localStorage.getItem('token') !== null;
   }
 }

@@ -4,37 +4,22 @@ import com.example.ubernet.e2e.pages.DashboardPage;
 import com.example.ubernet.e2e.pages.HomePage;
 import com.example.ubernet.e2e.pages.MapPage;
 import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.MethodOrderer;
 import org.junit.jupiter.api.Test;
-import org.springframework.format.annotation.DateTimeFormat;
+import org.junit.jupiter.api.TestMethodOrder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
+@TestMethodOrder(MethodOrderer.MethodName.class)
 public class OrderRideTest extends TwoChromesTestBase {
 
     @Test
-    @DisplayName("Customer orders ride 4 times - 1. invalid locations, 2. no money, 2. success, 3. cannot")
-    public void orderRide() {
-        initializeIncognitoWebDriver();
-        initializeWebDriver();
-
-        loginDriver();
-        loginCustomer("customer@gmail.com", "customer");
-        orderRideCustomer();
-
-        driver.quit();
-        incognitoDriver.quit();
-    }
-
-    @Test
-    @DisplayName("No available drivers and cannot add yourself to split fair")
-    public void cannotOrderRide() {
+    @DisplayName("1. No available drivers and cannot add yourself to split fair")
+    public void a_cannotOrderRide() {
         initializeWebDriver();
 
         loginCustomer("petar@gmail.com", "admin");
@@ -44,14 +29,28 @@ public class OrderRideTest extends TwoChromesTestBase {
     }
 
     @Test
-    @DisplayName("Reserve ride test with invalid tries")
-    public void reserveRide() {
+    @DisplayName("2. Reserve ride test with invalid tries")
+    public void b_reserveRide() {
         initializeWebDriver();
 
         loginCustomer("petar@gmail.com", "admin");
         reserveRideCustomer();
 
         driver.quit();
+    }
+
+    @Test
+    @DisplayName("3. Customer orders ride 4 times - 1. invalid locations, 2. no money, 2. success, 3. cannot")
+    public void c_orderRide() {
+        initializeIncognitoWebDriver();
+        initializeWebDriver();
+
+        loginDriver();
+        loginCustomer("customer@gmail.com", "customer");
+        orderRideCustomer();
+
+        driver.quit();
+        incognitoDriver.quit();
     }
 
     private void orderRideCustomer() {
@@ -103,6 +102,7 @@ public class OrderRideTest extends TwoChromesTestBase {
         mapPage.friendsStep("petar@gmail.com");
         assertEquals("You cannot add yourself.", mapPage.getSnackBarMessage());
 
+        mapPage.waitForSnackBarToDissapear();
         mapPage.summaryStep();
         assertEquals("There are no available cars at the moment", mapPage.getSnackBarMessage());
     }

@@ -46,6 +46,18 @@
     </mat-form-field>
   </p>
 
+  <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.city !== request.city)">
+    <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
+      <mat-label>Current city</mat-label>
+      <input matInput [(ngModel)]="request.driver.city" disabled>
+    </mat-form-field>
+
+    <mat-form-field style="width: 49%; margin-left: 1%" appearance="outline">
+      <mat-label>New city</mat-label>
+      <input matInput [(ngModel)]="request.city" disabled>
+    </mat-form-field>
+  </p>
+
   <p *ngIf="!showOnlyChanges || (showOnlyChanges && request.driver.car.plates !== request.plates)">
     <mat-form-field style="width: 49%; margin-right: 1%" appearance="outline">
       <mat-label>Current car plates</mat-label>

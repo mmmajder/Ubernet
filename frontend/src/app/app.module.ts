@@ -41,7 +41,7 @@ import {
   RideSplitFareDialogComponent
 } from './views/request-ride-accept/ride-split-fare-dialog/ride-split-fare-dialog.component';
 import {NotAuthorizedPageComponent} from "./views/403/not-authorized-page/not-authorized-page.component";
-import {AuthGuard} from "./model/auth-guard.service";
+import {AuthGuard} from "./model/AuthGuard";
 import {SocialLoginModule, SocialAuthServiceConfig} from '@abacritt/angularx-social-login';
 import {
   GoogleLoginProvider,

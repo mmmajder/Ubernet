@@ -7,7 +7,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RideEndTest extends TwoChromesTestBase  {
 
@@ -77,7 +76,7 @@ public class RideEndTest extends TwoChromesTestBase  {
     private void orderRideCustomer() {
         MapPage mapPage = new MapPage(driver);
 
-        // CASE 3 - successful ordering
+        // successful ordering
         mapPage.goToSearchDirections();
         mapPage.enterStopValue(0, "Novi Sad");
         mapPage.enterStopValue(1, "Prolaz Milosa Hadzica 4, Novi Sad");
