@@ -16,7 +16,7 @@ export class ReasonForRideCancellationComponent {
   shouldSetDriverInactive: boolean;
   reason: string;
 
-  constructor(@Inject(MAT_DIALOG_DATA) public data: any, private rideDenialService: RideDenialService, private _snackBar: MatSnackBar) {
+  constructor(@Inject(MAT_DIALOG_DATA) public data: ReasonForRideCancellationComponent, private rideDenialService: RideDenialService, private _snackBar: MatSnackBar) {
     this.ride = data.ride;
     this.shouldSetDriverInactive = data.shouldSetDriverInactive;
   }

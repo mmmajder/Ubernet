@@ -228,6 +228,7 @@ export class MapComponent implements OnInit {
       checkPoints.push(L.latLng(end.y, end.x))
       this.routeForDriver.push(L.Routing.control({
         waypoints: checkPoints,
+        routeWhileDragging: false,
         altLineOptions: {
           extendToWaypoints: false,
           missingRouteTolerance: 0,
@@ -308,7 +309,7 @@ export class MapComponent implements OnInit {
             {color: 'blue', opacity: 0.5}
           ],
         },
-        routeWhileDragging: true,
+        routeWhileDragging: false,
         addWaypoints: false,
         showAlternatives: true,
         useZoomParameter: false,

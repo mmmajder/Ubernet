@@ -40,7 +40,7 @@ export class NavbarComponent implements OnInit {
   notificationBadgeHidden = true;
   private stompClient: any;
   driverActive: boolean;
-  workingHours = "0 minutes";
+  workingHours = "less than a minute";
 
   constructor(private _snackBar: MatSnackBar, private driverService: DriversService, public dialog: MatDialog, private store: Store, private router: Router, private customerService: CustomersService, private imageService: ImageService, private notificationService: NotificationService) {
     this.valueSubscription = this.numberOfTokens$.subscribe((value: number) => {
@@ -174,4 +174,11 @@ export class NavbarComponent implements OnInit {
       }
     });
   }
+
+  timerClick() {
+    this.driverService.getNumberOfActiveHoursInLast24h(this.user.email).subscribe((seconds: number) => {
+      this.workingHours = secondsToHm(seconds)
+    })
+  }
+
 }

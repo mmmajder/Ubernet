@@ -207,7 +207,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
     return new Promise(resolve => {
       for (let i = 0; i < this.destinations.value.length; i++) {
         const destination = this.destinations.value[i]
-        this.mapService.findAddress(destination).subscribe((response: Object) => {
+        this.mapService.findAddress(destination).subscribe((response) => {
           const positions: PositionDTO[] = Object.values(response)
           if (positions.length == 0) {
             this.positions[i] = null
@@ -295,9 +295,9 @@ export class SearchDirectionsCustomerComponent implements OnInit {
         })
         this.createRideAlternatives(res.id)
       },
-      error: (res: any) => {
+      error: (err) => {
         this.findingDriver = false;
-        this._snackBar.open(res.error, '', {
+        this._snackBar.open(err.error, '', {
           duration: 3000,
           panelClass: ['snack-bar']
         })
@@ -306,8 +306,7 @@ export class SearchDirectionsCustomerComponent implements OnInit {
   }
 
   createRideAlternatives(rideId: number) {
-    this.rideAlternativeService.createRideAlternatives(rideId, this.allAlternatives).subscribe(() => {
-    })
+    this.rideAlternativeService.createRideAlternatives(rideId, this.allAlternatives).subscribe()
   }
 
   removeFriend(i: number) {
