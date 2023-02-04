@@ -1,5 +1,6 @@
 package com.example.ubernet.controller;
 
+import com.example.ubernet.dto.CreateRideDTO;
 import com.example.ubernet.model.*;
 import com.example.ubernet.model.enums.RideState;
 import com.example.ubernet.repository.*;
@@ -10,12 +11,21 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.web.client.TestRestTemplate;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.http.*;
 import org.springframework.test.annotation.Rollback;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+
+import java.time.LocalDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 
@@ -59,6 +69,10 @@ public class RideControllerIntegrationTest {
     private RideRequestRepository rideRequestRepository;
     @Autowired
     private DriverDailyActivityRepository driverDailyActivityRepository;
+    @Autowired
+    private CustomerPaymentRepository customerPaymentRepository;
+    @Autowired
+    private PaymentRepository paymentRepository;
 
     @Test
     @DisplayName("Should return Null for invalid ID when making GET request to endpoint - /ride/{id}")
@@ -280,6 +294,142 @@ public class RideControllerIntegrationTest {
         assertEquals(message, "You are blocked by admin and can not request ride!");
     }
 
+    @Test
+    @DisplayName("Should throw Bad Request when creating approach with invalid car id - POST /ride/update-car-route/{carId}")
+    public void shouldThrowBadRequestForInvalidCarIdWhenCreatingApproach(){
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/update-car-route/" + "899" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.NOT_FOUND, responseEntity.getStatusCode());
+        assertEquals(message, "Car does not exist");
+    }
+
+    @Test
+    @DisplayName("Should return  OK  when creating approach, no second ride - POST /ride/update-car-route/{carId}")
+    public void shouldReturnOkForValidCarIdWhenCreatingApproachAndNoSecondRide(){
+        setupShouldReturnOkForValidCarIdWhenCreatingApproachAndNoSecondRide();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/update-car-route/" + "6" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should return  OK  when creating approach, has second ride - POST /ride/update-car-route/{carId}")
+    public void shouldReturnOkForValidCarIdWhenCreatingApproachAndHasSecondRide(){
+        setupShouldReturnOkForValidCarIdWhenCreatingApproachAndHasSecondRide();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/update-car-route/" + "6" ,
+                HttpMethod.POST,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest  when splitting fare - POST /ride/accept-request-split-fare/{url}")
+    public void shouldThrowBadRequestForInvalidUrlIdWhenSplittingFare(){
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/accept-request-split-fare/" + "invalidurl" ,
+                HttpMethod.PUT,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "Url is incorrect");
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest  when splitting fare but user is Active - POST /ride/accept-request-split-fare/{url}")
+    public void shouldThrowBadRequestForActiveUserWhenSplittingFare(){
+        setupShouldThrowBadRequestForActiveUserWhenCreatingApproachAndHasSecondRide();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/accept-request-split-fare/" + "urlpayment" ,
+                HttpMethod.PUT,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "Customer can only have one ride at the time.");
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest  when splitting fare but is already paid - POST /ride/accept-request-split-fare/{url}")
+    public void shouldThrowBadRequestForAlreadyPaidWhenSplittingFare(){
+        setupShouldThrowBadRequestForAlreadyPaidWhenCreatingApproachAndHasSecondRide();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/accept-request-split-fare/" + "urlpayment" ,
+                HttpMethod.PUT,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "Payment has already been accepted");
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest when splitting fare but is already reservation passed - POST /ride/accept-request-split-fare/{url}")
+    public void shouldThrowBadRequestForPassedReservationdWhenSplittingFare(){
+        setupShouldThrowBadRequestForPassedReservationdWhenSplittingFare();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/accept-request-split-fare/" + "urlpayment" ,
+                HttpMethod.PUT,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "Reservation time has passed! You are not able to get on this ride any more.");
+    }
+
+    @Test
+    @DisplayName("Should throw BadRequest when splitting fare but not enough tokens - POST /ride/accept-request-split-fare/{url}")
+    public void shouldThrowBadRequestForNotEnoughTokensWhenSplittingFare(){
+        setupShouldThrowBadRequestForNotEnoughTokensdWhenSplittingFare();
+        HttpEntity<String> request = createCreateRideDTO();
+
+        ResponseEntity<String> responseEntity = restTemplate.exchange("/ride/accept-request-split-fare/" + "urlpayment" ,
+                HttpMethod.PUT,
+                request,
+                new ParameterizedTypeReference<String>() {
+                });
+
+        String message = responseEntity.getBody();
+
+        assertEquals(HttpStatus.BAD_REQUEST, responseEntity.getStatusCode());
+        assertEquals(message, "You do not have enough tokes.");
+    }
+
     private HttpEntity<String> createCreateRideDTO() {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
@@ -305,6 +455,87 @@ public class RideControllerIntegrationTest {
         return request;
     }
 
+    private void setupShouldThrowBadRequestForAlreadyPaidWhenCreatingApproachAndHasSecondRide(){
+        Customer customer = setupCustomer();
+        customer.setActive(false);
+        customer.setBlocked(false);
+        customer.setNumberOfTokens(99999);
+        customerRepository.save(customer);
+
+        CustomerPayment customerPayment = new CustomerPayment();
+        customerPayment.setId(4L);
+        customerPayment.setUrl("urlpayment");
+        customerPayment.setCustomer(customer);
+        customerPayment.setPayed(true);
+        customerPaymentRepository.save(customerPayment);
+    }
+
+//    @Query(value = "SELECT ride FROM Ride ride INNER JOIN ride.payment p INNER JOIN p.customers c WHERE ride.payment.id=p.id AND c.url=:url")
+//    Ride getRideByCustomerPaymentURL(String url);
+    private void setupShouldThrowBadRequestForNotEnoughTokensdWhenSplittingFare(){
+        Customer customer = setupCustomer();
+        customer.setActive(false);
+        customer.setBlocked(false);
+        customer.setNumberOfTokens(0);
+        customerRepository.save(customer);
+
+        CustomerPayment customerPayment = new CustomerPayment();
+        customerPayment.setId(4L);
+        customerPayment.setUrl("urlpayment");
+        customerPayment.setCustomer(customer);
+        customerPayment.setPricePerCustomer(50.0);
+        customerPaymentRepository.save(customerPayment);
+
+
+        Payment payment = new Payment();
+        payment.setCustomers(List.of(customerPayment));
+        paymentRepository.save(payment);
+
+        Ride ride = setupRide();
+        ride.setReservation(false);
+        ride.setPayment(payment);
+        rideRepository.save(ride);
+    }
+
+    private void setupShouldThrowBadRequestForPassedReservationdWhenSplittingFare(){
+        Customer customer = setupCustomer();
+        customer.setActive(false);
+        customer.setBlocked(false);
+        customer.setNumberOfTokens(99999);
+        customerRepository.save(customer);
+
+        CustomerPayment customerPayment = new CustomerPayment();
+        customerPayment.setId(4L);
+        customerPayment.setUrl("urlpayment");
+        customerPayment.setCustomer(customer);
+        customerPayment.setPricePerCustomer(50.0);
+        customerPaymentRepository.save(customerPayment);
+
+
+        Payment payment = new Payment();
+        payment.setCustomers(List.of(customerPayment));
+        paymentRepository.save(payment);
+
+        Ride ride = setupRide();
+        ride.setReservation(true);
+        ride.setPayment(payment);
+        ride.setRideState(RideState.REQUESTED);
+        ride.setScheduledStart(LocalDateTime.now().minus(2, ChronoUnit.HOURS));
+        rideRepository.save(ride);
+    }
+
+    private void setupShouldThrowBadRequestForActiveUserWhenCreatingApproachAndHasSecondRide(){
+        Customer customer = setupCustomer();
+        customer.setActive(true);
+        customerRepository.save(customer);
+
+        CustomerPayment customerPayment = new CustomerPayment();
+        customerPayment.setId(4L);
+        customerPayment.setUrl("urlpayment");
+        customerPayment.setCustomer(customer);
+        customerPaymentRepository.save(customerPayment);
+    }
+
     private void setupShouldThrowBadRequestForValidCreateRideDTOAndBlockedCustomer(){
         Customer customer = setupCustomer();
         customer.setActive(false);
@@ -319,6 +550,57 @@ public class RideControllerIntegrationTest {
         customer.setBlocked(false);
         customer.setNumberOfTokens(99999);
         customerRepository.save(customer);
+    }
+
+    private void setupShouldReturnOkForValidCarIdWhenCreatingApproachAndNoSecondRide(){
+        Car car = setupCar();
+        Driver driver = setupDriver();
+        driver.setCar(car);
+        driverRepository.save(driver);
+        car.setDriver(driver);
+
+        Ride ride = setupRide();
+        ride.setDriver(driver);
+        ride.setRideState(RideState.WAITING);
+        Navigation n = new Navigation();
+        car.setNavigation(n);
+
+        CurrentRide navCurrentRide = new CurrentRide();
+        n.setFirstRide(navCurrentRide);
+        currentRideRepository.save(navCurrentRide);
+
+        setupRideAlternatives(ride);
+
+        navigationRepository.save(n);
+        carRepository.save(car);
+        rideRepository.save(ride);
+    }
+
+    private void setupShouldReturnOkForValidCarIdWhenCreatingApproachAndHasSecondRide(){
+        Car car = setupCar();
+        Driver driver = setupDriver();
+        driver.setCar(car);
+        driverRepository.save(driver);
+        car.setDriver(driver);
+
+        Ride ride = setupRide();
+        ride.setDriver(driver);
+        ride.setRideState(RideState.WAITING);
+        Navigation n = new Navigation();
+        car.setNavigation(n);
+
+        CurrentRide navCurrentRide = new CurrentRide();
+        n.setFirstRide(navCurrentRide);
+        currentRideRepository.save(navCurrentRide);
+        CurrentRide navCurrentRideSecond = new CurrentRide();
+        n.setSecondRide(navCurrentRideSecond);
+        currentRideRepository.save(navCurrentRideSecond);
+
+        setupRideAlternatives(ride);
+
+        navigationRepository.save(n);
+        carRepository.save(car);
+        rideRepository.save(ride);
     }
 
     private void setupShouldReturnRideAndOKForValidCreateRideDTO(){
@@ -527,6 +809,7 @@ public class RideControllerIntegrationTest {
 
         return ride;
     }
+
 
     private RideAlternatives setupRideAlternatives(Ride ride){
         Position position = new Position();

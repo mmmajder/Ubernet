@@ -80,24 +80,6 @@ public class CarControllerIntegrationTest {
         assertEquals(carResponse.getDriver().getEmail(), "driverrfast123@2f4u.com");
     }
 
-//    @Test
-//    @DisplayName("Should return Car Response for valid ID when asking for new position and available cars exist - PUT /car/new-position")
-//    public void shouldReturnCarResponsesWhenAvailableCarsExistNewPosition(){
-//        setupShouldReturnCarResponsesWhenAvailableCarsExistNewPosition();
-//
-//        ResponseEntity<List<CarResponse>> responseEntity = restTemplate.exchange("/car/new-position",
-//                HttpMethod.PUT,
-//                null,
-//                new ParameterizedTypeReference<List<CarResponse>>() {
-//                });
-//
-//        List<CarResponse> carResponses = responseEntity.getBody();
-//
-//        assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
-//        assertNotNull(carResponses);
-//        assertEquals(2, carResponses.size());
-//    }
-
     @Test
     @DisplayName("Should throw Not Found for valid ID when asking for new position but no first ride - PUT /car/new-position")
     public void shouldThrowNotFoundExceptionResponsesWhenAvailableCarsExistButNoFirstRide(){
@@ -155,12 +137,6 @@ public class CarControllerIntegrationTest {
         HttpEntity<String> request = new HttpEntity<String>(jsonString, headers);
 
         return request;
-    }
-
-    private SetNewFreeRideDTO createSetNewFreeRideDTO() {
-        SetNewFreeRideDTO setNewFreeRideDTO = new SetNewFreeRideDTO();
-        setNewFreeRideDTO.setPositions(getCoordinates());
-        return setNewFreeRideDTO;
     }
 
     private List<List<Double>> getCoordinates() {
