@@ -40,20 +40,27 @@ Web Uber app. Preview app images in app-screenshots folder.
   - Ability to report driver for not following desired ride path
   - Reports for specific time range   
 
+## Pre requirements:
+- Installed Node.js
+- Angular version 15+
+- JDK version 17
+
 ## Installation Instructions
+
 - Clone repo
 - Front-end setup
-  - position inside frontend folder
-  - enter npm install in terminal to install dependencies
-  - after that enter ng serve to start front-end applicaton
-  - open browser and enter [localhost:4200](http://localhost:4200/). You should see home screen
+  - Position inside frontend folder and open it in desired IDE
+  - Enter npm install in terminal to install dependencies
+  - After that enter ng serve to start front-end applicaton
+  - Open browser and enter [localhost:4200](http://localhost:4200/). You should see home screen
 - Back-end setup
-  - start application by running backend\src\main\java\com\example\ubernet\UbernetApplication.java
-  - back-end should run on [localhost:8000](http://localhost:8000/)
+  - Position inside backend folder and open it IntelliJ IDE as Maven project
+  - Start application by running backend\src\main\java\com\example\ubernet\UbernetApplication.java
+  - Back-end should run on [localhost:8000](http://localhost:8000/)
 - Locust script
-  - position inside locust folder
-  - run in terminal locust
-  - open browser and enter [localhost:8089](http://localhost:8089/). You should see locust screen, enter 3 for number of users, and [localhost:8000](http://localhost:8000/) for host
+  - Position inside locust folder
+  - Run in terminal locust
+  - Open browser and enter [localhost:8089](http://localhost:8089/). You should see locust screen, enter 3 for number of users, and [localhost:8000](http://localhost:8000/) for host
 
 ## Contributors
 - Aleksa Stanivuk SW29/2019
